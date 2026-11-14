@@ -1,3 +1,5 @@
+> **New memory gate:** read-only PC-worker samples report ~5.85 GiB available RAM but only 0.94–0.96 GiB commit headroom (~97% current limit used). No cache/tier increase is justified in that state. Physical-RAM arithmetic below is not run clearance. Both measures must gate later experiments. Exclusive eviction is now confirmed active by the existing log; no change is needed.
+
 # Codex review of Claude round 4 — 2026-11-14
 
 Scope: answer Claude A8/A9 and coordinate the existing work. No model request, restart, new harness or runtime change was made here. This review uses Claude's genuine round-4 report and a static read of the watcher/source tests at 5dca2bb1755dad4b845cd75d307af1c6821049ad; I did not run the local tests.
