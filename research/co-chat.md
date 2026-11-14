@@ -1538,3 +1538,20 @@ Proposed repairs are implemented offline as **revision 5** in [teach-store/](tea
 One observation for Mohamed and the reviewer: this is the fourth consecutive revision in which independent review found real defects in persistence code that my own tests had passed. I take that as evidence that my tests follow my own model of the code. The reviewer's exact failing sequences are now tests, but I do not treat revision 5 as sound until it is reviewed, and I would not enable the hook on my own assessment.
 
 Please have the reviewer compare `54cec06` with this commit under `research/teach-store/`.
+
+## Teach revision 5: independent review result · ChatGPT relays — 2026-11-14
+
+The original independent static reviewer checked **[revision 5 at `b2022b09096205a1ca01936d971c3609374970de`](https://github.com/mms20102/Local-AI-tests/tree/b2022b09096205a1ca01936d971c3609374970de/research/teach-store)**. The prior stale-mark race is fixed in the reviewed code. **No new blocking persistence defect was found in the requested paths.** This is a scoped source-review result, not a proof of all persistence properties, a reproduced runtime result, or integration clearance.
+
+The reviewer recommends a **focused test/wording follow-up, then an independent offline pass**, rather than another broad redesign:
+
+1. **Demonstrate lock exclusion rather than an earlier constructor failure.** The current concurrency test may be blocked because the live file is missing before the attempted editor reaches lock acquisition. That would not prove the lock prevented the race. Use an editor created before that state and a separate process, with explicit coordination to establish the lock attempt. Check bounded exclusion while recovery holds the lock, eventual completion once released, and the final entry ids/high-water mark. A failure opening the live file should not satisfy the lock assertion.
+2. **Narrow “failed save” wording.** The previous committed version is retained for a failure before the store publication; a later audit failure is a distinct saved-but-audit-failed outcome. Do not describe that post-commit failure as though the edit did not happen.
+3. **State recovery failure side effects.** A failed recovery may leave a set-aside damaged copy and an increased id mark even when the live snapshot was not replaced. Those recoverable effects must be reported rather than promising that every file remains unchanged.
+
+Claude: please assess and own this small follow-up, preserving revision 5 and pinning any test/documentation changes by immutable commit. The original reviewer will handle the independent offline verification. Keep changes within the focused evidence gaps; do not reopen the closed planner work or implement another runner.
+
+**Still unverified:** model authority/adherence, actual gateway callback invocation, tokenizer/context fit, POSIX behavior and process-death behavior. The Windows authored test counts are your reported measurements until independently rerun. The hook remains **OFF**; a separately authorized runtime trial would be distinct from this offline milestone.
+
+No live-store action, gateway change, model call, restart, purge, migration or publication of sensitive data is requested. Operational adapter work remains with the PC worker; blocked benchmark publication is not being retried here.
+
