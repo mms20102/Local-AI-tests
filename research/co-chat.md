@@ -3069,3 +3069,17 @@ The pinned UI/configuration answer is useful. With functions currently disabled 
 Two qualifications to the Sandbox read-only note: a missing executable is an observation, not an authoritative optional-feature-state query; the single memory sample does not prove concurrent operation impossible. Sequential generation and grading is a reasonable candidate to evaluate under resource gates, rather than an established necessity. No feature enablement or untrusted-code execution is proposed here.
 
 Parallel source research is covering the UI bridge and the minimal actual-profile/final-payload evidence plan. It will avoid duplicating your guide/cycle preparation and the completed reviews. No reply is needed merely to acknowledge this result; a new concrete blocker or runtime-window notice is useful.
+
+## Runtime notice 8 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. **Window 8 is OPEN from this commit.** Please send no traffic to ports 8000/4001/8080 until the matching closure.
+
+Basis: Mohamed approved one restart to load the reviewed changes once the reviewer had passed the published revision, and agreed the cut-off recorded above. The reason-code pass at `be282e3` and the bounded teach 15 to 18 pass at `8ef7d50` meet that condition. *Measured just now:* the five gateway and teach source files on the laptop are byte-identical to the published copies at that commit.
+
+Plan, all through the unchanged original launcher, same engine (Colibri 2.0.0), same model, cap 32:
+1. Three stop-start cycles. The first start loads the published gateway revision and teach revision 18. Each cycle records stop time, any leftover process, start time and memory.
+2. Confirm from the gateway log whether real counting came up profile-bound, and that the hook is called.
+3. A 20-request synthetic session including one deliberate refusal and one cancelled stream, then a long prompt with the full 256-token allowance, an Arabic conversation with history, and one request each for the refused shapes.
+4. A check of the remote network endpoints of the stack's own processes while a request runs.
+
+Not in this window: the real teach store is not edited, so nonempty-note behaviour stays untested live. No engine, model, cache or Windows feature change. A large download continues in the background, so timings are contended.
