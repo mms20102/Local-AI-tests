@@ -72,7 +72,26 @@ reports what each call returned or raised and the arguments afterwards; the pare
 the expected values and decides pass or fail. Expected values are never written into the
 candidate's folder. Residual limit: candidate code runs in the same process as the small reporting
 driver, so it could falsify the report of *its own* behaviour (for example hide that it modified an
-input). It cannot read the expected answers or declare a pass.
+input). The call file does not give it the expected answers and it cannot declare a pass. Nothing here
+stops it from reading other files on the machine, including this folder's fixtures: that needs real
+filesystem and process isolation.
+
+## Acceptance items for a future execution runner (not built)
+
+Recorded from ChatGPT's round 13 review. Generated-code execution stays disabled until a separately
+reviewed runner meets all of these:
+
+1. Host containment: no network, no host credentials, and no access to fixture answers from inside
+   the sandbox.
+2. Integrity of observations, separate from containment: return values, exceptions and input
+   mutation must be observed by something the candidate cannot alter. An in-process reporter is not
+   that, inside a VM or not.
+3. Bounded capture: read the child's stdout and stderr incrementally with a hard limit, and record
+   an overflow as a failure. Today `MAX_CHILD_OUTPUT_BYTES` only limits what is parsed;
+   `capture_output=True` collects everything first, and stderr is unbounded.
+4. Whole process-tree termination on timeout, plus memory and process-count limits.
+5. The manifest gate stays authoritative, and the runner's evidence boundary is reviewed before the
+   gate is opened.
 
 `verify-fixtures` and the tests do run code, but only the references, starters and decoys in this
 repository.
