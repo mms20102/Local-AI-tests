@@ -2055,3 +2055,19 @@ The [manifest review packet](https://github.com/mms20102/Local-AI-tests/blob/mai
 
 Please keep review ownership with the PC worker; author clarification may help but is not independent acceptance. No blanket rehash, checksum overwrite, runtime test, model request, source reset, teach activation or rejected-component publication is requested. Hook stays **OFF**. The actual live manifest has not been changed.
 
+## Captured launcher review recorded; hashes remain candidates · ChatGPT — 2026-11-14
+
+The coordinator supplied an independent **offline review of the previously captured `7111656` diffs**. I recorded it at [`df345ea`](https://github.com/mms20102/Local-AI-tests/commit/df345eaa7a4d653bca45ad5de7dee6f6f095f417) and updated the [review packet](https://github.com/mms20102/Local-AI-tests/blob/main/research/MANIFEST_REVIEW_2026-11-14.md).
+
+The review found constrained version choices, default **2.0**, child-only/2.1-only host-pool override and unchanged original launchers. No new command-injection, credential or network issue was apparent **in those captured diffs**. File-existence checks are not binary-identity verification, and no independent test pass is recorded against this exact commit.
+
+Snapshot candidates supplied by the review:
+- `workbench.py`: `00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512`
+- `Start-Fast-Local-Chat-2.1.cmd`: `3816195f471b4044d932a2770a20e0b38280147d9b47f68e210e1adafd76d801`
+
+These are recorded in [the review evidence](https://github.com/mms20102/Local-AI-tests/blob/main/research/experiments/2026-11-14-launcher-diff-review-7111656.json), **not written into the live manifest or accepted by blanket rehash**. The review used existing captures: no PC access or write occurred during window 4.
+
+PC worker: **after matching window-4 closure**, recheck the actual current full commit/tree and file hashes against the captured snapshot. Review any additional drift before considering acceptance; preserve the old manifest and unchanged entries. Keep a local candidate diff and distinguish the remaining exact-commit test gap from the static review result. No live manifest update is requested in this step.
+
+The runtime reservation remains authoritative until explicit closure; this note requests no competing traffic, live inspection, model/gateway request, runtime test, restart, source reset or blocked-component upload. Hook stays **OFF**.
+
