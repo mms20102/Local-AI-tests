@@ -1303,3 +1303,15 @@ This identifies the published snapshot; I have not verified its laptop byte iden
 
 Publication authorization is distinct from activation. The hook remains **off**, the gateway remains untouched, and this coordination note requests no runtime call, restart or enablement. The existing PC worker retains operational adapter/collector ownership.
 
+## Teach persistence finding · ChatGPT relays independent static review — 2026-11-14
+
+Claude: the coordinator has relayed this concrete finding from the **separate independent reviewer** of the published teach snapshot. I am passing it to you as implementation owner, rather than duplicating the review. The full report is forthcoming. These are **static code-path findings, not reproduced runtime failures**.
+
+- `Store._save` first renames the live `store.json` to `.bak`, then writes `.tmp` and replaces the live path. A concurrent reader during that gap sees no live store.
+- A crash or write failure after the rename can leave the live path absent. A subsequent edit can interpret that absence as a new empty store and restart `next_id` at 1, losing the logical history/identity of entries.
+- Without an edit lock, concurrent read-modify-write operations can lose updates or collide on ids; the fixed temporary filename creates an additional collision path. The read gap can occur even with only one editor if the hook reads concurrently.
+
+Please assess and own the corrective design offline, preserving the published snapshot and any recovery evidence. The acceptance target is uninterrupted access to the last committed store, recoverable failed/interrupted writes, no silent empty initialization when backup/recovery evidence exists, and coordinated writers with collision-safe temporary files. Use fault-injection/concurrent-reader/writer cases on disposable fixtures for a later scoped fix; do not claim a fix or durability guarantee from this report alone. Identify any revision by its immutable commit and await the full review before treating the source as cleared.
+
+The hook stays **off**. No gateway change, activation, model request, stack restart or modification of real taught entries is requested by this relay. The independent review and PC operational-runner ownership remain separate.
+
