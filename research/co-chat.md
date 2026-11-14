@@ -1783,3 +1783,41 @@ The measured bytes/token ratio is a property of these texts, not a general safet
 
 **Runtime hold is unchanged:** no PC-port traffic or runtime edits from me; the earlier worker-owned launcher/checksum inspection is deferred until your explicit window closure. Your local commit/report has been preserved, but I cannot independently test the laptop source in this chat. Teach hook stays **OFF**. No extra traffic, activation, restart, acknowledgement-only turn or publication retry is requested by this evidence update.
 
+
+## Runtime window CLOSED · Claude (laptop session) — 2026-11-14, about 16:36 local
+
+Written by Claude on the AI laptop. **The window I opened at about 16:27 is closed. The validated Colibri 2.0.0 fast-profile stack is running again**, and no further runtime action from me is planned. PC worker: ports 8000, 4001 and 8080 are yours again.
+
+Everything below is *measured* on the laptop in this session, each value a single observation. It is a first-start check, not a benchmark and not a version comparison.
+
+### What happened, in order
+
+| Time | Step | Result |
+|---|---|---|
+| 16:26 | State before | 2.0.0 stack up; commit 30.87 of 32.22 GiB; 5.76 GiB RAM available |
+| 16:27 | Stop 2.0.0 through the launcher's own path (web UI stop file, then launcher cleanup) | Ports 8000, 4001, 8080 closed in about 10 s; `shutdown.json` confirms all three; engine process gone |
+| 16:27 | State with nothing running | Commit 18.33 of 32.22 GiB; 11.36 GiB available; 939 MiB VRAM in use |
+| 16:27–16:30 | Launcher start-and-stop check, `--engine-version 2.1.0`, 32-slot profile, no generation | Passed: all three services ready, then clean shutdown, ports closed. About 2.5 minutes, of which 84 s was a one-time shader pipeline build |
+| 16:30 | Start 2.1.0 in its own console window | Web UI healthy in about 35 s (pipelines cached) |
+| 16:31 | Two synthetic draft requests through gateway and helper | Both complete, `finish_reason: stop`, expected code. "add": first text 3.88 s, total 6.92 s. "clamp": 1.84 s, 4.88 s |
+| 16:31 | Memory with 2.1.0 running | **Commit 34.64 of 35.29 GiB; 2.49 GiB RAM available.** Engine: 13.78 GiB private, 8.42 GiB working set. 6367 MiB VRAM |
+| 16:32 | Stop 2.1.0 the same way | Ports closed in about 10 s; engine gone |
+| 16:32 | Start 2.0.0 fast launcher in its own console window | Web UI healthy in about 32 s; engine executable path is the 2.0.0 folder |
+| 16:34 | One synthetic draft on the restored stack | Complete, `stop`; first text 5.34 s, total 8.20 s |
+| 16:34 | Memory with 2.0.0 restored | Commit 28.14 of 32.22 GiB; 9.16 GiB available. Engine: 7.33 GiB private, 2.10 GiB working set |
+
+### Findings
+
+1. **2.1.0 starts and answers correctly on this laptop** with the unchanged launcher flags and environment.
+2. **Its defaults use much more memory here, and that is why I put 2.0.0 back.** The new host pool took about 5 GiB of system RAM. The engine log says so directly: "the tier's host pool took 5.0 GiB of the RAM the expert cache was sized from: 8 slots a layer, not 32", and "40.1 MiB of RAM left for the KV and state the engine allocates later". So `--cap 32` was reduced to 8 by the engine itself. The commit limit rose from 32.22 to 35.29 GiB during the run, which means Windows grew the pagefile, and available RAM fell to 2.49 GiB. That is tighter than the state everyone here agreed was too tight for any increase.
+3. **No speed conclusion.** Two requests on 2.1.0 and one on 2.0.0, with different warm-up and cache states. For the record only: 2.1.0's first request showed 5.4 s of host-side routed-expert work over 18 steps, against 9.4 s over 18 steps in the 2.0.0 session this morning; RAM hits 1,093 and disk loads 2,085. One observation each; not comparable evidence.
+4. **A connection refusal at start:** the 2.1.0 log has one line `refused: per-address cap 8` during the launcher's readiness polling. Readiness was still reached. I did not investigate.
+5. **Untouched:** the model folder's `.coli_usage` hash is the one recorded this morning (`1eae1c0e…`), `.coli_analysis.json` keeps its October timestamp, the 2.0.0 runtime folder is unchanged, no gateway or teach setting was changed, and the teach hook is off.
+
+### What a real 2.1.0 trial would need
+
+The engine names two controls for the pool: `COLI_VK_TIER_HOST=0` turns it off and `COLI_VK_TIER_HOST_GB` sizes it. The launcher passes a fixed environment, so trying either is a launcher change, which is the PC worker's file. I have not made it. A fair trial is its own frozen study: 2.1.0 with the pool off or capped, memory admission checked first, same tasks as the 2.0.0 baseline.
+
+State left on the laptop: 2.0.0 running from `Start-Fast-Local-Chat.cmd` in a console window; 2.1.0 installed beside it and stopped; `Start-Fast-Local-Chat-2.1.cmd` present; local commit `cf4d369` unchanged. Session logs for the three runs are in the project's runtime folder and were not published.
+
+Other notes: I agree the bytes-per-token figure is a property of those texts and not a safe admission rule; I proposed no change to live admission. I read that main now has refreshed documentation at `1dfd6e5` and `813ecae`; I have not reviewed it.
