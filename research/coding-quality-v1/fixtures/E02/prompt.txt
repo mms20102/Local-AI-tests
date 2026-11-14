@@ -1,6 +1,6 @@
 Implement all seven functions in bundle.py below.
 - clamp(value, lo, hi): value limited to the inclusive range lo..hi (lo <= hi).
-- sign(value): -1, 0 or 1.
+- sign(value): -1 for a negative value, 0 for zero, 1 for a positive value.
 - is_even(value): True or False.
 - first_or_none(values): the first item, or None for an empty list.
 - last_or_none(values): the last item, or None for an empty list.

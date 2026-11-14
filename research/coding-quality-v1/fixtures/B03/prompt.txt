@@ -1,4 +1,4 @@
-The file stats.py below has bugs. Fix median(values: list[int]) -> float. Work on a sorted copy. For an odd number of values return the middle one; for an even number return the arithmetic mean of the two middle values. Always return a float. An empty list raises ValueError. Do not modify the input.
+The file stats.py below has bugs. Fix median(values: list[int]) -> float. Work on a sorted copy. For an odd number of values return the middle one; for an even number return the arithmetic mean of the two middle values. Always return a float. An empty list raises ValueError. Values are integers between -1000000 and 1000000. Do not modify the input.
 Example: median([3, 1, 2]) returns 2.0.
 
 ```python

@@ -21,11 +21,18 @@ been run against a model. No pass rate exists yet.
 | `manifest.json` | SHA-256 of every prompt, test file, reference, starter and decoy |
 | `build_fixtures.py` | Regenerates all of the above, byte for byte |
 | `grade.py` | The grader |
-| `test_grade.py` | 23 offline tests for the grader |
+| `test_grade.py` | 31 offline tests for the grader |
 
-116 cases in total across the 12 tasks. Prompts are 380 to 1,060 characters, so they fit a
-2,048-token context. Whether every reference fits the 256-token output ceiling has not been checked
-with the model's tokenizer.
+116 cases in total across the 12 tasks (fixture revision 2). Prompts are about 380 to 1,150
+characters. Characters are not tokens: neither the prompt fit in the 2,048-token context nor the
+reference fit in the 256-token output ceiling has been checked with the model's tokenizer and chat
+template. That preflight is required before any run.
+
+The prompts restate the proposal's contracts. The three Arabic prompts keep the proposal's meaning
+but are not verbatim copies: each adds the file name and one example. Answer format, frozen with
+this revision: one fenced Python block per file; for the two-file task each block starts with
+`# file: invoice.py` or `# file: summary.py`. A format failure is reported under structure, not
+semantics.
 
 ## Use
 
@@ -53,10 +60,19 @@ answer that modifies its input fails.
 ## The execution gate
 
 `grade.py semantic` executes model-written code in a child Python process. A child process is not
-isolation. The command therefore refuses unless it is given `--i-am-in-a-sandbox` **and** the
-environment variable `CODE_Q1_SANDBOX=1`, which should be set only inside a disposable sandbox
-(for example Windows Sandbox with networking off and a read-only copy of this folder). That sandbox
-has not been set up or tested. Until it is, only the static level is available for model output.
+isolation. The command refuses unless all three hold: `manifest.json` has
+`generated_code_execution_enabled: true` (it is `false`), the flag `--i-am-in-a-sandbox` is given,
+and the environment variable `CODE_Q1_SANDBOX=1` is set. The flag and variable are an
+acknowledgement by whoever runs it; this program does not create or verify a sandbox, and it has no
+memory, process-tree or network limits of its own. A reviewed runner that enforces isolation is
+still to be built. Until then only the static level is available for model output.
+
+**Judging boundary.** The child process receives only the function calls and their arguments. It
+reports what each call returned or raised and the arguments afterwards; the parent process holds
+the expected values and decides pass or fail. Expected values are never written into the
+candidate's folder. Residual limit: candidate code runs in the same process as the small reporting
+driver, so it could falsify the report of *its own* behaviour (for example hide that it modified an
+input). It cannot read the expected answers or declare a pass.
 
 `verify-fixtures` and the tests do run code, but only the references, starters and decoys in this
 repository.
@@ -65,13 +81,17 @@ repository.
 
 - `verify-fixtures`: all 12 references pass all their cases; all 12 decoys fail at least one hidden
   case; manifest hashes match; no hidden case appears in a prompt.
-- `test_grade`: 23 tests pass.
+- `test_grade`: 31 tests pass, including: a candidate cannot see expected values or print its own
+  verdict; a tuple is not a list; input mutation is caught on the exception path; known truncation
+  overrides a missing finish reason; the manifest gate refuses even with the sandbox flag.
 
 ## Not done
 
 - No model run, so no baseline. Collecting drafts needs model traffic, which belongs to the PC
   worker and an agreed window.
-- No sandbox, so no semantic grading of model output.
+- No sandbox and no reviewed runner, so no semantic grading of model output.
+- "Returns a new object" is checked only on three cases (E01 twice, F02 once), and only that the
+  result is not the very object passed in.
 - The decoys for A02, F02 and F03 fail only one or two hidden cases; more cases would make those
   three tasks stricter.
 - The proposal asks for a fresh holdout set and four calibration fixtures; neither exists yet.

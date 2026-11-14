@@ -1,9 +1,11 @@
 {
+ "answer_format": "one fenced Python block per file; multi-file tasks start each block with '# file: <name>.py'",
  "based_on": "research/coding-quality-v1.proposed.json at main 3701d34",
  "executable": false,
- "fixture_revision": 1,
+ "fixture_revision": 2,
  "generated_code_execution_enabled": false,
  "model_traffic_enabled": false,
+ "prompt_note": "Prompts restate the proposal's contracts. The Arabic prompts keep the proposal's meaning but are not verbatim: they add the file name and an example.",
  "suite_id": "CODE-Q1",
  "tasks": {
   "A01": {
@@ -106,7 +108,7 @@
    "n_hidden": 7,
    "n_public": 1,
    "prompt_language": "en",
-   "prompt_sha256": "c34e1968d4becb5ae7693c3572ffe912dfd3c1a204f405875d6763a00cccd254",
+   "prompt_sha256": "eaa405f55ecd88c9df9a200e4ecba389c922c019144d911d3ce1a408366092ba",
    "public_tests_sha256": "4b23c82fb4e75bc7b46ee3ffefed8c92f5f00d1a9f6ef2ecf07e262acbed9836",
    "reference_sha256": "8fdb8bbe95fd03e1c812ffe8de20d19ac8bc6253ebb23f33fe7d0cdc896c6678",
    "required_callables": [
@@ -120,11 +122,11 @@
    "files": [
     "config.py"
    ],
-   "hidden_tests_sha256": "7741740f89b95329a2c2cddcd1c1fc685ffec265cead2f952d659980b9c4181b",
+   "hidden_tests_sha256": "382d3ed96ddccb5b58b0cd4c976e0c7895ed52ebaabeb30009be4cc503f9cee5",
    "n_hidden": 7,
    "n_public": 1,
    "prompt_language": "en",
-   "prompt_sha256": "a3f5c47922e07b30f8ca49f20c366e27e9687bd8120afb0d38a9a1a8ebe3aa23",
+   "prompt_sha256": "97bcacf06f7b4b3979bc1eae270c454a4aeaeb5f32723e3ab04375c943feda65",
    "public_tests_sha256": "5717dee58ed2838c7719510e59775674f437406dc96198a106267a917aeef455",
    "reference_sha256": "0aa7adceb6c28ece774bcc0133fabcc07389d3797f130a10b115d1bef60297ce",
    "required_callables": [
@@ -142,7 +144,7 @@
    "n_hidden": 19,
    "n_public": 2,
    "prompt_language": "en",
-   "prompt_sha256": "8442fb99f0540ec2bd7d15eaa5ddbdbee4e844df0fc0c3266b8ecf494c5cb88e",
+   "prompt_sha256": "a7c4b0319f8907e552522164db5d5064bd9369dace037612b73a0f7bcb3ae90d",
    "public_tests_sha256": "1db376a5b7ff9c644e8b1538a229268cd16eb2ab7ba262ab892daad253981bb2",
    "reference_sha256": "a6a98b9938d191bcb5048030a305f0ae039fc93be0592f90289f284547ca8a95",
    "required_callables": [
@@ -167,7 +169,7 @@
    "n_hidden": 9,
    "n_public": 1,
    "prompt_language": "en",
-   "prompt_sha256": "4b26ec37878d1c39aa64147e673a4094d85a46bd37b78239e46177ea3ea1b360",
+   "prompt_sha256": "7307c5fc85a083781b3cb07a2e9639d502753f32a0b76dca1ecbf9eb520de3cd",
    "public_tests_sha256": "241351e45fb60a86e854df9bae4194020ca4e77817c259dff705b2ce982c5926",
    "reference_sha256": "cf9ce2f5f04e0804c0c360e0f61b8044b8441ccf0a2b09be7dc2e22a6870476d",
    "required_callables": [
@@ -201,7 +203,7 @@
    "files": [
     "solution.py"
    ],
-   "hidden_tests_sha256": "5d3e1e50428e04784a7c4eece395f68badba8951d57861f103b971f9575598c4",
+   "hidden_tests_sha256": "e609861772dff52ec4ca29301a139ad10fbbb4ec0d699bbe433abd51b9a75b15",
    "n_hidden": 7,
    "n_public": 1,
    "prompt_language": "en",

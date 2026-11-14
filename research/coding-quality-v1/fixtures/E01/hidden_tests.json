@@ -32,14 +32,16 @@
   "expect": {
    "name": "x",
    "retries": 3
-  }
+  },
+  "new_object": true
  },
  {
   "args": [
    {}
   ],
   "call": "config.to_seconds",
-  "expect": {}
+  "expect": {},
+  "new_object": true
  },
  {
   "args": [

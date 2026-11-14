@@ -7,7 +7,9 @@ Commands:
   python grade.py static TASK DRAFT        Structural checks on one saved draft. Runs nothing.
   python grade.py semantic TASK DRAFT      Run the draft against the hidden cases. This EXECUTES
                                            model-written code, so it refuses unless it is told it
-                                           is inside a disposable sandbox (see README).
+                                           is inside a disposable sandbox AND the manifest enables execution.
+                                           The flag is an acknowledgement, not containment: this
+                                           program does not create or verify a sandbox (see README).
 
 DRAFT is either a text file with the model's answer, or a JSON file saved by the local draft
 helper (fields "content", "finish_reason", "truncated").
@@ -36,17 +38,53 @@ FILE_MARK = re.compile(r"^#\s*file:\s*([A-Za-z_][A-Za-z0-9_]*\.py)\s*$")
 PYTHON_LABELS = {"python", "python3", "py", ""}
 MAX_DRAFT_BYTES = 262144
 RUN_TIMEOUT_S = 10
+MAX_CHILD_OUTPUT_BYTES = 1048576
 SANDBOX_ENV = "CODE_Q1_SANDBOX"
 
-# Child process: imports the candidate modules from its working directory and runs the cases.
-# Results go to stdout as one JSON document. Kept as source text so the child needs no import
-# of this file.
+# Child process: imports the candidate modules from its working directory and calls them.
+# It receives only the calls and their arguments. Expected values never enter the candidate's
+# folder or process, and the child does not decide pass or fail: it reports what happened and
+# the parent (judge) compares. Kept as source text so the child needs no import of this file.
 DRIVER = r'''
 import copy, importlib, json, sys
 sys.path.insert(0, ".")
-cases = json.load(open("__cases__.json", encoding="utf-8"))
+calls = json.load(open("__calls__.json", encoding="utf-8"))
+def plain(value):
+    """True only for exact JSON types; a tuple, set, subclass or custom object is not plain."""
+    if value is None or type(value) in (bool, int, float, str):
+        return True
+    if type(value) is list:
+        return all(plain(item) for item in value)
+    if type(value) is dict:
+        return all(type(key) is str and plain(item) for key, item in value.items())
+    return False
 out = []
-def same(a, b):
+for call in calls:
+    module_name, _, func_name = call["call"].partition(".")
+    args = copy.deepcopy(call["args"])
+    record = {"status": "returned", "args_after": None, "value": None, "same_object_as_input": False}
+    try:
+        func = getattr(importlib.import_module(module_name), func_name)
+    except BaseException as error:
+        out.append({"status": "import_error", "error": type(error).__name__}); continue
+    try:
+        got = func(*args)
+    except BaseException as error:
+        record.update(status="raised", error=type(error).__name__)
+    else:
+        if plain(got):
+            record["value"] = got
+            record["same_object_as_input"] = any(got is arg for arg in args if type(arg) in (list, dict))
+        else:
+            record.update(status="not_json", error=type(got).__name__)
+    record["args_after"] = args if plain(args) else "not_json"
+    out.append(record)
+print(json.dumps(out))
+'''
+
+
+def same(a, b) -> bool:
+    """Type-strict equality on JSON values: bool is not int, int is not float, list order counts."""
     if type(a) is not type(b):
         return False
     if isinstance(a, dict):
@@ -56,25 +94,25 @@ def same(a, b):
     if isinstance(a, float):
         return abs(a - b) <= 1e-9
     return a == b
-for case in cases:
-    module_name, _, func_name = case["call"].partition(".")
-    args = copy.deepcopy(case["args"])
-    try:
-        func = getattr(importlib.import_module(module_name), func_name)
-    except BaseException as error:
-        out.append({"ok": False, "why": "import: " + type(error).__name__}); continue
-    try:
-        got = func(*args)
-    except BaseException as error:
-        name = type(error).__name__
-        out.append({"ok": case.get("raises") == name, "why": "raised " + name}); continue
+
+
+def judge(case: dict, record) -> dict:
+    """Decide one case from the child's report. Runs in the judge process only."""
+    if not isinstance(record, dict) or record.get("status") not in ("returned", "raised", "not_json", "import_error"):
+        return {"ok": False, "why": "bad result"}
+    if record["status"] == "import_error":
+        return {"ok": False, "why": "import: " + str(record.get("error"))}
+    if not same(record.get("args_after"), case["args"]):
+        return {"ok": False, "why": "mutated input"}
+    if record["status"] == "raised":
+        return {"ok": case.get("raises") == record.get("error"), "why": "raised " + str(record.get("error"))}
     if "raises" in case:
-        out.append({"ok": False, "why": "no exception"}); continue
-    if not same(args, case["args"]):
-        out.append({"ok": False, "why": "mutated input"}); continue
-    out.append({"ok": same(got, case["expect"]), "why": "value"})
-print(json.dumps(out))
-'''
+        return {"ok": False, "why": "no exception"}
+    if record["status"] == "not_json":
+        return {"ok": False, "why": "returned " + str(record.get("error"))}
+    if case.get("new_object") and record.get("same_object_as_input") is not False:
+        return {"ok": False, "why": "returned the input object"}
+    return {"ok": same(record.get("value"), case["expect"]), "why": "value"}
 
 
 def sha256(path: Path) -> str:
@@ -181,12 +219,12 @@ def static_grade(task: dict, draft: dict) -> dict:
     if missing:
         problems.append("missing required functions: " + ", ".join(missing))
     finish = draft["finish_reason"]
-    if finish is None:
-        transport = "unknown"
-    elif finish == "stop" and not draft["truncated"]:
+    if draft["truncated"] is True or finish not in (None, "stop"):
+        transport = "incomplete"                  # known truncation wins over missing metadata
+    elif finish == "stop" and draft["truncated"] is False:
         transport = "complete"
     else:
-        transport = "incomplete"
+        transport = "unknown"
     if transport == "incomplete":
         problems.append(f"answer not complete (finish_reason={finish}, truncated={draft['truncated']})")
     return {"task": task["id"], "transport": transport,
@@ -195,12 +233,16 @@ def static_grade(task: dict, draft: dict) -> dict:
 
 
 def run_cases(files: dict[str, str], cases: list[dict]) -> list[dict]:
-    """Run code in a child interpreter in a temp folder. Callers decide whether that is allowed."""
+    """Run code in a child interpreter in a temp folder; judge its reports here.
+
+    Callers decide whether running the code is allowed. The child sees calls and arguments only.
+    """
+    calls = [{"call": c["call"], "args": c["args"]} for c in cases]
     with tempfile.TemporaryDirectory(prefix="code-q1-") as temp:
         folder = Path(temp)
         for name, code in files.items():
             (folder / name).write_text(code, encoding="utf-8", newline="\n")
-        (folder / "__cases__.json").write_text(json.dumps(cases), encoding="utf-8")
+        (folder / "__calls__.json").write_text(json.dumps(calls), encoding="utf-8")
         (folder / "__driver__.py").write_text(DRIVER, encoding="utf-8")
         env = {k: v for k, v in os.environ.items() if k.upper() in ("SYSTEMROOT", "PATH", "TEMP", "TMP")}
         env["PYTHONIOENCODING"] = "utf-8"
@@ -209,13 +251,14 @@ def run_cases(files: dict[str, str], cases: list[dict]) -> list[dict]:
                                   capture_output=True, timeout=RUN_TIMEOUT_S)
         except subprocess.TimeoutExpired:
             return [{"ok": False, "why": "timeout"} for _ in cases]
+        output = done.stdout[:MAX_CHILD_OUTPUT_BYTES].decode("utf-8", errors="replace")
         try:
-            results = json.loads(done.stdout.decode("utf-8", errors="replace").strip().splitlines()[-1])
+            records = json.loads(output.strip().splitlines()[-1])
         except (ValueError, IndexError):
             return [{"ok": False, "why": "crashed"} for _ in cases]
-        if not isinstance(results, list) or len(results) != len(cases):
+        if not isinstance(records, list) or len(records) != len(cases):
             return [{"ok": False, "why": "bad result"} for _ in cases]
-        return results
+        return [judge(case, record) for case, record in zip(cases, records)]
 
 
 def summarise(results: list[dict]) -> dict:
@@ -225,6 +268,8 @@ def summarise(results: list[dict]) -> dict:
 
 
 def semantic_grade(task: dict, draft: dict, in_sandbox: bool) -> dict:
+    if manifest().get("generated_code_execution_enabled") is not True:
+        raise SystemExit("Refused: the manifest has generated_code_execution_enabled set to false.")
     if not in_sandbox:
         raise SystemExit(
             "Refused: this would execute model-written code on this machine. Run it only inside a "

@@ -102,6 +102,14 @@ class StaticTests(unittest.TestCase):
         result = grade.static_grade(task, draft(answer(reference("F01")["solution.py"]), finish=None, truncated=None))
         self.assertEqual(result["transport"], "unknown")
 
+    def test_known_truncation_wins_over_missing_finish_reason(self):
+        task = grade.load_task("F01")
+        good = answer(reference("F01")["solution.py"])
+        result = grade.static_grade(task, draft(good, finish=None, truncated=True))
+        self.assertEqual((result["transport"], result["structure"]), ("incomplete", "fail"))
+        self.assertEqual(grade.static_grade(task, draft(good, finish="stop", truncated=None))["transport"], "unknown")
+        self.assertEqual(grade.static_grade(task, draft(good, finish="length", truncated=False))["transport"], "incomplete")
+
     def test_saved_helper_json_is_read(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "d.json"
@@ -114,6 +122,24 @@ class ExecutionGateTests(unittest.TestCase):
         task = grade.load_task("F01")
         with self.assertRaises(SystemExit):
             grade.semantic_grade(task, draft(answer(reference("F01")["solution.py"])), in_sandbox=False)
+
+    def test_manifest_gate_refuses_even_inside_a_declared_sandbox(self):
+        task = grade.load_task("F01")
+        self.assertIs(grade.manifest()["generated_code_execution_enabled"], False)
+        with self.assertRaises(SystemExit) as caught:
+            grade.semantic_grade(task, draft(answer(reference("F01")["solution.py"])), in_sandbox=True)
+        self.assertIn("manifest", str(caught.exception))
+
+    def test_sandbox_flag_alone_is_refused_when_manifest_allows(self):
+        task = grade.load_task("F01")
+        real = grade.manifest
+        grade.manifest = lambda: dict(real(), generated_code_execution_enabled=True)
+        try:
+            with self.assertRaises(SystemExit) as caught:
+                grade.semantic_grade(task, draft(answer(reference("F01")["solution.py"])), in_sandbox=False)
+        finally:
+            grade.manifest = real
+        self.assertIn("sandbox", str(caught.exception))
 
     def test_cli_needs_both_flag_and_environment(self):
         self.assertNotEqual(os.environ.get(grade.SANDBOX_ENV), "1")
@@ -152,6 +178,37 @@ class JudgeTests(unittest.TestCase):
         code = "def f():\n    return {'b': [1, 2], 'a': 0}\n"
         self.assertTrue(self.run_one(code, {"call": "m.f", "args": [], "expect": {"a": 0, "b": [1, 2]}})["ok"])
         self.assertFalse(self.run_one(code, {"call": "m.f", "args": [], "expect": {"a": 0, "b": [2, 1]}})["ok"])
+
+    def test_candidate_never_receives_expected_values(self):
+        code = ("import pathlib\n"
+                "def f():\n"
+                "    seen = ' '.join(p.read_text(encoding='utf-8') for p in pathlib.Path('.').iterdir() if p.is_file())\n"
+                "    return ('SECRET' + '-EXPECTED') in seen\n")      # split so its own source does not match
+        self.assertTrue(self.run_one(code, {"call": "m.f", "args": [], "expect": False, "note": "SECRET-EXPECTED"})["ok"])
+        self.assertFalse(self.run_one(code, {"call": "m.f", "args": [], "expect": "SECRET-EXPECTED"})["ok"])
+
+    def test_candidate_cannot_declare_its_own_pass(self):
+        code = ("import atexit, json\n"
+                "atexit.register(lambda: print(json.dumps([{'ok': True, 'why': 'value'}])))\n"
+                "def f():\n    return 1\n")
+        self.assertFalse(self.run_one(code, {"call": "m.f", "args": [], "expect": 2})["ok"])
+
+    def test_tuple_is_not_a_list(self):
+        code = "def f():\n    return (1, 2)\n"
+        result = self.run_one(code, {"call": "m.f", "args": [], "expect": [1, 2]})
+        self.assertEqual((result["ok"], result["why"]), (False, "returned tuple"))
+
+    def test_mutation_is_caught_even_when_an_exception_is_expected(self):
+        code = "def f(xs):\n    xs.clear()\n    raise ValueError('x')\n"
+        result = self.run_one(code, {"call": "m.f", "args": [[1]], "raises": "ValueError"})
+        self.assertEqual((result["ok"], result["why"]), (False, "mutated input"))
+
+    def test_new_object_requirement(self):
+        code = "def f(d):\n    return d\n"
+        case = {"call": "m.f", "args": [{"a": 1}], "expect": {"a": 1}, "new_object": True}
+        self.assertEqual(self.run_one(code, case)["why"], "returned the input object")
+        self.assertTrue(self.run_one("def f(d):\n    return dict(d)\n", case)["ok"])
+        self.assertTrue(self.run_one(code, {"call": "m.f", "args": [{"a": 1}], "expect": {"a": 1}})["ok"])
 
     def test_endless_loop_times_out_as_failure(self):
         old = grade.RUN_TIMEOUT_S

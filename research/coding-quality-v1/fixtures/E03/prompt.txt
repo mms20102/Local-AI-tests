@@ -2,7 +2,7 @@ Fix the two files below and keep the public functions.
 - invoice.subtotal(items): items is a list of [quantity, unit_cents] rows; return the sum of quantity * unit_cents.
 - invoice.total(items, discount_cents): subtotal minus the discount, never below 0.
 - summary.render(items, discount_cents): return exactly the keys line_count (number of rows; duplicate rows count separately), subtotal_cents and total_cents.
-Do not modify inputs.
+Quantities, unit_cents and discount_cents are non-negative integers. Do not modify inputs.
 
 ```python
 # file: invoice.py

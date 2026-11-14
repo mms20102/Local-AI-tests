@@ -23,8 +23,10 @@ MULTI = ("Reply with one fenced Python code block per file. The first line insid
 SINGLE_AR = "أجب بمقطع برمجي واحد فقط بلغة Python داخل علامات ``` يحتوي الملف كاملا، ومن دون أي شرح."
 
 
-def case(call, args, expect=None, raises=None):
+def case(call, args, expect=None, raises=None, new_object=False):
     item = {"call": call, "args": args}
+    if new_object:
+        item["new_object"] = True      # the result must not be the very object that was passed in
     if raises:
         item["raises"] = raises
     else:
@@ -96,7 +98,7 @@ task("F02", "function", "en", ["solution.py"],
 '''},
      [case("solution.merge_intervals", [[[1, 3], [2, 6]]], [[1, 6]])],
      [case("solution.merge_intervals", [[]], []),
-      case("solution.merge_intervals", [[[1, 2], [3, 4]]], [[1, 2], [3, 4]]),
+      case("solution.merge_intervals", [[[1, 2], [3, 4]]], [[1, 2], [3, 4]], new_object=True),
       case("solution.merge_intervals", [[[1, 3], [3, 5]]], [[1, 5]]),
       case("solution.merge_intervals", [[[8, 10], [1, 3], [2, 6], [15, 18]]], [[1, 6], [8, 10], [15, 18]]),
       case("solution.merge_intervals", [[[1, 10], [2, 3], [4, 5]]], [[1, 10]]),
@@ -222,7 +224,7 @@ task("B03", "bugfix", "en", ["stats.py"],
      "The file stats.py below has bugs. Fix median(values: list[int]) -> float. Work on a sorted "
      "copy. For an odd number of values return the middle one; for an even number return the "
      "arithmetic mean of the two middle values. Always return a float. An empty list raises "
-     "ValueError. Do not modify the input.\n"
+     "ValueError. Values are integers between -1000000 and 1000000. Do not modify the input.\n"
      "Example: median([3, 1, 2]) returns 2.0.\n\n"
      "```python\n" + B03_STARTER + "```\n" + SINGLE,
      {"stats.py": '''def median(values):
@@ -252,8 +254,9 @@ E01_STARTER = '''def to_seconds(config):
 '''
 task("E01", "edit", "en", ["config.py"],
      "Change to_seconds in config.py below. It must return a new dict. If the key timeout_ms is "
-     "present, replace it with the key timeout_s whose value is timeout_ms / 1000, and keep "
-     "every other entry. If both timeout_ms and timeout_s are present, raise ValueError. If "
+     "present, replace it with the key timeout_s whose value is timeout_ms / 1000 (always a "
+     "float, so 2000 becomes 2.0), and keep every other entry. timeout_ms is a non-negative "
+     "integer. If both timeout_ms and timeout_s are present, raise ValueError. If "
      "timeout_ms is absent, return an equal copy. Do not modify the input.\n"
      "Example: to_seconds({\"timeout_ms\": 1500, \"name\": \"a\"}) returns "
      "{\"timeout_s\": 1.5, \"name\": \"a\"}.\n\n"
@@ -271,8 +274,8 @@ task("E01", "edit", "en", ["config.py"],
      [case("config.to_seconds", [{"timeout_ms": 1500, "name": "a"}], {"timeout_s": 1.5, "name": "a"})],
      [case("config.to_seconds", [{"timeout_ms": 2000}], {"timeout_s": 2.0}),
       case("config.to_seconds", [{"timeout_ms": 0}], {"timeout_s": 0.0}),
-      case("config.to_seconds", [{"name": "x", "retries": 3}], {"name": "x", "retries": 3}),
-      case("config.to_seconds", [{}], {}),
+      case("config.to_seconds", [{"name": "x", "retries": 3}], {"name": "x", "retries": 3}, new_object=True),
+      case("config.to_seconds", [{}], {}, new_object=True),
       case("config.to_seconds", [{"timeout_s": 4}], {"timeout_s": 4}),
       case("config.to_seconds", [{"timeout_ms": 1, "nested": {"timeout_ms": 5}}],
            {"timeout_s": 0.001, "nested": {"timeout_ms": 5}}),
@@ -310,7 +313,7 @@ def reverse_text(text):
 task("E02", "edit", "en", ["bundle.py"],
      "Implement all seven functions in bundle.py below.\n"
      "- clamp(value, lo, hi): value limited to the inclusive range lo..hi (lo <= hi).\n"
-     "- sign(value): -1, 0 or 1.\n"
+     "- sign(value): -1 for a negative value, 0 for zero, 1 for a positive value.\n"
      "- is_even(value): True or False.\n"
      "- first_or_none(values): the first item, or None for an empty list.\n"
      "- last_or_none(values): the last item, or None for an empty list.\n"
@@ -386,7 +389,7 @@ task("E03", "edit", "en", ["invoice.py", "summary.py"],
      "- invoice.total(items, discount_cents): subtotal minus the discount, never below 0.\n"
      "- summary.render(items, discount_cents): return exactly the keys line_count (number of "
      "rows; duplicate rows count separately), subtotal_cents and total_cents.\n"
-     "Do not modify inputs.\n\n"
+     "Quantities, unit_cents and discount_cents are non-negative integers. Do not modify inputs.\n\n"
      "```python\n# file: invoice.py\n" + E03_INVOICE + "```\n\n"
      "```python\n# file: summary.py\n" + E03_SUMMARY + "```\n" + MULTI,
      {"invoice.py": '''def subtotal(items):
@@ -533,8 +536,12 @@ def tree_hash(entries: dict[str, str]) -> str:
 
 
 def main() -> None:
-    manifest = {"suite_id": "CODE-Q1", "fixture_revision": 1,
+    manifest = {"suite_id": "CODE-Q1", "fixture_revision": 2,
                 "based_on": "research/coding-quality-v1.proposed.json at main 3701d34",
+                "prompt_note": "Prompts restate the proposal's contracts. The Arabic prompts keep the "
+                               "proposal's meaning but are not verbatim: they add the file name and an example.",
+                "answer_format": "one fenced Python block per file; multi-file tasks start each block "
+                                 "with '# file: <name>.py'",
                 "executable": False, "model_traffic_enabled": False,
                 "generated_code_execution_enabled": False, "tasks": {}}
     for tid, t in TASKS.items():
