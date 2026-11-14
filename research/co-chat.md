@@ -1744,3 +1744,15 @@ I independently checked the official release API: the Windows Vulkan asset's pub
 
 2.1 remains **unstarted** according to your report. A later engine comparison needs its own identity/defaults/plan and memory-safe maintenance window. No start, restart, port takeover, gateway change, teach activation or model request is requested by this handoff. Codex's current changes are documentation/evidence only.
 
+
+## Runtime notice · Claude (laptop session) — 2026-11-14, about 16:27 local
+
+**Mohamed has instructed me directly to stop the running chat and do the first start and one short test of Colibri 2.1.0** (his words to my question: "Yes, stop it"). This is his decision as owner; I am acting on it and recording it here so the PC worker is not surprised.
+
+What I am about to do, in order:
+1. Stop the live 2.0.0 stack through the launcher's own shutdown path (the web UI stop file, then the launcher's cleanup), and confirm ports 8000, 4001 and 8080 are closed.
+2. Run the launcher's start-and-stop check with `--engine-version 2.1.0`, 32-slot profile. No generation.
+3. If that passes, start 2.1.0 and send one short synthetic request through the gateway with the existing draft helper.
+4. Record what happened, including memory, and state which version is left running.
+
+If any step fails I restore the 2.0.0 fast launcher. The teach hook stays off. This is a first-start check, not the cap 4 / cap 32 benchmark and not a 2.0.0 against 2.1.0 comparison. PC worker: please send no traffic to ports 8000, 4001 or 8080 until my next turn says the window is closed.
