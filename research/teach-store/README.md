@@ -15,19 +15,20 @@ The laptop copy is the working one; this folder is for reading and review.
 | 8 | `109d002` | commit `acd5609` | Independent offline pass relayed in co-chat at `09498c4`: 76 passed, 4 skipped; the two revision 7 findings fixed in the tested scope, with three qualifications (line formatting outside the guard, blocking writes, status wording). Preserved in history. |
 | 9 | `3dcffc9` | commit `3ac4a3e` | Independent offline pass relayed in co-chat at `dcf4c30`: 77 passed, 5 skipped; construction and output of the log line both guarded. Qualifications: malformed ids were echoed with `str()`, blocking output, stale status wording here. Preserved in history. |
 | 10 | `b329e51` | commit `fd962cc` | Follow-up: the log line writes only ids and fingerprints in their canonical form and counts anything else without echoing it; this README's status wording corrected. **Independent offline pass relayed in co-chat at `30175f5`: 78 passed, 5 skipped; no blocking regression in the reviewed scope. Not loaded: the running gateway was last restarted before this revision existed.** |
+| 11 | `d5b6c16` | this commit | Two findings from the integration queue at `31dd8db`: an active entry whose id the store could not have issued is now left out of selection, so the logged count and the injected entries cannot disagree; a locked store file is retried for at most about 0.1 s inside a chat request instead of 0.95 s; the wording about blocking and about unchanged requests is narrowed. **Not independently reviewed, and not loaded.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 10 files, byte-identical to the laptop's:
+Revision 11 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `2b33ebd52e508430f3ac3d449b61638cf7dc20070ae05e2f3d9df7acb17b0f60` (unchanged since revision 8) |
-| `teach_hook.py` | `480a539c12f76a611ad415ba4a16d3fd3b72ee4a1da2bae0ccda86fe8862c858` |
-| `tests/test_teach_store.py` | `bd41f9a375ee887057eaa5fbd8aea7ca5f1c5d122ac08bf6dec3ca79f9adaaff` |
+| `teach_store.py` | `e4c0de8cb4832377cf3e1267be487a90d9bcf9edfa54ece9d60f404b2940fe14` |
+| `teach_hook.py` | `b25a5346afe7d3445708f1cd3dbd4b4ddfa03de57baa1914a8826227525c67f8` |
+| `tests/test_teach_store.py` | `00f46b19b9537a4fbff5e3fe63b83b177ef480e8722c7e490a1f5cd8dc73263b` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
-| `TEACH.md` | `f72bf85409be52b53682b56b650c3d29083591995ef49d8160e29ba333b38e89` |
+| `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` |
 
 ## Status: keep these apart
 
@@ -38,7 +39,8 @@ Revision 10 files, byte-identical to the laptop's:
 | Persistence code in `teach_store.py` (save, lock, recover, purge), revision 6 | Offline pass on Linux: 72 passed, 1 skipped; no new blocking issue in the reviewed scope. Unchanged since, apart from the read-only `snapshot()` added in revision 8. |
 | Hook, revision 8 | Offline pass: 76 passed, 4 skipped, with three qualifications. |
 | Hook, revision 9 | Offline pass: 77 passed, 5 skipped, with the qualifications listed in the revision table. |
-| Hook, revision 10 (this folder) | Offline pass: 78 passed, 5 skipped; canary, malformed-id, malformed-fingerprint and logging checks passed. The id check restricts what can be written; it does not prove an id was really issued by the store. |
+| Hook, revision 10 (commit `fd962cc`) | Offline pass: 78 passed, 5 skipped; canary, malformed-id, malformed-fingerprint and logging checks passed. The id check restricts what can be written; it does not prove an id was really issued by the store. |
+| Hook and store read path, revision 11 (this folder) | **Not reviewed.** |
 
 These are results on the published source. None of them is a test of the running gateway.
 
@@ -99,9 +101,9 @@ combined total. It is not activation approval.
 python -B -m unittest tests.test_teach_store
 ```
 
-83 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
+85 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 83 pass, and the project suite is 182. Three tests start a second Python
+the real gateway rules: 85 pass, and the project suite is 203 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5

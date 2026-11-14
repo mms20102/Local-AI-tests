@@ -9,10 +9,16 @@ TEACH.md records whether it is currently enabled.
 
 Behaviour: runs after the gateway's own request check has passed. Applying it twice to the
 same request adds nothing the second time. It re-reads the store on
-every request, so a new rule applies without a restart. If anything goes wrong it leaves the
-request exactly as it was: teaching can never block a chat. It writes only entry ids and a
+every request, so a new rule applies without a restart. If anything goes wrong it returns the
+request data it was given, so teaching never fails a chat request. It can delay one: the store
+file is read, and one log line written, inside the request. A locked store file is retried for
+at most about 0.1 s (STORE_READ_ATTEMPTS) and then skipped for that request; the time of the
+read and of the log write themselves is not bounded here. It writes only entry ids and a
 store fingerprint (never note text) to the gateway log, and a failure to write that line is
 ignored. The ids and the fingerprint come from the same single read of the store.
+
+"Returns the request data it was given" is what this module does and what its tests check. It
+is not a claim about the bytes the gateway finally sends to the engine.
 """
 from __future__ import annotations
 
@@ -22,6 +28,7 @@ from pathlib import Path
 from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_to_messages, snapshot
 
 ROOT = Path(__file__).resolve().parent
+STORE_READ_ATTEMPTS = 3        # reads of a locked store file inside one request, 50 ms apart
 
 
 def inject_with_evidence(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
@@ -41,7 +48,7 @@ def inject_with_evidence(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
         output = data.get("max_tokens", limits["default_output_tokens"])
         if type(output) is not int:
             return data, [], "not-read"
-        entries, fingerprint = snapshot(folder)
+        entries, fingerprint = snapshot(folder, STORE_READ_ATTEMPTS)
         if not entries:
             return data, [], fingerprint
         new_messages, used = apply_to_messages(messages, entries, limits, output, budget_units)

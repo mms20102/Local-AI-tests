@@ -1115,8 +1115,59 @@ class HookTests(Base):
         request = body([{"role": "user", "content": "hi"}])
         result, out = self.call_hook(request)
         self.assertEqual(len(request["messages"]), 1)
-        self.assertIn("[teach] added 0 entries: - | invalid:1 | store ", out.getvalue())
-        self.assertIn(result["messages"][-1]["content"].count("Be brief."), (0, 1))
+        # Revision 11: an entry whose id the store could not have issued is never injected,
+        # so the logged count and the injected entries cannot disagree.
+        self.assertIn("[teach] nothing added | store ", out.getvalue())
+        self.assertEqual(result, request)
+
+    def test_malformed_id_entries_are_skipped_and_valid_ones_still_apply(self):
+        self.folder.mkdir(parents=True)
+        entry = {"kind": "rule", "when": [], "status": "active", "created": "x"}
+        bad_ids = (5, None, "", "t1", "T001", "t001\n", "t0000000001", "t١٢٣", ["t001"], "note CANARY")
+        entries = [dict(entry, id=bad, text=f"BAD-{n}") for n, bad in enumerate(bad_ids)]
+        entries.insert(3, dict(entry, id="t007", text="Be brief."))
+        entries.append({"kind": "rule", "text": "NO-ID", "when": [], "status": "active", "created": "x"})
+        (self.folder / "store.json").write_text(json.dumps({"version": 1, "next_id": 9, "entries": entries}),
+                                                encoding="utf-8")
+        active, _ = ts.snapshot(self.folder)
+        self.assertEqual([e["id"] for e in active], ["t007"])
+        request = body([{"role": "user", "content": "hi"}])
+        result, used, fingerprint = teach_hook.inject_with_evidence(request, LIMITS, self.folder)
+        text = json.dumps(result)
+        self.assertIn("Be brief.", text)
+        self.assertNotIn("BAD-", text)
+        self.assertNotIn("NO-ID", text)
+        self.assertEqual(used, ["t007"])
+        line = teach_hook.log_line(used, fingerprint)
+        self.assertEqual(line, f"[teach] added 1 entries: t007 | store {fingerprint}")
+        self.assertNotIn("CANARY", line)
+
+    def test_locked_store_is_retried_a_bounded_number_of_times(self):
+        self.folder.mkdir(parents=True)
+        (self.folder / "store.json").write_text(json.dumps({"version": 1, "next_id": 1, "entries": []}),
+                                                encoding="utf-8")
+        reads, sleeps = [], []
+        real_read, real_sleep = Path.read_bytes, ts.time.sleep
+
+        def locked(path):
+            if path.name == "store.json":
+                reads.append(1)
+                raise PermissionError("locked")
+            return real_read(path)
+
+        Path.read_bytes, ts.time.sleep = locked, sleeps.append
+        try:
+            request = body([{"role": "user", "content": "hi"}])
+            self.assertEqual(teach_hook.inject_with_evidence(request, LIMITS, self.folder), (request, [], "unknown"))
+            self.assertEqual(len(reads), teach_hook.STORE_READ_ATTEMPTS)
+            self.assertEqual(sleeps, [0.05] * (teach_hook.STORE_READ_ATTEMPTS - 1))
+            self.assertLessEqual(sum(sleeps), 0.1 + 1e-9)
+            del reads[:], sleeps[:]
+            with self.assertRaises(PermissionError):
+                ts.snapshot(self.folder)                      # command-line default is unchanged
+            self.assertEqual((len(reads), len(sleeps)), (20, 19))
+        finally:
+            Path.read_bytes, ts.time.sleep = real_read, real_sleep
 
     def test_evidence_on_a_broken_store_is_marked_unknown(self):
         self.folder.mkdir(parents=True)

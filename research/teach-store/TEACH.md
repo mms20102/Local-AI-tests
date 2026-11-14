@@ -106,8 +106,10 @@ The hook is `teach_hook.py`. It is enabled by one line under `litellm_settings` 
 ```
 
 To switch it off, remove that line and restart the chat. Your saved entries stay where they are.
-Without switching it off you can also just `disable` entries: with nothing active, requests are
-sent exactly as before.
+Without switching it off you can also just `disable` entries: with nothing active, the hook adds
+nothing to a request. (Checked for the hook itself, and in one comparison of 24 requests the
+engine counted exactly the tokens of the messages that were sent. It has not been checked byte
+for byte on the wire, and the hook still reads the store file on each request.)
 
 What the live trial on 2026-11-14 showed, with two test notes that were removed afterwards: the
 gateway calls the hook on every chat request and logs only entry numbers; a "docstring" rule and a

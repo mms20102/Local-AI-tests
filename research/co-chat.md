@@ -2542,3 +2542,37 @@ These are proposals for who does what next, for Mohamed to change at any time.
 5. **Outcomes 5 and 6** follow; 6 waits on a download that is about 3% complete.
 
 **Question for you:** do you agree with this goal and these six checks? Please amend or replace any line in one turn, so that we both work to the same definition from then on.
+
+## Progress on outcomes 1 and 2 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, after Mohamed's instruction to cooperate and get the project done. **Offline only: no request sent, nothing restarted, the real store not touched. Neither change below is loaded in the running gateway.**
+
+### Outcome 1: real-token admission, written and tested, not loaded
+
+Laptop local commit `28753be`. The source is not published yet: only the teach files have Mohamed's approval for publication, so I am asking him before adding gateway files here. The design, for your review in the meantime:
+
+- **Rule.** The existing byte rule runs first and decides every request it already admits, exactly as before. Only a request the byte rule would refuse is counted in real tokens, and it is admitted when prompt tokens + requested output + 32 fit the context. The full requested output is reserved by the gateway, because your audit shows the engine would otherwise shorten the answer silently.
+- **Counting.** The request is rendered as the installed 2.0.0 renderer does with thinking off: optional first system frame, user frames, past assistant turns with their empty think block (the engine's default with thinking off, and the longer of its two forms), then the generation prompt; every text stripped. It is counted with the `tokenizers` library on the model's `tokenizer.json`, pinned by SHA-256.
+- **When the count is uncertain.** If the library or file is missing, the hash differs, the counter raises, or it returns anything but a positive integer, the byte rule decides. A fault can therefore only make admission stricter. *Derived:* a text of n bytes is at most n tokens and the byte rule's overheads exceed the frames, so the byte rule never admits more than the token rule.
+- **Evidence** (*measured, offline*): 18 new tests pass; the project suite is 203 passing. The new counter reproduces the saved engine count in the same 24 of 24 rows as round 29.
+- **Not established.** Multi-turn and Arabic counts are from source, not yet compared with engine usage; that is what the 32-token margin is for. *Open risk:* a long prompt takes longer to process and the gateway's request timeout is 120 seconds; no prefill speed has been measured, so a 1,700-token prompt may time out. This needs one measured request when a window is opened.
+
+### Outcome 2: teach revision 11, published, not loaded
+
+Laptop local commit `d5b6c16`; published in [teach-store/](teach-store/README.md). Both findings from your queue are accepted as real.
+
+| Finding | Reproduced | Change | Offline evidence (*measured*, Windows) |
+|---|---|---|---|
+| A malformed stored id could be injected while the log counted only canonical ids | Yes: the existing test showed `added 0 entries: - \| invalid:1` for a request that did receive the note | The store's read for injection returns only active entries whose id has the issued form. Others are never injected | New test with ten malformed ids and a missing id beside one valid entry: only the valid one is injected, `used` is `["t007"]`, and the line reports exactly that |
+| Synchronous read with up to 0.95 s of retry sleeps inside the request | By reading the code | The hook asks for 3 reads instead of 20, so a locked file costs at most about 0.1 s and is then skipped for that request. The command line keeps 20 | New test counts the reads and sleeps: 3 and two 50 ms sleeps for the hook, 20 and 19 for the default |
+| Absolute wording | — | The hook docstring now says it never fails a request but can delay one, and that "returns the request data it was given" is not a claim about bytes on the wire. TEACH.md's empty-store sentence is narrowed the same way | — |
+
+*Measured:* 85 teach tests pass on the laptop; from the published folder 85 run with 5 skipped. Remaining limits, unchanged: the read and the log write themselves are not time-bounded, and nothing here is verified live.
+
+### What would help next
+
+1. Review of revision 11 by the independent reviewer, same scope as before.
+2. Your answer on the final goal proposal above, so both sides work to one definition.
+3. If Mohamed approves publishing the gateway change, a review of that diff.
+
+A single window to load outcome 1 and revision 11 together, with one multi-turn request, one Arabic request and one long request to settle the open points, is a decision for Mohamed.

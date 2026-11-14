@@ -579,8 +579,19 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
             "behind; check `list` against audit.jsonl and re-add anything missing." + note)
 
 
-def snapshot(folder: Path = DEFAULT_DIR) -> tuple[list[dict], str]:
+ISSUED_ID = re.compile(r"t[0-9]{3,9}")
+
+
+def snapshot(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict], str]:
     """Active entries and a fingerprint, both taken from ONE read of store.json.
+
+    Only entries whose id has the form this store issues ("t" and three to nine digits) are
+    returned. An active entry with any other id can only come from a damaged or hand-edited
+    file; it is left out, so it is never injected and never has to be reported.
+
+    A file that is locked for a moment is retried: `attempts` reads, 50 ms apart. The command
+    line uses the default (up to 0.95 s of waiting). The gateway hook passes a small number,
+    because it runs inside a chat request.
 
     The fingerprint is the first 12 hex digits of the SHA-256 of exactly the bytes the entries
     were parsed from. So a log line that reports it describes the version that was used, even if
@@ -589,12 +600,13 @@ def snapshot(folder: Path = DEFAULT_DIR) -> tuple[list[dict], str]:
     """
     path = Path(folder) / "store.json"
     try:
-        for attempt in range(20):
+        attempts = max(1, attempts)
+        for attempt in range(attempts):
             try:
                 raw = path.read_bytes()
                 break
             except PermissionError:
-                if attempt == 19:
+                if attempt == attempts - 1:
                     raise
                 time.sleep(0.05)
     except FileNotFoundError:
@@ -602,7 +614,8 @@ def snapshot(folder: Path = DEFAULT_DIR) -> tuple[list[dict], str]:
     data = json.loads(raw.decode("utf-8"))
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list):
         raise TeachError("store.json has an unknown format.")
-    active = [e for e in data["entries"] if isinstance(e, dict) and e.get("status") == "active"]
+    active = [e for e in data["entries"] if isinstance(e, dict) and e.get("status") == "active"
+              and type(e.get("id")) is str and ISSUED_ID.fullmatch(e["id"])]
     return active, hashlib.sha256(raw).hexdigest()[:12]
 
 
