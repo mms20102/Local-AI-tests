@@ -2723,3 +2723,40 @@ All source/history and real notes remain intact. This session made no PC request
 ### Component progress relayed by the coordinator
 
 Separate PC-side/runner work now has a **cloud-only bounded output-capture component** covering stdout/stderr limits and overflow, deadlines/cancellation, process exit versus pipe EOF, and cleanup uncertainty. The coordinator reports **19 synthetic tests passed** with harmless subprocesses and injected failures; this repository session did not run them. Keep this separate from the older 124-test snapshot, not an added full-run total. Windows pipes/nested-Job integration and the live backend remain unverified, so controlled live-run readiness is unchanged. The original 18-file snapshot was preserved; no PC/model activity or rejected-publication retry occurred. This is a status handoff only, not publication of the blocked components.
+
+## Mohamed's note policy, and teach revision 12 against your matrix · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Integration work delivered" at `bd8f95f`. **Offline only: no request sent, nothing restarted, the real store not touched. Revision 12 is not loaded.**
+
+### Mohamed's decision
+
+I put item 5 of your contract to him. His answer, in his words: **"answer and notes left out"**. So when saved notes do not fit, the question and history are sent and the omission is reported; there is no refusal for that reason.
+
+### Revision 12
+
+Laptop local commit `f939b54`; published in [teach-store/](teach-store/README.md). It follows your contract: the complete candidate request, with the note block, its delimiters and the policy sentence in place, is counted as a whole and kept only if prompt tokens + the full requested output + 32 fit the context. If not, the last note is dropped and the smaller candidate is built and counted again, at most once per relevant note. Notes are never tokenized separately.
+
+| Your matrix case | Revision 12, offline (*measured*, Windows) |
+|---|---|
+| Empty store / no matching notes | Request unchanged; omitted count 0. Log: `nothing added` |
+| Long request over the byte rule, a small note fits in tokens | Note included. Tested with a stand-in counter and, on a throwaway store with the real tokenizer: 1,614-token and 1,690-token prompts received the note (1,670 and 1,746 with it), both within 2,048 with the full 256 reserved |
+| Long request, notes would exceed context | Request sent unchanged, question and history intact, omitted count reported. Log: `nothing added \| omitted-no-room:N` |
+| Arabic | One Arabic long request with an Arabic note passes with the stand-in counter. Real-tokenizer Arabic with notes: not tested |
+| Missing counter, invalid count or counter error | Treated as "does not fit": notes left out, request unchanged. Seven faulty counters tested. A counting fault cannot enlarge a request |
+| Duplicate hook invocation | Second application adds nothing, also in token mode |
+| Short requests | Decided by the byte rule exactly as in revision 11; the counter is not called. Tested for equality with the old function |
+| Later system message; `</think>` in history | Not addressed in this revision |
+
+*Measured:* 97 teach tests pass on the laptop (12 new); from the published folder 97 run with 5 skipped; the project suite is 215.
+
+**Limits, stated plainly.**
+- The omission is reported **in the gateway log only**. Mohamed's choice includes being told; nothing yet shows it in the chat window. Doing that needs a change to the response path, which I have not examined. Open item.
+- The 32-token allowance is the same unproven margin as in the gateway; revision 12 does not justify it further.
+- The real counter lives in the gateway file `token_count.py`, which is not published; the tests in this folder use a stand-in. Publication still awaits Mohamed's answer.
+- Nonempty-note behaviour has never been run live, in any revision since the trial.
+
+### Feedback on your interface, as you asked
+
+Your contract and matrix are sound, and I had no reason to depart from them. Two remarks: status as explicit named values (applied, none relevant, omitted for budget, unsupported counting, store unavailable) is better than my single omitted number, which cannot tell "no counter" from "no room"; I would adopt your names in a next revision. And a bound on candidate attempts is met here by construction (one per relevant note, and the note budget caps how many there can be), but the latency of counting inside the request is not measured.
+
+No acknowledgement is needed. A review of revision 12 by the independent reviewer would be the useful next step from your side.

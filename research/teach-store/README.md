@@ -15,20 +15,23 @@ The laptop copy is the working one; this folder is for reading and review.
 | 8 | `109d002` | commit `acd5609` | Independent offline pass relayed in co-chat at `09498c4`: 76 passed, 4 skipped; the two revision 7 findings fixed in the tested scope, with three qualifications (line formatting outside the guard, blocking writes, status wording). Preserved in history. |
 | 9 | `3dcffc9` | commit `3ac4a3e` | Independent offline pass relayed in co-chat at `dcf4c30`: 77 passed, 5 skipped; construction and output of the log line both guarded. Qualifications: malformed ids were echoed with `str()`, blocking output, stale status wording here. Preserved in history. |
 | 10 | `b329e51` | commit `fd962cc` | Follow-up: the log line writes only ids and fingerprints in their canonical form and counts anything else without echoing it; this README's status wording corrected. **Independent offline pass relayed in co-chat at `30175f5`: 78 passed, 5 skipped; no blocking regression in the reviewed scope. Not loaded: the running gateway was last restarted before this revision existed.** |
-| 11 | `d5b6c16` | this commit | Two findings from the integration queue at `31dd8db`: an active entry whose id the store could not have issued is now left out of selection, so the logged count and the injected entries cannot disagree; a locked store file is retried for at most about 0.1 s inside a chat request instead of 0.95 s; the wording about blocking and about unchanged requests is narrowed. **Not independently reviewed, and not loaded.** |
+| 11 | `d5b6c16` | commit `829d322` | Two findings from the integration queue at `31dd8db`: an active entry whose id the store could not have issued is now left out of selection, so the logged count and the injected entries cannot disagree; a locked store file is retried for at most about 0.1 s inside a chat request instead of 0.95 s; the wording about blocking and about unchanged requests is narrowed. Independent offline pass relayed in co-chat at `8e2c028`: 80 passed, 5 skipped. Loaded on the laptop by inference only (window 7). |
+| 12 | `f939b54` | this commit | Notes for a long request are budgeted on the whole candidate request in real tokens (`apply_with_status`), following the contract in `context-preflight/note-budget-alignment.md` on main. The byte rule still decides every request it already served. Relevant notes left out for lack of room are counted and logged as `omitted-no-room:N`. Mohamed's policy: answer anyway and say the notes were left out. **Not independently reviewed, and not loaded.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 11 files, byte-identical to the laptop's:
+Revision 12 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `e4c0de8cb4832377cf3e1267be487a90d9bcf9edfa54ece9d60f404b2940fe14` |
-| `teach_hook.py` | `b25a5346afe7d3445708f1cd3dbd4b4ddfa03de57baa1914a8826227525c67f8` |
-| `tests/test_teach_store.py` | `00f46b19b9537a4fbff5e3fe63b83b177ef480e8722c7e490a1f5cd8dc73263b` |
+| `teach_store.py` | `625d76a86e98b54ba616f88a8bd12ee815c8623366b361297a08df3938343843` |
+| `teach_hook.py` | `255f79a84750f91c3480c589c8c428e38b3a7a86cd5f8d7f39c87fa700b6850e` |
+| `tests/test_teach_store.py` | `96c137af73bb70e1a0b61bb0baf1e8c4a369c2726d3d79cce58bda264d82722e` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
-| `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` |
+| `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` (unchanged since revision 11) |
+
+The token counter itself (`token_count.py`) belongs to the gateway and is not in this folder; the tests here use a stand-in counter.
 
 ## Status: keep these apart
 
@@ -40,7 +43,8 @@ Revision 11 files, byte-identical to the laptop's:
 | Hook, revision 8 | Offline pass: 76 passed, 4 skipped, with three qualifications. |
 | Hook, revision 9 | Offline pass: 77 passed, 5 skipped, with the qualifications listed in the revision table. |
 | Hook, revision 10 (commit `fd962cc`) | Offline pass: 78 passed, 5 skipped; canary, malformed-id, malformed-fingerprint and logging checks passed. The id check restricts what can be written; it does not prove an id was really issued by the store. |
-| Hook and store read path, revision 11 (this folder) | **Not reviewed.** |
+| Hook and store read path, revision 11 (commit `829d322`) | Offline pass: 80 passed, 5 skipped. Limits noted by the reviewer: 100 ms is programmed sleep, not a wall-time bound; id shape is not provenance. |
+| Token-budgeted notes, revision 12 (this folder) | **Not reviewed.** |
 
 These are results on the published source. None of them is a test of the running gateway.
 
@@ -101,9 +105,9 @@ combined total. It is not activation approval.
 python -B -m unittest tests.test_teach_store
 ```
 
-85 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
+97 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 85 pass, and the project suite is 203 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
+the real gateway rules: 97 pass, and the project suite is 215 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5

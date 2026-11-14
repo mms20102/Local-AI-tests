@@ -25,10 +25,43 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_to_messages, snapshot
+from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_with_status, snapshot
 
 ROOT = Path(__file__).resolve().parent
 STORE_READ_ATTEMPTS = 3        # reads of a locked store file inside one request, 50 ms apart
+
+
+def inject_with_status(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
+                       budget_units: int = DEFAULT_BUDGET_UNITS, count_tokens=None
+                       ) -> tuple[dict, list[str], str, int]:
+    """Return (request data, ids used, store fingerprint, relevant entries left out). Never raises.
+
+    With count_tokens, notes for a long request are budgeted in real tokens (see
+    teach_store.apply_with_status). The last number says how many entries applied to this
+    message but were left out because the request had no room for them; the question and the
+    history are sent regardless.
+    """
+    try:
+        messages = data.get("messages")
+        if not isinstance(messages, list) or not all(
+                isinstance(m, dict) and set(m) == {"role", "content"} and isinstance(m["content"], str)
+                for m in messages):
+            return data, [], "not-read", 0
+        output = data.get("max_tokens", limits["default_output_tokens"])
+        if type(output) is not int:
+            return data, [], "not-read", 0
+        entries, fingerprint = snapshot(folder, STORE_READ_ATTEMPTS)
+        if not entries:
+            return data, [], fingerprint, 0
+        new_messages, used, omitted = apply_with_status(messages, entries, limits, output, budget_units,
+                                                        count_tokens)
+        if not used:
+            return data, [], fingerprint, omitted
+        changed = dict(data)
+        changed["messages"] = new_messages
+        return changed, used, fingerprint, omitted
+    except Exception:          # deliberate: a broken store must not break chat
+        return data, [], "unknown", 0
 
 
 def inject_with_evidence(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
@@ -51,7 +84,7 @@ def inject_with_evidence(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
         entries, fingerprint = snapshot(folder, STORE_READ_ATTEMPTS)
         if not entries:
             return data, [], fingerprint
-        new_messages, used = apply_to_messages(messages, entries, limits, output, budget_units)
+        new_messages, used, _ = apply_with_status(messages, entries, limits, output, budget_units)
         if not used:
             return data, [], fingerprint
         changed = dict(data)
@@ -72,7 +105,7 @@ ID_FORM = re.compile(r"t[0-9]{3,9}")
 FINGERPRINT_FORM = re.compile(r"[0-9a-f]{12}|none|unknown|not-read")
 
 
-def log_line(used, fingerprint) -> str:
+def log_line(used, fingerprint, omitted=0) -> str:
     """What the hook writes to the gateway log.
 
     Only values in a known, harmless form are written: entry ids exactly as the store issues
@@ -85,15 +118,16 @@ def log_line(used, fingerprint) -> str:
     good = [item for item in items if type(item) is str and ID_FORM.fullmatch(item)]
     bad = len(items) - len(good) + (0 if isinstance(used, (list, tuple)) else 1)
     mark = fingerprint if type(fingerprint) is str and FINGERPRINT_FORM.fullmatch(fingerprint) else "invalid"
+    left_out = f" | omitted-no-room:{omitted}" if type(omitted) is int and 0 < omitted < 10**6 else ""
     if not good and not bad:
-        return f"[teach] nothing added | store {mark}"
+        return f"[teach] nothing added{left_out} | store {mark}"
     line = f"[teach] added {len(good)} entries: {','.join(good) or '-'}"
     if bad:
         line += f" | invalid:{bad}"
-    return line + f" | store {mark}"
+    return line + left_out + f" | store {mark}"
 
 
-def safe_log(used, fingerprint) -> None:
+def safe_log(used, fingerprint, omitted=0) -> None:
     """Diagnostics must never break a chat.
 
     Building the line and writing it are both inside the guard, so neither odd values nor a
@@ -102,7 +136,7 @@ def safe_log(used, fingerprint) -> None:
     continuously by the launcher, and nothing here adds a timeout.
     """
     try:
-        print(log_line(used, fingerprint), flush=True)
+        print(log_line(used, fingerprint, omitted), flush=True)
     except Exception:
         pass
 
@@ -118,12 +152,18 @@ class TeachHook(CustomLogger):
         super().__init__()
         from chat_contract import read_json, validate_settings     # the gateway's own settings loader
         self.limits = validate_settings(read_json(ROOT / "settings.json"))
+        try:                                    # real token counting is optional; None means bytes only
+            from token_count import load_counter
+            self.count_tokens = load_counter()
+        except Exception:
+            self.count_tokens = None
 
     async def async_pre_call_hook(self, user_api_key_dict, cache, data, call_type):
         if call_type not in ("completion", "acompletion"):
             return data
-        changed, used, fingerprint = inject_with_evidence(data, self.limits)
-        safe_log(used, fingerprint)
+        changed, used, fingerprint, omitted = inject_with_status(
+            data, self.limits, count_tokens=getattr(self, "count_tokens", None))
+        safe_log(used, fingerprint, omitted)
         return changed
 
 

@@ -990,14 +990,14 @@ class HookTests(Base):
         import asyncio, contextlib as cl, io as _io
         if teach_hook.teach is None:
             self.skipTest("hook object needs the laptop project's settings")
-        real = teach_hook.inject_with_evidence
-        teach_hook.inject_with_evidence = lambda data, limits: real(data, limits, self.folder)
+        real = teach_hook.inject_with_status
+        teach_hook.inject_with_status = lambda data, limits, **kw: real(data, limits, self.folder, **kw)
         out = stdout if stdout is not None else _io.StringIO()
         try:
             with cl.redirect_stdout(out):
                 result = asyncio.run(teach_hook.teach.async_pre_call_hook(None, None, request, "acompletion"))
         finally:
-            teach_hook.inject_with_evidence = real
+            teach_hook.inject_with_status = real
         return result, out
 
     def test_log_line_never_contains_note_text(self):
@@ -1047,17 +1047,17 @@ class HookTests(Base):
         import hashlib
         self.store.add("First note.")
         before = hashlib.sha256((self.folder / "store.json").read_bytes()).hexdigest()[:12]
-        real_apply = teach_hook.apply_to_messages
+        real_apply = teach_hook.apply_with_status
 
         def edit_during_request(*args, **kwargs):
             ts.Store(self.folder).add("Second note, added while the request is being built.")
             return real_apply(*args, **kwargs)
-        teach_hook.apply_to_messages = edit_during_request
+        teach_hook.apply_with_status = edit_during_request
         try:
             changed, used, fingerprint = teach_hook.inject_with_evidence(
                 body([{"role": "user", "content": "hi"}]), LIMITS, self.folder)
         finally:
-            teach_hook.apply_to_messages = real_apply
+            teach_hook.apply_with_status = real_apply
         after = hashlib.sha256((self.folder / "store.json").read_bytes()).hexdigest()[:12]
         self.assertNotEqual(before, after)                                       # the store really changed mid-request
         self.assertEqual(fingerprint, before)                                    # the log names the version used...
@@ -1174,6 +1174,138 @@ class HookTests(Base):
         (self.folder / "store.json").write_text("not json", encoding="utf-8")
         request = body([{"role": "user", "content": "hi"}])
         self.assertEqual(teach_hook.inject_with_evidence(request, LIMITS, self.folder), (request, [], "unknown"))
+
+
+def word_counter(messages):
+    """A stand-in for the real tokenizer: one token per whitespace-separated word, plus four per message."""
+    return sum(len(m["content"].split()) + 4 for m in messages) + 3
+
+
+class TokenBudgetTests(Base):
+    """Revision 12: notes for a long request are budgeted on the whole candidate request in tokens."""
+
+    def long_messages(self, words=1200):
+        return [{"role": "user", "content": "word " * words + "please summarise"}]
+
+    def test_long_request_gets_its_note_when_it_fits_in_tokens(self):
+        self.store.add("Be brief.")
+        messages = self.long_messages()
+        self.assertGreater(ts.request_units(messages, LIMITS, 256), LIMITS["context_tokens"])   # over the byte rule
+        legacy, legacy_ids = ts.apply_to_messages(messages, self.store.entries(), LIMITS, 256)
+        self.assertEqual((legacy, legacy_ids), (messages, []))                                    # bytes alone: skipped
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                     count_tokens=word_counter)
+        self.assertEqual((used, omitted), (["t001"], 0))
+        self.assertEqual(result[0], {"role": "system", "content": ts.POLICY})
+        self.assertTrue(result[-1]["content"].startswith("<saved_notes>\n- Be brief.\n</saved_notes>\n\n"))
+        self.assertTrue(result[-1]["content"].endswith(messages[-1]["content"]))                 # question intact
+        self.assertLessEqual(word_counter(result) + 256 + ts.TOKEN_MARGIN, LIMITS["context_tokens"])
+        self.assertEqual(messages, self.long_messages())                                          # input untouched
+
+    def test_full_request_keeps_question_and_reports_omission(self):
+        self.store.add("Be brief.")
+        self.store.add("Use metric units.")
+        limit = LIMITS["context_tokens"] - 256 - ts.TOKEN_MARGIN
+        messages = self.long_messages(limit - 4 - 3 - 2)             # the bare request exactly fills the budget
+        self.assertEqual(word_counter(messages), limit)
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                     count_tokens=word_counter)
+        self.assertEqual((result, used, omitted), (messages, [], 2))
+
+    def test_candidate_is_recounted_after_each_dropped_note(self):
+        self.store.add("Be brief.")
+        self.store.add("Second note " + "pad " * 60)
+        messages = self.long_messages(1200)
+        calls = []
+
+        def counter(candidate):
+            calls.append(candidate[-1]["content"].count("pad "))
+            return word_counter(candidate)
+        room_for_one = word_counter([{"role": "system", "content": ts.POLICY}] + [
+            {"role": "user", "content": "<saved_notes>\n- Be brief.\n</saved_notes>\n\n" + messages[-1]["content"]}])
+        limits = dict(LIMITS, context_tokens=room_for_one + 256 + ts.TOKEN_MARGIN)
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), limits, 256,
+                                                     count_tokens=counter)
+        self.assertEqual((used, omitted), (["t001"], 1))
+        self.assertEqual(len(calls), 2)                               # two whole candidates were counted
+        self.assertGreater(calls[0], 0)
+        self.assertEqual(calls[1], 0)
+        self.assertNotIn("pad ", result[-1]["content"])
+
+    def test_counter_faults_only_ever_leave_notes_out(self):
+        self.store.add("Be brief.")
+        messages = self.long_messages()
+
+        def broken(candidate):
+            raise RuntimeError("tokenizer fault")
+        for counter in (broken, lambda m: None, lambda m: 0, lambda m: -1, lambda m: True, lambda m: "5", lambda m: 10**9):
+            result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                         count_tokens=counter)
+            self.assertEqual((result, used, omitted), (messages, [], 1))
+
+    def test_short_request_is_decided_by_bytes_and_counter_is_not_called(self):
+        self.store.add("Be brief.")
+        messages = [{"role": "user", "content": "hi"}]
+        calls = []
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
+                                                     count_tokens=lambda m: calls.append(1) or 1)
+        self.assertEqual((result, used), ts.apply_to_messages(messages, self.store.entries(), LIMITS, 128))
+        self.assertEqual((used, omitted, calls), (["t001"], 0, []))
+
+    def test_without_counter_result_equals_the_byte_rule_and_omission_is_counted(self):
+        self.store.add("Be brief.")
+        messages = self.long_messages()
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256)
+        self.assertEqual((result, used, omitted), (messages, [], 1))
+
+    def test_no_relevant_notes_reports_nothing_omitted(self):
+        self.store.add("Use tabs.", when=["python"])
+        result, used, omitted = ts.apply_with_status(self.long_messages(), self.store.entries(), LIMITS, 256,
+                                                     count_tokens=word_counter)
+        self.assertEqual((used, omitted), ([], 0))
+
+    def test_applying_twice_adds_nothing_the_second_time_in_token_mode(self):
+        self.store.add("Be brief.")
+        once, used, _ = ts.apply_with_status(self.long_messages(), self.store.entries(), LIMITS, 256,
+                                             count_tokens=word_counter)
+        twice, used_again, omitted = ts.apply_with_status(once, self.store.entries(), LIMITS, 256,
+                                                          count_tokens=word_counter)
+        self.assertEqual((twice, used_again, omitted), (once, [], 0))
+
+    def test_arabic_long_request_gets_its_note(self):
+        self.store.add("\u0627\u0643\u062a\u0628 \u0628\u0625\u064a\u062c\u0627\u0632.")
+        messages = [{"role": "user", "content": "\u0643\u0644\u0645\u0629 " * 700}]
+        self.assertGreater(ts.request_units(messages, LIMITS, 256), LIMITS["context_tokens"])
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                     count_tokens=word_counter)
+        self.assertEqual((used, omitted), (["t001"], 0))
+
+    def test_hook_status_and_log_line_report_omission_without_text(self):
+        self.store.add("Be brief. CANARY-NOTE")
+        request = body(self.long_messages(), 256)
+        changed, used, fingerprint, omitted = teach_hook.inject_with_status(
+            request, LIMITS, self.folder, count_tokens=lambda m: 10**9)
+        self.assertEqual((changed, used, omitted), (request, [], 1))
+        line = teach_hook.log_line(used, fingerprint, omitted)
+        self.assertEqual(line, f"[teach] nothing added | omitted-no-room:1 | store {fingerprint}")
+        self.assertNotIn("CANARY", line)
+        changed, used, fingerprint, omitted = teach_hook.inject_with_status(
+            request, LIMITS, self.folder, count_tokens=word_counter)
+        self.assertEqual((used, omitted), (["t001"], 0))
+        self.assertEqual(teach_hook.log_line(used, fingerprint, omitted),
+                         f"[teach] added 1 entries: t001 | store {fingerprint}")
+
+    def test_log_line_ignores_malformed_omitted_values(self):
+        for bad in (None, "3", -1, True, 2.5, [1], 10**9, "CANARY"):
+            self.assertEqual(teach_hook.log_line([], "abc123abc123", bad), "[teach] nothing added | store abc123abc123")
+        self.assertEqual(teach_hook.log_line(["t001"], "abc123abc123", 2),
+                         "[teach] added 1 entries: t001 | omitted-no-room:2 | store abc123abc123")
+
+    def test_old_three_value_function_still_works(self):
+        self.store.add("Be brief.")
+        request = body([{"role": "user", "content": "hi"}])
+        changed, used, fingerprint = teach_hook.inject_with_evidence(request, LIMITS, self.folder)
+        self.assertEqual(used, ["t001"])
 
 
 class CliTests(Base):

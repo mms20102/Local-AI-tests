@@ -670,6 +670,59 @@ def already_applied(messages: list[dict]) -> bool:
     return messages[-1]["content"].startswith(OPEN + "\n")
 
 
+TOKEN_MARGIN = 32      # the same allowance the gateway adds to a real token count
+
+
+def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,
+                      budget_units: int = DEFAULT_BUDGET_UNITS, count_tokens=None
+                      ) -> tuple[list[dict], list[str], int]:
+    """Return (new message list, ids used, number of relevant entries left out for lack of room).
+
+    The byte rule (apply_to_messages) is tried first and its result is kept whenever it places
+    every relevant entry. Only when it leaves some out, and count_tokens(messages) -> prompt
+    tokens is given, the complete candidate request is built with the notes block and the policy
+    sentence in place and counted as a whole: it is kept when prompt tokens + the full requested
+    output + TOKEN_MARGIN fit the context. If it does not fit, the last entry is dropped and the
+    smaller candidate is built and counted again, at most once per relevant entry. A failing
+    counter, or a count that is not a positive integer, is treated as "does not fit", so a
+    counting fault can only leave notes out, never push a request over the limit.
+
+    The original question and history are never shortened to make room for notes. Entries that
+    were relevant but left out are counted, so the caller can report it.
+    """
+    legacy, legacy_ids = apply_to_messages(messages, entries, limits, output_tokens, budget_units)
+    if not messages or messages[-1].get("role") != "user" or already_applied(messages):
+        return legacy, legacy_ids, 0
+    try:
+        wanted = select(entries, messages[-1]["content"], budget_units)
+    except Exception:
+        return legacy, legacy_ids, 0
+    if len(legacy_ids) >= len(wanted) or count_tokens is None:
+        return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+    has_system = messages[0].get("role") == "system"
+    if not has_system and len(messages) >= limits["max_messages"]:
+        return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+    has_policy = has_system and messages[0]["content"].endswith(POLICY)
+    chosen = list(wanted)
+    while len(chosen) > len(legacy_ids):
+        result = [dict(m) for m in messages]
+        if has_policy:
+            pass
+        elif has_system:
+            result[0]["content"] = result[0]["content"] + "\n\n" + POLICY
+        else:
+            result.insert(0, {"role": "system", "content": POLICY})
+        result[-1]["content"] = block_for(chosen) + result[-1]["content"]
+        try:
+            prompt = count_tokens(result)
+        except Exception:
+            prompt = None
+        if type(prompt) is int and prompt > 0 and prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]:
+            return result, [e["id"] for e in chosen], len(wanted) - len(chosen)
+        chosen.pop()
+    return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+
+
 def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,
                       budget_units: int = DEFAULT_BUDGET_UNITS) -> tuple[list[dict], list[str]]:
     """Return (new message list, ids used). The input list is not modified.
