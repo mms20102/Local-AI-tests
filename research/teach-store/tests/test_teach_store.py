@@ -290,21 +290,122 @@ class DurabilityTests(Base):
         self.assertEqual(sorted(p.name for p in self.folder.iterdir() if p.suffix == ".tmp"), [])
         self.assertEqual(self.store.add("Two.")["id"], "t003")       # lock was released; t002 was reserved, so skipped
 
-    def test_failed_temp_write_leaves_the_last_version(self):
+    def test_failed_flush_leaves_the_last_version(self):
         self.store.add("One.")
-        real = Path.write_text
+        real, calls = ts.os.fsync, []
 
-        def failing(path, *args, **kwargs):
-            if path.name.endswith(".tmp"):
+        def failing(descriptor):
+            calls.append(descriptor)
+            if len(calls) >= 2:                        # the id mark flushes first; fail on the store files
                 raise OSError("simulated disk full")
-            return real(path, *args, **kwargs)
-        Path.write_text = failing
+            return real(descriptor)
+        ts.os.fsync = failing
         try:
             with self.assertRaises(OSError):
                 self.store.add("Two.")
         finally:
-            Path.write_text = real
+            ts.os.fsync = real
+        self.assertGreaterEqual(len(calls), 2)                                   # every publish asks for a flush
         self.assertEqual(len(self.live()["entries"]), 1)
+        self.assertEqual(list(self.folder.glob("*.tmp")), [])
+
+    def test_add_refuses_when_the_id_mark_is_missing_or_unreadable(self):
+        self.store.add("One.")
+        mark = self.folder / "store.idmark"
+        for damage in (mark.unlink, lambda: mark.write_text("not a number", encoding="utf-8")):
+            damage()
+            with self.assertRaises(ts.TeachError) as caught:
+                self.store.add("Two.")
+            self.assertIn("reconcile-ids", str(caught.exception))
+            self.assertEqual(len(self.live()["entries"]), 1)                     # nothing was added
+            message = ts.reconcile_ids(self.folder)
+            self.assertIn("WARNING", message)
+            self.assertEqual(ts.read_id_mark(self.folder), 1)
+        self.assertEqual(self.store.add("Two.")["id"], "t002")
+
+    def test_mark_lost_after_a_reserved_but_uncommitted_id(self):
+        self.store.add("One.")
+        real = ts._replace
+
+        def failing(source, target):
+            if Path(target).name == "store.json":
+                raise OSError("simulated failure at the commit point")
+            real(source, target)
+        ts._replace = failing
+        try:
+            with self.assertRaises(OSError):
+                self.store.add("Reserved t002, never committed.")
+        finally:
+            ts._replace = real
+        self.assertEqual(ts.read_id_mark(self.folder), 2)
+        (self.folder / "store.idmark").unlink()        # now the only record of t002's reservation is gone
+        with self.assertRaises(ts.TeachError):
+            self.store.add("Next.")                    # refuses: it will not guess
+        message = ts.reconcile_ids(self.folder)        # explicit owner action, with the limit stated
+        self.assertIn("could be issued again", message)
+        self.assertEqual(self.store.add("Next.")["id"], "t002")                  # the documented residual case
+
+    def test_reconcile_never_lowers_a_readable_mark(self):
+        self.store.add("One.")
+        with ts.folder_lock(self.folder):
+            ts.write_id_mark(self.folder, 40)
+        self.assertIn("readable", ts.reconcile_ids(self.folder))
+        self.assertEqual(ts.read_id_mark(self.folder), 40)
+
+    def test_recover_failure_before_and_after_the_mark_update(self):
+        self.store.add("One.")
+        self.store.add("Two.")
+        self.store.add("Three.")
+        (self.folder / "store.json").unlink()
+        real = ts._replace
+
+        def fail_on(name):
+            def failing(source, target):
+                if Path(target).name == name:
+                    raise OSError("simulated failure publishing " + name)
+                real(source, target)
+            return failing
+
+        with ts.folder_lock(self.folder):
+            pass
+        (self.folder / "store.idmark").write_text("1\n", encoding="utf-8")      # stale-but-readable mark
+        ts._replace = fail_on("store.idmark")
+        try:
+            with self.assertRaises(OSError):
+                ts.recover(self.folder)
+        finally:
+            ts._replace = real
+        self.assertFalse((self.folder / "store.json").exists())                  # mark failed first: nothing published
+        self.assertEqual(ts.read_id_mark(self.folder), 1)
+
+        ts._replace = fail_on("store.json")
+        try:
+            with self.assertRaises(OSError):
+                ts.recover(self.folder)
+        finally:
+            ts._replace = real
+        self.assertFalse((self.folder / "store.json").exists())                  # live file not half done
+        self.assertEqual(ts.read_id_mark(self.folder), 3)                        # only the mark went up
+        self.assertEqual(list(self.folder.glob("*.tmp")), [])
+        ts.recover(self.folder)                                                  # repeatable
+        self.assertEqual(ts.Store(self.folder).add("Four.")["id"], "t004")
+
+    def test_interleaved_add_then_unlogged_add_then_live_loss(self):
+        # Continuation of the reviewer's sequence after a recovery: an add whose audit line fails,
+        # immediate loss of the live file, recovery again. The number must still not repeat.
+        self.store.add("One.")
+        self.store.add("Two.")
+        (self.folder / "store.json").unlink()
+        ts.recover(self.folder)
+        store = ts.Store(self.folder)
+        real_open = self.fail_audit_appends()
+        with self.assertRaises(ts.AuditWriteError) as caught:
+            store.add("Unlogged.")
+        Path.open = real_open
+        unlogged = int(str(caught.exception).split(":")[0][1:])
+        (self.folder / "store.json").unlink()
+        ts.recover(self.folder)
+        self.assertGreater(int(ts.Store(self.folder).add("After.")["id"][1:]), unlogged)
 
     def test_missing_live_file_with_backup_is_not_treated_as_empty(self):
         self.store.add("One.")
@@ -510,6 +611,48 @@ class DurabilityTests(Base):
         (self.folder / "store.json").unlink()          # lost immediately, with no intervening save
         ts.recover(self.folder)
         self.assertEqual(ts.Store(self.folder).add("Again.")["id"], "t003")      # t002 is never issued twice
+
+    def test_an_add_cannot_slip_between_recovery_and_its_mark_update(self):
+        # The reviewer's interleaving, forced rather than timed: at the moment recovery updates
+        # the id mark, another editor tries to add. Either that add is shut out by the lock, or,
+        # if it gets in, the mark must not afterwards be lower than the id it was given.
+        self.short_wait()
+        self.store.add("One.")
+        self.store.add("Two.")
+        self.store.add("Three.")
+        (self.folder / "store.json").unlink()
+        real, state = ts.write_id_mark, {"busy": False, "racer": None, "blocked": False}
+
+        def racing(folder, number, *args, **kwargs):
+            if not state["busy"]:
+                state["busy"] = True
+                try:
+                    state["racer"] = ts.Store(folder).add("Racer.")["id"]
+                except ts.TeachError:
+                    state["blocked"] = True
+                finally:
+                    state["busy"] = False
+            return real(folder, number, *args, **kwargs)
+        ts.write_id_mark = racing
+        try:
+            ts.recover(self.folder)
+        finally:
+            ts.write_id_mark = real
+        mark = ts.read_id_mark(self.folder)
+        if state["racer"] is not None:
+            self.assertGreaterEqual(mark, int(state["racer"][1:]))               # never overwritten with less
+        else:
+            self.assertTrue(state["blocked"])                                    # the interval does not exist
+        self.assertGreaterEqual(mark, 3)
+
+    def test_id_mark_only_ever_goes_up(self):
+        self.store.add("One.")
+        self.store.add("Two.")
+        ts.write_id_mark(self.folder, 1)
+        self.assertEqual(ts.read_id_mark(self.folder), 2)
+        ts.write_id_mark(self.folder, 9)
+        self.assertEqual(ts.read_id_mark(self.folder), 9)
+        self.assertEqual(self.store.add("Three.")["id"], "t010")
 
     def test_recover_says_so_when_it_cannot_establish_the_id_high_water_mark(self):
         self.store.add("One.")
@@ -771,6 +914,27 @@ class CliTests(Base):
         self.assertEqual(self.run_cli("disable", "t002")[0], 0)
         self.assertNotIn("SQLite", self.run_cli("preview", "which database?")[1])
         self.assertIn("[disabled]", self.run_cli("list", "--all")[1])
+
+    def test_incomplete_purge_has_its_own_exit_code(self):
+        self.assertEqual(self.run_cli("add", "Remove this sentence.")[0], 0)
+        self.assertEqual(self.run_cli("add", "Keep.")[0], 0)
+        with (self.folder / "audit.jsonl").open("ab") as handle:
+            handle.write(b"### damaged ###\n")
+        code, out, _ = self.run_cli("purge", "t001")
+        self.assertEqual(code, 4)
+        self.assertIn("NOT complete", out)
+        code, out, _ = self.run_cli("purge", "t001", "--delete-unreadable-audit-lines")
+        self.assertEqual(code, 0)
+        self.assertIn("Purge complete", out)
+
+    def test_cli_reconcile_ids(self):
+        self.assertEqual(self.run_cli("add", "One.")[0], 0)
+        (self.folder / "store.idmark").unlink()
+        code, _, err = self.run_cli("add", "Two.")
+        self.assertEqual(code, 1)
+        self.assertIn("reconcile-ids", err)
+        self.assertEqual(self.run_cli("reconcile-ids")[0], 0)
+        self.assertEqual(self.run_cli("add", "Two.")[0], 0)
 
     def test_errors_are_reported_without_a_traceback(self):
         code, out, err = self.run_cli("delete", "t999")

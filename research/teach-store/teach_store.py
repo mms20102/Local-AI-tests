@@ -14,6 +14,10 @@ sentence in the system message says the block is data, not instructions.
     python teach_store.py purge t003          # really remove the text (see below)
     python teach_store.py preview "how do I parse a date in python?"
     python teach_store.py recover             # only if store.json is missing or damaged
+    python teach_store.py reconcile-ids       # only if told that store.idmark is missing
+
+Exit codes: 0 done; 1 refused, nothing changed; 3 saved but the audit line failed;
+4 purge finished as far as it can but is NOT complete.
 
 Data lives in .runtime/teach/ (ignored by git): store.json, store.json.bak (previous version)
 and audit.jsonl (every change, append-only). One editor at a time: a second edit waits for the
@@ -186,6 +190,30 @@ def _replace(source: Path, target: Path) -> None:
             time.sleep(0.05)
 
 
+def _publish(target: Path, data: bytes) -> None:
+    """Write `data` beside `target`, ask the system to flush it to disk, then replace `target`.
+
+    What this gives: a reader never sees a half-written file, and a failure before the replace
+    leaves the old file. The flush (fsync) asks for the new contents to be on disk before the
+    replace. What it does not give: proof against power loss. That has not been tested, and the
+    directory entry itself is not flushed (Windows offers no portable way).
+    """
+    temp = target.with_name(f"{target.name}.{os.getpid()}.{secrets.token_hex(4)}.tmp")
+    try:
+        with open(temp, "wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        _replace(temp, target)
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            temp.unlink()
+
+
+def _json_bytes(value) -> bytes:
+    return (json.dumps(value, ensure_ascii=False, indent=1) + "\n").encode("utf-8")
+
+
 def _read_json(path: Path):
     for attempt in range(20):
         try:
@@ -205,14 +233,62 @@ def read_id_mark(folder: Path):
     return value if type(value) is int and value >= 0 else None
 
 
-def write_id_mark(folder: Path, number: int) -> None:
-    temp = folder / f"store.idmark.{os.getpid()}.{secrets.token_hex(4)}.tmp"
-    try:
-        temp.write_text(json.dumps(number) + "\n", encoding="utf-8")
-        _replace(temp, folder / "store.idmark")
-    finally:
-        with contextlib.suppress(FileNotFoundError):
-            temp.unlink()
+def write_id_mark(folder: Path, number: int, force: bool = False) -> None:
+    """Raise the mark to `number`. It only ever goes up: a lower or equal value is ignored.
+
+    Call only while holding the folder lock. `force` is for reconcile_ids, which may replace an
+    unreadable mark; it still never lowers a readable one.
+    """
+    current = read_id_mark(folder)
+    if current is not None and current >= number:
+        return
+    if current is None and (folder / "store.idmark").exists() and not force:
+        raise TeachError("store.idmark is unreadable; run `python teach_store.py reconcile-ids`.")
+    _publish(folder / "store.idmark", (json.dumps(number) + "\n").encode("utf-8"))
+
+
+def evidence_exists(folder: Path) -> bool:
+    """True once this folder has held a store: then a missing mark is a loss, not a fresh start."""
+    return any((folder / name).exists() for name in ("store.json", "store.json.bak", "audit.jsonl", "store.idmark"))
+
+
+def ids_seen(folder: Path, extra=()) -> list[int]:
+    """Every id number found in the live store, the backup, the audit log and `extra` documents."""
+    numbers = []
+    documents = list(extra)
+    for name in ("store.json", "store.json.bak"):
+        with contextlib.suppress(OSError, ValueError):
+            documents.append(_read_json(folder / name))
+    for document in documents:
+        if isinstance(document, dict):
+            if type(document.get("next_id")) is int:
+                numbers.append(document["next_id"] - 1)
+            for entry in document.get("entries") or []:
+                with contextlib.suppress(ValueError, KeyError, TypeError):
+                    numbers.append(int(entry["id"][1:]))
+    with contextlib.suppress(OSError):
+        for line in (folder / "audit.jsonl").read_bytes().splitlines():
+            with contextlib.suppress(ValueError, KeyError, TypeError):
+                numbers.append(int(json.loads(line.decode("utf-8"))["id"][1:]))
+    return numbers
+
+
+def reconcile_ids(folder: Path = DEFAULT_DIR) -> str:
+    """Rebuild a missing or unreadable store.idmark from what is left. An explicit owner action.
+
+    It can only be as good as the remaining evidence: an id that was reserved or committed but
+    appears in neither store, backup nor log is unknown to it and could be issued again.
+    """
+    folder = Path(folder)
+    with folder_lock(folder):
+        current = read_id_mark(folder)
+        seen = ids_seen(folder)
+        number = max(seen + ([current] if current is not None else []) + [0])
+        write_id_mark(folder, number, force=True)
+    if current is not None:
+        return f"store.idmark was readable ({current}); it is now {max(current, number)}."
+    return (f"store.idmark rebuilt as {number} from the store, backup and audit log. WARNING: an id used "
+            "after the newest of those records is not known and could be issued again.")
 
 
 class Store:
@@ -229,7 +305,9 @@ class Store:
     - An id is reserved in store.idmark BEFORE the entry is saved. The mark does not depend on
       the backup or the audit log, so an id that was committed is never issued again even if its
       log line failed and the live file was then lost. Ids can therefore be skipped (a failed
-      save burns one) but not repeated. If the mark itself is missing, recovery says so.
+      save burns one) but not repeated. The mark only ever goes up and is only written under the
+      lock. If the mark itself is missing or unreadable once a store exists, both add and
+      recover refuse; `reconcile-ids` rebuilds it from the remaining evidence, with a warning.
     Not covered: power loss in the middle of the operating system's own rename.
     """
 
@@ -277,22 +355,9 @@ class Store:
 
     def _save(self, action: str, entry: dict) -> None:
         """Commit self.data. Call only inside _locked()."""
-        token = f"{os.getpid()}.{secrets.token_hex(4)}"
-        temp = self.folder / f"store.json.{token}.tmp"
-        try:
-            temp.write_text(json.dumps(self.data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-            if self.path.exists():                       # keep the previous version, without moving the live file
-                copy = self.folder / f"store.json.{token}.bak.tmp"
-                try:
-                    shutil.copyfile(self.path, copy)
-                    _replace(copy, self.backup_path)
-                finally:
-                    with contextlib.suppress(FileNotFoundError):
-                        copy.unlink()
-            _replace(temp, self.path)                    # the commit point
-        finally:
-            with contextlib.suppress(FileNotFoundError):
-                temp.unlink()
+        if self.path.exists():                           # keep the previous version, without moving the live file
+            _publish(self.backup_path, self.path.read_bytes())
+        _publish(self.path, _json_bytes(self.data))      # the commit point
         # From here the change is committed. A log failure must not look like "nothing changed".
         record = {"time": now(), "action": action, "id": entry["id"], "kind": entry["kind"],
                   "text": entry["text"], "when": entry["when"]}
@@ -315,8 +380,15 @@ class Store:
                 raise TeachError(f"The store is full ({MAX_ENTRIES} entries). Delete some first.")
             if any(e["text"].casefold() == text.casefold() for e in live):
                 raise TeachError("The same text is already stored.")
-            number = max(self.data["next_id"], (read_id_mark(self.folder) or 0) + 1)
-            write_id_mark(self.folder, number)           # reserve first: durable before the entry exists
+            mark = read_id_mark(self.folder)
+            if mark is None:
+                if evidence_exists(self.folder):
+                    raise TeachError(
+                        "store.idmark is missing or unreadable, so the highest entry number ever used is not "
+                        "known. Nothing was added. Run `python teach_store.py reconcile-ids` first.")
+                mark = 0                                 # a folder that has never held a store
+            number = max(self.data["next_id"], mark + 1)
+            write_id_mark(self.folder, number)           # reserve first, before the entry exists
             entry = {"id": f"t{number:03d}", "kind": kind, "text": text, "when": keywords,
                      "status": "active", "created": now(), "source": "owner"}
             self.data["next_id"] = number + 1
@@ -415,22 +487,10 @@ class Store:
                     pieces.append(b"\n")                      # the last line had no ending; do not join onto it
                 pieces.append((json.dumps({"time": now(), "action": "purge", "id": entry_id, "kind": entry["kind"],
                                            "text": "[purged]", "when": []}) + "\n").encode("utf-8"))
-                temp = self.folder / f"audit.jsonl.{token}.purge.tmp"
-                try:
-                    temp.write_bytes(b"".join(pieces))
-                    _replace(temp, self.audit_path)
-                finally:
-                    with contextlib.suppress(FileNotFoundError):
-                        temp.unlink()
+                _publish(self.audit_path, b"".join(pieces))
                 # 2. backup, 3. live store
                 for target in (self.backup_path, self.path):
-                    temp = self.folder / f"store.json.{token}.purge.tmp"
-                    try:
-                        temp.write_text(json.dumps(purged, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-                        _replace(temp, target)
-                    finally:
-                        with contextlib.suppress(FileNotFoundError):
-                            temp.unlink()
+                    _publish(target, _json_bytes(purged))
                 self.data = purged
                 # 4. everything else in the folder is reported, never silently skipped
                 for other in sorted(self.folder.iterdir()):
@@ -461,7 +521,8 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
     The whole operation holds the folder lock. The restored version, with its id counter already
     corrected, is built in a temporary file and published in one step, so no reader or editor
     can see a half-recovered store. A damaged live file is set aside only after the replacement
-    is ready; if anything fails before that, nothing has changed.
+    is ready. The id mark is raised first, inside the same lock, so an exception here means either
+    that nothing changed or that only the mark went up; the live file is never left half done.
     """
     folder = Path(folder)
     live, backup, audit = folder / "store.json", folder / "store.json.bak", folder / "audit.jsonl"
@@ -482,14 +543,6 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
         if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list) \
                 or type(data.get("next_id")) is not int:
             raise TeachError("The backup has an unknown format; nothing was changed.")
-        used = []
-        for entry in data["entries"]:
-            with contextlib.suppress(ValueError, KeyError, TypeError):
-                used.append(int(entry["id"][1:]))
-        if audit.exists():                                   # never hand out an id the log has seen
-            for line in audit.read_text(encoding="utf-8").splitlines():
-                with contextlib.suppress(ValueError, KeyError, TypeError):
-                    used.append(int(json.loads(line)["id"][1:]))
         mark = read_id_mark(folder)
         if mark is None and not allow_unconfirmed_ids:
             raise TeachError(
@@ -497,27 +550,25 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
                 "Nothing was changed. The backup and audit log may not know about the newest entry, and "
                 "restoring from them could give a new entry an id that was already used. Compare "
                 "store.json.bak with audit.jsonl first; then `recover --accept-unconfirmed-ids` restores anyway.")
-        if mark is not None:
-            used.append(mark)
-        if used and data["next_id"] <= max(used):
-            data["next_id"] = max(used) + 1
+        used = ids_seen(folder, extra=[data]) + ([mark] if mark is not None else [])
+        high = max(used + [0])
+        if data["next_id"] <= high:
+            data["next_id"] = high + 1
+        # Order, all under the lock:
+        #   1. raise the mark (only ever upward). If this fails, nothing else has changed.
+        #   2. set a damaged live file aside as evidence.
+        #   3. publish the restored store. If this fails, the live file is as it was and the
+        #      mark may have gone up, which can only cause a skipped number, never a repeat.
+        write_id_mark(folder, high, force=mark is None)
         token = secrets.token_hex(4)
-        temp = folder / f"store.json.{token}.recover.tmp"
-        try:
-            temp.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-            if damaged:
-                shutil.copyfile(live, folder / f"store.json.damaged.{token}")   # evidence kept, live untouched
-            _replace(temp, live)                             # the only step that changes the live file
-        finally:
-            with contextlib.suppress(FileNotFoundError):
-                temp.unlink()
+        if damaged:
+            shutil.copyfile(live, folder / f"store.json.damaged.{token}")
+        _publish(live, _json_bytes(data))
     note = " The unreadable file was kept as store.json.damaged.*; it may contain note text." if damaged else ""
     if mark is None:
         note += (" WARNING: the id high-water mark (store.idmark) was missing, so the highest id ever "
                  "used could not be confirmed. New ids continue from the backup and the audit log and "
                  "might repeat an id that was used after them.")
-    else:
-        write_id_mark(folder, max(used))
     return (f"Restored {len(data['entries'])} entries from the backup. The backup is one change "
             "behind; check `list` against audit.jsonl and re-add anything missing." + note)
 
@@ -629,6 +680,7 @@ def main(argv=None) -> int:
                        help="also delete set-aside store.json.damaged.* files, which may contain the text")
     purge.add_argument("--delete-unreadable-audit-lines", action="store_true",
                        help="also delete EVERY audit line that is not valid JSON, related or not")
+    sub.add_parser("reconcile-ids", help="rebuild a missing or unreadable store.idmark from the remaining evidence")
     recovering = sub.add_parser("recover", help="restore the last backup when store.json is missing or damaged")
     recovering.add_argument("--accept-unconfirmed-ids", action="store_true",
                             help="restore even though store.idmark is missing; a new id might repeat an old one")
@@ -640,6 +692,9 @@ def main(argv=None) -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="replace")
     try:
+        if args.command == "reconcile-ids":
+            print(reconcile_ids(args.dir))
+            return 0
         if args.command == "recover":
             print(recover(args.dir, args.accept_unconfirmed_ids))
             return 0
@@ -679,6 +734,8 @@ def main(argv=None) -> int:
             print("Purge complete for the files this tool manages." if report["complete"]
                   else "Purge is NOT complete: see the items above.")
             print("This is not secure erasure: the disk may keep old data, and copies outside this folder are untouched.")
+            if not report["complete"]:
+                return 4                                 # distinct status: done as far as possible, NOT complete
         elif args.command == "preview":
             chosen = select(store.entries(), args.message, args.budget)
             print(block_for(chosen).rstrip("\n") or "(nothing would be added)")

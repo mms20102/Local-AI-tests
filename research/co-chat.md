@@ -1509,3 +1509,32 @@ Claude: please assess these alongside the exact interleaving in the early note, 
 
 This report is **static only, not runtime reproduction**. Hook stays **OFF**. No live-store action, purge, recovery, gateway change, restart, model request or sensitive-data publication is requested.
 
+
+## Research round 19 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the early finding at `13b96c5` and the full-review addendum at `145ffa7` on teach revision 4 (`54cec06`). Offline only, on throwaway synthetic stores: no model traffic, no stack start, no gateway change, no real store (none exists). The hook is still off.
+
+### Teach revision 4 review: assessment · Claude
+
+**I accept all five findings; no disagreement.**
+
+**The stale-mark race is reproduced.** I forced the interleaving instead of relying on timing: at the instant recovery updates the mark, another editor attempts an add. *Measured* on revision 4: the add got in, was given `t004`, and recovery then left the mark at 3. That is the reviewer's finding exactly.
+
+Proposed repairs are implemented offline as **revision 5** in [teach-store/](teach-store/README.md), laptop local commit `f663f66`. Revisions 1 to 4 are preserved at `a72c796`, `1f8577d`, `8c0ee3b` and `54cec06`. Revision 5 is **not reviewed and not cleared**.
+
+| Finding | Repair in revision 5 | Offline evidence (*measured*, Windows, three runs) |
+|---|---|---|
+| Mark written after the lock is released; a newer mark can be overwritten | Mark written inside the recovery lock, and monotonic everywhere | The forced-interleaving test now finds the add shut out by the lock; a direct test shows a lower value never replaces a higher one |
+| Live file published, then mark write fails | Mark first, then the live file, both under the lock | Simulated failure at the mark: no live file published, mark unchanged. Simulated failure at publication: no live file, mark raised, no temporary files, and recovery succeeds on repeat |
+| Durability claims | One publish function with `fsync` before replace; claims narrowed to what was tested | Test that every publish calls the flush and that a failed flush leaves the last version. **No power-loss test exists**; I claim none |
+| Add treated a missing mark as zero | Add refuses when the mark is missing or unreadable once a store exists; new `reconcile-ids` rebuilds it with a warning and never lowers a readable mark | Tests for missing and corrupt marks on add; mark lost after a reserved-but-uncommitted id; reconcile with a readable mark |
+| Incomplete purge exits 0 | Exit code 4 | Test: 4 with a damaged log line present, 0 after the explicit option removes it |
+| The full continuation you asked for | — | Test: recovery, then an add whose audit line fails, immediate loss of the live file, recovery again; the next id is higher than the unlogged one |
+
+**Guarantees, narrowed to the evidence:** ids are not repeated while the mark is readable; if it is lost the tool refuses and reconciliation is manual and only as good as the remaining records. Saves are tested against injected failures at the process level, not power loss. Purge reports and signals what it leaves.
+
+**Evidence totals** (*measured* on the laptop): 70 teach tests pass, 170 in the project suite; from the published folder 70 pass with 1 skipped.
+
+One observation for Mohamed and the reviewer: this is the fourth consecutive revision in which independent review found real defects in persistence code that my own tests had passed. I take that as evidence that my tests follow my own model of the code. The reviewer's exact failing sequences are now tests, but I do not treat revision 5 as sound until it is reviewed, and I would not enable the hook on my own assessment.
+
+Please have the reviewer compare `54cec06` with this commit under `research/teach-store/`.

@@ -35,6 +35,7 @@ python teach_store.py purge t002
   files such as a damaged copy set aside by `recover`. Two explicit options finish the job:
   `--delete-unreadable-audit-lines` removes every damaged log line, related or not, and
   `--delete-damaged-copies` removes the set-aside copies. If a purge is interrupted, run it again.
+  For scripts: the command ends with status 4, not 0, when the purge is not complete.
   It is not secure erasure: the disk may keep old data, and copies made elsewhere are not touched.
 - If a command says "Saved, with a problem", the change was saved but its log line was not. Do not
   repeat the command.
@@ -66,11 +67,21 @@ python teach_store.py recover
 That restores the backup, which is one change behind; compare `list` with `audit.jsonl` and
 re-add anything missing.
 
-Entry numbers (t001, t002, ...) are never given out twice. Each number is reserved in a small
-file, `store.idmark`, before the entry is saved, so a number can be skipped after a failed save but
-not repeated. If that file is missing, `recover` refuses, because it could not be sure which
-numbers were already used; `recover --accept-unconfirmed-ids` restores anyway after you have
-checked.
+Entry numbers (t001, t002, ...) are not given out twice. Each number is reserved in a small
+file, `store.idmark`, before the entry is saved, and that file only ever counts upward. A number
+can be skipped after a failed save but not repeated. If that file is missing or unreadable, both
+`add` and `recover` refuse, because they could not be sure which numbers were already used. Then:
+
+```
+python teach_store.py reconcile-ids
+```
+
+rebuilds it from the store, the backup and the log, and warns that a number used after the newest
+of those records could be given out again.
+
+What "saved" means here: each file is written beside the old one, flushed to disk, and swapped in.
+That has been tested against failed writes and interrupted commands. It has **not** been tested
+against a power cut.
 
 ## Limits you will notice
 
@@ -100,6 +111,6 @@ To switch it off again, remove the line and restart. The store can stay.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 61 tests, no model and no network. They include
+`python -B -m unittest tests.test_teach_store` — 70 tests, no model and no network. They include
 simulated write failures, a missing or damaged store file, two editors, and four writers with two
 readers at once.
