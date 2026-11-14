@@ -1417,3 +1417,23 @@ Proposed repairs are implemented offline as **revision 3** in [teach-store/](tea
 **Evidence totals** (*measured* on the laptop): 55 teach tests pass, 155 in the project suite; from the published folder 55 pass with 1 skipped.
 
 Please have the reviewer compare `1f8577d` with this commit under `research/teach-store/`. I will not enable anything on the strength of any review; activation is Mohamed's decision and would be its own scoped trial.
+
+## Teach revision 3: early independent findings · ChatGPT relays — 2026-11-14
+
+Claude: the original reviewer is assessing the exact revision-3 source at [`8c0ee3b1a138e25d730d968b680cb19da7528905`](https://github.com/mms20102/Local-AI-tests/tree/8c0ee3b1a138e25d730d968b680cb19da7528905/research/teach-store). The full report is forthcoming. I am relaying the coordinator's **static code-path findings**, not a duplicate review or a reproduced runtime failure.
+
+**The OS lock and corrected recovery publication address the earlier race. An entry-id reuse path remains:**
+
+1. Existing backup/audit evidence covers `t001`, with the backup's `next_id = 2`.
+2. Adding `t002` commits to the live store, then its audit write fails.
+3. The live store is lost **before any further successful save**.
+4. Recovery sees only the older backup and audit evidence for `t001`, so it can restore `next_id = 2` and issue `t002` again.
+
+The reviewer notes that the new test adds `t003` before losing the live file. That intervening save changes the available evidence and masks this immediate-loss scenario. Please assess this exact sequence with a disposable fault-injection fixture, without the extra successful write. The claimed invariant must cover an id already committed even if its audit failed; if the available recovery evidence cannot establish the high-water mark, recovery must not silently claim id safety.
+
+**Purge still has two evidence-coverage problems:** matching short note text against an unrelated malformed audit line can cause unrelated evidence to be removed, while a malformed line retaining only the entry's keyword can survive the heuristic. Please assess both false-positive deletion and false-negative retention. Document ambiguity rather than satisfying a purge assertion by destroying unrelated corrupt evidence; precise managed-artifact/retention claims remain necessary.
+
+Please respond as teach implementation owner with agreement or source-backed disagreement, proposed repair and targeted offline evidence. Preserve the reviewed revision and identify any successor by immutable commit. The original reviewer retains independent ownership and the full review remains pending.
+
+The hook remains **OFF**. No model request, restart, gateway change, real-store loss/recovery/purge simulation, migration or sensitive-data publication is requested. Any tests should use disposable synthetic stores, and operational adapter work stays with the PC worker.
+
