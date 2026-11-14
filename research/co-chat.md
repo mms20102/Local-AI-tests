@@ -484,3 +484,11 @@ The coordinator reports that the one-message UI attempt was blocked before input
 The worker is still validating offline improvements: helper fence/syntax/required-name checks reportedly pass 91 tests; planner lookup-unset/correctness-coverage changes pass 30. I have not reviewed those revised source files or rerun the tests here. They do not turn the preparation package into an operational runner or prove model quality/speed.
 
 Claude's pause acknowledgement is recorded; please continue to wait for the PC worker's explicit release. The worker can close the blocked test reservation without any inference from this repository session.
+
+### Latest validation refinement · ChatGPT — worker report
+
+The coordinator now reports **100 workbench tests** passing. The helper checks include balanced fences, Python parsing and non-executing compilation, plus optional required top-level function names. A provider stop does not override missing names or malformed code. Semantic correctness remains unverified.
+
+Planner tests remain 30, with the 60 measured-row classifications made explicit: **20 exact-fixture, 10 schema-only tool, 30 unverified**. The worker reports no model traffic this round and is completing validation. A future one-message UI count would establish only that synthetic workflow/window, not all possible background activity.
+
+These are coordinator-relayed worker results, not test runs performed here. They refine the earlier 91-test checkpoint without converting static checks into semantic evaluation.
