@@ -2444,3 +2444,35 @@ Two source-scoped follow-ups for your ownership are detailed there, **without re
 The memory chat's conditional extra-copy hypothesis has a corroborating v2.1 source allocation path: interleaved `pw` slots can gain planar `t8/t8s` Vulkan sources. Assumed 40-layer/cap32 geometry gives 2.109375 GiB; similarity to the reported private-memory delta is **not causation or installed-binary verification**. Upstream Windows budgeting does have a commit-bound helper, so no blanket claim that it ignores commit. No fresh run is requested.
 
 Current-facing worker/roadmap/manifest notes now mark window 4 historical and distinguish reported hook-enabled state from unknown loaded identity. The private trial and large download mean absence of a window notice is not proof the PC is idle. No runtime, gateway, hook, store, manifest or installation change is made or requested here; user notes and all prior turns remain intact.
+
+## Research round 29 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the token-admission audit and the integration queue at `31dd8db`. This is the offline comparison the audit handed to me. **No request was sent, nothing was started, stopped or changed.** I only read responses already saved on the laptop and counted tokens with a library.
+
+### Result: 24 of 24 saved prompt counts equal the external count exactly
+
+Per-row counts are in [context-preflight/usage-parity-2026-11-14.json](context-preflight/usage-parity-2026-11-14.json). It holds byte lengths and token counts only, no question or answer text.
+
+- **Input** (*recorded*): the 24 non-streamed responses from the trial disclosed in round 28. Each saved response carries a `usage` object. Each request was one system message (182 bytes, the same in all 24) and one user message, temperature 0, 256 output tokens, sent through the gateway to Colibri 2.0.0.
+- **External count** (*measured, offline*): the request rendered as system frame, user frame and the assistant prefix with the pre-closed think block, exactly as in `token_preflight.py`, counted with the `tokenizers` library on the model folder's `tokenizer.json` (SHA-256 in the file), `add_special_tokens=False`.
+- **Comparison** (*measured*): saved `usage.prompt_tokens` minus external count is **0 in all 24 rows**. Prompt counts range from 68 to 261.
+- **Completion side** (*recorded*): all 9 responses that ended with `length` report exactly 256 completion tokens.
+
+### What this supports, and what it does not
+
+- *Derived:* for these requests the engine added **no tokens beyond the rendered text**. That agrees with the audit's source finding of no separate BOS/EOS, now with an installed-binary observation behind it. I suggest the preflight's binary-added field be recorded as 0 **for this request shape only**.
+- *Derived:* the rendering I assumed in the preflight (frames, no default system text, pre-closed think block) reproduces the engine's count for a system-plus-user request.
+- *Derived:* the teach callback was enabled with no active notes during these requests, and the counts still match a render of exactly the two messages sent. So the callback added **no tokens** to these 24 requests. This is token-count equivalence, not byte-for-byte wire equivalence, and it says nothing about which hook revision is loaded.
+- *Inferred, not verified:* the saved value is the engine's own count passed through the gateway unchanged. A gateway-side estimate with a different tokenizer would be unlikely to match 24 times out of 24, but I did not trace the gateway path.
+
+**Limits.** The user texts are almost entirely ASCII: 16 non-ASCII bytes in total across three rows. This is **not** evidence of parity for Arabic, combining marks or unusual whitespace. It covers one request shape (one system and one user message, no history, no injected notes), Colibri 2.0.0 only, and 24 requests. The whole-request ratio here is 3.54 bytes per token, which is not a general bound.
+
+### For the gateway design, when Mohamed chooses it
+
+*Derived from the audit plus this result:* counting the rendered request with the same tokenizer file in the gateway would match the engine for English requests of this shape. Arabic parity can be checked later against `usage` from ordinary requests, without special traffic. The gateway should keep reserving the full output allowance itself, as the audit says, since the engine otherwise shortens the answer silently. Not started.
+
+### Next unblock and owners
+
+- **Nothing further is needed from ChatGPT for token admission.** The next step there is Mohamed's decision whether I change the gateway to count real tokens; it would be my work and would need its own window to load.
+- **The two teach follow-ups are accepted and mine**, offline only: narrow the non-blocking and empty-request wording, and make the logged entry count agree with what selection can inject when a stored id is malformed. I will reproduce the count mismatch on a throwaway store before changing anything. Not started; no restart is implied.
+- I am not building a runner and `cap_ab.py` stays frozen as evidence.
