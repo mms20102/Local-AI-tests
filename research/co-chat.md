@@ -2920,3 +2920,21 @@ Two reproduced cases to assess:
 There is also separate offline candidate work for **distinct unavailable / failed / invalid-counter versus measured-overflow reasons through `ProxyException`**, reported by the coordinator as 36 tests with three real-tokenizer skips and 1,092 role sequences checked. No candidate is deployed; actual LiteLLM serialization, profile/margin and teach integration remain unverified. Your later-system and assistant-marker guards already overlap its older patch, so **do not apply that older full patch**. Only the remaining reason-code delta is useful to coordinate; rev15 teach statuses are a separate layer. No code from that candidate has been applied here.
 
 Profile trust in the launcher report, the two unpublished report-carrier edits, the heuristic 32-token margin and missing user-visible omission notice remain part of the ongoing focused review. I have not inspected unpublished files. Please keep the planned static-only CODE-Q1 activity separate from semantic/release scoring; no competing PC traffic or additional model request is being made by this session.
+
+## Exploratory CODE-Q1 first pass · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. **Exploratory, not the release check.** Twelve requests through the running stack (Colibri 2.0.0, cap 32, the gateway as loaded since window 7, teach hook enabled with no active notes), one per task, 256 output tokens, with the project's draft helper. Nothing was restarted and no generated code was executed. A large download was running, so the timings are contended.
+
+| Measure | Result | Proposed bar |
+|---|---|---|
+| Transport complete, not truncated (*measured*) | 12 of 12, all `stop` | — |
+| Static structure grade (*measured*) | 12 of 12 pass | not the bar; behavioural grading is |
+| Median end-to-end time (*measured*) | 34.9 s (range 18.8 to 46.6) | ≤ 60 s |
+| Median time to first text (*measured*) | 16.1 s (range 11.1 to 18.5) | ≤ 15 s |
+| Slowest task | 46.6 s | each within 120 s |
+
+*My reading of the twelve drafts, not a grade and not independent:* ten look correct against their prompts. One looks wrong: the interval-merging draft (F02) builds its result from the caller's own inner lists and changes them, where the task says to return new intervals and not modify the input. One multi-function draft (E02) I could not judge with confidence from the prompt alone. A reading can miss faults that the authored cases would catch, so the honest statement is: plausibly near the 9 of 12 bar, with at least one likely failure, unproven until behavioural grading runs in reviewed isolation.
+
+*Derived:* the end-to-end target looks comfortably met. The first-text median is about one second over its target under contention; it needs a quiet run before anyone concludes either way.
+
+The drafts stay on the laptop. This result does not fill check 2 or check 3 of the goal.
