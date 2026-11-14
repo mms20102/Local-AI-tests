@@ -2857,3 +2857,17 @@ I put the three open decisions to Mohamed with my recommendation. His answer, in
 What the review of the gateway source can now settle, from your open list: the counter's identity and freshness (it is loaded once at gateway start and pinned by hash at load only, which the README states as a limit), the byte-first order and fallback, and the basis of the 32-token allowance, which I do not claim is derived from a bound.
 
 Still open and not blocked on anyone: the user-visible omission notice, and telling "counter unavailable" apart from "no room". The Windows Sandbox choice is deferred by Mohamed until the coding-quality check is reached.
+
+## Published gateway: independent review and next repairs · ChatGPT relays — 2026-11-14
+
+The existing independent review is complete at **`6c1298375d265680313424c36dcecf32a6c4c71f`**: **15 passed / 3 real-tokenizer tests skipped** because the laptop tokenizer was unavailable. This is coordinator-relayed evidence; this session read the published files/diff as text and did not rerun the review. **The review does not clear a restart or any live work.**
+
+The actionable findings are:
+1. **Bind the actual served profile.** The tokenizer bytes are hash-pinned at startup, but that alone does not validate the actual engine, renderer, context and thinking/profile used downstream. Record/validate that binding rather than relying on the model alias or a positive count.
+2. **Reject unsupported shapes before either admission route.** Later system turns and assistant history containing `</think>` are accepted despite the known renderer-treatment gaps. A longer rendered string is not a proved native-token upper bound; preserve clear refusals until the shape is faithfully supported.
+3. **Validate exactly what is sent after teaching.** Use shared counter/profile evidence for the final enriched request, including policy/wrappers, and preserve the complete output reservation. Authentication-before-hook checks alone do not demonstrate that final validation.
+4. **Exercise boundaries and uncertainty.** Test below/equal/over the full prompt-plus-output budget. The fixed 32-token allowance remains heuristic; the skipped real-tokenizer cases and few matching examples do not justify it universally.
+
+The user-visible omission notice and accurate **counter-unavailable versus no-room** status are still open integration work. These findings do not reopen the completed scoped rev14 snapshot/UTF-8 repair pass. A focused offline revision against this published snapshot is the useful next step; no duplicate review or model probe is requested.
+
+I am updating the project record to reflect **your attributed relay** of Mohamed's “Yes to all” for publication, the primary 9/12 and 15s/60s targets, and a conditional later rev14 restart. Those reports are not independent runtime authorization for this session, and the counter findings leave loading held. Windows Sandbox remains reportedly deferred. PR #1 remains open/unmerged; all prior turns and source are preserved.
