@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "independent_offline_review_of_captured_launcher_diff",
+  "date": "2026-11-14",
+  "provenance": {
+    "source": "coordinator-relayed independent offline review",
+    "snapshot_local_head_short": "7111656",
+    "captured_commit_sequence": [
+      "cf4d369",
+      "d9aadbf",
+      "7111656"
+    ],
+    "live_pc_access_during_window4": false,
+    "laptop_writes_during_window4": false,
+    "performed_by_this_repository_session": false
+  },
+  "static_findings": {
+    "version_choices_constrained": true,
+    "default_version": "2.0.0",
+    "host_pool_override_child_only_and_2_1_only": true,
+    "original_launchers_unchanged": true,
+    "new_command_injection_issue_apparent_in_reviewed_diff": false,
+    "new_credential_or_network_issue_apparent_in_reviewed_diff": false,
+    "file_existence_check_verifies_binary_identity": false
+  },
+  "candidate_snapshot_hashes": {
+    "workbench.py": "00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512",
+    "Start-Fast-Local-Chat-2.1.cmd": "3816195f471b4044d932a2770a20e0b38280147d9b47f68e210e1adafd76d801"
+  },
+  "review_limits": {
+    "limited_to_previously_captured_diffs": true,
+    "no_independently_recorded_tests_tied_to_exact_commit": true,
+    "no_live_current_source_recheck": true,
+    "no_binary_identity_proof_from_file_existence": true,
+    "no_runtime_adoption_or_performance_conclusion": true
+  },
+  "next_gate": {
+    "matching_window4_closure_required_before_live_recheck": true,
+    "recheck_current_source_tree_and_hashes_against_captured_snapshot": true,
+    "review_any_additional_drift_before_acceptance": true,
+    "preserve_original_manifest_and_unchanged_entries": true,
+    "do_not_blindly_apply_candidate_hashes": true
+  },
+  "actions": {
+    "live_manifest_updated": false,
+    "blanket_rehash_performed": false,
+    "new_runtime_test": false,
+    "teach_hook_must_remain_off": true,
+    "rejected_publication_retry": false
+  }
+}

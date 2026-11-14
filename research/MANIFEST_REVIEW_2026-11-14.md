@@ -14,7 +14,7 @@ At 14:22 UTC, available RAM was 6.10 GiB and commit headroom 1.33 GiB. They are 
 |---|---|---|
 | `workbench.py` | Recorded `7385b3966d99380ffea826a4bbd99335a6f32f4a170073627f8f70fd56c1f462`; actual `00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512` | Mismatch recorded; new hash **not accepted automatically** |
 | Original launchers | Existing recorded hashes match; 2.0 selection unchanged | Preserve as baseline |
-| Separate 2.1 launcher | Selects 2.1 with host pool off; no manifest entry | Missing coverage; hash value still absent from relay |
+| Separate 2.1 launcher | Selects 2.1 with host pool off; no manifest entry | Snapshot candidate `3816195f471b4044d932a2770a20e0b38280147d9b47f68e210e1adafd76d801`; live recheck pending |
 | Native 2.0 engine | Hash matches prior verified binary | Full digest value absent from relay; do not invent it |
 
 A clean Git tree says tracked files match the local commit, not that every change has been independently reviewed. Checksum drift consistent with known edits is not by itself evidence of compromise. Neither accepting a file hash nor adding experimental-launcher coverage adopts 2.1 as the default.
@@ -24,6 +24,21 @@ A clean Git tree says tracked files match the local commit, not that every chang
 The existing PC worker owns the launcher and performs the independent review; Claude is the change author and can clarify intent. The coordinator receives the concrete review/candidate. Do not start another runtime test or publish the rejected benchmark components under another route.
 
 Preserve all three commits: `cf4d369` (version selection), `d9aadbf` (host-pool flag), `7111656` (separate launcher). Recheck the actual working tree and current runtime reservation before any local operation. Do not stash, reset, revert, rewrite commits or overwrite a concurrent edit.
+
+## Captured-snapshot offline review received
+
+A separate independent offline review of the previously captured `7111656` diffs found constrained version choices, default 2.0, a child-only 2.1 host-pool override and unchanged original launchers. No new command-injection, credential or network issue was apparent **within those diffs**. No PC access or write occurred during window 4.
+
+[Review evidence](experiments/2026-11-14-launcher-diff-review-7111656.json) supplies two **snapshot candidates**, not accepted live-manifest entries:
+
+| File | Candidate SHA-256 for inspected snapshot |
+|---|---|
+| `workbench.py` | `00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512` |
+| `Start-Fast-Local-Chat-2.1.cmd` | `3816195f471b4044d932a2770a20e0b38280147d9b47f68e210e1adafd76d801` |
+
+File-existence checks do not verify binary identity. There is still no independently recorded test pass tied to this exact source commit. This is a limited static-diff result, not comprehensive behavioral clearance.
+
+**After the matching window-4 closure**, recheck the actual current tree, full commit identities and file hashes against the captured snapshot before preparing any accepted change. If source or hashes differ, review that drift first. Keep the old manifest and unchanged entries intact. No live checksum file has been written; no runtime test or automatic trust renewal follows from this review.
 
 ## A. Establish the reviewed baseline
 
@@ -58,7 +73,7 @@ After source review, prepare a **local candidate diff** explaining each change:
 - Whether/how the separately reviewed experimental launcher belongs in this manifest, with its actual digest and correct relative path.
 - Which existing entries remain byte-for-byte unchanged.
 
-The workbench actual digest above is an observation, **not** a trust decision. The missing launcher digest must stay unknown until actually obtained. Do not regenerate every hash or broaden coverage indiscriminately.
+The workbench actual digest above is an observation, **not** a trust decision. The new launcher's digest is now supplied for the captured snapshot only; it must be matched to the actual post-window source before acceptance. Do not regenerate every hash or broaden coverage indiscriminately.
 
 Return the sanitized classification and review rationale to the coordinator; keep the candidate local and do not upload blocked components or private configuration. Applying a manifest change is outside this read-only task. Preserve the original for rollback/audit, and distinguish integrity coverage from runtime adoption.
 

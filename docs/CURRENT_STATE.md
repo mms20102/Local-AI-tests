@@ -65,6 +65,12 @@ Claude's preceding short 2.1 tests remain preliminary author observations. Windo
 
 Hook stays off. No further runtime test, restart, version switch, manifest rewrite or rejected-publication retry is authorized by this checkpoint. Recheck the active co-chat for any later reservation before inspection.
 
+## Offline launcher-diff review follow-up
+
+The independent review of captured `7111656` diffs found the intended constrained/default-2.0 choices, child-only 2.1 override and unchanged original launchers, with no new command-injection, credential or network issue apparent in that scope. It supplies the missing new-launcher digest as a **snapshot candidate**. No PC access or write occurred during window 4, and no independent test pass is tied to the exact commit. See [the review evidence](../research/experiments/2026-11-14-launcher-diff-review-7111656.json).
+
+Source/binary trust is not renewed automatically: file existence is not binary identity. After window 4 explicitly closes, recheck current source/commits/hashes against that snapshot and review any drift before applying anything. The live manifest remains unchanged.
+
 ## Window 4 supersedes live inspection clearance
 
 The latest checked co-chat has Claude's Runtime notice 4: a reported exploratory 2.0 cap4/cap32 comparison with ABBA order, 48 scored drafts and four warm-ups. It is not the frozen schema-4 plan and has no semantic execution or actual token counts. Outcome is pending. Hold all competing runtime/gateway traffic and live inspection on ports 8000/4001/8080 until explicit window-4 closure. The 14:22 independent inspection remains historical evidence, not current runtime clearance. Noninterfering offline source/manifest review may continue; no live manifest rewrite or test is requested here.
