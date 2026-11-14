@@ -582,6 +582,28 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
 ISSUED_ID = re.compile(r"t[0-9]{3,9}")
 
 
+def usable(entry: dict) -> bool:
+    """True when an entry has every field selection and rendering read, in the form the store
+    writes them. Anything else comes from a damaged or hand-edited file. Such an entry is left
+    out on its own, so it cannot take the valid notes beside it down with it."""
+    return (type(entry.get("id")) is str and ISSUED_ID.fullmatch(entry["id"]) is not None
+            and entry.get("kind") in ("rule", "fact", "correction")
+            and type(entry.get("text")) is str and bool(entry["text"].strip())
+            and type(entry.get("created")) is str
+            and type(entry.get("when")) is list and all(type(k) is str for k in entry["when"]))
+
+
+def skipped_invalid(folder: Path = DEFAULT_DIR, attempts: int = 20) -> int:
+    """How many entries marked active in store.json are not usable. Separate read; diagnostic only."""
+    path = Path(folder) / "store.json"
+    try:
+        data = json.loads(path.read_bytes().decode("utf-8"))
+        return sum(1 for e in data["entries"]
+                   if not isinstance(e, dict) or (e.get("status") == "active" and not usable(e)))
+    except Exception:
+        return 0
+
+
 def snapshot(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict], str]:
     """Active entries and a fingerprint, both taken from ONE read of store.json.
 
@@ -615,7 +637,7 @@ def snapshot(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict]
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list):
         raise TeachError("store.json has an unknown format.")
     active = [e for e in data["entries"] if isinstance(e, dict) and e.get("status") == "active"
-              and type(e.get("id")) is str and ISSUED_ID.fullmatch(e["id"])]
+              and usable(e)]
     return active, hashlib.sha256(raw).hexdigest()[:12]
 
 
@@ -625,6 +647,19 @@ def line_for(entry: dict) -> str:
 
 
 WRAPPER_UNITS = len((OPEN + "\n" + CLOSE + "\n\n").encode("utf-8"))
+
+
+def relevant(entries: list[dict], query: str) -> list[dict]:
+    """Every entry that applies to this user message, in injection order, with no size limit."""
+    words = set(tokens(query))
+    always = [e for e in entries if not e["when"]]
+    matched = []
+    for entry in entries:
+        if entry["when"]:
+            hits = sum(1 for keyword in entry["when"] if set(keyword.split()) <= words)
+            if hits:
+                matched.append((-hits, entry["created"], entry["id"], entry))
+    return always + [item[3] for item in sorted(matched, key=lambda item: item[:3])]
 
 
 def select(entries: list[dict], query: str, budget_units: int) -> list[dict]:
@@ -675,8 +710,14 @@ TOKEN_MARGIN = 32      # the same allowance the gateway adds to a real token cou
 
 def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,
                       budget_units: int = DEFAULT_BUDGET_UNITS, count_tokens=None
-                      ) -> tuple[list[dict], list[str], int]:
-    """Return (new message list, ids used, number of relevant entries left out for lack of room).
+                      ) -> tuple[list[dict], list[str], dict]:
+    """Return (new message list, ids used, left_out).
+
+    left_out counts the entries that apply to this message but were not added, by reason:
+      "note_cap": they did not fit the fixed size cap for the notes block (budget_units);
+      "no_room":  they fit the cap, but the request had no room left for them.
+    Both are counted against relevant(), the full list of applicable entries, never against a
+    list that was already filtered. An entry is in exactly one of: used, note_cap, no_room.
 
     The byte rule (apply_to_messages) is tried first and its result is kept whenever it places
     every relevant entry. Only when it leaves some out, and count_tokens(messages) -> prompt
@@ -692,16 +733,18 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
     """
     legacy, legacy_ids = apply_to_messages(messages, entries, limits, output_tokens, budget_units)
     if not messages or messages[-1].get("role") != "user" or already_applied(messages):
-        return legacy, legacy_ids, 0
-    try:
-        wanted = select(entries, messages[-1]["content"], budget_units)
-    except Exception:
-        return legacy, legacy_ids, 0
+        return legacy, legacy_ids, {"note_cap": 0, "no_room": 0}
+    applicable = relevant(entries, messages[-1]["content"])
+    wanted = select(entries, messages[-1]["content"], budget_units)
+    over_cap = len(applicable) - len(wanted)
+
+    def left(used_ids):
+        return {"note_cap": over_cap, "no_room": len(wanted) - len(used_ids)}
     if len(legacy_ids) >= len(wanted) or count_tokens is None:
-        return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+        return legacy, legacy_ids, left(legacy_ids)
     has_system = messages[0].get("role") == "system"
     if not has_system and len(messages) >= limits["max_messages"]:
-        return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+        return legacy, legacy_ids, left(legacy_ids)
     has_policy = has_system and messages[0]["content"].endswith(POLICY)
     chosen = list(wanted)
     while len(chosen) > len(legacy_ids):
@@ -718,9 +761,9 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
         except Exception:
             prompt = None
         if type(prompt) is int and prompt > 0 and prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]:
-            return result, [e["id"] for e in chosen], len(wanted) - len(chosen)
+            return result, [e["id"] for e in chosen], left(chosen)
         chosen.pop()
-    return legacy, legacy_ids, len(wanted) - len(legacy_ids)
+    return legacy, legacy_ids, left(legacy_ids)
 
 
 def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,
