@@ -1,0 +1,48 @@
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+local.env
+local.env.*
+*.key
+*.pem
+credentials*
+secrets*
+.netrc
+.npmrc
+
+# Private inputs, conversations and runtime logs
+private/
+private-logs/
+raw-logs/
+data/
+logs/
+*.log
+*.db
+*.db-*
+*.sqlite
+*.sqlite*
+.coli_usage*
+.coli_kv*
+.coli_vocab*
+
+# Downloaded/converted model artifacts
+models/
+weights/
+*.safetensors
+*.gguf
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Local environments and generated dependencies
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
