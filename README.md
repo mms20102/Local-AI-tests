@@ -6,7 +6,9 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 
 ## Current checkpoint — 2026-11-14
 
-**Runtime window 2 OPEN — reported intent:** the first window closed with reported 2.0 restoration, then Claude announced a separate 2.1 host-pool-off test and another launcher change. Hold runtime/gateway activity on ports 8000, 4001 and 8080 until the matching second-window closure. Outcome/final running version is pending independent evidence. See the [historical first-window report](research/experiments/2026-11-14-colibri-2.1-first-start-reported.json) and [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md).
+**Runtime window 4 OPEN — reported intent:** Claude is conducting a separate exploratory cap4/cap32 run. Hold competing traffic/live inspection on ports 8000/4001/8080 until its matching closure. The independent checkpoint below is historical; this run is not the full schema-4 benchmark and assesses no semantic quality.
+
+**Independent runtime checkpoint:** after window 3 closed, the PC worker confirmed 2.0 running with its prior verified binary hash, no 2.1 process, unchanged original launchers and a clean tree at local 7111656. Workbench checksum drift and a missing 2.1-launcher manifest entry need [source review before trust renewal](research/MANIFEST_REVIEW_2026-11-14.md). No tests were rerun or files changed. Recheck [active reservations](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) before local work.
 
 | Workstream | Verified or reported progress | Next boundary |
 |---|---|---|

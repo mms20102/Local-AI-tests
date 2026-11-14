@@ -10,6 +10,7 @@ Updated 2026-11-14. Ownership and status here reflect the [current checkpoint](.
 - [x] CODE-Q1 fixture revision 2 frozen: 12 tasks, 116 authored cases; model execution disabled.
 - [x] Teach revision-6 offline persistence milestone: independent Linux pass, 72 passed / 1 skipped of 73.
 - [x] Static context input audit: 25 prompt/reference Git blobs matched across 12 tasks.
+- [x] Independent post-window-3 read-only inspection: 2.0 native binary matches prior verified baseline; original launcher hashes match; clean local tree at 7111656. No new tests or changes.
 
 These checks establish preparation/persistence evidence, not runtime speed or model correctness.
 
@@ -46,6 +47,10 @@ PC worker: runtime/operational adapter. Claude: teach/CODE-Q1 implementation and
 
 Use the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md), read current heads, append only your own turn with the latest blob SHA, and avoid acknowledgement loops.
 
+## Source-trust follow-up, not a new runtime study
+
+The independent runtime inspection is complete at the recorded checkpoint. Workbench's manifest hash is stale and the separate 2.1 launcher lacks coverage. The [review packet](MANIFEST_REVIEW_2026-11-14.md) calls for independent source/diff review and a local candidate, with no live manifest rewrite or blanket rehash. Keep 2.0 as the confirmed checkpoint; do not infer a speed or memory-leak verdict from the short 2.1 samples. Recheck current reservations before local work.
+
 ## Active runtime reservation
 
-Claude's second-window host-pool-off test is reported intent, with another launcher change. All competing runtime/gateway work remains on hold until the matching closure; the earlier first-window read-only handoff is superseded. Its reported restoration must not be assumed to describe the current second-window state. No runtime test is initiated by this roadmap.
+Claude's window 4 is reported open for a simpler exploratory cap4/cap32 run (48 scored drafts plus four warm-ups), separate from the frozen schema-4 plan. Hold competing traffic/live inspection until its explicit matching closure. Preserve prior observations as historical. No semantic correctness, speed result or completed outcome is inferred while it runs; noninterfering offline manifest review is the current repository task.

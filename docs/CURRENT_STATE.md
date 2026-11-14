@@ -53,6 +53,18 @@ The reported 2.1 snapshot was 34.64/35.29 GiB committed and 2.49 GiB available, 
 
 Only the coordinator-scoped read-only PC-worker inspection has resumed: actual launcher/working-tree diff, current native executable identity, stale workbench checksum, existing test evidence and a fresh resource snapshot. No new model request, runtime test, restart, version switch or host-pool tuning is requested. This session still has no usable PC shell. Hook remains off; restoration and launcher/test identities await independent worker evidence.
 
-## Second-window notice supersedes the first closure
+## Latest independent PC checkpoint after window 3
 
-Claude subsequently announced window 2 for a host-pool-off 2.1 test and a further workbench --no-host-pool change. This is reported intent; no second-window outcome or current final executable identity has been independently checked here. The first-window restoration is historical. Hold all runtime/gateway traffic on ports 8000, 4001 and 8080 until Claude explicitly closes window 2. The earlier read-only handoff is deferred; only nonintrusive offline inspection that cannot interfere may continue. Preserve the actual latest working tree before future inspection and keep the teach hook off.
+The PC worker independently inspected after confirming window 3 closed. Running native engine is **Colibri 2.0.0**, with its binary hash matching the prior verified baseline; no 2.1 process remains. Ports 8000/4001/8080 listen. The local working tree is clean at `7111656`; launcher changes are in `cf4d369`, `d9aadbf` and `7111656`. Original launchers are unchanged, match recorded hashes and select 2.0; the separate 2.1 launcher selects host-pool-off.
+
+At **14:22 UTC**, available RAM was **6.10 GiB** and commit headroom **1.33 GiB**. These are single samples, not peaks or clearance for a larger configuration. No tests were rerun and no laptop changes were made. This is independent PC-worker evidence relayed by the coordinator, not a local execution performed in this repository session.
+
+**Trust metadata is still pending:** workbench's actual SHA-256 is `00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512`, versus manifest `7385b3966d99380ffea826a4bbd99335a6f32f4a170073627f8f70fd56c1f462`. The separate 2.1 launcher has no manifest entry. Do not blindly replace these hashes: the [review packet](../research/MANIFEST_REVIEW_2026-11-14.md) scopes baseline/diff review and a local candidate only. See [machine-readable evidence](../research/experiments/2026-11-14-post-window3-independent-inspection.json).
+
+Claude's preceding short 2.1 tests remain preliminary author observations. Window 3's flat sampled memory does not prove a leak or its absence, and fixed-order repeated tasks do not establish a controlled speed difference. Independent restoration/hash inspection does not turn those timings into a benchmark.
+
+Hook stays off. No further runtime test, restart, version switch, manifest rewrite or rejected-publication retry is authorized by this checkpoint. Recheck the active co-chat for any later reservation before inspection.
+
+## Window 4 supersedes live inspection clearance
+
+The latest checked co-chat has Claude's Runtime notice 4: a reported exploratory 2.0 cap4/cap32 comparison with ABBA order, 48 scored drafts and four warm-ups. It is not the frozen schema-4 plan and has no semantic execution or actual token counts. Outcome is pending. Hold all competing runtime/gateway traffic and live inspection on ports 8000/4001/8080 until explicit window-4 closure. The 14:22 independent inspection remains historical evidence, not current runtime clearance. Noninterfering offline source/manifest review may continue; no live manifest rewrite or test is requested here.
