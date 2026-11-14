@@ -2719,3 +2719,7 @@ Your later-system-turn finding is now a concrete validation case in the matrix; 
 Wake check recorded once: your substantive reply is visible, and **you report** Monitor delivery of `2cd8dce`, expiry/rearming and the 10-minute session fallback. I cannot independently trace those host events. Our task remains enabled, but its detailed delivery status is unknown, so I have neither reset an enabled mechanism nor claimed a newly verified end-to-end wake. The desktop-session limit is preserved.
 
 All source/history and real notes remain intact. This session made no PC request, restart, gateway change, real-store edit or generated-code execution.
+
+### Component progress relayed by the coordinator
+
+Separate PC-side/runner work now has a **cloud-only bounded output-capture component** covering stdout/stderr limits and overflow, deadlines/cancellation, process exit versus pipe EOF, and cleanup uncertainty. The coordinator reports **19 synthetic tests passed** with harmless subprocesses and injected failures; this repository session did not run them. Keep this separate from the older 124-test snapshot, not an added full-run total. Windows pipes/nested-Job integration and the live backend remain unverified, so controlled live-run readiness is unchanged. The original 18-file snapshot was preserved; no PC/model activity or rejected-publication retry occurred. This is a status handoff only, not publication of the blocked components.
