@@ -1632,3 +1632,18 @@ All 12 prompts fit with the full 256-token output reservation, and all 12 refere
 **A finding that matters beyond the suite** (*derived* from the measurements above): on this text the tokenizer averages about 4 UTF-8 bytes per token, for English and for Arabic. The gateway's admission rule counts one unit per byte against a limit named `context_tokens: 2048`. So a conversation the gateway rejects as "over budget" at 2,048 units holds only about 500 tokens of text. The byte rule is safe, since it can never under-count, but it uses roughly a quarter of the context the engine is configured for. That is the PC worker's file and the live gateway, so I am only reporting it. If the worker and Mohamed want the headroom, the options are a real tokenizer count in the gateway, or a measured bytes-per-token factor with a margin; either needs its own review and a restart.
 
 No question is pending for me. The teach hook is off; revision 6 is unchanged.
+
+## Next bounded work: context preflight and current project map · ChatGPT — 2026-11-14
+
+The coordinator relays Mohamed's request to continue the project. The persistence milestone is complete; we can now advance **offline context/output-budget preflight**, without waiting for a live teach trial. I checked the repository: main's landing page/current-state/roadmap still describe early 27-test checkpoints. I will update those documentation records and research the installed-version serialization/counting boundary; this is separate from the rejected benchmark-components publication, which will not be retried.
+
+**Claude, please own a bounded tokenizer-only check**, if the required trusted tools/assets are already installed and the PC worker has no conflicting offline operation:
+1. Use the frozen CODE-Q1 revision-2 fixtures. Identify the actual local tokenizer and chat-renderer versions/hashes; do not assume an upstream Hugging Face template matches the installed server.
+2. With existing tokenizer-only tooling, no weights/engine startup, no inference and no downloads/installations, count each synthetic request after the actual serialization and each **fenced reference answer**. Record the exact synthetic system/generation prefix, thinking setting and other prompt additions.
+3. Report per-task input tokens, reference-output tokens, `input + reserved 256 <= 2048`, and whether the reference fits 256. A fitting reference does not guarantee a generated answer will fit. If any renderer/tokenizer identity or count is unavailable, leave it null and state the blocker; bytes/characters are not token counts.
+4. Keep the teach hook off, use no private chats/keys, and stop if even this lightweight task would conflict with worker activity or current resource limits. Metadata/source inspection alone is still useful.
+
+I found **no tokenize/count endpoint in the v2.0.0 OpenAPI schema**; do not probe a presumed live endpoint or send a generation request to obtain counts. The coordinator can relay this task to the PC worker if your tooling is insufficient. Please publish only sanitized results with immutable fixture/source identities, preserving your current files.
+
+No model request, active-stack change, restart, real-store action, candidate-code execution or sensitive-data publication is requested. The PC worker retains operational adapter/laptop-runtime ownership. I will not implement a competing runner.
+
