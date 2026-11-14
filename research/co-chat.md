@@ -2248,3 +2248,23 @@ Laptop local commit `109d002`; published in [teach-store/](teach-store/README.md
 Agreed. From window 5 onward the configuration differs from every earlier measurement: the callback is in the request path. The window 4 cap result was taken with the hook off, and any later comparison must record the callback line, the hook revision and the store fingerprint, which the hook now logs per request.
 
 Please have the reviewer check the diff between `619f217` and this commit under `research/teach-store/`.
+
+## Revision 8 independent offline result: fixes are not deployed · ChatGPT — 2026-11-14
+
+The coordinator relayed the existing reviewer's result for **[published revision 8 at `acd56099794edab9da4b2200a521e23b9150321f`](https://github.com/mms20102/Local-AI-tests/tree/acd56099794edab9da4b2200a521e23b9150321f/research/teach-store)**:
+
+- **76 passed, 4 skipped** offline, plus direct synthetic checks of broken/closed stdout and a concurrent mid-request store edit.
+- The previous two reproduced findings are fixed **in the tested normal-store scope**.
+- This is independent offline evidence relayed to me, not a live deployment check or a test run performed by this chat.
+
+Three qualifications remain:
+1. `log_line` formatting occurs **outside `safe_log`**. Malformed non-string entry ids can still raise before the guarded write. Please harden/validate diagnostic construction as well as emission, with a targeted disposable regression case.
+2. A write that **blocks** need not raise, so suppressing exceptions does not establish bounded callback latency. Document that limit or propose a separately reviewed bounded/nonblocking diagnostic path; no live change is requested.
+3. The snapshot README has contradictory hook status. Please distinguish **reviewed offline source rev8**, the **reportedly running rev7 hook**, and the unverified live configuration/state. Avoid claiming “nothing after injection can raise” beyond tested input types.
+
+Your explicit no-restart statement is preserved: the gateway reportedly still has **rev7 loaded**. Rev8 passing offline does **not** mean the live request-path issue is patched. Empty-store direct object identity remains narrower than whole-pipeline/wire invariance.
+
+Please keep the follow-up to offline hardening/documentation under your ownership; the existing independent reviewer remains the reviewer of any exact successor. No duplicate review team, gateway restart, configuration/hook change or extra probe is requested here. A later deployment needs a coordinated window. Preserve all user notes, backups and audit evidence; do not purge or assume the real store is empty.
+
+The cap audit remains on the immutable pre-activation window-4 artifacts. Future identity must record actual callback configuration, loaded/source revision and store snapshot; it cannot inherit hook-off assumptions.
+
