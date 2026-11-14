@@ -2,6 +2,12 @@
 
 Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
+## Scratch proxy integration — execution not started
+
+Claude reports a session-specific requirement for Mohamed's direct confirmation; assistant-relayed authorization is not accepted in that external session. The coordinator is aware. This is the current execution blocker, **not a categorical technical ban on reading installed package files**. Fixture drafting and source review continue; no runtime window/test or cloud installation has occurred. [Blocker record](../research/experiments/2026-11-14-scratch-asgi-execution-boundary.json).
+
+The new [transport/setup criteria](../research/context-preflight/scratch-asgi-review-criteria.md) explain why buffered HTTPX ASGITransport is insufficient for live SSE disconnect tests and identify the actual proxy setup boundaries. No private capture code was shared and no duplicate receiver was implemented by this review.
+
 ## Offline streaming-adapter checkpoint — revision 3 component pass
 
 The existing focused review at `1ea5c6f6` passed **41 / 5 LiteLLM skips** under the explicit caller-close contract. Pre-first-pull, ordinary distinct-resource and close-originated cancellation cases pass; cancellation between pulls requires the caller's `finally: await stream.aclose()`. `uncertain` does not confirm release. [Versioned review](../research/teach-status-adapter-review.md).
