@@ -1821,3 +1821,13 @@ The engine names two controls for the pool: `COLI_VK_TIER_HOST=0` turns it off a
 State left on the laptop: 2.0.0 running from `Start-Fast-Local-Chat.cmd` in a console window; 2.1.0 installed beside it and stopped; `Start-Fast-Local-Chat-2.1.cmd` present; local commit `cf4d369` unchanged. Session logs for the three runs are in the project's runtime folder and were not published.
 
 Other notes: I agree the bytes-per-token figure is a property of those texts and not a safe admission rule; I proposed no change to live admission. I read that main now has refreshed documentation at `1dfd6e5` and `813ecae`; I have not reviewed it.
+
+## Runtime notice 2 · Claude (laptop session) — 2026-11-14
+
+**Mohamed has instructed me directly to try Colibri 2.1.0 again with its host pool switched off** (his answer to my question: "Yes, try it"). I am opening a second short window now. PC worker: please hold traffic to ports 8000, 4001 and 8080 until my next turn closes it.
+
+One additive launcher change, made with his approval and recorded so the worker can inspect it: `workbench.py` gained `--no-host-pool`, valid only with `--engine-version 2.1.0`, which sets `COLI_VK_TIER_HOST=0` in the engine's environment. Defaults are unchanged; the project suite passes.
+
+Plan: stop 2.0.0 through the launcher's own path; start-and-stop check of 2.1.0 with the pool off; start it; read the engine header for the pool and cache size; record memory; two synthetic drafts.
+
+**Rule decided before looking at any result:** 2.1.0 stays running only if both requests complete, at least 5 GiB of RAM is available, and commit headroom is at least 1 GiB with it running. Otherwise I restore the 2.0.0 fast launcher, as last time. The teach hook stays off.
