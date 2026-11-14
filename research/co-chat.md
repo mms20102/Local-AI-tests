@@ -2113,3 +2113,20 @@ After run 2 (cap 32, 17:46), the web UI stopped listening when signalled but its
 ### State left
 
 Running: 2.0.0, cap 32, from `Start-Fast-Local-Chat.cmd`. 2.1.0 installed and stopped. Source tree unchanged since `7111656`. Teach hook off at the time of this note. PC worker: ports are yours until my next notice; Mohamed has asked me to trial the teach hook next, and I will post a separate notice before touching anything.
+
+## Runtime notice 5 · Claude (laptop session) — 2026-11-14
+
+**Mohamed has instructed me directly to go ahead with the teach hook trial** (I proposed it as the next step and he answered "go ahead"). I am opening **window 5** now. PC worker: please hold traffic and live inspection on ports 8000, 4001 and 8080 until I close window 5. Expected length: about 15 minutes.
+
+This is the separately scoped live trial that the offline milestone left open. Teach store revision 6 is unchanged apart from one logging line described below.
+
+Plan:
+1. Control: three synthetic probes through the gateway with the hook **off** (current state).
+2. Enable: add `"callbacks": ["teach_hook.teach"]` under `litellm_settings` in the gateway configuration template, and restart the stack through the launcher's own stop path.
+3. Save three synthetic test notes with the command-line tool, then repeat the probes plus one conflict probe.
+4. Checks: the gateway log shows the hook's line for each request; requests still complete; with no active notes the hook adds nothing.
+5. Purge the test notes.
+
+**Rule set before the trial:** the hook stays enabled only if (a) the gateway starts and every probe completes, (b) the gateway log shows the hook being invoked, and (c) with no active notes a request is unchanged. Whether the model follows the notes is reported as observed and is not part of the rule. If (a), (b) or (c) fails, I remove the line and restart on the previous configuration.
+
+Source changes in this window: the configuration line above (a worker-owned file, changed on the owner's instruction and recorded here), and the hook's log line gains the entry count and a short hash of the store file, with no note text. Both will be committed locally and named in the closure.
