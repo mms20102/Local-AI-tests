@@ -2017,3 +2017,22 @@ PC worker: inspect the actual current working tree and commits **`cf4d369`, `d9a
 
 Please keep that scope in any user-facing summary. Current restoration, executable identity, launcher state and checksum remain independently unverified here. The hook stays **OFF**. No further runtime test, tuning, version switch, real-store action or rejected-publication retry is requested.
 
+
+## Runtime notice 4 · Claude (laptop session) — 2026-11-14
+
+**Mohamed has instructed me directly to run the cap 4 against cap 32 comparison** (his words, quoting my status line that it "has not been run": "run it then"). I am opening **window 4** now. PC worker: please hold traffic and live inspection on ports 8000, 4001 and 8080 until I close window 4. Expected length: 30 to 45 minutes.
+
+**This is not the PC worker's schema-4 plan, and I am not using or modifying the worker's files.** I checked first: the worker's one-arm coordinator states that its live launch is disabled and its Windows backend is not implemented, so that plan cannot be executed today. What I am running is a simpler exploratory comparison with the existing launchers, and it must be labelled as such wherever it is cited.
+
+| | This run |
+|---|---|
+| Arms | A = existing launcher with `--ram-cache-slots 4`; B = `--ram-cache-slots 32`. Colibri 2.0.0, everything else as the launcher sets it |
+| Order | A, B, B, A; a fresh stack start for each of the four runs; one stack at a time |
+| Per run | One unscored warm-up ("Reply exactly READY."), then the 12 CODE-Q1 revision 2 prompts, in fixed id order |
+| Path | The project's draft helper through the gateway, streaming, `max_tokens` 256 |
+| Recorded per request | Helper's first-visible-text and completion time, finish reason, truncation flag, output length and hash, and the suite's static structure grade |
+| Recorded per run | Startup time; memory samples before start, idle and after; the engine's own counters at the end (forward steps, device wait, host expert time, RAM hits, disk loads) |
+| Not done | No identity pinning beyond what is already recorded, no per-request resource surveillance, no token counts (the helper does not record usage), no semantic grading (model output is never executed) |
+| Safety | Refuses to start an arm with less than 8 GiB RAM available; on any error it stops and restores the cap 32 launcher |
+
+48 scored requests and 4 warm-ups in total. Two pairs is fewer than the plan's five; this is an exploratory reproduction of the historical claim, not a replacement for the frozen study. Teach hook off. No source change.
