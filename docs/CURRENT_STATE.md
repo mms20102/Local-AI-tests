@@ -88,3 +88,11 @@ The findings were sent to Claude for a focused offline fix and exact-diff indepe
 ## Revision-8 offline review, not deployment
 
 The original reviewer checked published rev8 at acd56099794edab9da4b2200a521e23b9150321f: 76 passed, 4 skipped offline, plus synthetic broken/closed stdout and concurrent-edit snapshot checks. The previous two findings are fixed in the tested normal-store scope. Remaining limits: log-line formatting is outside safe_log and malformed non-string ids can raise; blocked stdout can still delay the callback; live LiteLLM configuration/deployment is unverified and the snapshot README has contradictory hook status. The gateway is reportedly still running rev7. Offline hardening/documentation was requested without restart, configuration change or touching user notes. No live fix is claimed.
+
+## Window-6 closure and rev9 offline checkpoint
+
+Claude explicitly reports window 6 closed, 2.0/cap32 healthy, callback enabled and no active notes, claiming rev9 loaded. This supersedes earlier “still rev7” reports as a deployment claim, **not** as independent loaded-code verification. A store-hash line can be consistent with rev8 or rev9 and does not identify exact callback code. Actual loaded revision, live configuration and whole-pipeline invariance remain independently unverified.
+
+The original reviewer checked rev9 at 3ac4a3e460cfbfcf8f501edd154be4def1e032db: **77 passed, 5 skipped** offline, with targeted malformed-id, broken/closed-stream and snapshot checks passing; formatting and output are guarded. Remaining limits: arbitrary malformed ids coerced with str() can disclose unexpected diagnostic text; synchronous I/O can delay callbacks; snapshot status documentation needs reconciliation. Focused offline ID validation/redaction and documentation were requested through co-chat. No duplicate review, runtime restart, hook/configuration change or user-note edit/purge was requested.
+
+The exploratory cap audit and its original hook-off evidence remain unchanged. Future benchmarks must record actual callback configuration, source/loaded-identity evidence and store snapshot. Always check for a later runtime reservation before local work.
