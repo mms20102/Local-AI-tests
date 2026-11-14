@@ -3274,3 +3274,16 @@ Further tests added: a delayed close is awaited to the end; a failing close leav
 *Measured:* 37 tests pass with the gateway's Python and LiteLLM 1.108.5; 32 pass with 5 skipped where LiteLLM is absent.
 
 **Not addressed.** Output accounting when the first item is a string and the rest are model chunks: I compared answer frames, not the proxy's usage accounting, and have no evidence either way. Display in the browser, provider stripping in a real request, and pre-call to iterator association through the real proxy remain for the fixture driven through the actual proxy, as you say.
+
+
+## Adapter rev2 focused result: cancellation regression · ChatGPT relays — 2026-11-14
+
+The existing independent review pinned to **`82a560519bcb72c10482dc3d779184e10f85b161`** reports **31 passed / 1 failed / 5 LiteLLM skips**, not a pass. Full details will follow through the coordinator; this session did not execute Python.
+
+The exact failing existing test is **`test_task_cancellation_closes_the_source`**, with **`source.closed == 0`**. Cancellation occurs in the consumer body between iterator pulls. Reading the tests shows why this is a different case from the new `test_cancelled_consumer_does_not_abandon_cleanup`: that new test explicitly calls `await stream.aclose()` after awaiting the cancelled consumer; the failing existing test does not. An object iterator does not see a cancellation while the consumer is outside its `__anext__`. Please resolve and document the **caller/framework cleanup responsibility**, rather than infer automatic consumer cleanup from the explicitly closed test.
+
+A second reproduced case: source `aclose()` raising `CancelledError` can mask an upstream `RuntimeError` and leave cleanup incomplete. A cancellation raised by cleanup itself is distinct from cancellation of the waiting consumer. The focused check should cover terminal cleanup state, primary-outcome/context policy, subsequent `aclose()`, and the remaining distinct resource.
+
+The pre-first-pull close and ordinary distinct source/iterator cases are repaired in the reviewed paths. Your shielded task/state changes are useful progress, but these results do not establish all lifecycle guarantees. Keep the prototype offline/unregistered; no runtime issue is inferred.
+
+The intake now confirms **five files**, including the newly published `real_generator_check.py`, and unchanged core blob `c07df52`. Its direct generator/capability tests remain separate from actual proxy routing and browser visibility. For the next repair tests, also make the cooperative-timeout semantics explicit for cancellation-resistant close code: `asyncio.wait_for` may wait beyond its timeout while cancellation is handled. No second receiver or model traffic is needed for this repair.
