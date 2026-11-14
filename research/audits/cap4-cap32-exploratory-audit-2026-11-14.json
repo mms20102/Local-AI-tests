@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "kind": "independent_offline_arithmetic_and_static_driver_audit",
+  "date": "2026-11-14",
+  "source": {
+    "repository": "mms20102/Local-AI-tests",
+    "commit": "d858cb890aa36783993e5cfe7cf13e76c4daebcb",
+    "artifacts": [
+      {
+        "path": "research/experiments-claude/2026-11-14-cap4-cap32-exploratory/cap_ab.py",
+        "git_blob": "a5571ea0c79fae3d676ddf58e7527b7add0f4fab"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-14-cap4-cap32-exploratory/result-pair1.json",
+        "git_blob": "e290e2e6fcfce4db59e6b37ccc3d00a76037aa65"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-14-cap4-cap32-exploratory/result-pair2.json",
+        "git_blob": "4c38b3f8b42b4dd25ec9de03b6073f3a962c338d"
+      }
+    ],
+    "source_git_blobs_matched_to_same_tree": true,
+    "original_artifacts_modified": false,
+    "first_invocation_driver_revision_unknown": true
+  },
+  "method": {
+    "auditor_ran_driver": false,
+    "model_or_pc_requests_sent": 0,
+    "candidate_code_executed": false,
+    "calculation_runtime": "functions JavaScript isolate; parsed JSON and auditor-authored arithmetic only",
+    "totals": "sum recorded elapsed_seconds; checked independently in integer centiseconds",
+    "reduction_formula": "100 * (1 - cap32 / cap4)",
+    "median": "median of 12 task-wise reductions per order pair",
+    "end_to_end_lifecycle_latency_included": false,
+    "actual_token_counts_available": false
+  },
+  "observed_schedule": {
+    "reconstructed_order": [
+      "A",
+      "B",
+      "B",
+      "A"
+    ],
+    "distinct_invocations": 2,
+    "logical_observed_runs": 4,
+    "logical_scored_rows": 48,
+    "observed_warmups": 4,
+    "invocations": [
+      {
+        "planned_order": [
+          "A",
+          "B",
+          "B",
+          "A"
+        ],
+        "observed_order": [
+          "A",
+          "B"
+        ],
+        "status": "aborted: RuntimeError('stack did not stop; ports still open: [8000, 4001]')",
+        "restored_fast_stack": false,
+        "unstarted_planned_runs": 2,
+        "started": "17:27:27",
+        "finished": "17:48:55"
+      },
+      {
+        "planned_order": [
+          "B",
+          "A"
+        ],
+        "observed_order": [
+          "B",
+          "A"
+        ],
+        "status": "complete",
+        "restored_fast_stack": true,
+        "unstarted_planned_runs": 0,
+        "started": "17:51:01",
+        "finished": "18:08:11"
+      }
+    ]
+  },
+  "counts": {
+    "scored": 48,
+    "warmups": 4,
+    "recorded_complete": 48,
+    "recorded_static_pass": 48,
+    "recorded_truncated": 0,
+    "recorded_helper_nonzero": 0,
+    "paired_task_observations": 24,
+    "unique_tasks": 12,
+    "pair_blocks": 2,
+    "scored_metadata_failures": 0,
+    "aborted_invocations": 1,
+    "reported_failed_restorations": 1,
+    "semantic_quality_assessed": 0,
+    "static_grades_independently_rerun": 0
+  },
+  "per_run": [
+    {
+      "invocation": 1,
+      "run": 1,
+      "arm": "A",
+      "cap": 4,
+      "session": "20261114-172743-6bc5143a",
+      "scored": 12,
+      "total_s": 484.02,
+      "warmup_complete": true,
+      "chat_requests": 13,
+      "commit_headroom_after_gib": 2.28
+    },
+    {
+      "invocation": 1,
+      "run": 2,
+      "arm": "B",
+      "cap": 32,
+      "session": "20261114-173702-dfbde1df",
+      "scored": 12,
+      "total_s": 351.07,
+      "warmup_complete": true,
+      "chat_requests": 13,
+      "commit_headroom_after_gib": 0.62
+    },
+    {
+      "invocation": 2,
+      "run": 1,
+      "arm": "B",
+      "cap": 32,
+      "session": "20261114-175107-e815d565",
+      "scored": 12,
+      "total_s": 353.92,
+      "warmup_complete": true,
+      "chat_requests": 13,
+      "commit_headroom_after_gib": 0.81
+    },
+    {
+      "invocation": 2,
+      "run": 2,
+      "arm": "A",
+      "cap": 4,
+      "session": "20261114-175814-1eed5765",
+      "scored": 12,
+      "total_s": 478.22,
+      "warmup_complete": true,
+      "chat_requests": 13,
+      "commit_headroom_after_gib": 2.63
+    }
+  ],
+  "per_pair": [
+    {
+      "pair": 1,
+      "order": [
+        "A",
+        "B"
+      ],
+      "sum_a_s": 484.02,
+      "sum_b_s": 351.07,
+      "median_completion_reduction_pct": 26.3291,
+      "completion_reduction_range_pct": [
+        21.0947,
+        32.8248
+      ],
+      "faster_completion_count": 12,
+      "median_first_text_reduction_pct": 25.8442,
+      "faster_first_text_count": 12,
+      "tasks": [
+        {
+          "task": "A01",
+          "a_s": 30.97,
+          "b_s": 20.94,
+          "reduction_pct": 32.3862,
+          "first_text_reduction_pct": 32.0659,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 218,
+          "b_chars": 218
+        },
+        {
+          "task": "A02",
+          "a_s": 41.56,
+          "b_s": 29.72,
+          "reduction_pct": 28.4889,
+          "first_text_reduction_pct": 27.8976,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 367,
+          "b_chars": 367
+        },
+        {
+          "task": "A03",
+          "a_s": 31.28,
+          "b_s": 23.62,
+          "reduction_pct": 24.4885,
+          "first_text_reduction_pct": 18.477,
+          "same_recorded_fingerprint_and_length": false,
+          "a_chars": 275,
+          "b_chars": 212
+        },
+        {
+          "task": "B01",
+          "a_s": 39.03,
+          "b_s": 29.76,
+          "reduction_pct": 23.751,
+          "first_text_reduction_pct": 26.8136,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 331,
+          "b_chars": 331
+        },
+        {
+          "task": "B02",
+          "a_s": 22.3,
+          "b_s": 17.11,
+          "reduction_pct": 23.2735,
+          "first_text_reduction_pct": 20.764,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 112,
+          "b_chars": 112
+        },
+        {
+          "task": "B03",
+          "a_s": 43.59,
+          "b_s": 30.58,
+          "reduction_pct": 29.8463,
+          "first_text_reduction_pct": 31.1511,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 377,
+          "b_chars": 377
+        },
+        {
+          "task": "E01",
+          "a_s": 43.45,
+          "b_s": 31.69,
+          "reduction_pct": 27.0656,
+          "first_text_reduction_pct": 22.8419,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 413,
+          "b_chars": 413
+        },
+        {
+          "task": "E02",
+          "a_s": 64.89,
+          "b_s": 43.59,
+          "reduction_pct": 32.8248,
+          "first_text_reduction_pct": 27.864,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 651,
+          "b_chars": 651
+        },
+        {
+          "task": "E03",
+          "a_s": 47.88,
+          "b_s": 36.09,
+          "reduction_pct": 24.6241,
+          "first_text_reduction_pct": 22.8137,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 469,
+          "b_chars": 469
+        },
+        {
+          "task": "F01",
+          "a_s": 23.75,
+          "b_s": 18.74,
+          "reduction_pct": 21.0947,
+          "first_text_reduction_pct": 17.4305,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 215,
+          "b_chars": 215
+        },
+        {
+          "task": "F02",
+          "a_s": 55.66,
+          "b_s": 39.72,
+          "reduction_pct": 28.6382,
+          "first_text_reduction_pct": 29.2546,
+          "same_recorded_fingerprint_and_length": false,
+          "a_chars": 720,
+          "b_chars": 712
+        },
+        {
+          "task": "F03",
+          "a_s": 39.66,
+          "b_s": 29.51,
+          "reduction_pct": 25.5925,
+          "first_text_reduction_pct": 24.8748,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 523,
+          "b_chars": 523
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "order": [
+        "B",
+        "A"
+      ],
+      "sum_a_s": 478.22,
+      "sum_b_s": 353.92,
+      "median_completion_reduction_pct": 24.3722,
+      "completion_reduction_range_pct": [
+        18.1359,
+        31.9389
+      ],
+      "faster_completion_count": 12,
+      "median_first_text_reduction_pct": 23.5706,
+      "faster_first_text_count": 12,
+      "tasks": [
+        {
+          "task": "A01",
+          "a_s": 30.12,
+          "b_s": 20.5,
+          "reduction_pct": 31.9389,
+          "first_text_reduction_pct": 31.0058,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 218,
+          "b_chars": 218
+        },
+        {
+          "task": "A02",
+          "a_s": 38.48,
+          "b_s": 29.39,
+          "reduction_pct": 23.6227,
+          "first_text_reduction_pct": 21.4548,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 367,
+          "b_chars": 367
+        },
+        {
+          "task": "A03",
+          "a_s": 29.72,
+          "b_s": 24.33,
+          "reduction_pct": 18.1359,
+          "first_text_reduction_pct": 16.0852,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 275,
+          "b_chars": 275
+        },
+        {
+          "task": "B01",
+          "a_s": 37.64,
+          "b_s": 29.31,
+          "reduction_pct": 22.1307,
+          "first_text_reduction_pct": 21.9875,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 331,
+          "b_chars": 331
+        },
+        {
+          "task": "B02",
+          "a_s": 20.89,
+          "b_s": 17.08,
+          "reduction_pct": 18.2384,
+          "first_text_reduction_pct": 17.8385,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 112,
+          "b_chars": 112
+        },
+        {
+          "task": "B03",
+          "a_s": 44.61,
+          "b_s": 31.16,
+          "reduction_pct": 30.1502,
+          "first_text_reduction_pct": 32.9146,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 377,
+          "b_chars": 377
+        },
+        {
+          "task": "E01",
+          "a_s": 42.83,
+          "b_s": 33.64,
+          "reduction_pct": 21.4569,
+          "first_text_reduction_pct": 20.4736,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 445,
+          "b_chars": 445
+        },
+        {
+          "task": "E02",
+          "a_s": 65.17,
+          "b_s": 44.58,
+          "reduction_pct": 31.5943,
+          "first_text_reduction_pct": 30.5132,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 651,
+          "b_chars": 651
+        },
+        {
+          "task": "E03",
+          "a_s": 47.88,
+          "b_s": 37.03,
+          "reduction_pct": 22.6608,
+          "first_text_reduction_pct": 20.2037,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 469,
+          "b_chars": 469
+        },
+        {
+          "task": "F01",
+          "a_s": 25.25,
+          "b_s": 18.08,
+          "reduction_pct": 28.396,
+          "first_text_reduction_pct": 28.4367,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 215,
+          "b_chars": 215
+        },
+        {
+          "task": "F02",
+          "a_s": 56.58,
+          "b_s": 39.58,
+          "reduction_pct": 30.046,
+          "first_text_reduction_pct": 31.9482,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 712,
+          "b_chars": 712
+        },
+        {
+          "task": "F03",
+          "a_s": 39.05,
+          "b_s": 29.24,
+          "reduction_pct": 25.1216,
+          "first_text_reduction_pct": 25.1537,
+          "same_recorded_fingerprint_and_length": true,
+          "a_chars": 523,
+          "b_chars": 523
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "sum_cap4_s": 962.24,
+    "sum_cap32_s": 704.99,
+    "total_completion_reduction_pct": 26.7345,
+    "median_of_24_task_reductions_pct": 25.3571,
+    "direction_count_faster_cap32": 24,
+    "paired_task_observations": 24,
+    "independent_pair_blocks": 2,
+    "unique_task_prompts": 12,
+    "no_significance_or_confidence_interval_claim": true
+  },
+  "fingerprint_sensitivity": {
+    "algorithm": "stored SHA-256 prefix only",
+    "stored_hex_digits": 16,
+    "prefix_bits": 64,
+    "full_outputs_available": false,
+    "stable_fingerprint_and_length_all_four_tasks": 9,
+    "varying_tasks": [
+      {
+        "task": "A03",
+        "variants": 2,
+        "rows": [
+          {
+            "invocation": 1,
+            "arm": "A",
+            "chars": 275,
+            "fingerprint": "f1bbed22883bf406"
+          },
+          {
+            "invocation": 1,
+            "arm": "B",
+            "chars": 212,
+            "fingerprint": "d233b81c4841cfb9"
+          },
+          {
+            "invocation": 2,
+            "arm": "B",
+            "chars": 275,
+            "fingerprint": "f1bbed22883bf406"
+          },
+          {
+            "invocation": 2,
+            "arm": "A",
+            "chars": 275,
+            "fingerprint": "f1bbed22883bf406"
+          }
+        ]
+      },
+      {
+        "task": "E01",
+        "variants": 2,
+        "rows": [
+          {
+            "invocation": 1,
+            "arm": "A",
+            "chars": 413,
+            "fingerprint": "85d7d89c60eb1a4c"
+          },
+          {
+            "invocation": 1,
+            "arm": "B",
+            "chars": 413,
+            "fingerprint": "85d7d89c60eb1a4c"
+          },
+          {
+            "invocation": 2,
+            "arm": "B",
+            "chars": 445,
+            "fingerprint": "4ac446621146962f"
+          },
+          {
+            "invocation": 2,
+            "arm": "A",
+            "chars": 445,
+            "fingerprint": "4ac446621146962f"
+          }
+        ]
+      },
+      {
+        "task": "F02",
+        "variants": 2,
+        "rows": [
+          {
+            "invocation": 1,
+            "arm": "A",
+            "chars": 720,
+            "fingerprint": "9270c374e8279167"
+          },
+          {
+            "invocation": 1,
+            "arm": "B",
+            "chars": 712,
+            "fingerprint": "0a6ea2eef9e330e6"
+          },
+          {
+            "invocation": 2,
+            "arm": "B",
+            "chars": 712,
+            "fingerprint": "0a6ea2eef9e330e6"
+          },
+          {
+            "invocation": 2,
+            "arm": "A",
+            "chars": 712,
+            "fingerprint": "0a6ea2eef9e330e6"
+          }
+        ]
+      }
+    ],
+    "matched_pair_count": 22,
+    "unmatched_pairs": [
+      {
+        "pair": 1,
+        "task": "A03"
+      },
+      {
+        "pair": 1,
+        "task": "F02"
+      }
+    ],
+    "matched_subset_total_cap4_s": 875.3,
+    "matched_subset_total_cap32_s": 641.65,
+    "matched_subset_reduction_pct": 26.6937,
+    "matched_prefix_and_length_is_not_independent_exact_output_proof": true
+  },
+  "validation_errors": [],
+  "driver_static_findings": [
+    {
+      "id": "P1",
+      "kind": "provenance",
+      "summary": "ABBA reconstructed from an aborted AB invocation and a complete BA invocation; not one clean ABBA invocation.",
+      "source_lines": [
+        193,
+        227,
+        242
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D1",
+      "kind": "resource_admission",
+      "summary": "Only pre-start available RAM is checked; missing memory defaults to 99, with no commit/GPU or per-request surveillance.",
+      "source_lines": [
+        63,
+        77,
+        204,
+        205
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D2",
+      "kind": "process_ownership",
+      "summary": "Fallback selects Python webui hosts by broad command-line pattern and kills matching process trees; stop selects latest session, not a verified owned process.",
+      "source_lines": [
+        59,
+        85,
+        99,
+        109
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D3",
+      "kind": "failure_accounting",
+      "summary": "Warmup/returned row failures do not force abort; in-flight exceptions may have no request row; CLI returns 0 after an aborted run.",
+      "source_lines": [
+        131,
+        146,
+        210,
+        218,
+        226,
+        260
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D4",
+      "kind": "restoration_evidence",
+      "summary": "Restoration is inferred from UI health, not version/cap/all-port ownership; partial listeners can prevent restore, and save failure can precede cleanup.",
+      "source_lines": [
+        229,
+        245
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D5",
+      "kind": "response_correlation",
+      "summary": "Driver chooses the newest new draft filename rather than request-id correlation, permitting misassociation if another writer exists.",
+      "source_lines": [
+        131,
+        146
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "E1",
+      "kind": "identity_limits",
+      "summary": "No per-run driver/config/model/fixture/history hashes or actual token usage; published driver includes a fallback reportedly added between invocations.",
+      "source_lines": [
+        193,
+        194
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "E2",
+      "kind": "output_evidence",
+      "summary": "Only 16 hex digits of SHA-256 and character lengths are stored; outputs absent, so hashes and static grades cannot be independently rerun.",
+      "source_lines": [
+        171,
+        181
+      ],
+      "runtime_reproduced_by_auditor": false
+    },
+    {
+      "id": "D6",
+      "kind": "entrypoint_scope",
+      "summary": "The smoke mode sends a generation request and saves a draft; it is not read-only despite the changes-nothing wording.",
+      "source_lines": [
+        8,
+        135,
+        253,
+        257
+      ],
+      "runtime_reproduced_by_auditor": false
+    }
+  ],
+  "interpretation": {
+    "claimed_summary_arithmetic_reproduces": true,
+    "useful_exploratory_screening_evidence_for_short_task_elapsed_time": true,
+    "not_full_schema4_execution": true,
+    "not_a_clean_single_invocation": true,
+    "not_token_throughput": true,
+    "no_semantic_quality_or_general_performance_claim": true,
+    "no_new_runtime_test_or_driver_reuse_requested": true
+  },
+  "later_context": {
+    "window4_precedes_reported_hook_enablement": true,
+    "window5_reported_hook_enabled_empty_store_independent_live_verification_pending": true,
+    "rev7_independent_logging_failure_relayed": true,
+    "future_benchmark_identity_must_record_callback_source_and_store_snapshot": true,
+    "no_hook_change_performed_by_auditor": true,
+    "reported_loaded_hook_revision": 7,
+    "offline_reviewed_successor": {
+      "revision": 8,
+      "commit": "acd56099794edab9da4b2200a521e23b9150321f",
+      "passed": 76,
+      "skipped": 4,
+      "scope": "tested normal-store logging failures and mid-request snapshot",
+      "remaining_hardening": true,
+      "live_deployment_verified": false
+    }
+  }
+}

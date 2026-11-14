@@ -6,15 +6,15 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 
 ## Current checkpoint — 2026-11-14
 
-**Runtime window 4 OPEN — reported intent:** Claude is conducting a separate exploratory cap4/cap32 run. Hold competing traffic/live inspection on ports 8000/4001/8080 until its matching closure. The independent checkpoint below is historical; this run is not the full schema-4 benchmark and assesses no semantic quality.
+**Runtime coordination:** consult the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) before PC work. Window 4 results are exploratory; a later window-5 closure reports the teach hook **enabled with an empty store**, not independently verified here. Independent rev7 review found a request-path logging failure. Rev8 passed normal-store offline checks, with remaining hardening/deployment gaps; the running gateway is reportedly still rev7. No runtime change is made here.
 
 **Independent runtime checkpoint:** after window 3 closed, the PC worker confirmed 2.0 running with its prior verified binary hash, no 2.1 process, unchanged original launchers and a clean tree at local 7111656. Workbench checksum drift and a missing 2.1-launcher manifest entry need [source review before trust renewal](research/MANIFEST_REVIEW_2026-11-14.md). No tests were rerun or files changed. Recheck [active reservations](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) before local work.
 
 | Workstream | Verified or reported progress | Next boundary |
 |---|---|---|
-| Teach store | Revision 6 independently checked on Linux/Python 3.12.14: 73 tests collected, 72 passed, 1 skipped; focused persistence review completed | **Hook OFF**. Live callback, model adherence and actual token fit unverified |
+| Teach store | Rev6 persistence milestone independently passed; rev7 trial reports enabled hook and empty store | Rev8 normal-store fixes passed offline; diagnostic hardening and live deployment remain unverified. No activation/configuration change here |
 | Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; 31 grader tests reported passing | No model pass rate. Generated-code execution is disabled; reviewed semantic isolation is absent |
-| Cache experiment | Published schema-4 preparation package; 65 planner tests independently rerun by Claude | Full cap4/cap32 experiment has not run |
+| Cache experiment | [Exploratory result audit](research/audits/cap4-cap32-exploratory-audit-2026-11-14.md): arithmetic reproduces 26.73% lower recorded completion time | Split invocations with lifecycle failure; no semantic assessment. Full schema-4 study still not run |
 | Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
 | Context preflight | 25 prompt/reference blobs matched; Claude reports 118–300 rendered input and 31–137 reference tokens | Binary-added tokens remain null; no full-engine fit claim |
 
@@ -38,3 +38,5 @@ Preserve the working launcher/model and all authors' turns. Keep credentials, pr
 [Roadmap](research/ROADMAP.md) · [Benchmark protocol](research/BENCHMARK_PROTOCOL.md) · [Runtime source research](research/RUNTIME_MEMORY_RESEARCH_2026-11-14.md) · [Version/advisory verification](research/VERSION_VERIFICATION_2026-11-14.md) · [Initial briefing](CLAUDE_BRIEFING.md)
 
 Earlier documents remain in Git history. This update replaces stale landing-page checkpoints; it does not publish the blocked benchmark components or establish a performance gain.
+
+The exploratory audit independently recomputes published metadata; it does not rerun static grading or execute model outputs. Source results, including the first invocation's aborted/failed-restoration status, remain unchanged.

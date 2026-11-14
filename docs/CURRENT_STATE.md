@@ -71,6 +71,20 @@ The independent review of captured `7111656` diffs found the intended constraine
 
 Source/binary trust is not renewed automatically: file existence is not binary identity. After window 4 explicitly closes, recheck current source/commits/hashes against that snapshot and review any drift before applying anything. The live manifest remains unchanged.
 
-## Window 4 supersedes live inspection clearance
+## Exploratory window-4 audit
 
-The latest checked co-chat has Claude's Runtime notice 4: a reported exploratory 2.0 cap4/cap32 comparison with ABBA order, 48 scored drafts and four warm-ups. It is not the frozen schema-4 plan and has no semantic execution or actual token counts. Outcome is pending. Hold all competing runtime/gateway traffic and live inspection on ports 8000/4001/8080 until explicit window-4 closure. The 14:22 independent inspection remains historical evidence, not current runtime clearance. Noninterfering offline source/manifest review may continue; no live manifest rewrite or test is requested here.
+The [independent offline audit](../research/audits/cap4-cap32-exploratory-audit-2026-11-14.md) reproduces 962.24 s at cap4 versus 704.99 s at cap32, a 26.7345% reduction in recorded helper completion time. All 48 scored rows record complete/stop/not-truncated and static pass; those grades were not independently rerun because outputs are not published.
+
+The observation is AB followed by a separate BA invocation: the first artifact remains aborted with restoration false after the UI hang; the second reports complete/restoration true. Current published driver contains a fallback reportedly added between invocations. This is not one clean batch or the full schema-4 plan, and no semantic quality/token-throughput/general-workload claim is established. Post-run cap32 commit-headroom samples were 0.62 and 0.81 GiB; no peaks/per-request surveillance were recorded. Original artifacts are preserved.
+
+## Latest reported window-5 teach state and independent offline findings
+
+At [the window-5 closure snapshot](https://github.com/mms20102/Local-AI-tests/blob/619f21764409fd9f80d6111011554f16fc934f9c/research/co-chat.md), Claude reports 2.0/cap32 healthy and the hook **enabled with an empty store**, local revision-7 commit 0783706. This supersedes the historical hook-off status for future identity records; actual current hook/store/live-pipeline state is not independently verified here. Check for any newer runtime reservation before PC work.
+
+The coordinator relayed independent rev7 offline review: 74 tests collected, 72 passed, 2 skipped; a separate reproduced logging path raises BrokenPipeError into requests even with empty notes, outside the intended fail-open guard. A concurrent store edit can make the log fingerprint disagree with the snapshot actually selected/injected. A direct empty-store callback returned the identical request object, which does not establish full live pipeline invariance. “Nothing added” logs and similar answers alone are insufficient for that claim.
+
+The findings were sent to Claude for a focused offline fix and exact-diff independent review. No runtime/hook/configuration change or additional probe is requested by that handoff. Preserve all real user notes and backups; do not assume emptiness or purge to prepare a repair. Future benchmark identity must include callback configuration, hook source and store snapshot. The repository session has no PC shell and has performed no activation or candidate-code execution.
+
+## Revision-8 offline review, not deployment
+
+The original reviewer checked published rev8 at acd56099794edab9da4b2200a521e23b9150321f: 76 passed, 4 skipped offline, plus synthetic broken/closed stdout and concurrent-edit snapshot checks. The previous two findings are fixed in the tested normal-store scope. Remaining limits: log-line formatting is outside safe_log and malformed non-string ids can raise; blocked stdout can still delay the callback; live LiteLLM configuration/deployment is unverified and the snapshot README has contradictory hook status. The gateway is reportedly still running rev7. Offline hardening/documentation was requested without restart, configuration change or touching user notes. No live fix is claimed.
