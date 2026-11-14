@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_gateway_offline_review_with_static_intake",
+  "source_commit": "6c1298375d265680313424c36dcecf32a6c4c71f",
+  "files": [
+    {
+      "path": "research/gateway-admission/README.md",
+      "git_blob": "47f33ac5c44301e24b9a58edf58a9856f4b9f3c6"
+    },
+    {
+      "path": "research/gateway-admission/changes-since-baseline.diff",
+      "git_blob": "a35325f4b0b9a4d2dd388ac6f294c20b7ec0905e"
+    },
+    {
+      "path": "research/gateway-admission/chat_contract.py",
+      "git_blob": "e4ab938142b460223887cf16358274ec32792212"
+    },
+    {
+      "path": "research/gateway-admission/gateway_auth.py",
+      "git_blob": "0739bc4c1b312e8f06d0bf05cce64e76c116c422"
+    },
+    {
+      "path": "research/gateway-admission/token_count.py",
+      "git_blob": "602cdf3e65afc82bce6e4686d673b464ca8c6c87"
+    },
+    {
+      "path": "research/gateway-admission/tests/test_token_admission.py",
+      "git_blob": "18c34a6aa1b94002b6a549df16652d6143106ddc"
+    }
+  ],
+  "source_files_mutated": false,
+  "checks": {
+    "git_tree_and_fetch_identities_matched": true,
+    "sha256_independently_recomputed": false,
+    "baseline_diff_independently_reconstructed": false,
+    "source_read_as_text": true,
+    "code_executed": false,
+    "tests_rerun": false
+  },
+  "author_reported_results": {
+    "published_total": 18,
+    "published_skipped": 3,
+    "laptop_passed": 18,
+    "tokenizer_unavailable_for_skips": true
+  },
+  "decisions": {
+    "attribution": "Claude relays Mohamed's words Yes to all",
+    "publication": true,
+    "primary_targets": {
+      "first_attempt_coding_passes": "at least 9/12",
+      "median_first_useful_text_seconds": 15,
+      "median_task_time_seconds": 60
+    },
+    "conditional_restart": "one restart to load teach rev14 after counter review",
+    "independent_runtime_authorization_for_this_session": false,
+    "windows_sandbox": "reportedly deferred"
+  },
+  "state": {
+    "gateway_counter": "reported active since window 7; exact loaded source identity unverified here",
+    "teach_rev14": "reported not loaded",
+    "runtime_window": "none open in checked shared log",
+    "counter_review": "existing independent review complete; 15 passed / 3 real-tokenizer tests skipped; no restart clearance",
+    "duplicate_review_started": false
+  },
+  "unresolved": [
+    "Startup hash does not by itself bind the running engine/profile",
+    "Byte-first/fallback bound and manual renderer need review",
+    "32-token allowance has no derived universal bound",
+    "Final enriched-request order and short-path versus long-path integration need review",
+    "User-facing omission notice absent; counter-unavailable and no-room status not distinguished"
+  ],
+  "actions": {
+    "pc_access": false,
+    "model_requests": 0,
+    "runtime_changes": false,
+    "generated_code_executed": false,
+    "pr_merged_or_closed": false,
+    "blocked_component_publication_retried": false
+  },
+  "independent_review": {
+    "source_commit": "6c1298375d265680313424c36dcecf32a6c4c71f",
+    "passed": 15,
+    "skipped": 3,
+    "skips": "real-tokenizer tests; laptop tokenizer unavailable",
+    "executed_by_this_session": false,
+    "restart_clearance": false,
+    "findings": [
+      "tokenizer bytes pinned but actual engine/rendering profile not bound",
+      "32-token margin heuristic",
+      "unsupported later-system and assistant </think> shapes accepted",
+      "final post-hook validation and shared counter/profile ordering not demonstrated"
+    ],
+    "actionable_repairs": [
+      "pin and validate the actual engine/renderer/tokenizer/context/thinking profile",
+      "reject unsupported shapes before admission",
+      "validate the exact final enriched request using shared counter/profile evidence and full output reservation",
+      "test below/equal/over boundaries"
+    ],
+    "remaining": [
+      "user-visible omission disclosure",
+      "distinct counter-unavailable versus no-room status"
+    ]
+  },
+  "successor_report": {
+    "source_commit": "87351dea9da795b7214f4ddf05653189b612420b",
+    "cochat_blob": "85c2a9d394ed8bc5798a6af7019ebba528f02f4e",
+    "reported_local_commit": "7dd479f",
+    "reported_changes": [
+      "teach rev15 distinguishes omitted-uncounted from measured no_room",
+      "gateway rejects system messages not in first position"
+    ],
+    "loaded": false,
+    "independently_reviewed": false,
+    "author_reported_tests": {
+      "teach_laptop_passed": 106,
+      "teach_published_run": 106,
+      "teach_published_skipped": 5,
+      "admission_laptop_passed": 19,
+      "admission_published_phrase": "16 run from the published folder",
+      "project_passed": 225
+    },
+    "remaining_offline_work": [
+      "assistant </think> history handling",
+      "actual engine/profile binding",
+      "exact enriched-request validation on the short path",
+      "real-tokenizer boundary tests"
+    ],
+    "user_visible_omission_notice": "still open",
+    "loading": "held"
+  },
+  "reported_planned_live_activity": {
+    "source": "same Claude turn",
+    "description": "exploratory first pass of about 12 CODE-Q1 requests on the current running stack",
+    "reported_user_directed": true,
+    "requests_observed_by_this_session": null,
+    "static_grading_only": true,
+    "restart_or_window_notice_planned": false,
+    "semantic_or_release_pass_established": false,
+    "competing_pc_traffic_by_this_session": false
+  },
+  "subsequent_independent_review": {
+    "source_commit": "b111a6479adf3901fce5a1651c6f8e55eec40ee7",
+    "record": "2026-11-14-gateway-revision16-independent-offline-review.json",
+    "gateway_passed": 21,
+    "gateway_skipped": 6,
+    "teach_passed": 104,
+    "teach_skipped": 5,
+    "restart_clearance": false
+  }
+}

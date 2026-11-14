@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "author_reported_exploratory_codeq1_first_pass",
+  "source": {
+    "commit": "051e0226af1274fce5629efdfb7a188801bf019d",
+    "cochat_blob": "67363059a990b1029247b695b6c650bfab40d234",
+    "raw_rows_published": false,
+    "drafts_location": "laptop; not retrieved by this session"
+  },
+  "reported_profile": {
+    "runtime": "Colibri 2.0.0",
+    "cache_cap": 32,
+    "gateway": "loaded since window7",
+    "teach_hook_enabled": true,
+    "active_notes": false,
+    "requests": 12,
+    "output_allowance_tokens": 256,
+    "restart": false,
+    "generated_code_executed": false,
+    "background_download": true
+  },
+  "reported_results": {
+    "transport_stop": 12,
+    "total": 12,
+    "static_structure_pass": 12,
+    "median_end_to_end_seconds": 34.9,
+    "end_to_end_range_seconds": [
+      18.8,
+      46.6
+    ],
+    "median_first_text_seconds": 16.1,
+    "first_text_range_seconds": [
+      11.1,
+      18.5
+    ]
+  },
+  "interpretation": {
+    "aggregates_independently_recomputed": false,
+    "behavioral_grades_available": false,
+    "semantic_pass_count": null,
+    "first_useful_text_seconds": null,
+    "correctness_qualified_task_time": null,
+    "clean_benchmark": false,
+    "release_check2_complete": false,
+    "release_check3_complete": false
+  },
+  "author_ungraded_reading": {
+    "plausibly_correct": 10,
+    "F02": "suspected input mutation",
+    "E02": "uncertain",
+    "semantic_grades": false,
+    "independent_findings": false
+  },
+  "actions": {
+    "model_requests_by_this_session": 0,
+    "drafts_read_by_this_session": false,
+    "generated_code_execution_by_this_session": false,
+    "pc_activity": false
+  }
+}

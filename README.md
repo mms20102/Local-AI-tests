@@ -18,7 +18,9 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 | Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
 | Context preflight | Source audit, 24 saved count pairs and [four window-7 synthetic pairs](research/context-preflight/window7-observation-2026-11-14.json) agree within their profiles | No universal parity/full release fit claim; [note budgeting still needs alignment](research/context-preflight/note-budget-alignment.md) |
 
-Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**coding scope relayed as accepted; numeric targets pending**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
+Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**coding scope and primary targets relayed as accepted; gateway findings open**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
+
+The [CODE-Q1 exploration](research/experiments/2026-11-14-codeq1-exploratory-first-pass.json) reports 12/12 static passes with contended timings; semantic correctness and first-useful-text remain unmeasured, so release checks 2/3 are incomplete. The [published gateway review](research/gateway-admission-review.md) reports **15 passed / 3 skipped**, without restart or live-integration clearance. Profile binding, unsupported shapes, final post-hook validation and user-visible omission/status remain open. Conditional restart approval is Claude-relayed; no runtime action is performed here.
 
 ## Where active work lives
 

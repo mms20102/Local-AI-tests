@@ -2,9 +2,27 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
+## Latest reported coding and successor progress
+
+[CODE-Q1 exploratory first pass](experiments/2026-11-14-codeq1-exploratory-first-pass.json): Claude reports 12/12 transport stops and static-structure passes, median completion 34.9 s and first text 16.1 s during download contention. No behavioral grades, first-useful-text or clean-speed result; goal checks 2/3 stay incomplete. F02/E02 concerns are ungraded author reading; drafts remain on the laptop.
+
+Rev17 (`83a6f58`, source `631b1ec1`) reportedly corrects type ordering and labels retained note fallback `byte_only`; it is not loaded or independently reviewed here. The label does not prove fallback safety: establish the supported byte bound or omit notes on uncertainty. No published reason-code-only delta link is available to this session, and the older full patch is not applied.
+
+## Current focused candidate review
+
+At `b111a647` (reported local `d8d25e2`, teach rev16), the existing independent review is complete: **gateway 21 passed / 6 skipped; teach 104 passed / 5 skipped**. [Record](experiments/2026-11-14-gateway-revision16-independent-offline-review.json). The two urgent reproduced cases were relayed once: malformed assistant content raises `TypeError` before the string check; failed final counting retains notes with `uncounted=0`. Profile report trust, independent auth/teach loads, exact post-hook validation, heuristic margin, missing carrier-source evidence and UI disclosure remain unresolved. No restart clearance or duplicate review.
+
+Do not apply the older parallel full patch. Current role/marker guards already overlap it; only distinct counter-reason propagation remains a useful delta. Source activity is reportedly offline/unloaded; current-stack static-only CODE-Q1 requests may occur without a restart/window notice, so no competing PC traffic is sent and no result is inferred.
+
+## Published gateway and decision update
+
+Claude’s [6c129837 relay](https://github.com/mms20102/Local-AI-tests/blob/6c1298375d265680313424c36dcecf32a6c4c71f/research/co-chat.md) quotes “Yes to all” for source publication, the primary 9/12 and 15s/60s targets, and a conditional rev14 restart after counter review. These are attributed reports, not independent runtime authorization here. The source is visibly [published](https://github.com/mms20102/Local-AI-tests/tree/6c1298375d265680313424c36dcecf32a6c4c71f/research/gateway-admission). The existing review is complete: **15 passed / 3 real-tokenizer tests skipped; no restart/live clearance**. [Review and repair matrix](gateway-admission-review.md) · [record](experiments/2026-11-14-gateway-admission-independent-offline-review.json).
+
+Claude’s subsequent `87351dea` turn reports unloaded teach rev15 `uncounted` status and a later-system-message rejection at local `7dd479f`; no independent result for that successor is claimed. Actual profile binding, assistant-history handling, shared counter/profile validation of the exact post-hook payload, and real-tokenizer boundaries remain next offline work. User-visible omission and distinct counter-unavailable/no-room status stay open. The Sandbox choice is reportedly deferred. No window is open in the checked shared log, and loading stays held with findings unresolved. Claude reports a planned approximately 12-request static-only CODE-Q1 exploration on the current stack without a restart; no completion/result is inferred and this session avoids competing traffic. No duplicate review was started. This update supersedes earlier pending-publication/target-decision checkpoints below; older revision/source reports remain historical.
+
 ## Shared finish line
 
-[FINAL_GOAL.md](FINAL_GOAL.md) records the shared bounded-check direction. Claude relayed Mohamed's coding-scope acceptance; numeric targets and gateway publication are still undecided. The new [context/teaching alignment analysis](context-preflight/note-budget-alignment.md) is the immediate offline contribution. Routine Arabic/English coding usefulness remains the first-release goal on that attributed scope report. Larger/overnight models are a stretch. The [Windows isolation proposal](WINDOWS_ISOLATION_PROPOSAL.md) is a design for review, not a tested sandbox. Captured runner `1f067428` is not ready for live use; no delivery date or current-PC claim is inferred.
+[FINAL_GOAL.md](FINAL_GOAL.md) records the shared bounded-check direction. Claude relayed Mohamed's coding-scope acceptance; primary targets and gateway publication were later relayed as accepted; see the current update above. The new [context/teaching alignment analysis](context-preflight/note-budget-alignment.md) is the immediate offline contribution. Routine Arabic/English coding usefulness remains the first-release goal on that attributed scope report. Larger/overnight models are a stretch. The [Windows isolation proposal](WINDOWS_ISOLATION_PROPOSAL.md) is a design for review, not a tested sandbox. Captured runner `1f067428` is not ready for live use; no delivery date or current-PC claim is inferred.
 
 ## Revision 14 status
 

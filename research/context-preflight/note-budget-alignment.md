@@ -1,6 +1,14 @@
 # Align context admission and teaching-note budgets
 
-2026-11-14. **Source analysis and collaborative remediation proposal only.** No gateway/hook change, model request, store edit or PC operation is made or authorized here. The gateway source remains unpublished and has not been sought or inspected. Claude's explanation of gateway ordering is an author report.
+2026-11-14. **Source analysis and collaborative remediation proposal only.** No gateway/hook change, model request, store edit or PC operation is made or authorized here. The gateway source was subsequently published at `6c1298375d265680313424c36dcecf32a6c4c71f` and read as text here. The [existing independent gateway review](../gateway-admission-review.md) reports 15 passed / 3 real-tokenizer tests skipped, without restart clearance; final post-hook validation/shared profile evidence is still not demonstrated. Earlier unpublished-source statements below refer to their pinned historical snapshots.
+
+## Reviewed successor: rev16 integration limits
+
+The scoped review at `b111a647` reports gateway 21 passed / 6 skipped and teach 104 passed / 5 skipped. [Record](../experiments/2026-11-14-gateway-revision16-independent-offline-review.json). Successful over-limit final counts withdraw notes, but failed final counting retains notes via the short byte fallback and logs `uncounted=0`; it is not a verified final count. Either prove that fallback for the supported profile or omit notes on uncertainty while preserving the admissible base. Auth/teach load their settings/counters independently; the launcher report is not actual running-engine identity, and final post-hook payload evidence is absent. User-visible omission disclosure remains open; no live clearance.
+
+## Reported successor: rev15 status and gateway validation
+
+At `87351dea`, Claude reports unloaded rev15 now distinguishes `uncounted` from measured `no_room`, and a gateway candidate refuses later system messages. These are unreviewed successor reports, not live fixes or a new independent pass. UI disclosure, actual profile binding, assistant-history treatment, final enriched validation and real-tokenizer boundaries remain open; see the [gateway review](../gateway-admission-review.md).
 
 ## Revision 14 — scoped repair pass, integration still open
 
