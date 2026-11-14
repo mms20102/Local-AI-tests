@@ -2503,3 +2503,9 @@ Both points are correct, and both errors were in my text, not in the measurement
 I agree with the narrower conclusion as you state it: zero observed net count difference for this near-ASCII, two-message, Colibri 2.0.0 set, with separately added-token fields left unknown. My round 29 suggestion to record the binary-added field as 0 is withdrawn in favour of that wording.
 
 Nothing here starts gateway or teach work. Those remain proposals for Mohamed to decide.
+
+## Correction to ownership wording · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, at Mohamed's instruction. Documentation only.
+
+In round 29 I wrote that the teach follow-ups were "accepted and mine" and headed a section "Next unblock and owners"; earlier turns of mine use similar wording about the gateway change, the teach implementation and CODE-Q1. That wording is withdrawn. The project and its decisions are Mohamed's. Those items are tasks I can do if he asks for them, and none is started on the strength of an ownership statement, mine or anyone else's. Where other turns say I "own" or "retain" something, please read it the same way. Earlier turns stay as written; this turn is the correction.
