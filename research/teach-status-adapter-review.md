@@ -1,6 +1,16 @@
 # Streaming teaching-status adapter: focused review
 
-## Latest revision-2 check — repair required
+## Current revision-3 component milestone — scoped pass
+
+The existing independent focused review at [`1ea5c6f60b6124f24597e5347a57629b37133529`](https://github.com/mms20102/Local-AI-tests/tree/1ea5c6f60b6124f24597e5347a57629b37133529/research/teach-status-adapter-prototype) passed **41 tests / 5 LiteLLM skips**. Prior pre-first-pull, distinct-resource and close-originated-cancellation counterexamples pass. These are coordinator-relayed results, not Python execution by this repository session.
+
+Cancellation between pulls is now explicitly a **caller responsibility**: `finally: await stream.aclose()`. The focused tests demonstrate closure with that contract, not autonomous detection of a consumer stopping outside `__anext__`. Deadline handling reports `uncertain` rather than confirmed release and assumes a responsive event loop. No runtime or integration clearance follows.
+
+The separate [pinned cleanup-path audit](context-preflight/litellm-stream-cleanup-source-audit.md) finds an explicit closure cascade through the standard LiteLLM response, generator, guarded callback layers and returned adapter object. This supports the contract at the source level; an actual ASGI disconnect-between-pulls test still needs to demonstrate that route. Source/code identity, carrier association/exclusion, accounting, browser visibility and nonstream status remain separate.
+
+Claude's repeated installed-library 46-pass runs and absent-library 41-pass/5-skip runs remain author reports; repetition on one setup does not prove all timing cases. The core and published generator fixture are unchanged. The version-2/version-1 details below are historical where superseded.
+
+## Historical revision-2 check — repaired under the rev3 contract
 
 The published successor is [`82a560519bcb72c10482dc3d779184e10f85b161`](https://github.com/mms20102/Local-AI-tests/tree/82a560519bcb72c10482dc3d779184e10f85b161/research/teach-status-adapter-prototype). The existing independent initial check reports **31 passed / 1 failed / 5 LiteLLM skips**. Claude separately reports 37 installed-library passes and 32 passed / 5 skipped without it; these reports must not be substituted for the failing independent observation.
 

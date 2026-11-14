@@ -163,5 +163,85 @@
       "No model/PC/runtime traffic by this session",
       "Process token is not request binding or routing evidence"
     ]
+  },
+  "current_reviewed_source": "1ea5c6f60b6124f24597e5347a57629b37133529",
+  "current_status": "focused component pass; caller finally required; full integration unverified",
+  "revision3": {
+    "source_commit": "1ea5c6f60b6124f24597e5347a57629b37133529",
+    "cochat_blob": "e3b6846f3b4b0d4cda4b0e6f961ad036bd44ef70",
+    "source_manifest": [
+      {
+        "path": "research/teach-status-adapter-prototype/README.md",
+        "git_blob": "115b4087c8cf3d082b76cd00b0b3328bb14fd9cc"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/real_generator_check.py",
+        "git_blob": "a76cd858cbe13141405c90447e70c0bb7175cecd"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/teach_status_adapter.py",
+        "git_blob": "a9a141769b198a8adfbb5b1096b1e4ff5f2275a7"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/teach_status_core.py",
+        "git_blob": "c07df5220f2064163ed5d11d035f6382fc4a9191"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/test_teach_status_adapter.py",
+        "git_blob": "bb2583fec1c5517b3947db40a900bcf201463b4b"
+      }
+    ],
+    "author_reported": {
+      "with_litellm": {
+        "passed": 46,
+        "skipped": 0,
+        "repeated_runs": 3
+      },
+      "without_litellm": {
+        "passed": 41,
+        "skipped": 5,
+        "repeated_runs": 5
+      },
+      "warnings_as_errors": {
+        "passed": 41,
+        "skipped": 5
+      },
+      "repeated_runs_not_general_timing_proof": true
+    },
+    "independent_focused_review": {
+      "passed": 41,
+      "skipped": 5,
+      "scope": "focused revision3 component paths; coordinator-relayed",
+      "executed_by_this_session": false,
+      "scoped_result": "pass with explicit caller-close contract",
+      "prior_counterexamples_passed": [
+        "pre-first-pull closure",
+        "distinct source/iterator",
+        "close-originated cancellation"
+      ],
+      "between_pulls_contract": "caller finally must await stream.aclose",
+      "uncertain_means_release_unconfirmed": true,
+      "assumes_responsive_event_loop": true,
+      "integration_or_runtime_clearance": false
+    },
+    "separate_source_audit": {
+      "framework_ref": "2a61f2114d45016bae77930903e65172cd8e762c",
+      "document": "research/context-preflight/litellm-stream-cleanup-source-audit.md",
+      "standard_response_closure_cascade_present": true,
+      "actual_asgi_test_run": false,
+      "installed_path_verified": false
+    },
+    "next_scope": [
+      "actual ASGI disconnect/finally path",
+      "actual proxy carrier association and provider exclusion",
+      "accounting",
+      "browser and nonstream disclosure"
+    ],
+    "actions": {
+      "model_requests": 0,
+      "pc_traffic": false,
+      "runtime_changes": false,
+      "duplicate_receiver": false
+    }
   }
 }

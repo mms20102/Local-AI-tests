@@ -2,11 +2,11 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
-## Offline streaming-adapter checkpoint — revision 2 needs repair
+## Offline streaming-adapter checkpoint — revision 3 component pass
 
-The successor at `82a56051` is unloaded. The existing independent initial check reports **31 passed / 1 failed / 5 LiteLLM skips**: the existing consumer-cancellation test leaves `source.closed=0`; source-close cancellation can also mask the upstream error. Pre-first-pull and ordinary distinct source/iterator cases improved. [Versioned focused review](teach-status-adapter-review.md).
+The existing focused review at `1ea5c6f6` passed **41 / 5 LiteLLM skips** under the explicit caller-close contract. Pre-first-pull, ordinary distinct-resource and close-originated cancellation cases pass; cancellation between pulls requires the caller's `finally: await stream.aclose()`. `uncertain` does not confirm release. [Versioned review](teach-status-adapter-review.md).
 
-Next: explicit caller/framework cleanup responsibility and focused successor tests using the existing review path, followed by actual proxy pre-call/iterator/provider-boundary checks with the existing capture work. The generator fixture is now published, but direct generator evidence, process-token checking and fixed metadata do not establish routing or browser visibility. No duplicate receiver or runtime action.
+Pinned source shows the standard LiteLLM response can propagate closure to the adapter, but actual ASGI disconnect/routing remains untested. [Cleanup-path audit](context-preflight/litellm-stream-cleanup-source-audit.md). Reuse the existing capture work for actual proxy/ASGI boundaries; browser, nonstream and accounting remain separate. No duplicate receiver, registration or runtime change.
 
 
 ## Current component reviews and reported operating decision

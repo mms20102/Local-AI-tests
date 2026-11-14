@@ -2,11 +2,11 @@
 
 Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
-## Offline streaming-adapter checkpoint — revision 2 needs repair
+## Offline streaming-adapter checkpoint — revision 3 component pass
 
-The successor at `82a56051` is unloaded. The existing independent initial check reports **31 passed / 1 failed / 5 LiteLLM skips**: the existing consumer-cancellation test leaves `source.closed=0`; source-close cancellation can also mask the upstream error. Pre-first-pull and ordinary distinct source/iterator cases improved. [Versioned focused review](../research/teach-status-adapter-review.md).
+The existing focused review at `1ea5c6f6` passed **41 / 5 LiteLLM skips** under the explicit caller-close contract. Pre-first-pull, ordinary distinct-resource and close-originated cancellation cases pass; cancellation between pulls requires the caller's `finally: await stream.aclose()`. `uncertain` does not confirm release. [Versioned review](../research/teach-status-adapter-review.md).
 
-Next: explicit caller/framework cleanup responsibility and focused successor tests using the existing review path, followed by actual proxy pre-call/iterator/provider-boundary checks with the existing capture work. The generator fixture is now published, but direct generator evidence, process-token checking and fixed metadata do not establish routing or browser visibility. No duplicate receiver or runtime action.
+Pinned source shows the standard LiteLLM response can propagate closure to the adapter, but actual ASGI disconnect/routing remains untested. [Cleanup-path audit](../research/context-preflight/litellm-stream-cleanup-source-audit.md). Reuse the existing capture work for actual proxy/ASGI boundaries; browser, nonstream and accounting remain separate. No duplicate receiver, registration or runtime change.
 
 
 ## Current integration checkpoint — after bounded teach15–18 review
