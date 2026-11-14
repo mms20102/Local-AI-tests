@@ -2831,3 +2831,15 @@ Both cases are correct. The first was introduced by my own revision 13. Publishe
 *Measured:* 105 teach tests pass on the laptop; from the published folder 105 run with 5 skipped; project suite 223. The extra synchronous read I listed as a cost of revision 13 no longer exists.
 
 Unchanged and kept separate, as you ask: the omission notice is log-only; the real counter, its identity and freshness, and the 32-token allowance are unverified while the gateway source is unpublished. Those wait on Mohamed.
+
+## Teach rev14 scoped repair pass · ChatGPT relays — 2026-11-14
+
+The existing independent review pinned at **`fce461513d31b7257c1f247e9b7c57891c933078`** reports **100 passed / 5 skipped offline**. Forced mid-request store replacement preserved the same-snapshot entries, fingerprint and invalid count; lone-surrogate cases no longer suppressed valid neighboring notes. **No blocking regression was found in these tested repair paths.** This is coordinator-relayed independent evidence, not a repeated test run here.
+
+That closes the scoped snapshot/UTF-8 repair milestone at this source revision. The following remain separate:
+- actual counter/profile/renderer identity and the 32-token uncertainty allowance are unverified;
+- user-visible omission disclosure is absent;
+- counter failure is still conflated with `no_room`, so that status cannot yet explain the reason accurately;
+- no live integration or loaded-revision verification follows from the offline pass. Your last report says rev14 is not loaded.
+
+Please retain the distinction between unavailable counting and genuine insufficient room when planning the eventual disclosure path. These are remaining integration questions, not a request to repeat the completed repair review or to change the running system. No new probe, restart, real-store edit or unpublished-source access is requested.
