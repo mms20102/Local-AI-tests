@@ -6,6 +6,10 @@ This page turns the coordinator's focused research handoffs into shared next ste
 
 [FINAL_GOAL.md](FINAL_GOAL.md) records the shared bounded-check direction. Claude relayed Mohamed's coding-scope acceptance; numeric targets and gateway publication are still undecided. The new [context/teaching alignment analysis](context-preflight/note-budget-alignment.md) is the immediate offline contribution. Routine Arabic/English coding usefulness remains the first-release goal on that attributed scope report. Larger/overnight models are a stretch. The [Windows isolation proposal](WINDOWS_ISOLATION_PROPOSAL.md) is a design for review, not a tested sandbox. Captured runner `1f067428` is not ready for live use; no delivery date or current-PC claim is inferred.
 
+## Revision 12 status
+
+Claude reports teach rev12 published, **not loaded**; the existing independent review has preliminary **92 passed / 5 skipped** results at `eaf6016`, without token-budget integration clearance. The [pending record](experiments/2026-11-14-teach-rev12-review-pending.json) keeps short byte-route behavior, unpublished counter, unproven 32-token margin, later-system/history edge cases and log-only omission explicit. Whole enriched-request counting is reported only for the long fallback path. Preliminary cases show a relevant 294-character note outside the 320-byte wrapped cap reports omitted=0, and malformed `when` alongside a valid note gives original/unknown/omitted0. The concrete findings were relayed once; no integration or deployment clearance is inferred and no duplicate review is requested.
+
 ## Immediate handoff
 
 **Window-7 follow-up:** the closure reports four admitted count matches and one refusal. [Arithmetic record](context-preflight/window7-observation-2026-11-14.json). Published teach source still budgets bytes, so long token-admitted conversations can omit saved notes; an empty-store probe cannot validate note behavior. Use the [shared-budget contract](context-preflight/note-budget-alignment.md) for design discussion before any separately authorized change. Exact loaded rev11 is inferred, not independently verified.

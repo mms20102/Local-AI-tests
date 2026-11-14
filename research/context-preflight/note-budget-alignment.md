@@ -2,7 +2,15 @@
 
 2026-11-14. **Source analysis and collaborative remediation proposal only.** No gateway/hook change, model request, store edit or PC operation is made or authorized here. The gateway source remains unpublished and has not been sought or inspected. Claude's explanation of gateway ordering is an author report.
 
-## The concrete gap
+## Revision 12 candidate — preliminary review, not cleared
+
+Claude [reports revision 12](https://github.com/mms20102/Local-AI-tests/blob/eaf6016953fc5b6578ed707afef238fceca034b0/research/co-chat.md) published from local `f939b54`, explicitly **not loaded**. The existing independent reviewer reports **92 passed / 5 skipped offline** at that pinned source, with full review still pending. **Token-budget integration is not cleared**; this session does not duplicate the review. [Status record](../experiments/2026-11-14-teach-rev12-review-pending.json).
+
+The reported long path counts the whole enriched candidate after byte-route failure and drops whole notes with bounded attempts. The short path still uses the byte rule and does not call the counter. The 32-token allowance is unproven and the actual counter source is unpublished; later-system/history-marker edge cases remain unresolved. The real-tokenizer examples reported are English; Arabic-with-notes uses a stand-in counter. No live nonempty-note result or deployment is established.
+
+Claude relays Mohamed's policy as **answer with notes left out when they do not fit**. The current omission report is **gateway-log-only**; the user-facing notice required by the design is still missing. A single omitted count also cannot distinguish no room from unavailable counting. Preliminary reviewer reproductions: a relevant **294-character note** excluded by the **320-byte wrapped cap** reports `omitted=0` because `wanted` was already budget-filtered; malformed `when` metadata beside a valid note returns the original request / unknown fingerprint / omitted=0. These mask distinct reasons for missing notes. Preserve the relevant eligible set before budget selection and assess per-entry validation/status reporting. These are reviewer-reported cases, not executions by this session. Do not mark the integration/teaching acceptance check complete from implementation or passing-test counts.
+
+## The concrete gap at revision 11
 
 Window 7 reportedly admitted requests using the token counter, while the teaching hook still uses its earlier byte-based budget. Published teach source at `829d3228438034b3126a2eac419517d1760db239` corroborates the latter mechanism:
 
@@ -22,7 +30,7 @@ Use the **same supported serialization/count evidence and output reservation** f
 2. Build a complete candidate containing the actual note block, delimiters, any policy/system insertion, message frames, history and nonthinking prefix. Count that final rendered candidate with pinned profile evidence. Do not simply add separately tokenized note counts; boundaries and wrappers matter.
 3. Retain only a candidate whose prompt count plus full output reservation and a justified uncertainty allowance fits. Recount after any note/subset change. Bound the number/size of candidate attempts and account for counter/read/log latency.
 4. Apply one final admission decision to exactly the candidate that will be sent. Use explicit statuses for applied notes, no relevant notes, notes omitted for budget, unsupported counting and store unavailability. Do not log note text or arbitrary malformed IDs.
-5. When optional notes do not fit, propose preserving the original question/history and disclosing that saved preferences were omitted. If Mohamed wants particular notes always applied, a no-room request must instead ask for a shorter conversation or another explicit choice. **This policy choice is for Mohamed; it is not implemented by this document.**
+5. When optional notes do not fit, propose preserving the original question/history and disclosing that saved preferences were omitted. If Mohamed wants particular notes always applied, a no-room request must instead ask for a shorter conversation or another explicit choice. **Claude later relays Mohamed's choice to answer with notes left out; rev12's log-only notice still leaves the user-facing disclosure gap. This document implements no policy.**
 6. Unknown or unsupported counting must not enlarge acceptance on a guessed margin. A byte fallback requires its own proof for the entire final serialization; an average ratio or an unvalidated 32-token allowance is not that proof. Do not silently drop history or shrink the answer allowance.
 
 A short UI message explaining that preferences were not applied helps the user make a decision. Detailed diagnostic hashes/implementation terms belong in bounded local evidence, not the normal conversation.
