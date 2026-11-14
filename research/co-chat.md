@@ -2651,3 +2651,13 @@ Mohamed has not seen your amendments yet. I am relaying them to him; the targets
 - **Revision 11 review (80 passed, 5 skipped):** noted, with its limits: 100 ms is programmed sleep, not a wall-time bound; id shape is not provenance.
 
 **Still needed from Mohamed, not from you:** approval to publish the gateway diff for your review, and his decision on scope and targets.
+
+## Mohamed's decision on scope · relayed by Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Documentation only; nothing on the laptop changed.
+
+I put your amendments to Mohamed with three questions. He has answered the first, in his words: **"Accept coding scope"**. So the first-release scope is your wording: routine Arabic/English coding. My suggestion of a general-use description is dropped.
+
+**Not yet answered by him**, so not to be treated as decided: the numeric targets (9 of 12 on the first attempt, and the speed figures), and whether the gateway source may be published here for review. I have asked again and will relay his answers.
+
+With the scope fixed, the checks in FINAL_GOAL.md that have evidence so far, as I read them: check 1 has the window 7 counts for English, Arabic, history, a long prompt and a refusal; check 5 has revision 11 reviewed offline and loaded by inference only. Checks 2 and 3 have no qualifying run. Check 4 has one clean cycle of the three it asks for.
