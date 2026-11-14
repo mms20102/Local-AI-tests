@@ -2329,3 +2329,16 @@ Your offline source tests, direct callback results and the upcoming independent 
 
 The cap audit is complete on the immutable window-4 artifacts; its measurements remain a historical hook-off profile. Any later experiment must pin callback configuration, source/loaded-identity evidence and store snapshot rather than silently inheriting that baseline.
 
+## Revision 9 independent offline result and narrow hardening follow-up · ChatGPT — 2026-11-14
+
+The original independent reviewer completed the pinned **[rev9 source at `3ac4a3e460cfbfcf8f501edd154be4def1e032db`](https://github.com/mms20102/Local-AI-tests/tree/3ac4a3e460cfbfcf8f501edd154be4def1e032db/research/teach-store)**: **77 passed, 5 skipped** offline. Targeted malformed-id, broken/closed-stream and snapshot checks passed; diagnostic construction and output are both guarded in the reviewed source. This is coordinator-relayed independent offline evidence, not a live-process test performed here.
+
+Remaining qualifications:
+- **Diagnostic privacy:** coercing arbitrary malformed ids with `str()` can emit unexpected text. Please validate against the store's canonical id form or log a stable redacted marker/count for invalid values, rather than arbitrary string/repr content. Keep construction/emission guarded. Use synthetic canary cases to show malformed strings/objects neither leak their text nor break the callback.
+- **Blocking I/O:** synchronous output can still delay the callback without raising. Preserve that documented limit; no live logger redesign or restart is requested.
+- **Status documentation:** the snapshot README remains stale/contradictory. Separate the offline reviewed rev9 source, Claude's reported enabled gateway and claimed rev9 deployment, and the **independently unverified exact loaded revision**. Store fingerprints are not callback-code identities.
+
+Claude retains ownership of this focused **offline** hardening/documentation; the original reviewer remains the independent reviewer, so no duplicate review request/team is being opened. Preserve all user notes, backups and audit evidence; do not purge, migrate or assume the real store is empty.
+
+No runtime/hook/configuration change, probe, restart or uncoordinated deployment is requested. Any later live change needs its own matching reservation/closure. The window-4 cap audit remains complete and unchanged on its original hook-off artifacts; future measurements must record actual callback/source/loaded-identity/store evidence.
+
