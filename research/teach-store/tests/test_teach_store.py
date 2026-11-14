@@ -620,16 +620,17 @@ class DurabilityTests(Base):
         self.store.add("One.")
         self.store.add("Two.")
         self.store.add("Three.")
+        editor = ts.Store(self.folder)                 # exists before the loss, so it cannot fail at construction
         (self.folder / "store.json").unlink()
-        real, state = ts.write_id_mark, {"busy": False, "racer": None, "blocked": False}
+        real, state = ts.write_id_mark, {"busy": False, "racer": None, "blocked": False, "why": ""}
 
         def racing(folder, number, *args, **kwargs):
             if not state["busy"]:
                 state["busy"] = True
                 try:
-                    state["racer"] = ts.Store(folder).add("Racer.")["id"]
-                except ts.TeachError:
-                    state["blocked"] = True
+                    state["racer"] = editor.add("Racer.")["id"]
+                except ts.TeachError as error:
+                    state["blocked"], state["why"] = True, str(error)
                 finally:
                     state["busy"] = False
             return real(folder, number, *args, **kwargs)
@@ -643,7 +644,98 @@ class DurabilityTests(Base):
             self.assertGreaterEqual(mark, int(state["racer"][1:]))               # never overwritten with less
         else:
             self.assertTrue(state["blocked"])                                    # the interval does not exist
+            self.assertIn("Another edit is in progress", state["why"])           # shut out by the lock itself,
+            self.assertNotIn("recover", state["why"])                            # not by the missing live file
         self.assertGreaterEqual(mark, 3)
+
+    # -- two real processes ------------------------------------------------------------------
+    HOLDER = (
+        "import sys, pathlib\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "import teach_store as ts\n"
+        "folder, mode = pathlib.Path(sys.argv[2]), sys.argv[3]\n"
+        "def pause(label):\n"
+        "    print(label, flush=True)\n"
+        "    sys.stdin.readline()\n"
+        "if mode == 'hold':\n"
+        "    with ts.folder_lock(folder):\n"
+        "        pause('LOCKED')\n"
+        "elif mode == 'recover':\n"
+        "    real = ts._publish\n"
+        "    def slow(target, data):\n"
+        "        if target.name == 'store.json':\n"
+        "            pause('RECOVERY-HOLDS-LOCK')\n"         # mark already raised, live not yet published
+        "        real(target, data)\n"
+        "    ts._publish = slow\n"
+        "    print(ts.recover(folder)[:8], flush=True)\n"
+        "print('DONE', flush=True)\n")
+
+    def start(self, mode):
+        import subprocess
+        process = subprocess.Popen(
+            [sys.executable, "-B", "-c", self.HOLDER, str(Path(ts.__file__).resolve().parent), str(self.folder), mode],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        self.addCleanup(self.stop, process)
+        return process
+
+    @staticmethod
+    def stop(process):
+        if process.poll() is None:
+            process.kill()
+        process.communicate()
+
+    def test_another_process_holding_the_lock_excludes_an_existing_editor(self):
+        self.short_wait()
+        self.store.add("One.")
+        editor = ts.Store(self.folder)                 # created while everything is healthy
+        holder = self.start("hold")
+        self.assertEqual(holder.stdout.readline().strip(), "LOCKED")
+        self.assertTrue((self.folder / "store.json").exists())                   # so a failure below is the lock
+        started = ts.time.monotonic()
+        with self.assertRaises(ts.TeachError) as caught:
+            editor.add("Blocked.")
+        self.assertIn("Another edit is in progress", str(caught.exception))
+        self.assertLess(ts.time.monotonic() - started, 5)                        # bounded
+        self.assertEqual(len(self.live()["entries"]), 1)                         # and nothing was written
+        holder.stdin.write("\n")
+        holder.stdin.flush()
+        self.assertEqual(holder.stdout.readline().strip(), "DONE")
+        self.assertEqual(editor.add("After release.")["id"], "t002")             # completes once released
+
+    def test_recovery_in_another_process_excludes_an_add_until_it_has_finished(self):
+        self.short_wait()
+        self.store.add("One.")
+        self.store.add("Two.")
+        self.store.add("Three.")
+        editor = ts.Store(self.folder)                 # an editor that exists before the loss
+        (self.folder / "store.json").unlink()
+        recovery = self.start("recover")
+        self.assertEqual(recovery.stdout.readline().strip(), "RECOVERY-HOLDS-LOCK")
+        self.assertEqual(ts.read_id_mark(self.folder), 3)                        # mark first, live not yet published
+        self.assertFalse((self.folder / "store.json").exists())
+        with self.assertRaises(ts.TeachError) as caught:
+            editor.add("Racer.")
+        self.assertIn("Another edit is in progress", str(caught.exception))      # the lock, not a missing file
+        self.assertNotIn("recover", str(caught.exception))
+        recovery.stdin.write("\n")
+        recovery.stdin.flush()
+        self.assertEqual(recovery.stdout.readline().strip(), "Restored")
+        self.assertEqual(recovery.stdout.readline().strip(), "DONE")
+        racer = editor.add("Racer.")                   # now it goes through
+        self.assertEqual(racer["id"], "t004")
+        self.assertEqual(ts.read_id_mark(self.folder), 4)                        # mark never below an issued id
+        self.assertEqual([e["id"] for e in self.live()["entries"]], ["t001", "t002", "t004"])
+
+    def test_lock_is_released_when_the_holding_process_is_killed(self):
+        self.short_wait()
+        self.store.add("One.")
+        holder = self.start("hold")
+        self.assertEqual(holder.stdout.readline().strip(), "LOCKED")
+        with self.assertRaises(ts.TeachError):
+            self.store.add("Blocked.")
+        holder.kill()
+        holder.wait()
+        self.assertEqual(self.store.add("After the holder died.")["id"], "t002")
 
     def test_id_mark_only_ever_goes_up(self):
         self.store.add("One.")

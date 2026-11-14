@@ -56,7 +56,9 @@ ignored by git. To erase everything, delete the whole folder; deleting only `sto
 the backup and the log.
 
 Saving is done so that `store.json` is never missing: the new version is written beside it and
-swapped in. If a save fails, the last saved version stays. Only one edit runs at a time; a second
+swapped in. If a save fails before that swap, the last saved version stays. If the swap
+succeeds but the log line cannot be written, the change did happen and the command says "Saved,
+with a problem". Only one edit runs at a time; a second
 one waits. If `store.json` ever goes missing or is damaged while a backup or log exists, the tool
 refuses to start with an empty list and tells you to run:
 
@@ -65,7 +67,9 @@ python teach_store.py recover
 ```
 
 That restores the backup, which is one change behind; compare `list` with `audit.jsonl` and
-re-add anything missing.
+re-add anything missing. If `recover` itself fails, `store.json` is not replaced, but two things
+may be left behind: a higher number in `store.idmark` (harmless: a number may be skipped) and a
+`store.json.damaged.*` copy of the unreadable file (it may contain note text). Run `recover` again.
 
 Entry numbers (t001, t002, ...) are not given out twice. Each number is reserved in a small
 file, `store.idmark`, before the entry is saved, and that file only ever counts upward. A number
@@ -111,6 +115,7 @@ To switch it off again, remove the line and restart. The store can stay.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 70 tests, no model and no network. They include
+`python -B -m unittest tests.test_teach_store` — 73 tests, three of which start a second process
+to check the lock, no model and no network. They include
 simulated write failures, a missing or damaged store file, two editors, and four writers with two
 readers at once.

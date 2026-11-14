@@ -296,8 +296,9 @@ class Store:
 
     Guarantees aimed for, each covered by a test:
     - The live file is never missing during a save: the new version is written to a private
-      temporary file and then replaces the live file in one step. A failed save leaves the last
-      committed version in place.
+      temporary file and then replaces the live file in one step. A failure BEFORE that step
+      leaves the last committed version in place. A failure AFTER it (the audit line) is a
+      different outcome: the edit did happen, and AuditWriteError says so.
     - If the live file is missing while a backup or audit log exists, the store refuses to start
       empty; `recover` restores the backup on request. Ids are never silently restarted.
     - Writers take an exclusive lock and re-read the file under it, so two editors cannot lose
@@ -521,8 +522,12 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
     The whole operation holds the folder lock. The restored version, with its id counter already
     corrected, is built in a temporary file and published in one step, so no reader or editor
     can see a half-recovered store. A damaged live file is set aside only after the replacement
-    is ready. The id mark is raised first, inside the same lock, so an exception here means either
-    that nothing changed or that only the mark went up; the live file is never left half done.
+    is ready. The id mark is raised first, inside the same lock.
+
+    A recovery that fails does not replace the live file, but it is not always free of side
+    effects. Depending on where it stopped it may leave: a higher store.idmark (which can only
+    cause a skipped number), and a store.json.damaged.* copy of an unreadable live file (which
+    may contain note text). Both are safe to keep and recovery can be run again.
     """
     folder = Path(folder)
     live, backup, audit = folder / "store.json", folder / "store.json.bak", folder / "audit.jsonl"

@@ -1555,3 +1555,25 @@ Claude: please assess and own this small follow-up, preserving revision 5 and pi
 
 No live-store action, gateway change, model call, restart, purge, migration or publication of sensitive data is requested. Operational adapter work remains with the PC worker; blocked benchmark publication is not being retried here.
 
+
+## Research round 20 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the revision 5 review result at `a1d3f9c`. Offline only, on throwaway synthetic stores. No model traffic, no stack start, no gateway change. The hook is still off.
+
+### Teach revision 5 follow-up · Claude
+
+Thank you to the reviewer. I accept the result as stated: a scoped source review with no new blocking persistence defect in the requested paths, not a proof and not integration clearance. I accept all three follow-up points, and the first one was a fair hit on my test.
+
+**Revision 6** is in [teach-store/](teach-store/README.md), laptop local commit `1358a1a`. It is tests and wording only: `teach_store.py` differs from revision 5 in docstrings, with no change in behaviour. Revision 5 is preserved at `b2022b0`.
+
+1. **Lock exclusion shown directly, with a second process.** You were right about my earlier test: the editor in it was constructed after the live file had gone, so it was refused for the missing file and never reached the lock. Three new tests start a real second Python process and coordinate over a pipe:
+   - *Holder process.* It takes the lock and reports. An editor created beforehand, with the live file present, attempts an add: refused with "Another edit is in progress" in under five seconds, nothing written. After release the same add completes as `t002`.
+   - *Recovery in the other process.* The live file is deleted; an editor exists from before the loss. The second process runs `recover` and pauses after raising the mark and before publishing the live file. The test checks the mark is 3 and no live file exists, then attempts the add: refused with the lock message, and the test asserts the message is **not** the missing-file one. After release, recovery finishes; the add goes through as `t004`; the mark is 4; the entries are `t001`, `t002`, `t004`.
+   - *Holder killed.* The holding process is killed; the next add succeeds.
+   The earlier in-process test now also uses a pre-created editor and asserts the lock message.
+2. **"Failed save" wording narrowed.** A failure before the store is published keeps the previous version. A failure after it, at the audit line, is the separate saved-but-audit-failed outcome. Code comments, owner documentation and the snapshot README now say this.
+3. **Recovery failure side effects stated.** A failed recovery does not replace the live file but may leave a higher id mark and a set-aside copy of a damaged live file. Documented in the same three places.
+
+**Evidence** (*measured* on the laptop, Windows, three runs): 73 teach tests pass, 173 in the project suite; from the published folder 73 pass with 1 skipped. These are my own runs until the reviewer's offline pass.
+
+**Still unverified, as you list:** model adherence to the data block, actual gateway callback invocation, tokenizer and context fit, POSIX behaviour, and process death other than a killed lock holder. I am not reopening the planner, building a runner, or enabling anything.

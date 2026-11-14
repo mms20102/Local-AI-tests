@@ -9,20 +9,21 @@ The laptop copy is the working one; this folder is for reading and review.
 | 2 | `e4fff00` | commit `1f8577d` | Examined. Preserved in history. |
 | 3 | `fc3dc8a` | commit `8c0ee3b` | Examined. Preserved in history. |
 | 4 | `dd40a6b` | commit `54cec06` | Examined. Preserved in history. |
-| 5 | `f663f66` | this commit | Repairs proposed in response to the review of revision 4. **Not yet reviewed.** |
+| 5 | `f663f66` | commit `b2022b0` | Examined: prior race fixed, no new blocking persistence defect in the requested paths; a focused test and wording follow-up was requested. Preserved in history. |
+| 6 | `1358a1a` | this commit | That follow-up: tests and wording only. `teach_store.py` differs from revision 5 in docstrings only. **Awaiting the independent offline pass.** |
 
-Every revision so far has had real defects found by the independent reviewer. Treat revision 5 as
-unproven until that review reports otherwise.
+Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
+is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 5 files, byte-identical to the laptop's:
+Revision 6 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `b7e60330298112d81bfc7c0efd846096157eb9d260ce62dbb897aff642b2dbef` |
+| `teach_store.py` | `08332ec8121a38bfc66ccac3cf43b739d4f69946ae674b03b0afbad124d1fa6f` |
 | `teach_hook.py` | `7623d430dfd37a809bc1fe1f1af5949d9c17e6939d470c0ce84dbb25dfbd3335` (unchanged since revision 2) |
-| `tests/test_teach_store.py` | `f253915ebd707153326a41487f89f8cf72e95586af9d0ba8f40f8e314dd1ae6d` |
+| `tests/test_teach_store.py` | `762230b9292da34363b1f623c7b6b57b598d5dd836317150e94e95e9b37b8f29` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
-| `TEACH.md` | `092a99dd0567dc00a075de597c3bfdd6e6797de9a0efd88336fd717c2fc70dd8` |
+| `TEACH.md` | `09f3286981dbaff3345c593a7ff9d6b1bd341f835c54dbf4109f989ea513e0fa` |
 
 **Status:** the gateway hook is not enabled on the laptop and the gateway configuration is
 unchanged. No taught entries exist; the store folder has never been created there. Nothing here
@@ -34,10 +35,19 @@ contains keys, chats or personal data.
 python -B -m unittest tests.test_teach_store
 ```
 
-70 tests, 1 skipped when run from this folder (the check that the laptop's gateway configuration
+73 tests, 1 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 70 pass, and the project suite is 170. Only the Windows lock path has been
+the real gateway rules: 73 pass, and the project suite is 173. Three tests start a second Python
+process. Only the Windows lock path has been
 run.
+
+## Revision 6 follow-up to the review of revision 5
+
+| Requested | Done |
+|---|---|
+| Show lock exclusion itself, not an earlier constructor failure | Three tests with a real second process. (1) A process holds the lock; an editor created beforehand, with the live file present, is refused with the lock message within a bounded time, nothing is written, and its add completes after release. (2) A second process runs recovery and pauses after raising the mark and before publishing the live file; an editor created before the loss is refused with the lock message and explicitly not the missing-file message; after release recovery finishes, the add gets `t004`, the mark is 4, and the entries are `t001`, `t002`, `t004`. (3) The holding process is killed and the lock becomes available. The earlier in-process test now uses a pre-created editor and asserts the lock message. |
+| Narrow "failed save" wording | Docstring and owner documentation now separate a failure before publication (previous version kept) from a failure after it (edit happened; saved-but-audit-failed). |
+| State recovery failure side effects | Docstring and owner documentation say a failed recovery does not replace the live file but may leave a higher id mark and a set-aside damaged copy. |
 
 ## Revision 5 changes, by finding of the review of revision 4
 
@@ -55,8 +65,9 @@ run.
   `reconcile-ids` is a manual path whose result is only as good as the remaining records. After
   a reserved-but-uncommitted id whose mark is then lost, reconcile will hand that number out; it
   was never attached to an entry.
-- **Saves:** readers never see a partial file; a failed save leaves the previous version. Proven
-  by fault injection at the process level only.
+- **Saves:** readers never see a partial file. A failure before the store is published leaves the
+  previous version; a failure after it (the audit line) is reported as saved-with-a-problem.
+  Shown by fault injection at the process level only.
 - **Purge:** rewrites the entry's own valid records in three files; reports, and signals by exit
   code, anything it left. Retryable, not atomic, not secure erasure.
 
@@ -66,6 +77,7 @@ run.
   data block is untested and needs a separately authorized trial.
 - A user message that itself begins with the exact block marker is treated as already injected.
 - `recover` restores a backup that is one change behind.
-- Power-loss behaviour and the POSIX lock path are untested.
+- Power-loss behaviour and the POSIX lock path are untested. Process death is tested only for
+  the lock holder being killed, on Windows.
 - The budget is in gateway admission units (bytes), not model tokens.
 - The running gateway has never been started with the hook.
