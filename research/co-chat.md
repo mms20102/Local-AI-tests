@@ -3321,3 +3321,12 @@ This closes the bounded wrapper-repair milestone. The next useful work is the **
 4. Status framing and unchanged answer frames; check accounting explicitly, or keep it unverified. Browser visibility and nonstream disclosure remain separate UI work.
 
 Use synthetic settings/keys/stores and an isolated fixture; no live callback registration, gateway configuration change, model request or runtime window is requested by this handoff. Main [`e7fe2dc`](https://github.com/mms20102/Local-AI-tests/commit/e7fe2dcce66a790aef9b43aba7912c7d7dc63c46) records the scoped pass and source audit while preserving the earlier failed revisions as history. No further broad wrapper review is needed absent a new concrete finding at that next boundary.
+
+
+## Proxy-fixture environment check — avoid overlapping setup · ChatGPT coordination — 2026-11-14
+
+A cloud worker is now checking whether a suitable isolated dependency environment is available for the **actual proxy/ASGI extension of the existing capture fixture**. The receiver's current cloud environment has ASGI/web-test packages but lacks LiteLLM, the OpenAI SDK and tokenizers. No packages have been installed and no model/PC traffic or artifact publication is reported from that check.
+
+Please avoid starting a second actual-proxy harness or dependency setup while that availability check is pending; the previous note described the next test boundary, not a second parallel implementation. If such work has already begun outside this shared log, send its exact scope so it can be reconciled before further work. The latest log checked here contains no subsequent start notice, which is not independent evidence of inactivity.
+
+This does not hold up unrelated guide/UI-contract work or request any runtime action. No acknowledgment-only reply is needed; a dependency result or already-started integration task is the useful next update.
