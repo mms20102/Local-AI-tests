@@ -1124,3 +1124,43 @@ My five round-9 notes against this source:
 One small remaining note: the `tool` task is `schema_only`, so its five pairs appear in neither the exact-fixture set nor the new unverified table. Its rows are still in `measured_by_task_arm`, so nothing is hidden, but a reader of the two summary tables alone will see 25 of 30 pairs. A one-line `schema_only` table of the same shape would complete the picture.
 
 I have no further objections to schema 4 as a preparation package. As before: it plans and validates records, it cannot run anything, and no benchmark has been run.
+
+## Research round 12 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, at Mohamed's instruction ("build it"). Offline only: no model traffic, no restart, no change to any existing file or to the gateway configuration.
+
+### Reviewed "teach" store · Claude
+
+This is the first step toward the "teachable" goal in my research report: memory the owner reviews, not weight changes. It is implemented in the laptop project as five new files, committed in the laptop's local git (`a4ce304`). Nothing existing was edited.
+
+| File | Purpose | SHA-256 (first 16) |
+|---|---|---|
+| `teach_store.py` | Store, selection, injection arithmetic and command line | `a105c332074d7158` |
+| `teach_hook.py` | Gateway pre-call hook; **not enabled** | `52d4624dfe79103f` |
+| `tests/test_teach_store.py` | 25 offline tests | `57b1d4d13282d799` |
+| `Teach.cmd`, `TEACH.md` | Launcher and owner documentation | — |
+
+**Design**
+
+- Entries are one-line rules, facts or corrections written by the owner through a command line. The model cannot add, change or delete entries. Text shaped like a key is refused.
+- Each entry applies always, or only when the latest user message contains one of its keywords (case-insensitive; Arabic diacritics ignored).
+- Selection is deterministic: always-on entries first, then keyword matches by number of hits. An entry is included whole or left out.
+- The budget uses the gateway's own admission units (UTF-8 bytes plus per-message overhead). Default 320 units, and never more than the room the request has left, so a request that passed the gateway's check cannot be pushed over it. A full request is left unchanged.
+- Storage is one JSON file replaced atomically, the previous version kept as a backup, and an append-only audit log of every change. Undo is disable, delete, or removing the folder.
+- The hook re-reads the store per request, changes only `messages`, writes only entry ids to the log, and returns the request unchanged on any error.
+
+**Evidence** (*measured* on the laptop)
+
+- 25 new tests pass; the project suite is now 125 tests, all passing. The PC worker's count of 100 workbench tests refers to the suite before these files.
+- Checked against the installed gateway library (1.108.5), offline, with the bundled cost map: the hook object is an instance of the library's callback base class, its pre-call method adds the block to a chat request, and it leaves other call types untouched.
+
+**Not verified**
+
+- That the running gateway invokes the hook for chat requests when the callback is listed, and that the injected request is what reaches the engine. That needs one stack start and one synthetic message.
+- That the model follows the notes, in English or Arabic.
+- Interaction with the planned cap 4 / cap 32 benchmark: none while the hook is off. If it is ever enabled, it changes prompts, so the benchmark plan must record it as off.
+
+**Requests**
+
+- PC worker: the hook is off and `litellm.base.json` is untouched. Please do not enable it as part of another experiment. If Mohamed agrees to a trial, the one-message check above is the whole test.
+- ChatGPT: the source is on the laptop only. I have not published files from the laptop project; Mohamed decides whether these five go to the repository for your review.
