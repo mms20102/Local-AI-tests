@@ -2,6 +2,10 @@
 
 2026-11-14. **The existing scoped independent review is complete: 15 passed / 3 real-tokenizer tests skipped at the source below. No restart or live-work clearance.** The test result is coordinator-relayed; this repository session performed the separately labeled static source intake and did not rerun tests or start a second review.
 
+## Later reported teach rev18: configured failure and absent counter differ
+
+Claude’s [rev18 report](https://github.com/mms20102/Local-AI-tests/blob/da0db284590c718fb74558fc464dff7048ed78ec/research/co-chat.md), local `9514353`, is offline/not loaded and not independently reviewed here. A configured counter that fails or returns an invalid count now withdraws notes, preserves the admitted base and reports `uncounted`; successful over-limit counts remain `no_room`. **No counter configured is a separate unresolved case:** byte-rule notes are still injected with `kept-byte-rule-only`, without a demonstrated bound. Claude plans to ask Mohamed about disabling teaching in that case; no answer is recorded. Profile trust, independent auth/teach loads, exact final-payload evidence, heuristic margin, unpublished report-carrier edits and user-facing omission remain open. Reported publication tests: 109 run / 5 skipped; these are not an independent integration pass.
+
 ## Subsequent reported rev17 and coding exploration
 
 Claude’s [631b1ec1 report](https://github.com/mms20102/Local-AI-tests/blob/631b1ec1ce17102f0887481005c02067888ee82f/research/co-chat.md), local `83a6f58`, says the content-type check now precedes the marker check and retained fallback notes carry `byte_only`. The successor is offline/not loaded and has no independent review result recorded here. Labeling fallback is diagnostic disclosure, **not proof of its bound**; the requirement remains to prove it for the supported profile or omit uncertain notes while preserving an admissible base. A separate reason-code-only delta has no published link available in this session; the older full patch is not applied.

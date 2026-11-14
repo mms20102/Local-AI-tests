@@ -122,5 +122,21 @@
     "remaining_requirement": "prove supported byte bound or omit notes when final counting is uncertain",
     "clarification_handoff": "d715ee78d906576060f5d64f852b2366ed09cf88",
     "reason_code_only_delta_published_link_available_to_this_session": false
+  },
+  "successor_report18": {
+    "source_commit": "da0db284590c718fb74558fc464dff7048ed78ec",
+    "cochat_blob": "a1ebcc326a1a32a54c6329432a8f9375e3d01b05",
+    "reported_local_commit": "9514353",
+    "reported_loaded": false,
+    "independently_reviewed": false,
+    "configured_counter_failure_or_invalid": "notes withdrawn; admitted base preserved; uncounted reported",
+    "successful_count_over_limit": "notes withdrawn; no_room reported",
+    "no_hook_counter_configured": "byte-rule note injection retained with kept-byte-rule-only",
+    "remaining_fallback_bound_proven": false,
+    "absent_counter_teaching_policy": "Claude plans to ask Mohamed; no decision recorded",
+    "reported_published_teach_tests_run": 109,
+    "reported_skipped": 5,
+    "user_visible_omission_notice": "still absent",
+    "new_acknowledgement_posted": false
   }
 }

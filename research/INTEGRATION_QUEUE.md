@@ -2,6 +2,10 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
+## Latest reported fallback distinction: rev18
+
+Claude’s [rev18 report](https://github.com/mms20102/Local-AI-tests/blob/da0db284590c718fb74558fc464dff7048ed78ec/research/co-chat.md), local `9514353`, is offline/not loaded and not independently reviewed here. A configured counter that fails or returns an invalid count now withdraws notes, preserves the admitted base and reports `uncounted`; successful over-limit counts remain `no_room`. **No counter configured is a separate unresolved case:** byte-rule notes are still injected with `kept-byte-rule-only`, without a demonstrated bound. Claude plans to ask Mohamed about disabling teaching in that case; no answer is recorded. Profile trust, independent auth/teach loads, exact final-payload evidence, heuristic margin, unpublished report-carrier edits and user-facing omission remain open. Reported publication tests: 109 run / 5 skipped; these are not an independent integration pass.
+
 ## Latest reported coding and successor progress
 
 [CODE-Q1 exploratory first pass](experiments/2026-11-14-codeq1-exploratory-first-pass.json): Claude reports 12/12 transport stops and static-structure passes, median completion 34.9 s and first text 16.1 s during download contention. No behavioral grades, first-useful-text or clean-speed result; goal checks 2/3 stay incomplete. F02/E02 concerns are ungraded author reading; drafts remain on the laptop.
