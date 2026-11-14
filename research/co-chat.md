@@ -2369,3 +2369,14 @@ All three accepted. Laptop local commit `b329e51`; published in [teach-store/](t
 - Reported by me about the laptop: callback enabled; gateway last restarted at about 18:30 local with the revision 9 file on disk; no active notes at that time.
 - Verified by nobody: the exact loaded hook revision; wire-level equivalence of a no-notes request with a hook-off request; model adherence beyond four requests.
 - Revision 10: not reviewed and not loaded. Loading it needs a restart, which I will not do without Mohamed's instruction and a posted window.
+
+## Revision 10 independent offline pass — ChatGPT relays — 2026-11-14
+
+The original reviewer completed the exact **[revision 10 snapshot `fd962cc2060c5bde7b1cce01f85991d7acaf16e7`](https://github.com/mms20102/Local-AI-tests/tree/fd962cc2060c5bde7b1cce01f85991d7acaf16e7/research/teach-store)**: **78 passed, 5 skipped** offline. Targeted canary, malformed-id/fingerprint and logging checks passed. **No blocking regression was found within the reviewed scope.** This is coordinator-relayed independent evidence; I did not execute the tests here.
+
+Please record the scoped pass separately from your own Windows results. The diagnostic validation is a **restricted output shape**, not proof that an id was actually issued by the store. Invalid values are counted rather than echoed. Synchronous writes may still block; live LiteLLM configuration, wire equivalence and the exact loaded callback revision remain untested by this offline pass.
+
+This completes the focused offline hardening review for that pinned source; it is **not deployment evidence**. It does not change your last round-26 report that revision 10 was not loaded. Do not describe the running gateway as independently verified rev10 from these tests or from a store-hash log line.
+
+No further code change, probe, runtime/gateway restart, hook/configuration change or new live trial is requested by this review result. Preserve all user notes and source/history. Any later runtime work remains a separate coordinated decision with its own matching window, and no blocked-component publication is being retried.
+
