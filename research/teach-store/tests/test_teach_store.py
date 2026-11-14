@@ -985,21 +985,101 @@ class HookTests(Base):
         callbacks = json.loads(config.read_text(encoding="utf-8"))["litellm_settings"].get("callbacks", [])
         self.assertIn(callbacks, ([], ["teach_hook.teach"]))
 
-    def test_log_line_never_contains_note_text(self):
+    def call_hook(self, request, stdout=None):
+        """Run the real callback object against this test's throwaway store."""
         import asyncio, contextlib as cl, io as _io
         if teach_hook.teach is None:
             self.skipTest("hook object needs the laptop project's settings")
-        self.store.add("A very recognisable sentence.")
-        real = teach_hook.inject
-        teach_hook.inject = lambda data, limits: real(data, limits, self.folder)
-        out = _io.StringIO()
+        real = teach_hook.inject_with_evidence
+        teach_hook.inject_with_evidence = lambda data, limits: real(data, limits, self.folder)
+        out = stdout if stdout is not None else _io.StringIO()
         try:
             with cl.redirect_stdout(out):
-                asyncio.run(teach_hook.teach.async_pre_call_hook(None, None, body([{"role": "user", "content": "hi"}]), "acompletion"))
+                result = asyncio.run(teach_hook.teach.async_pre_call_hook(None, None, request, "acompletion"))
         finally:
-            teach_hook.inject = real
-        self.assertIn("[teach] added 1 entries: t001", out.getvalue())
+            teach_hook.inject_with_evidence = real
+        return result, out
+
+    def test_log_line_never_contains_note_text(self):
+        self.store.add("A very recognisable sentence.")
+        _, out = self.call_hook(body([{"role": "user", "content": "hi"}]))
+        self.assertIn("[teach] added 1 entries: t001 | store ", out.getvalue())
         self.assertNotIn("recognisable", out.getvalue())
+
+    def test_broken_log_pipe_does_not_break_the_request(self):
+        class Broken:
+            def write(self, text):
+                raise BrokenPipeError(32, "Broken pipe")
+
+            def flush(self):
+                raise BrokenPipeError(32, "Broken pipe")
+
+        request = body([{"role": "user", "content": "hi"}])
+        result, _ = self.call_hook(request, Broken())                            # empty store
+        self.assertEqual(result, request)
+        self.store.add("Be brief.")
+        result, _ = self.call_hook(request, Broken())                            # active note
+        self.assertTrue(result["messages"][-1]["content"].startswith("<saved_notes>\n- Be brief."))
+        self.assertEqual(len(request["messages"]), 1)                            # caller's request untouched
+
+    def test_closed_log_stream_does_not_break_the_request(self):
+        import io as _io
+        closed = _io.StringIO()
+        closed.close()
+        self.store.add("Be brief.")
+        result, _ = self.call_hook(body([{"role": "user", "content": "hi"}]), closed)
+        self.assertIn("Be brief.", result["messages"][-1]["content"])
+
+    def test_snapshot_fingerprint_is_the_hash_of_the_bytes_that_were_parsed(self):
+        import hashlib
+        self.assertEqual(ts.snapshot(self.folder), ([], "none"))                 # no store file yet
+        self.store.add("One.")
+        entries, fingerprint = ts.snapshot(self.folder)
+        raw = (self.folder / "store.json").read_bytes()
+        self.assertEqual(fingerprint, hashlib.sha256(raw).hexdigest()[:12])
+        self.assertEqual([e["text"] for e in entries], ["One."])
+        self.store.set_status("t001", "disabled")
+        entries, later = ts.snapshot(self.folder)
+        self.assertEqual(entries, [])
+        self.assertNotEqual(later, fingerprint)
+
+    def test_logged_ids_and_fingerprint_describe_the_version_that_was_injected(self):
+        import hashlib
+        self.store.add("First note.")
+        before = hashlib.sha256((self.folder / "store.json").read_bytes()).hexdigest()[:12]
+        real_apply = teach_hook.apply_to_messages
+
+        def edit_during_request(*args, **kwargs):
+            ts.Store(self.folder).add("Second note, added while the request is being built.")
+            return real_apply(*args, **kwargs)
+        teach_hook.apply_to_messages = edit_during_request
+        try:
+            changed, used, fingerprint = teach_hook.inject_with_evidence(
+                body([{"role": "user", "content": "hi"}]), LIMITS, self.folder)
+        finally:
+            teach_hook.apply_to_messages = real_apply
+        after = hashlib.sha256((self.folder / "store.json").read_bytes()).hexdigest()[:12]
+        self.assertNotEqual(before, after)                                       # the store really changed mid-request
+        self.assertEqual(fingerprint, before)                                    # the log names the version used...
+        self.assertEqual(used, ["t001"])
+        self.assertIn("First note.", changed["messages"][-1]["content"])         # ...and that is what was injected
+        self.assertNotIn("Second note", changed["messages"][-1]["content"])
+
+    def test_log_line_reports_the_fingerprint_when_nothing_is_added(self):
+        self.assertEqual(teach_hook.log_line([], "none"), "[teach] nothing added | store none")
+        self.assertEqual(teach_hook.log_line(["t001", "t004"], "abc123abc123"),
+                         "[teach] added 2 entries: t001,t004 | store abc123abc123")
+        self.store.add("One.")
+        self.store.set_status("t001", "disabled")
+        _, used, fingerprint = teach_hook.inject_with_evidence(body([{"role": "user", "content": "hi"}]), LIMITS, self.folder)
+        self.assertEqual(used, [])
+        self.assertEqual(len(fingerprint), 12)
+
+    def test_evidence_on_a_broken_store_is_marked_unknown(self):
+        self.folder.mkdir(parents=True)
+        (self.folder / "store.json").write_text("not json", encoding="utf-8")
+        request = body([{"role": "user", "content": "hi"}])
+        self.assertEqual(teach_hook.inject_with_evidence(request, LIMITS, self.folder), (request, [], "unknown"))
 
 
 class CliTests(Base):

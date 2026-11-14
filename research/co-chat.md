@@ -2215,3 +2215,36 @@ Do not change the running hook, gateway, runtime or store on this handoff. A liv
 
 The cap-result audit continues offline on the immutable window-4 artifacts. Its hook-off condition is historical; subsequent measurements must not silently inherit it. No candidate-code execution or rejected-component publication is requested.
 
+
+## Research round 25 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the revision 7 findings at `a0168db`. Offline only, on throwaway synthetic stores. **I did not restart, reconfigure or touch the running gateway, and I did not touch the real store.** The running gateway therefore still has the revision 7 hook loaded; the repair below takes effect only at the next restart, which needs Mohamed's go-ahead.
+
+### Revision 7 findings: assessment · Claude
+
+**I accept all three; no disagreement.**
+
+1. **Logging could break the request: reproduced.** *Measured* on revision 7 with a throwaway store: with stdout replaced by an object that raises `BrokenPipeError`, the callback raised `BrokenPipeError` both with an empty store and with one active note. The `print` was outside the fail-open guard. Since the hook is live, this is a real exposure: if the gateway's log pipe ever broke, chat requests could fail.
+2. **Racy provenance: correct by reading.** Revision 7 selected the notes from one read of the store and computed the fingerprint from a second read at log time.
+3. **"Identical request object" is a direct-call result:** agreed. "Nothing added" in the log plus similar answers does not prove the serialized request on the wire was byte-identical to a hook-off request. I have not captured the wire form and do not claim it.
+
+### Repair: revision 8 (offline, not yet running)
+
+Laptop local commit `109d002`; published in [teach-store/](teach-store/README.md). Revision 7 is preserved at `619f217`.
+
+| Finding | Change | Offline evidence (*measured*, Windows) |
+|---|---|---|
+| Diagnostic output can break the request | The log write goes through `safe_log`, which ignores any failure to write. Nothing in the callback after the fail-open injection can raise from logging | Tests with a stream that raises `BrokenPipeError` on write and flush, for an empty store and for an active note: the callback returns normally; with a note the injected request is still produced; the caller's request object is untouched. A closed stream is covered too |
+| Fingerprint from a different snapshot | New `snapshot()` reads `store.json` once and returns the active entries and the fingerprint of exactly those bytes. `inject_with_evidence` returns the request, the ids and that fingerprint together; the log line is built only from them | A test edits the store in the middle of a request (after the read, before rendering): the returned fingerprint is the hash of the pre-edit file, the ids are the pre-edit ids, and the injected text is the pre-edit note |
+| Meaning of the fingerprint | Stated in code and README: the first 12 hex digits of the SHA-256 of the store file bytes the entries were parsed from; `none` when there is no store file; `unknown` when the store could not be read; `not-read` when the request was not eligible. It identifies a file version and reveals no text | Tests for each value |
+| Privacy of the log | Unchanged: ids, count and fingerprint only | Existing test that note text never appears in the line |
+
+`teach_store.py` gains only the read-only `snapshot()` function; the persistence code reviewed in revision 6 is not modified. *Measured:* 80 teach tests pass on the laptop, 179 in the project suite; the hook object is still an instance of the installed gateway library's callback class.
+
+**Not claimed:** live behaviour of revision 8 (it has not run in the gateway), wire-level equivalence of an empty-store request with a hook-off request, or anything about concurrent editors beyond the single mid-request edit in the test.
+
+### On experiment identity
+
+Agreed. From window 5 onward the configuration differs from every earlier measurement: the callback is in the request path. The window 4 cap result was taken with the hook off, and any later comparison must record the callback line, the hook revision and the store fingerprint, which the hook now logs per request.
+
+Please have the reviewer check the diff between `619f217` and this commit under `research/teach-store/`.

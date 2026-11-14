@@ -121,7 +121,7 @@ through the same gateway), long conversations, and many entries at once.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 73 tests, three of which start a second process
+`python -B -m unittest tests.test_teach_store` — 80 tests, three of which start a second process
 to check the lock, no model and no network. They include
 simulated write failures, a missing or damaged store file, two editors, and four writers with two
 readers at once.

@@ -36,6 +36,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import datetime
+import hashlib
 import json
 import os
 import re
@@ -576,6 +577,33 @@ def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> 
                  "might repeat an id that was used after them.")
     return (f"Restored {len(data['entries'])} entries from the backup. The backup is one change "
             "behind; check `list` against audit.jsonl and re-add anything missing." + note)
+
+
+def snapshot(folder: Path = DEFAULT_DIR) -> tuple[list[dict], str]:
+    """Active entries and a fingerprint, both taken from ONE read of store.json.
+
+    The fingerprint is the first 12 hex digits of the SHA-256 of exactly the bytes the entries
+    were parsed from. So a log line that reports it describes the version that was used, even if
+    the store is edited a moment later. "none" means there is no store file. It identifies a
+    file version; it is not a secret and reveals no note text.
+    """
+    path = Path(folder) / "store.json"
+    try:
+        for attempt in range(20):
+            try:
+                raw = path.read_bytes()
+                break
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.05)
+    except FileNotFoundError:
+        return [], "none"
+    data = json.loads(raw.decode("utf-8"))
+    if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list):
+        raise TeachError("store.json has an unknown format.")
+    active = [e for e in data["entries"] if isinstance(e, dict) and e.get("status") == "active"]
+    return active, hashlib.sha256(raw).hexdigest()[:12]
 
 
 def line_for(entry: dict) -> str:

@@ -11,24 +11,35 @@ The laptop copy is the working one; this folder is for reading and review.
 | 4 | `dd40a6b` | commit `54cec06` | Examined. Preserved in history. |
 | 5 | `f663f66` | commit `b2022b0` | Examined: prior race fixed, no new blocking persistence defect in the requested paths; a focused test and wording follow-up was requested. Preserved in history. |
 | 6 | `1358a1a` | commit `015a2ec` | That follow-up: tests and wording only. `teach_store.py` differs from revision 5 in docstrings only. **Independent offline pass completed** (see below). |
-| 7 | `0783706` | this commit | Live trial revision. `teach_store.py` is unchanged from revision 6 (same hash). `teach_hook.py` gained a log line with the entry count and a short store hash; one guard test was replaced and one added; owner documentation updated. **Not independently reviewed.** |
+| 7 | `0783706` | commit `619f217` | Live trial revision. `teach_store.py` is unchanged from revision 6 (same hash). `teach_hook.py` gained a log line with the entry count and a short store hash; one guard test was replaced and one added; owner documentation updated. Examined by the independent reviewer: a broken log pipe could break a request, and the logged fingerprint could describe a different store version. Preserved in history. |
+| 8 | `109d002` | this commit | Repair for the revision 7 findings: logging can no longer break a request; ids and fingerprint come from one read of the store. `teach_store.py` gains only a read-only `snapshot()`; its persistence code is unchanged from revision 6. **Not yet reviewed, and not yet running: the live gateway still has revision 7 loaded until its next restart.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 7 files, byte-identical to the laptop's:
+Revision 8 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `08332ec8121a38bfc66ccac3cf43b739d4f69946ae674b03b0afbad124d1fa6f` |
-| `teach_hook.py` | `9125c69a35c606ba3fe4378d9570f40f933950ab3e46b5568acfdd37f2d211c0` |
-| `tests/test_teach_store.py` | `526f703a44995c61166cd5702e027577f1c0f3b447c04fe0acafaa34fe1aaf0a` |
+| `teach_store.py` | `2b33ebd52e508430f3ac3d449b61638cf7dc20070ae05e2f3d9df7acb17b0f60` |
+| `teach_hook.py` | `efbf05262a0f9c6e42a026645413fd748cf492cc718040b49c101bcbf8850f13` |
+| `tests/test_teach_store.py` | `00a34cbab8df35833b66defcb831b16149d546ac8484e3d28710776e226bb1d3` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
-| `TEACH.md` | `b781c316c31bc6906954f83861a37a9f209479d0ebfb738a3f953a48ed85610e` |
+| `TEACH.md` | `cd1f02e12ed6610e230ac2f8ebfab385b735650915337a7099937518a0c28e1d` |
 
 **Status:** the gateway hook is **enabled on the laptop** since the live trial of 2026-11-14
 (co-chat, "Runtime window 5 CLOSED"), on Mohamed's instruction. The store is empty: the trial's two
 synthetic notes were purged. Nothing here contains keys, chats or personal data.
+
+## The log line and its fingerprint (revision 8)
+
+For each chat request the hook writes one line to the gateway log:
+`[teach] added N entries: t001,t004 | store <fingerprint>` or `[teach] nothing added | store <fingerprint>`.
+The fingerprint is the first 12 hex digits of the SHA-256 of the `store.json` bytes that the
+injected entries were parsed from, taken in the same single read. Other values: `none` (no store
+file), `unknown` (the store could not be read; the request was left unchanged), `not-read` (the
+request was not an eligible plain-text chat). The line never contains note text, and a failure to
+write it is ignored so that logging cannot break a chat.
 
 ## Independent offline result for revision 6
 
@@ -50,9 +61,9 @@ combined total. It is not activation approval.
 python -B -m unittest tests.test_teach_store
 ```
 
-75 tests, 2 skipped when run from this folder (the check that the laptop's gateway configuration
+80 tests, 4 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 75 pass, and the project suite is 174. Three tests start a second Python
+the real gateway rules: 80 pass, and the project suite is 179. Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5
