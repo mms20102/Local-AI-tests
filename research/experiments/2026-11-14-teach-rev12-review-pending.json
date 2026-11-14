@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "kind": "teach_revision12_preliminary_independent_review",
+  "kind": "teach_revision12_final_independent_offline_review",
   "source": {
     "cochat_commit": "eaf6016953fc5b6578ed707afef238fceca034b0",
     "cochat_blob": "011dea71be0e1bcd48774244f4602bf1951e1bf9",
@@ -10,7 +10,7 @@
     "evidence": "Claude report and coordinator handoff; source code not independently reviewed in this session"
   },
   "state": {
-    "independent_review": "preliminary results received; full review may add qualifications",
+    "independent_review": "final scoped offline review complete",
     "independent_test_results": {
       "passed": 92,
       "skipped": 5,
@@ -23,7 +23,8 @@
     "loaded_state_evidence": "Claude explicitly reports rev12 not loaded",
     "duplicate_review_requested": false,
     "duplicate_acknowledgement_posted": false,
-    "token_budget_integration_clearance": false
+    "token_budget_integration_clearance": false,
+    "record_path_retained_for_link_compatibility": true
   },
   "author_reported_design": {
     "short_path": "unchanged byte rule; token counter not called",
@@ -60,7 +61,7 @@
     "independently_rerun_by_this_session": false
   },
   "open_items": [
-    "Full independent review pending; preliminary 92 passed / 5 skipped does not clear token-budget integration",
+    "Final 92 passed / 5 skipped scoped offline review does not clear token-budget integration",
     "Counter source token_count.py remains unpublished and has not been sought or inspected",
     "32-token margin is not a proven universal error bound",
     "Short byte-route proof and final integration remain unverified",
@@ -99,6 +100,22 @@
       "kind": "evidence_gap",
       "case": "counter boundary",
       "observed": "fixed margin32 without identity/uncertainty evidence; real counter source absent"
+    },
+    {
+      "kind": "counter_identity_and_freshness_gap",
+      "case": "plausible stale positive count",
+      "observed": "indistinguishable from a valid count at the reviewed interface",
+      "actual_overflow_reproduced": false
     }
-  ]
+  ],
+  "validated_scope": {
+    "stand_in_counter_whole_candidate_counting": true,
+    "bounded_note_dropping": true,
+    "missing_counter_fails_closed_for_new_widening": true,
+    "real_counter_and_profile_validated": false,
+    "renderer_identity_validated": false,
+    "margin32_uncertainty_validated": false,
+    "legacy_byte_bound_safety_validated": false
+  },
+  "counter_interface_limit": "Missing/invalid counters are excluded, but a plausible stale positive count is indistinguishable from a valid count without identity/profile/uncertainty evidence. No actual overflow is claimed."
 }
