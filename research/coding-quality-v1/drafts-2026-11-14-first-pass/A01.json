@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef word_counts(text):\n    if not text or text.isspace():\n        return {}\n    words = text.split()\n    counts = {}\n    for word in words:\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 27.34,
+ "first_text_seconds": 15.64,
+ "executed": false
+}

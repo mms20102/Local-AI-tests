@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef lookup(cache, key, default):\n    if key in cache:\n        return cache[key]\n    return default\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 19.34,
+ "first_text_seconds": 14.16,
+ "executed": false
+}

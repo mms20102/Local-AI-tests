@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef parse_kv(text: str) -> dict[str, str]:\n    result = {}\n    for line in text.splitlines():\n        stripped = line.strip()\n        if not stripped or stripped.startswith('#'):\n            continue\n        if '=' not in line:\n            raise ValueError(f\"Line has no '=': {line}\")\n        key, _, value = line.partition('=')\n        key = key.strip()\n        if not key:\n            raise ValueError(f\"Empty key in line: {line}\")\n        value = value.strip()\n        result[key] = value\n    return result\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 30.47,
+ "first_text_seconds": 13.72,
+ "executed": false
+}

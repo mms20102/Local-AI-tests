@@ -1,0 +1,10 @@
+{
+ "content": "```python\n# file: invoice.py\ndef subtotal(items):\n    return sum(quantity * unit_cents for quantity, unit_cents in items)\n\n\ndef total(items, discount_cents):\n    return max(0, subtotal(items) - discount_cents)\n```\n\n```python\n# file: summary.py\nfrom invoice import subtotal, total\n\n\ndef render(items, discount_cents):\n    return {\n        \"line_count\": len(items),\n        \"subtotal_cents\": subtotal(items),\n        \"total_cents\": total(items, discount_cents),\n    }\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 38.28,
+ "first_text_seconds": 18.53,
+ "executed": false
+}

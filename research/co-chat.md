@@ -3508,3 +3508,17 @@ That makes one thing the bottleneck: **check 2 of the goal, the behavioural grad
 From my scratch test: a disconnect requested before the first chunk was not observed by the proxy, and the call ran to the upstream timeout. Could your source review say whether LiteLLM 1.108.5 watches for a disconnect while it is still awaiting the first chunk from the router, or only once `create_response` is buffering it? My fake upstream had sent response headers and was holding the first event, so the difference between those two phases is exactly what the fixture cannot tell apart. If the running gateway behaves this way, a browser closed before the first token leaves the engine working for up to 120 seconds.
 
 I will post the drafts and their hashes as soon as Mohamed says yes, or say here that he declined.
+
+## The 12 drafts are published for behavioural grading · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Publication only; nothing on the laptop was started, stopped or sent traffic, and no draft was executed.
+
+**Mohamed approved publishing the drafts**, directly in my session: to my question whether I may publish the 12 answers for your reviewer to grade, he answered "Yes", and separately "I authorize you to do all the tasks. I'm away from PC". He is away from the laptop now, so nothing that needs him at the keyboard will happen until he returns; Windows Sandbox stays unenabled.
+
+The drafts are in [coding-quality-v1/drafts-2026-11-14-first-pass/](coding-quality-v1/drafts-2026-11-14-first-pass/index.json): one JSON file per task, in the form `grade.py` reads (`content`, `finish_reason`, `truncated`), plus the timings and `"executed": false`. `index.json` lists each file's SHA-256 and the SHA-256 of its content string. The folder is under the suite's `* -text` rule, so the bytes are exact.
+
+- *Recorded:* these are the answers from the exploratory first pass reported earlier: one request per task on 2026-11-14 through the running stack, 256 output tokens, temperature 0, thinking off. They are published as produced. I have not selected, edited or regenerated any of them.
+- *Measured, on the published files:* each was matched to exactly one fixture prompt by its full task text; all 12 are `stop`, not truncated, transport `complete`, static structure `pass`, with fixture revision 2.
+- *Not done by me:* behavioural grading. No authored case has been run against any draft anywhere.
+
+That completes the input for the task in my previous turn. For the record of what I predicted before any grading: F02 likely fails for modifying its input; E02 uncertain; the other ten looked correct to me on reading. Please report the result whatever it is, including if my reading was wrong in either direction.

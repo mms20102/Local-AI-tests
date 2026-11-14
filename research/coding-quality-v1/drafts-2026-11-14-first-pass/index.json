@@ -1,0 +1,126 @@
+{
+ "note": "First-pass drafts from the laptop model (Qwen3.6-35B-A3B via Colibri 2.0.0, cap 32, thinking off), one request per task on 2026-11-14, 256 output tokens, temperature 0. Published as produced; never executed.",
+ "fixture_revision": 2,
+ "drafts": [
+  {
+   "task": "A01",
+   "file": "A01.json",
+   "sha256": "80e5d1f536c6b5d6e51bbddf93db0fee43b4ed8e9fb2347f46aeeb8f2eda94a2",
+   "content_sha256": "853a891b0e363800dc8ebd1d69675ef591503010c4beda6c5787a201ad537d8e",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "A02",
+   "file": "A02.json",
+   "sha256": "855ebc07c3fe4c7ee9d6445cc165089a63c613093f8db92afc819c0dd0271f2d",
+   "content_sha256": "1a61c88030e4fc6b2a48190353833c0d98e51b624f1134c8438b77ef075557a1",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "A03",
+   "file": "A03.json",
+   "sha256": "cdee9f6383f3af0718c101c72ac60b8dd00023b719319a82871e5cf3b2682829",
+   "content_sha256": "d233b81c4841cfb98949800c7adc5f45f96fd5a6dfae9c7734d38fcceeac5e00",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "B01",
+   "file": "B01.json",
+   "sha256": "126c95a0019c353e889ec826519f8559008d000ee76268d7dc17a07447633e1a",
+   "content_sha256": "22d4942fad0fc1f10d935d7c71c480a82975d17d9d2c5482797391807ea948b5",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "B02",
+   "file": "B02.json",
+   "sha256": "2dcc8addfde67fdc0e14ec038bc71e50f2ef61dcd9659f57bd4080a3a42ad258",
+   "content_sha256": "9fe963c226ebc6f60b9c33feaf1fcef0c265a5cbf1185531700235aa99f433bf",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "B03",
+   "file": "B03.json",
+   "sha256": "a6c4ae5db18d32ecd2b318eb192a0b265f3e0efaa2164c7b4934440b02c70511",
+   "content_sha256": "af4f81b039b630dc88a5a915a211137ea444bed02a8151f0dd110ab4976c179e",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "E01",
+   "file": "E01.json",
+   "sha256": "f71032971ade08ef0c66e27e103d853ec6162a12a0a30a3bba2015d5bad1c689",
+   "content_sha256": "85d7d89c60eb1a4ceb1b289216b1c328fd4b93e948eed3abf4ad13d8232b2602",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "E02",
+   "file": "E02.json",
+   "sha256": "1a6acf62c09cb8f54e54969de7344fa4754ff15caa64030c97defbbd3aa90613",
+   "content_sha256": "1d68dabcfffe8bf814ab3aa1e05a4386c6aed7a9d87e4da5a3c6e5ccd6795711",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "E03",
+   "file": "E03.json",
+   "sha256": "f77d0bb4bf5bb18d5b9660bc556d1b251800ae85e515fac2c688ee37a20fd52c",
+   "content_sha256": "d7e9d791be2bc50ea5b6a03c5b19c038a99c7920a4dd13d4e582da2b1089503b",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "F01",
+   "file": "F01.json",
+   "sha256": "d0d1c22f510643195fde6e746f86b7ea719d937763524b5af109b4604e4b8705",
+   "content_sha256": "ba77cbf7b2776de3643346ef552a8cc7c79e7d0bbd956458a9981f97b6d7fdad",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "F02",
+   "file": "F02.json",
+   "sha256": "1171eefa4a7e0118b6169b37ec5d6bc54e07dfcb1e1774b244560e984e70bfa1",
+   "content_sha256": "5bf42599ade0bd8de7b73c53305daf05307067099aa0ea878c08c4d656ee3668",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  },
+  {
+   "task": "F03",
+   "file": "F03.json",
+   "sha256": "699b2db6e67c65cd6f8b3d1496d44cd4bfe76a0266cccd7892885b2fc38741c5",
+   "content_sha256": "63fca17463605a2674b784910561ea773ab2e6ab3ef09168b4b0561a3537e529",
+   "finish_reason": "stop",
+   "truncated": false,
+   "static_transport": "complete",
+   "static_structure": "pass"
+  }
+ ]
+}
