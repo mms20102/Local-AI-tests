@@ -1,0 +1,126 @@
+{
+ "passed": 5,
+ "failed": 0,
+ "guard_violations": [],
+ "loopback_ports_connected": [
+  61980
+ ],
+ "upstream_port": 61980,
+ "results": [
+  {
+   "case": "baseline: complete stream through the direct driver",
+   "result": "pass",
+   "observed": {
+    "http_spec_version": "2.3",
+    "application_call": "returned",
+    "response_status": 200,
+    "body_messages_accepted": 7,
+    "disconnect_delivered_by_receive": 0,
+    "blocked_send_cancelled": 0,
+    "oserrors_raised_by_send": 0,
+    "adapter_streams_created": 1,
+    "adapter_cleanup_states": [
+     "done"
+    ],
+    "adapter_close_errors": [
+     []
+    ],
+    "upstream_stream_closed_before_finishing": 0,
+    "upstream_stream_completed": 1,
+    "proxy_still_serves_afterwards": true,
+    "bodies_in_real_time": 7
+   }
+  },
+  {
+   "case": "disconnect while send is blocked between pulls (HTTP spec 2.3)",
+   "result": "pass",
+   "observed": {
+    "http_spec_version": "2.3",
+    "application_call": "returned",
+    "response_status": 200,
+    "body_messages_accepted": 2,
+    "disconnect_delivered_by_receive": 1,
+    "blocked_send_cancelled": 1,
+    "oserrors_raised_by_send": 0,
+    "adapter_streams_created": 1,
+    "adapter_cleanup_states": [
+     "done"
+    ],
+    "adapter_close_errors": [
+     []
+    ],
+    "upstream_stream_closed_before_finishing": 1,
+    "upstream_stream_completed": 0,
+    "proxy_still_serves_afterwards": true
+   }
+  },
+  {
+   "case": "disconnect requested before the first chunk (HTTP spec 2.3): observed outcome",
+   "result": "pass",
+   "observed": {
+    "http_spec_version": "2.3",
+    "application_call": "returned",
+    "response_status": 408,
+    "body_messages_accepted": 1,
+    "disconnect_delivered_by_receive": 0,
+    "blocked_send_cancelled": 0,
+    "oserrors_raised_by_send": 0,
+    "adapter_streams_created": 0,
+    "adapter_cleanup_states": [],
+    "adapter_close_errors": [],
+    "upstream_stream_closed_before_finishing": 1,
+    "upstream_stream_completed": 0,
+    "proxy_still_serves_afterwards": true,
+    "seconds_until_application_call_ended": 30.5,
+    "disconnect_observed_by_application": false
+   }
+  },
+  {
+   "case": "disconnect during a backend pull (HTTP spec 2.3)",
+   "result": "pass",
+   "observed": {
+    "http_spec_version": "2.3",
+    "application_call": "returned",
+    "response_status": 200,
+    "body_messages_accepted": 3,
+    "disconnect_delivered_by_receive": 1,
+    "blocked_send_cancelled": 0,
+    "oserrors_raised_by_send": 0,
+    "adapter_streams_created": 1,
+    "adapter_cleanup_states": [
+     "done"
+    ],
+    "adapter_close_errors": [
+     []
+    ],
+    "upstream_stream_closed_before_finishing": 1,
+    "upstream_stream_completed": 0,
+    "proxy_still_serves_afterwards": true
+   }
+  },
+  {
+   "case": "send on a closed connection raises OSError (HTTP spec 2.4): observed outcome",
+   "result": "pass",
+   "observed": {
+    "http_spec_version": "2.4",
+    "application_call": "raised ModuleNotFoundError",
+    "response_status": 200,
+    "body_messages_accepted": 2,
+    "disconnect_delivered_by_receive": 0,
+    "blocked_send_cancelled": 0,
+    "oserrors_raised_by_send": 1,
+    "adapter_streams_created": 1,
+    "adapter_cleanup_states": [
+     "done"
+    ],
+    "adapter_close_errors": [
+     []
+    ],
+    "upstream_stream_closed_before_finishing": 1,
+    "upstream_stream_completed": 0,
+    "proxy_still_serves_afterwards": true,
+    "application_error_tail": "<site-packages>/litellm/proxy/db/exception_handler.py\", line 180, in is_database_infrastructure_error //     import prisma // ModuleNotFoundError: No module named 'prisma'"
+   }
+  }
+ ]
+}

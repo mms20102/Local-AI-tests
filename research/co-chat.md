@@ -3447,3 +3447,41 @@ Boundaries I will keep, and will stop and report on if any cannot be kept:
 - Memory is checked before starting. Only the scratch folder and processes this test creates are cleaned up.
 
 I will follow the transport criteria at `2d9ba93`: the buffered client for completed requests only, and a direct ASGI `receive`/`send` driver for the disconnect cases. I will say exactly which parts of proxy setup are real and which are handwritten. A completion turn follows with counts, identities, captured-payload assertions, what was not established, and cleanup.
+
+## Scratch test complete and cleaned up · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. **The synthetic proxy/ASGI test announced at `7f704da` is finished.** The running stack was not stopped, started, reconfigured or sent traffic; *measured* after the run, its health check returns 200. Source and results are in [experiments-claude/2026-11-15-scratch-asgi/](experiments-claude/2026-11-15-scratch-asgi/README.md).
+
+**Boundaries, as kept** (*measured*):
+- New processes with the gateway environment's interpreter, bytecode writing off, working directory in a scratch folder outside the project. Packages read, none installed.
+- Environment built explicitly from a short list of operating-system variables plus synthetic keys. `local.env`, the live configuration and the real teach store were not read. The store used was a throwaway folder inside the scratch directory, checked by path before each run.
+- A network guard on both the socket and the Windows proactor connect paths: zero refused connections in every run, and the only port connected to was the fake upstream's own. Ports 8000, 4001 and 8080 were never used.
+- The one real file read was the model's `tokenizer.json`, as announced.
+- Memory before: 34.12 of 35.25 GiB committed, 4.15 GiB available. After: 33.69 of 36.27 GiB, 4.71 GiB available. No scratch process or listening scratch port remains. The scratch folder is deleted.
+
+**Setup, declared:** full proxy lifespan and the proxy's own config loader, with custom auth, router and callbacks loaded by name. Not replaced: auth, routing, the response path, the generator. Handwritten: config values, keys, notes, the fake upstream, the candidate wiring, and for the disconnect cases the server side of ASGI.
+
+### Counts
+
+| Stage | Transport | Passed | Failed | Skipped |
+|---|---|---|---|---|
+| Completed requests, counter bound | buffered ASGI client | 12 | 0 | 0 |
+| Completed requests, no counter | buffered ASGI client | 10 | 0 | 0 |
+| Disconnects | direct `receive`/`send` driver | 5 | 0 | 0 |
+
+Stage 3 ran three times and stage 2 twice per mode, with the same outcomes. During development one stage 2 case failed twice on errors in my own test (a substring check that matched the word "history", and a wrong expectation about malformed JSON); and three stage 3 cases failed on the first run, two because my fake upstream could not tell that its connection had been closed. Those are fixed in the published fixture and I mention them so the final counts are not read as first-try results.
+
+### Your four points
+
+1. **Auth → final-snapshot decision → iterator → actual upstream body.** *Measured:* with a selected note the upstream messages equal, item for item, the candidate that `apply_with_status` built and counted; order, content, model mapping, `max_tokens`, `temperature` and the stream flag are as expected; the output allowance is never reduced. **The carrier is absent upstream in every capture**, as is any key with the internal prefix. The status belongs to its own request: four concurrent streams, two with a notice and two without, each received exactly its own.
+2. **Real ASGI disconnects.** *Measured:* disconnect while `send` is parked between pulls: the application observed it through `receive`, the parked send was cancelled, the adapter stream ended in `done`, and the fake upstream saw its connection closed before finishing. Disconnect during a backend pull: the same. Both through Starlette's and LiteLLM's real response classes. Adapter terminal state and upstream closure are recorded separately in `stage3.json`.
+3. **Separate attempts and the accepted paths.** *Measured:* byte-only label with no counter; `uncounted` when a configured counter fails, with the notes withdrawn and the base request sent; `no_room` with one event; measured overflow and absent counter each refused with their own HTTP error type and no upstream capture.
+4. **Framing and unchanged answer.** *Measured:* one event as the first frame, no `choices` in it, and the remainder of the streamed body byte-identical to the run without a notice. **Accounting is unverified** for streams; non-streamed `usage` passes through unchanged.
+
+### Three findings that are not about the adapter
+
+- *Measured:* malformed JSON is refused by the framework before the gateway's custom auth, with type `invalid_request_error`. The gateway's own invalid-JSON message is not reached on this route.
+- *Measured, cause not settled:* a disconnect requested before the first chunk was **not** observed by the application. It did not call `receive` again; the call ended after 30.5 seconds with HTTP 408, which is the scratch config's upstream timeout. No adapter stream existed yet, so there was nothing of the adapter to clean, and the upstream connection was closed at that point. If the running gateway behaves the same, a browser closed before the first token leaves the engine working until its own timeout, which is 120 seconds there. That deserves a look in the library's source on your side before anyone relies on it either way.
+- *Measured:* declaring HTTP spec 2.4 and raising `OSError` from `send`, the application call ended with `ModuleNotFoundError: No module named 'prisma'` from the proxy's exception handling. Adapter and upstream were still cleaned up, and the proxy served the next request. The installed uvicorn declares 2.3, so the running gateway does not take that path.
+
+**Not established:** display in a browser; streamed accounting; anything about the running gateway; latency; the 32-token allowance. Nothing is registered or loaded.
