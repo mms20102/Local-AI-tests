@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "review_checkpoint_utc": "2026-11-14 21:32 UTC",
+  "producer_artifact_label": "2026-11-15",
+  "source_ref": "573fa44bcc46e54940fc3243dcf35a8ac18effb8",
+  "source_folder": "research/experiments-claude/2026-11-15-scratch-asgi",
+  "artifact_manifest": [
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/README.md",
+      "git_blob": "cd857a021300e724b8c0cbc186044c675095d358"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/fixture_common.py",
+      "git_blob": "19ee07e4ee99fdc7262af66563b04271c0870cea"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/launch.py",
+      "git_blob": "d54205fe73a9891fa9c2a07d08ca2572ea33684c"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2-bound.json",
+      "git_blob": "b474cc68e9ea8a20883dedb337f815a0108847a1"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2-nocounter.json",
+      "git_blob": "9ec4cd94393d5b59a2b9d0a4a56a95d93747e2a3"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2.py",
+      "git_blob": "7f9e60c6dffbc890afc187c8cb661b23e04f1c36"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage3.json",
+      "git_blob": "b818d66e64fa12d770fbd2cea5126af89eedd4df"
+    },
+    {
+      "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage3.py",
+      "git_blob": "9a2aad2d0a77262720f5065c3ff5fff7657cd042"
+    }
+  ],
+  "candidate_wiring": {
+    "path": "research/experiments-claude/2026-11-15-scratch-asgi/app/integration_candidate.py",
+    "git_blob": "8a096808f6dd34f2d35ff4c11d5deea34bd5a063"
+  },
+  "review_kind": "independent artifact arithmetic and source inspection; not an independent execution rerun",
+  "summaries": [
+    {
+      "file": "stage2-bound.json",
+      "git_blob": "b474cc68e9ea8a20883dedb337f815a0108847a1",
+      "groups": 12,
+      "recomputed_pass": 12,
+      "recomputed_nonpass": 0,
+      "reported_pass": 12,
+      "reported_failed": 0,
+      "count_fields_match": true,
+      "skipped_field_present": false,
+      "upstream_captures": 13,
+      "guard_violations": 0,
+      "observed_connect_ports_match_declared_upstream": true
+    },
+    {
+      "file": "stage2-nocounter.json",
+      "git_blob": "9ec4cd94393d5b59a2b9d0a4a56a95d93747e2a3",
+      "groups": 10,
+      "recomputed_pass": 10,
+      "recomputed_nonpass": 0,
+      "reported_pass": 10,
+      "reported_failed": 0,
+      "count_fields_match": true,
+      "skipped_field_present": false,
+      "upstream_captures": 11,
+      "guard_violations": 0,
+      "observed_connect_ports_match_declared_upstream": true
+    },
+    {
+      "file": "stage3.json",
+      "git_blob": "b818d66e64fa12d770fbd2cea5126af89eedd4df",
+      "groups": 5,
+      "recomputed_pass": 5,
+      "recomputed_nonpass": 0,
+      "reported_pass": 5,
+      "reported_failed": 0,
+      "count_fields_match": true,
+      "skipped_field_present": false,
+      "upstream_captures": null,
+      "guard_violations": 0,
+      "observed_connect_ports_match_declared_upstream": true
+    }
+  ],
+  "scenario_group_total": 27,
+  "direct_driver_classification": [
+    {
+      "case": "baseline: complete stream through the direct driver",
+      "assertions": "pass",
+      "application": "returned",
+      "status_field": 200,
+      "receive_disconnect": 0,
+      "adapter_streams": 1,
+      "adapter_cleanup": [
+        "done"
+      ],
+      "upstream_closed_early": 0,
+      "independent_recovery_probe": true,
+      "claim": "normal completion/cleanup"
+    },
+    {
+      "case": "disconnect while send is blocked between pulls (HTTP spec 2.3)",
+      "assertions": "pass",
+      "application": "returned",
+      "status_field": 200,
+      "receive_disconnect": 1,
+      "adapter_streams": 1,
+      "adapter_cleanup": [
+        "done"
+      ],
+      "upstream_closed_early": 1,
+      "independent_recovery_probe": true,
+      "claim": "observed midstream disconnect/cleanup"
+    },
+    {
+      "case": "disconnect requested before the first chunk (HTTP spec 2.3): observed outcome",
+      "assertions": "pass",
+      "application": "returned",
+      "status_field": 408,
+      "receive_disconnect": 0,
+      "adapter_streams": 0,
+      "adapter_cleanup": [],
+      "upstream_closed_early": 1,
+      "independent_recovery_probe": true,
+      "claim": "disconnect not observed; eventual timeout/cleanup only"
+    },
+    {
+      "case": "disconnect during a backend pull (HTTP spec 2.3)",
+      "assertions": "pass",
+      "application": "returned",
+      "status_field": 200,
+      "receive_disconnect": 1,
+      "adapter_streams": 1,
+      "adapter_cleanup": [
+        "done"
+      ],
+      "upstream_closed_early": 1,
+      "independent_recovery_probe": true,
+      "claim": "observed midstream disconnect/cleanup"
+    },
+    {
+      "case": "send on a closed connection raises OSError (HTTP spec 2.4): observed outcome",
+      "assertions": "pass",
+      "application": "raised ModuleNotFoundError",
+      "status_field": 200,
+      "receive_disconnect": 0,
+      "adapter_streams": 1,
+      "adapter_cleanup": [
+        "done"
+      ],
+      "upstream_closed_early": 1,
+      "independent_recovery_probe": true,
+      "claim": "cleanup succeeded with secondary application import failure"
+    }
+  ],
+  "source_explanations": {
+    "litellm_ref": "2a61f2114d45016bae77930903e65172cd8e762c",
+    "earlier_router_wait": true,
+    "router_prefetches_first_event": true,
+    "cancel_on_disconnect_defaults_false_and_omitted_in_fixture": true,
+    "later_create_response_monitor_does_not_cover_prior_wait": true,
+    "live120second_behavior_proved": false,
+    "prisma_import_unguarded_in_database_classifier": true,
+    "starlette_ref": "8aa828ceaff764a2e57932fb42fdf105a47c4c83",
+    "uvicorn_ref": "3eb9a9ab9af69005c687728097461c1fd2a95db9",
+    "installed_file_hashes_independently_verified": false
+  },
+  "reproducibility": {
+    "candidate_import_precedes_settings_bootstrap": true,
+    "preexisting_synthetic_settings_dependency_not_documented": true,
+    "actual_initial_file_not_known": true,
+    "network_guard_starts_after_imports": true
+  },
+  "coverage_limits": [
+    "Raw captures not published",
+    "No global all-capture internal-key assertion in the published source",
+    "Concurrent notice classes checked, not unique retry traces",
+    "Pre-first timing includes wait and recovery probe",
+    "Two stage3 groups pass outcome assertions while target cancellation/clean handling remains unmet",
+    "No separate skipped field; no skips is author-reported"
+  ],
+  "traffic": {
+    "guarded_ports_match_upstream": true,
+    "guard_not_os_sandbox": true,
+    "post_run_live_health_200_reported_separately": true,
+    "no_model_inference_reported": true
+  },
+  "open_items": [
+    "fresh-copy bootstrap",
+    "pre-first cancellation",
+    "spec2.4 secondary exception",
+    "stream accounting",
+    "browser/nonstream disclosure",
+    "quiet timing",
+    "actual live loaded identity"
+  ],
+  "actions": {
+    "tests_executed_by_this_session": 0,
+    "pc_traffic_by_this_session": 0,
+    "runtime_changes": false,
+    "private_capture_code_rehosted": false
+  }
+}
