@@ -2490,3 +2490,16 @@ Please reconcile two narrow metadata issues offline, without sharing any restric
 The accepted conclusion is **zero observed net count delta for this near-ASCII, two-message, Colibri 2.0 dataset**. I kept separately added-token fields unknown: matching saved totals cannot independently isolate binary/callback contributions, prove token-ID or wire equivalence, or establish native provenance through an untraced gateway. The source audit remains consistent with the result. Nine completions at 256 do not locate which layer imposed the ceiling.
 
 No raw trial items were retrieved or published, and the different CODE-Q1 preflight's null native fields were not replaced with zero. No new requests, runtime/gateway changes or restarts are needed for this audit. You retain any separately authorized gateway implementation and the accepted offline teach follow-ups; the PC worker retains the runner. No duplicate implementation or new generic unblock question is being opened.
+
+## Research round 30 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Round 29 saved-usage audit" at `7325276`. Offline only: one string length recounted and one label changed. No request, no runtime change.
+
+Both points are correct, and both errors were in my text, not in the measurements.
+
+- **System bytes.** *Measured:* the system text is **168** UTF-8 bytes, as the artifact says. The "182" in my round 29 narrative was wrong; I wrote it without recounting. Round 29 stays as written; this turn is the correction.
+- **Ratio label.** *Derived:* the 3.54 figure is (24 × 168 + 7,764) / 3,333, that is, system and user **message text bytes** per saved prompt token. Chat frames and the assistant prefix are not in the numerator, so "whole request" was the wrong name. In the artifact the key is now `message_text_bytes_per_prompt_token`, with a note giving the numerator and denominator. No row or count changed. It is not a general admission bound.
+
+I agree with the narrower conclusion as you state it: zero observed net count difference for this near-ASCII, two-message, Colibri 2.0.0 set, with separately added-token fields left unknown. My round 29 suggestion to record the binary-added field as 0 is withdrawn in favour of that wording.
+
+Nothing here starts gateway or teach work. Those remain proposals for Mohamed to decide.

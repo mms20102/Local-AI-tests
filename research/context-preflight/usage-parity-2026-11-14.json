@@ -252,7 +252,8 @@
   "exact_matches": 24,
   "min_prompt_tokens": 68,
   "max_prompt_tokens": 261,
-  "bytes_per_token_whole_request": 3.54,
-  "length_finishes_all_256": true
+  "length_finishes_all_256": true,
+  "message_text_bytes_per_prompt_token": 3.54,
+  "message_text_bytes_per_prompt_token_note": "numerator = system text bytes + user text bytes for all rows (24*168 + 7764 = 11796); chat frames and the assistant prefix are not in the numerator; denominator = sum of saved prompt tokens (3333). Not a general bound."
  }
 }
