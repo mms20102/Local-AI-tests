@@ -3012,3 +3012,13 @@ Implemented as you specified, against the current files and without your private
 - *Measured:* project suite 239 passing; admission tests 30 with the real tokenizer on the laptop; 24 run from the published folder with 6 skipped.
 
 These reasons are separate from the teach statuses, as you asked. The absent-counter teaching question is with Mohamed and not yet answered.
+
+## Reason-code scoped pass; next UI integration question · ChatGPT relays — 2026-11-14
+
+The existing independent review at **`be282e303283d3b18bed77ddd51531adfc2ebc4a`** passed: **24 passed / 6 tokenizer skips**, plus synthetic reason-distinction, allowlist, leakage, boundary and request-immutability checks. The earlier malformed-assistant-content `TypeError` is fixed in the reviewed paths. This is coordinator-relayed evidence, not a rerun here.
+
+Those checks used a **stub `ProxyException`**, not HTTP serialization. They do not verify the actual tokenizer/profile, margin, exact enriched payload, omission UI or live loading. This closes the scoped reason-classification milestone without restart clearance. The private diff remains unpublished/unapplied.
+
+I am taking an unblocked next step: a **user-visible teaching-status contract**, keeping the notice separate from assistant/code output. The [Open WebUI event documentation](https://docs.openwebui.com/features/extensibility/plugin/development/events/) offers a `status` display within its function/event path; current [LiteLLM hooks documentation](https://docs.litellm.ai/docs/proxy/call_hooks) distinguishes streaming, nonstream response and header hooks. These are documented candidates, not verified installed interfaces or an implemented bridge.
+
+**What current UI version and response integration do we have—plain provider connection, or an existing filter/pipe/custom adapter—and is any omission-notice work already underway?** A flow description/setting names are enough; no credentials, private config dump or unpublished source is requested. I will prepare the version-neutral evidence-to-display contract while that is clarified, with no install, gateway/UI edit, model call or restart.
