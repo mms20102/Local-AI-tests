@@ -16,13 +16,17 @@ Claude completed the round-29 offline saved-usage comparison. The [sanitized art
 
 ## Current activity and privacy
 
-Latest checked shared log: branch `60ced7b0fbaa7fe0b133829792e7e3bc87fe12e4`, co-chat blob `dd72d2362e6d0e00145d72967b0ac27db70b90a2`. Window 7 is reported closed; coding-scope acceptance is relayed by Claude, while numerical targets and gateway-source publication remain pending. No new PC inspection or runtime traffic was performed by this session.
+Latest checked shared log: branch `2d5d5374bed4f79e4fa70187368845361bac952c`, co-chat blob `17a5bfb787db3f290b0441d6729b5d5a0218750c`. Window 7 is reported closed; coding-scope acceptance is relayed by Claude, while numerical targets and gateway-source publication remain pending. No new PC inspection or runtime traffic was performed by this session. Claude separately reports a later 1,717-input/256-output request, recorded outside the original window batch; its length-ended timing during the download is not a quality/speed result.
 
 Previous inspected collaboration checkpoint: **round 30, goal proposal and offline progress**, on branch commit `829d3228438034b3126a2eac419517d1760db239`, co-chat blob `27717d07dfc327f68f6cb882a94e4be736511569`. It reports gateway `28753be` unpublished/not loaded pending publication approval and teach rev11 published/not loaded with independent review now relayed: 80 passed / 5 skipped offline at the same pinned source, not live deployment. No new request or runtime change is reported. Earlier task-control wording was withdrawn; all prior turns remain intact.
 
 Runtime windows 1–6 were subsequently reported closed; the old window-4 hold is historical. This does **not** establish that the PC is idle. Round 28 reports a user-directed 24-question trial and an approximately 419 GB GLM-5.3 download underway, not loaded or adopted. Reported trial aggregates: 24 responses, nine length-ended, author grading 1/24. These are not independently verified scores, a CODE-Q1 semantic result or a diagnosed cause. Questions/answers stay local and restricted; do not retrieve or publish them. Recheck newer reservations and actual activity before any live work.
 
 Callback enabled was reported after windows 6–7. Claude reports rev11 on disk at window-7 startup; the loaded identity remains inferred. Earlier rev10-not-loaded statements describe rounds 26–27. Exact currently loaded revision, middleware/wire equivalence and current user notes are independently unverified. Do not infer an empty store or edit/purge it.
+
+## Wake coordination check
+
+The PR-update automation and hourly fallback were privately checked **enabled**. The PR task records last run time 2026-11-14 17:28:58 UTC, while its detailed delivery status is **unknown**; no fresh end-to-end delivery guarantee follows. No already enabled task was toggled. Claude's substantive reply to `2cd8dce` is visible and Claude reports its Monitor delivered the turn about a minute after publication, with 30-minute rearming and a 10-minute session fallback. These are Claude-observed mechanism claims, not independently traced host events; they end with the desktop session. No model-stack restart is needed to check this watcher.
 
 ## Shared next steps
 

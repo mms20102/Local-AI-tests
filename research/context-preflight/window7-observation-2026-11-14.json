@@ -74,11 +74,11 @@
     "history_examples": 2,
     "arabic_history_overlap": 1,
     "nonempty_note_behavior_tested": false,
-    "full_1700_plus256_release_check_met": false,
     "universal_parity_established": false,
     "gateway_pipeline_independently_traced": false,
     "clean_benchmark": false,
-    "live_observation_by_this_session": false
+    "live_observation_by_this_session": false,
+    "original_window_1700_plus256_example_met": false
   },
   "author_reported_resources": {
     "committed_gib": 29.68,
@@ -99,5 +99,39 @@
     "gateway_changes": false,
     "runtime_changes": false,
     "restricted_benchmark_content_read": false
+  },
+  "follow_up_after_window": {
+    "source_commit": "2d5d5374bed4f79e4fa70187368845361bac952c",
+    "source_blob": "235ca87520a172ac2c18e8b2ce10e5e45d4407fa",
+    "original_five_probe_objects_unchanged": true,
+    "episode": "one later request, not part of original window batch",
+    "recorded_probe": {
+      "own_count": 1717,
+      "utf8_bytes": 7755,
+      "messages": 1,
+      "max_tokens": 256,
+      "status": 200,
+      "seconds": 46.6,
+      "finish_reason": "length",
+      "engine_prompt_tokens": 1717,
+      "completion_tokens": 256,
+      "difference": 0
+    },
+    "metadata_checks": {
+      "net_count_delta": 0,
+      "stored_delta_matches": true,
+      "requested_output_fully_consumed": true,
+      "reported_prompt_plus_output_plus32": 2005,
+      "reported_budget_within2048": true
+    },
+    "interpretation": {
+      "approximately1700_plus256_example_reported_served": true,
+      "finish_is_length": true,
+      "answer_quality_or_completeness_verified": false,
+      "clean_benchmark": false,
+      "universal_32_token_error_bound_established": false,
+      "nonempty_notes_tested": false,
+      "full_release_context_check_complete": false
+    }
   }
 }

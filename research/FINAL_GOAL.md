@@ -29,7 +29,7 @@ The [normalized window-7 record](context-preflight/window7-observation-2026-11-1
 
 | Check | Evidence now | Still missing |
 |---|---|---|
-| Context | Four reported admitted count pairs match; two Arabic and two history cases overlap. A 2,400-count request records HTTP 413. | Near-boundary prompt + full answer reservation, supported-profile bounds and nonempty-note alignment. The long probe was 1,641 prompt / 48 requested output / 12 completed, not the proposed approximately 1,700 + 256 check. |
+| Context | Four reported admitted count pairs match; two Arabic and two history cases overlap. A 2,400-count request records HTTP 413. | Near-boundary prompt + full answer reservation, supported-profile bounds and nonempty-note alignment. The original long probe was 1,641 prompt / 48 requested / 12 completed. A separate later probe records 1,717 prompt / 256 requested and generated, ending `length`; that example is now reported served, not evidence of complete/correct answers or all context checks. |
 | Coding quality | Frozen tasks/fixtures and scoped grader/preparation evidence. | A qualifying controlled, independently judged run; the semantic pass rate is unknown. |
 | Speed | Historical exploratory timings and window-7 single probes. | A qualifying quiet-profile end-to-end quality/speed run, with all failures retained. Download-contended timings are not that run. |
 | Operation | Claude reports one clean stop/start, 14 seconds to stop and healthy at 51 seconds after start. | Remaining cycles, 20-request session, cancellation/recovery and current identity evidence. |
