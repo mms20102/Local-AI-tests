@@ -15,12 +15,25 @@ Flow, per chat request:
   4. the iterator hook reads the carrier back, validates it again, and StatusStream yields one
      JSON status event followed by every model chunk, untouched.
 
+Trust: the notice is only as trustworthy as the carrier. attach() must run on every chat request
+and removes any carrier the client sent. As a second line, a carrier is accepted only if it holds
+this process's random token, which a client cannot know.
+
+Resources, stated once (see StatusStream):
+  - this adapter is given `response`; it does not create it. It closes what it was given: the
+    object itself and, when __aiter__() returned a different object, that iterator too;
+  - LiteLLM also closes the stream it handed over; closing twice must be harmless for a source,
+    and this adapter calls each close() at most once itself;
+  - "closed" here means close() was awaited to the end. It does not mean the engine stopped work.
+
 Nothing here reads the store, the request text, logs or the environment. The carrier holds no note
 text, no entry ids and no fingerprint. Streaming only: a non-streamed answer gets no notice.
 """
 from __future__ import annotations
 
-from typing import Any, AsyncIterator, Optional
+import asyncio
+import secrets
+from typing import Any, Optional
 
 from teach_status_core import AttemptNotice, TeachingDecision
 
@@ -28,6 +41,11 @@ CARRIER_KEY = "_litellm_teach_status_v1"
 CARRIER_FIELDS = ("store", "relevant", "applied", "omitted_cap", "omitted_no_room",
                   "omitted_uncounted", "invalid", "byte_only")
 LOCALES = ("en", "ar")
+# A random value made when this module is loaded and kept inside this process. The carrier must
+# hold it, so a carrier that did not come from attach() in this process is not accepted even if
+# attach() was somehow not run for a request. It is not a secret worth protecting beyond that.
+_PROCESS_TOKEN = secrets.token_hex(16)
+CLOSE_TIMEOUT_SECONDS = 5.0          # how long one close() is awaited before cleanup is called uncertain
 _HEX = set("0123456789abcdef")
 
 
@@ -66,13 +84,17 @@ def to_carrier(decision: TeachingDecision, locale: str) -> dict:
         raise ValueError("Invalid teaching status carrier input")
     carrier = {name: getattr(decision, name) for name in CARRIER_FIELDS}
     carrier["locale"] = locale
+    carrier["token"] = _PROCESS_TOKEN
     return carrier
 
 
 def from_carrier(carrier: Any) -> Optional[tuple[TeachingDecision, str]]:
     """Validate a carrier read back from request data. None for anything not exactly well formed."""
     try:
-        if type(carrier) is not dict or set(carrier) != set(CARRIER_FIELDS) | {"locale"}:
+        if type(carrier) is not dict or set(carrier) != set(CARRIER_FIELDS) | {"locale", "token"}:
+            return None
+        token = carrier["token"]
+        if type(token) is not str or not secrets.compare_digest(token, _PROCESS_TOKEN):
             return None
         locale = carrier["locale"]
         if type(locale) is not str or locale not in LOCALES:
@@ -117,21 +139,41 @@ class StatusStream:
     """Async iterator: the status event (at most once, as JSON text with no `data:` prefix), then
     every item of `source` in order and unchanged.
 
-    It owns the source: when this stream is closed, cancelled or fails, the source's own aclose()
-    is called once. A status that was yielded is not an acknowledgement that anyone displayed it.
+    It is an object, not an async generator, on purpose: closing it before the first item is
+    pulled still closes the source (an unstarted generator would skip its own cleanup).
+
+    cleanup is one of:
+      "open"       nothing closed yet;
+      "closing"    close has started and has not finished;
+      "done"       every close() this adapter owed was awaited to the end without error;
+      "failed"     a close() raised; the error is kept in close_errors (type names only);
+      "uncertain"  a close() did not finish within CLOSE_TIMEOUT_SECONDS. It may still be running.
+
+    Failure and cancellation:
+      - an error from the source is re-raised unchanged after cleanup has been attempted;
+      - errors raised by close() never replace it and are never raised from here;
+      - the cleanup runs in its own task, shielded. If the caller is cancelled while waiting for
+        it, the cancellation is raised (it is never swallowed), the source error, if any, stays
+        attached as its context, and the cleanup task carries on. A later aclose() waits for that
+        same task, so cleanup is not started twice and is not abandoned half way.
+    No hard time bound is promised for arbitrary close code: after the timeout the state says
+    "uncertain" and the close is cancelled cooperatively.
     """
 
     def __init__(self, source: Any, notice: Optional[AttemptNotice]):
         self._source = source
         self._iterator = None
         self._notice = notice
-        self._closed = False
+        self._finished = False
+        self._close_task: Optional[asyncio.Future] = None
+        self.cleanup = "open"
+        self.close_errors: list[str] = []
 
     def __aiter__(self) -> "StatusStream":
         return self
 
     async def __anext__(self) -> Any:
-        if self._closed:
+        if self._finished:
             raise StopAsyncIteration
         if self._notice is not None:
             notice, self._notice = self._notice, None
@@ -142,33 +184,52 @@ class StatusStream:
             if self._iterator is None:
                 self._iterator = self._source.__aiter__()
             return await self._iterator.__anext__()
-        except BaseException:               # includes StopAsyncIteration, cancellation and failures
-            await self.aclose()
+        except BaseException:               # normal end, upstream failure, or cancellation
+            self._finished = True
+            await self.aclose()             # a cancellation here keeps the error above as its context
             raise
 
-    async def aclose(self) -> None:
-        if self._closed:
+    async def _close_one(self, target: Any) -> None:
+        close = getattr(target, "aclose", None)
+        if close is None:
             return
-        self._closed = True
-        for target in (self._iterator, self._source):
-            close = getattr(target, "aclose", None)
-            if close is not None:
-                try:
-                    await close()
-                except Exception:
-                    pass
-                return
+        try:
+            await asyncio.wait_for(close(), CLOSE_TIMEOUT_SECONDS)
+        except asyncio.TimeoutError:
+            self.cleanup = "uncertain"
+        except asyncio.CancelledError:
+            raise
+        except Exception as error:          # a close error must not replace the primary outcome
+            self.close_errors.append(type(error).__name__)
+
+    async def _close_all(self) -> None:
+        targets = [self._iterator] if self._iterator is not None else []
+        if self._source is not self._iterator:
+            targets.append(self._source)
+        for target in targets:
+            await self._close_one(target)
+        if self.cleanup == "closing":
+            self.cleanup = "failed" if self.close_errors else "done"
+
+    async def aclose(self) -> None:
+        self._finished = True
+        if self._close_task is None:
+            self.cleanup = "closing"
+            self._close_task = asyncio.ensure_future(self._close_all())
+        if not self._close_task.done():
+            await asyncio.shield(self._close_task)      # cancellation of the caller does not stop cleanup
 
 
-async def stream_with_status(response: Any, request_data: Any) -> AsyncIterator[Any]:
-    """Body for an `async_post_call_streaming_iterator_hook` override.
+def status_stream(response: Any, request_data: Any) -> StatusStream:
+    """What an `async_post_call_streaming_iterator_hook` override returns.
 
     Define the override on the REGISTERED LEAF CLASS (LiteLLM looks in that class's own
-    attributes), and have it do:   async for item in stream_with_status(response, request_data): yield item
+    attributes) as a plain method:
+
+        def async_post_call_streaming_iterator_hook(self, user_api_key_dict, response, request_data):
+            return status_stream(response, request_data)
     """
-    stream = StatusStream(response, notice_for(request_data))
-    try:
-        async for item in stream:
-            yield item
-    finally:
-        await stream.aclose()
+    return StatusStream(response, notice_for(request_data))
+
+
+stream_with_status = status_stream        # earlier name, kept for the published tests

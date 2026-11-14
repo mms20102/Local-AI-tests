@@ -98,7 +98,7 @@ class CarrierTests(unittest.TestCase):
         self.assertIsNot(result, data)
         self.assertEqual(result["messages"], data["messages"])
         carrier = result[adapter.CARRIER_KEY]
-        self.assertEqual(set(carrier), set(adapter.CARRIER_FIELDS) | {"locale"})
+        self.assertEqual(set(carrier), set(adapter.CARRIER_FIELDS) | {"locale", "token"})
         for name, value in carrier.items():
             self.assertTrue(value is None or type(value) in (int, str), name)
         text = json.dumps(carrier)
@@ -305,6 +305,274 @@ class InstalledLibraryTests(unittest.TestCase):
         request_data = adapter.attach({"model": "m"}, adapter.decision_from_hook([], "abc123abc123", status(no_room=1)), "en")
         items = run(collect(Leaf().async_post_call_streaming_iterator_hook(None, FakeStream(["a"]), request_data)))
         self.assertEqual((len(items), items[1]), (2, "a"))
+
+
+class Closable:
+    """A source or iterator whose close can be delayed, made to fail, or made to hang."""
+
+    def __init__(self, items=(), delay=0.0, close_error=None, hang=False, fail=None):
+        self.items, self.delay, self.close_error, self.hang, self.fail = list(items), delay, close_error, hang, fail
+        self.close_started = self.close_finished = 0
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        await asyncio.sleep(0)
+        if self.fail is not None:
+            raise self.fail
+        if not self.items:
+            raise StopAsyncIteration
+        return self.items.pop(0)
+
+    async def aclose(self):
+        self.close_started += 1
+        if self.hang:
+            await asyncio.sleep(3600)
+        if self.delay:
+            await asyncio.sleep(self.delay)
+        if self.close_error is not None:
+            raise self.close_error
+        self.close_finished += 1
+
+
+class Iterable:
+    """An iterable whose __aiter__ returns a DIFFERENT closable object."""
+
+    def __init__(self, iterator):
+        self.iterator = iterator
+        self.close_started = self.close_finished = 0
+
+    def __aiter__(self):
+        return self.iterator
+
+    async def aclose(self):
+        self.close_started += 1
+        await asyncio.sleep(0)
+        self.close_finished += 1
+
+
+def omitted_request():
+    return adapter.attach({"model": "m"}, adapter.decision_from_hook([], "abc123abc123", status(no_room=1)), "en")
+
+
+class LifecycleTests(unittest.TestCase):
+    """The three counterexamples from the review of the first prototype, and the stated contract."""
+
+    def test_close_before_the_first_pull_closes_the_source(self):
+        source = Closable(["a"])
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await stream.aclose()
+            with self.assertRaises(StopAsyncIteration):
+                await stream.__anext__()
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+    def test_distinct_iterable_and_iterator_are_both_closed_once(self):
+        iterator = Closable(["a", "b"])
+        source = Iterable(iterator)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            items = [item async for item in stream]
+            await stream.aclose()                       # a second close does nothing more
+            return stream, items
+        stream, items = run(go())
+        self.assertEqual(items[1:], ["a", "b"])
+        self.assertEqual((iterator.close_finished, source.close_finished, stream.cleanup), (1, 1, "done"))
+        self.assertEqual((iterator.close_started, source.close_started), (1, 1))
+
+    def test_distinct_iterable_closed_before_first_pull_closes_only_what_exists(self):
+        iterator = Closable(["a"])
+        source = Iterable(iterator)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await stream.aclose()
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_finished, iterator.close_started, stream.cleanup), (1, 0, "done"))
+
+    def test_upstream_error_survives_a_failing_close(self):
+        source = Closable(fail=RuntimeError("upstream PRIMARY"), close_error=ValueError("close CANARY"))
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await stream.__anext__()                    # the status
+            with self.assertRaises(RuntimeError) as caught:
+                await stream.__anext__()
+            return stream, caught.exception
+        stream, error = run(go())
+        self.assertEqual(str(error), "upstream PRIMARY")
+        self.assertEqual((stream.cleanup, stream.close_errors), ("failed", ["ValueError"]))   # type name only
+
+    def test_delayed_close_is_awaited_to_the_end(self):
+        source = Closable(["a"], delay=0.05)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            items = [item async for item in stream]
+            return stream, items
+        stream, items = run(go())
+        self.assertEqual((len(items), source.close_finished, stream.cleanup), (2, 1, "done"))
+
+    def test_cancellation_during_cleanup_is_raised_keeps_the_upstream_error_and_cleanup_finishes(self):
+        source = Closable(fail=RuntimeError("upstream PRIMARY"), delay=0.05)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await stream.__anext__()
+
+            async def pull():
+                await stream.__anext__()
+            task = asyncio.create_task(pull())
+            while source.close_started == 0:            # forced interleaving: cancel exactly while close is running
+                await asyncio.sleep(0)
+            self.assertEqual(source.close_finished, 0)
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError) as caught:
+                await task
+            state_at_cancel = (stream.cleanup, source.close_finished)
+            await stream.aclose()                       # waits for the SAME cleanup; does not start another
+            return stream, caught.exception, state_at_cancel
+        stream, cancelled, state_at_cancel = run(go())
+        self.assertEqual(state_at_cancel, ("closing", 0))                       # honestly not finished yet
+        self.assertIsInstance(cancelled.__context__, RuntimeError)             # the upstream error is not lost
+        self.assertEqual(str(cancelled.__context__), "upstream PRIMARY")
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+    def test_cancelled_consumer_does_not_abandon_cleanup(self):
+        source = Closable([f"c{i}" for i in range(1000)], delay=0.05)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+
+            async def consume():
+                async for _ in stream:
+                    await asyncio.sleep(0)
+            task = asyncio.create_task(consume())
+            await asyncio.sleep(0.01)
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+            await stream.aclose()
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+    def test_close_that_never_returns_is_reported_uncertain_after_the_deadline(self):
+        source = Closable(["a"], hang=True)
+        saved = adapter.CLOSE_TIMEOUT_SECONDS
+        adapter.CLOSE_TIMEOUT_SECONDS = 0.05
+        try:
+            async def go():
+                stream = adapter.status_stream(source, omitted_request())
+                started = asyncio.get_running_loop().time()
+                await stream.aclose()
+                return stream, asyncio.get_running_loop().time() - started
+            stream, waited = run(go())
+        finally:
+            adapter.CLOSE_TIMEOUT_SECONDS = saved
+        self.assertEqual((stream.cleanup, source.close_started, source.close_finished), ("uncertain", 1, 0))
+        self.assertLess(waited, 2.0)                    # a cooperative deadline, not a hard guarantee
+
+    def test_concurrent_close_calls_share_one_cleanup(self):
+        source = Closable(["a"], delay=0.02)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await asyncio.gather(stream.aclose(), stream.aclose(), stream.aclose())
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+
+class ForgedCarrierTests(unittest.TestCase):
+    def test_well_formed_carrier_without_this_process_token_is_rejected(self):
+        genuine = omitted_request()[adapter.CARRIER_KEY]
+        self.assertIsNotNone(adapter.notice_for({adapter.CARRIER_KEY: dict(genuine)}))
+        for token in ("", "0" * 32, None, 5, genuine["token"][:-1] + ("0" if genuine["token"][-1] != "0" else "1")):
+            forged = dict(genuine, token=token)
+            self.assertIsNone(adapter.notice_for({adapter.CARRIER_KEY: forged}))
+        without = {k: v for k, v in genuine.items() if k != "token"}
+        self.assertIsNone(adapter.notice_for({adapter.CARRIER_KEY: without}))
+
+    def test_token_is_not_part_of_the_event_shown_to_the_user(self):
+        data = omitted_request()
+        event = adapter.notice_for(data).take()
+        self.assertNotIn(data[adapter.CARRIER_KEY]["token"], event)
+
+
+@unittest.skipUnless(HAVE_LITELLM, "LiteLLM is not installed in this Python")
+class InstalledGeneratorTests(unittest.TestCase):
+    """Through the installed proxy's own streaming generator, with the callback REGISTERED the way
+    the proxy discovers callbacks. Still no server, no model, no network, and not the running gateway."""
+
+    def frames(self, request_data, source):
+        import litellm
+        from litellm.proxy import proxy_server
+        from litellm.proxy._types import UserAPIKeyAuth
+        from litellm.proxy.utils import ProxyLogging
+
+        class Leaf(CustomLogger):
+            def async_post_call_streaming_iterator_hook(self, user_api_key_dict, response, request_data):
+                return adapter.status_stream(response, request_data)
+
+        saved = litellm.callbacks
+        litellm.callbacks = [Leaf()]
+        try:
+            caps = ProxyLogging.callback_capabilities()
+            self.assertTrue(caps.has_iterator_override)                     # the framework itself found the override
+
+            async def go():
+                out = []
+                async for frame in proxy_server.async_data_generator(source, UserAPIKeyAuth(), request_data):
+                    out.append(frame if isinstance(frame, str) else frame.decode("utf-8"))
+                return out
+            return run(go())
+        finally:
+            litellm.callbacks = saved
+
+    def model_chunks(self):
+        from litellm.types.utils import ModelResponseStream
+
+        def chunk(text, finish=None):
+            return ModelResponseStream(id="chatcmpl-test", model="local-qwen36-chat", created=1,
+                                       choices=[{"index": 0, "delta": {"content": text}, "finish_reason": finish}])
+        return [chunk("```python\n"), chunk("x = {\"a\": 1}\n"), chunk("```"), chunk("", "stop")]
+
+    def answer(self, frames):
+        text = ""
+        for frame in frames:
+            body = frame[len("data: "):].strip()
+            if body == "[DONE]":
+                continue
+            parsed = json.loads(body)
+            if "choices" in parsed:
+                text += parsed["choices"][0]["delta"].get("content") or ""
+        return text
+
+    def test_event_frame_then_identical_answer_frames(self):
+        plain = self.frames({"model": "local-qwen36-chat", "stream": True}, FakeStream(self.model_chunks()))
+        data = adapter.attach({"model": "local-qwen36-chat", "stream": True},
+                              adapter.decision_from_hook([], "abc123abc123", status(no_room=1)), "en")
+        noticed = self.frames(data, FakeStream(self.model_chunks()))
+        self.assertEqual(len(noticed), len(plain) + 1)
+        first = json.loads(noticed[0][len("data: "):])
+        self.assertEqual(first["event"]["type"], "status")
+        self.assertNotIn("choices", first)
+        self.assertEqual(noticed[1:], plain)                                # every answer frame byte-identical
+        self.assertEqual(self.answer(noticed), "```python\nx = {\"a\": 1}\n```")
+        self.assertEqual(noticed[-1], "data: [DONE]\n\n")
+
+    def test_source_is_closed_when_the_proxy_generator_finishes(self):
+        source = FakeStream(self.model_chunks())
+        self.frames(adapter.attach({"model": "m", "stream": True},
+                                   adapter.decision_from_hook([], "abc123abc123", status(no_room=1)), "en"), source)
+        self.assertGreaterEqual(source.closed, 1)
 
 
 if __name__ == "__main__":

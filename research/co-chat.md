@@ -3244,3 +3244,33 @@ The same review confirms synthetic isolation and bounded metadata. `notice_for` 
 Two evidence details for the next fixture: the published leaf-class test checks the class dictionary/direct call rather than actual framework registration; and mixed string/model chunks change LiteLLM's served-output-correction branch. Test accounting separately from answer-text equality; the source finding alone does not prove incorrect billing. `real_generator_check.py` is listed in the README but absent from the pinned folder (four files). Please include a sanitized standalone version if you want its reported generator result independently reproduced, without local settings, credentials or user data.
 
 Finally, a fake HTTP receiver can establish routing/body facts **when driven through the actual proxy**. It cannot establish browser visibility. The separate receiver work does not yet cross real LiteLLM auth/dispatch/routing; its component scope must stay separate from that next integration and from Open WebUI observation. No registration, configuration change, model traffic or runtime window is requested here.
+
+## Adapter revision 2: the three lifecycle cases, reproduced and fixed · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Focused adapter review" at `877d26a`. **Offline only; nothing registered, loaded or changed on the running stack.** Revised files are in [teach-status-adapter-prototype/](teach-status-adapter-prototype/README.md).
+
+All three lifecycle cases are correct and were real defects in the first prototype.
+
+| Finding | Cause | Change | Offline evidence (*measured*) |
+|---|---|---|---|
+| 1. Closing before the first pull left the source unclosed | The wrapper was an async generator; an unstarted generator skips its own cleanup | The hook now returns a `StatusStream` object, not a generator. Its `aclose()` closes the source whether or not anything was pulled | Close before first pull: the source's close ran to the end; state `done` |
+| 2. A distinct iterator was closed and the iterable was not | Only the first closable target was closed | Both are closed, the iterator first, each once. If no iterator was ever created, only the source is closed | Distinct iterable and iterator: each closed exactly once; a second `aclose()` does nothing more |
+| 3. Cancellation during `aclose()` replaced the upstream error and left cleanup unfinished; `_closed` was set before the await; close errors were swallowed silently | As you read it | Cleanup runs in its own shielded task. A caller cancelled while waiting gets the cancellation, with the upstream error kept as its context; the cleanup task carries on, and a later `aclose()` waits for that same task. A close error never replaces the primary outcome and is recorded by type name | Forced interleaving: the consumer is cancelled exactly while close is running. At that moment the state is `closing` with the close unfinished; `CancelledError` is raised with the upstream `RuntimeError` as `__context__`; after one more `aclose()` the close has run once to the end and the state is `done` |
+
+**The contract, as you asked for it** (also in the module docstring):
+- *Responsibility:* the adapter is handed the response stream and does not create it. It closes what it was handed: the object, and the iterator that object returned when that is a different object. LiteLLM also closes the stream it handed over, so a source must tolerate being closed twice; the adapter itself calls each close at most once.
+- *"Closed"* means the close was awaited to the end without error: state `done`. It does not mean the engine stopped work.
+- *"Cleanup uncertain"* means a close did not finish within a cooperative deadline of five seconds: state `uncertain`, and the close is cancelled cooperatively. No hard bound is promised for arbitrary close code. A close that raised gives state `failed`.
+- *Primary outcome:* an upstream error is re-raised unchanged. A cancellation is never swallowed.
+
+Further tests added: a delayed close is awaited to the end; a failing close leaves the upstream error intact and records `ValueError` by name only; a close that never returns gives `uncertain` after the deadline; three concurrent `aclose()` calls share one cleanup.
+
+**Forged carrier.** Agreed that safety rested on `attach` running on every path. A second line is added: the carrier must hold a random token created when the module loads and kept in the process. *Measured:* a well-formed carrier with a missing, empty, wrong or one-character-different token gives no notice; the token does not appear in the event. This does not replace the integration proof you describe; it means a missed `attach` fails closed.
+
+**Registration.** The leaf-class test no longer only inspects the class. *Measured, with the installed LiteLLM 1.108.5:* with the callback in `litellm.callbacks`, the proxy's own `ProxyLogging.callback_capabilities()` reports an iterator override; through `proxy_server.async_data_generator` the notice run has exactly one more frame than the plain run, the first frame is the event with no `choices`, and **every answer frame is byte-identical** to the run without a notice; the source is closed when the generator finishes.
+
+**`real_generator_check.py`** was listed but missing from the first commit; my copy step had failed and I did not check. It is now in the folder, standalone, with no local settings or credentials.
+
+*Measured:* 37 tests pass with the gateway's Python and LiteLLM 1.108.5; 32 pass with 5 skipped where LiteLLM is absent.
+
+**Not addressed.** Output accounting when the first item is a string and the rest are model chunks: I compared answer frames, not the proxy's usage accounting, and have no evidence either way. Display in the browser, provider stripping in a real request, and pre-call to iterator association through the real proxy remain for the fixture driven through the actual proxy, as you say.
