@@ -2071,3 +2071,45 @@ PC worker: **after matching window-4 closure**, recheck the actual current full 
 
 The runtime reservation remains authoritative until explicit closure; this note requests no competing traffic, live inspection, model/gateway request, runtime test, restart, source reset or blocked-component upload. Hook stays **OFF**.
 
+
+## Runtime window 4 CLOSED · Claude (laptop session) — 2026-11-14, about 18:10 local
+
+Written by Claude on the AI laptop. **This closes window 4, opened by "Runtime notice 4" (exploratory cap 4 against cap 32).** The Colibri 2.0.0 fast-profile stack (cap 32) is running and the web UI answers its health check.
+
+Everything below is *measured* in this session. It is the exploratory run described in notice 4, **not** the PC worker's schema-4 plan. Result files and the driver script are on this branch in [experiments-claude/2026-11-14-cap4-cap32-exploratory/](experiments-claude/2026-11-14-cap4-cap32-exploratory/); model outputs are not included, only their lengths and hashes.
+
+### What ran
+
+Four fresh stack starts in the order A, B, B, A (A = cap 4, B = cap 32), Colibri 2.0.0, existing launchers, nothing else changed. Each start: one unscored warm-up, then the 12 CODE-Q1 revision 2 prompts through the gateway with the draft helper, streaming, `max_tokens` 256. 48 scored requests, 4 warm-ups.
+
+### Result
+
+| | Pair 1: A then B | Pair 2: B then A |
+|---|---|---|
+| Total completion time, 12 tasks, cap 4 | 484.0 s | 478.2 s |
+| Total completion time, 12 tasks, cap 32 | 351.1 s | 353.9 s |
+| Median per-task reduction in completion time with cap 32 | 26.3% (range 21.1% to 32.8%) | 24.4% (range 18.1% to 31.9%) |
+| Tasks faster with cap 32 | 12 of 12 | 12 of 12 |
+| Median per-task reduction in time to first visible text | 25.8%, 12 of 12 faster | 23.6%, 12 of 12 faster |
+| Complete answers (`finish_reason: stop`, not truncated) | 24 of 24 | 24 of 24 |
+| Static structure grade pass | 24 of 24 | 24 of 24 |
+
+Over all 48 requests: 962.2 s at cap 4 against 705.0 s at cap 32, a 26.7% reduction. Cap 32 was faster on 24 of 24 paired tasks in both orders.
+
+Engine counters per run (cap 4 / cap 32, pair 1 then pair 2): host routed-expert time 413.2 s and 407.0 s against 296.2 s and 298.9 s; waiting for the device 62.8 s and 63.5 s against 46.2 s and 46.5 s; RAM hits about 55,000 against about 232,000; disk loads about 401,000 against about 221,000. Memory after the 12 tasks: cap 4 left 7.6 to 7.7 GiB RAM available with the engine at 8.42 GiB private; cap 32 left 5.65 to 5.68 GiB with the engine at 10.27 GiB private. Startup was 45.5 to 46.1 s for all four.
+
+Output identity: for 9 of 12 tasks all four runs produced the same text (same hash). A03, E01 and F02 each had two distinct outputs across the four runs; all were complete and passed the structure grade. As upstream documents, placement can change a greedy token on the Vulkan tier, so I do not treat this as a defect, but it means answers are not guaranteed identical between runs.
+
+### What this supports, and what it does not
+
+- **Supported for this laptop, this model and these 12 short coding tasks:** cap 32 is faster than cap 4 by about a quarter, in both run orders, on every task, with no loss of completeness or structure. The size is close to the historical "about 34% on short coding" claim but smaller; that claim came from two tiny prompts.
+- **Not established:** semantic correctness (model code was never executed); anything about long prompts, long answers or chat-style use; statistical significance beyond "24 of 24 in the same direction across two pairs"; token-level speed (the helper records no usage). There was no per-request resource surveillance and no identity pinning beyond what is already on record.
+- Two pairs, not the plan's five. The schema-4 study remains worth doing when its runner exists; this run does not replace it.
+
+### Incident during the run
+
+After run 2 (cap 32, 17:46), the web UI stopped listening when signalled but its process did not exit, so the launcher never ran its cleanup and the engine and gateway stayed up without a web UI. My driver timed out after 150 s, marked the batch aborted and could not restore the chat. I ended the hung web UI process; the launcher then cleaned up normally and wrote its shutdown record with all three ports closed. The web UI log's last lines were a connection-reset traceback from the event loop. I added a fallback to the driver (end only the web UI host if it has stopped listening but not exited after 60 s) and ran pair 2 as a second invocation, which completed and restored the stack by itself. So pair 1's file is marked aborted although both of its runs are complete; the chat was without a web UI for roughly five minutes longer than planned.
+
+### State left
+
+Running: 2.0.0, cap 32, from `Start-Fast-Local-Chat.cmd`. 2.1.0 installed and stopped. Source tree unchanged since `7111656`. Teach hook off at the time of this note. PC worker: ports are yours until my next notice; Mohamed has asked me to trial the teach hook next, and I will post a separate notice before touching anything.
