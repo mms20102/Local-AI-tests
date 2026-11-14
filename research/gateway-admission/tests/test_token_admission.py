@@ -204,6 +204,23 @@ class AdmissionTests(unittest.TestCase):
         messages[0]["content"] = "what does </think> mean?"           # the tag in a USER message is ordinary text
         validate_chat(dict(self.body, messages=messages), self.s)
 
+    def test_malformed_content_is_a_controlled_refusal_and_the_counter_is_not_called(self):
+        # Reviewer's case for the previous revision: the type check must come before the tag check.
+        calls = []
+
+        def counter(messages):
+            calls.append(1)
+            return 10
+        for role in ("assistant", "user", "system"):
+            for bad in (None, 5, True, 2.5, ["</think>"], {"text": "x"}):
+                first = {"role": role, "content": bad} if role == "system" else {"role": "user", "content": "a"}
+                messages = [first] if role == "system" else [first, {"role": role, "content": bad}]
+                messages.append({"role": "user", "content": "b"})
+                for use in (None, counter):
+                    with self.assertRaises(ContractError):
+                        validate_chat(dict(self.body, messages=messages), self.s, use)
+        self.assertEqual(calls, [])
+
     def test_messages_not_modified(self):
         before = copy.deepcopy(self.body)
         validate_chat(self.body, self.s, words(500))

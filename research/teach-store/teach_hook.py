@@ -42,11 +42,13 @@ def inject_with_status(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
       "note_cap"  applicable entries left out because they exceed the size cap for notes;
       "no_room"   applicable entries left out because the request had no room (measured);
       "uncounted" applicable entries left out because a token count could not be made;
+      "byte_only" entries that WERE added on the byte rule alone, without a successful token
+                  count of the final request;
       "invalid"   entries marked active in the store that are malformed and were skipped.
     The question and the history are sent regardless. A store that could not be read at all is
     reported through the fingerprint "unknown", not through these counts.
     """
-    none = {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 0}
+    none = {"note_cap": 0, "no_room": 0, "uncounted": 0, "byte_only": 0, "invalid": 0}
     try:
         messages = data.get("messages")
         if not isinstance(messages, list) or not all(
@@ -114,7 +116,8 @@ FINGERPRINT_FORM = re.compile(r"[0-9a-f]{12}|none|unknown|not-read")
 
 
 STATUS_LABELS = (("note_cap", "omitted-note-cap"), ("no_room", "omitted-no-room"),
-                 ("uncounted", "omitted-uncounted"), ("invalid", "skipped-invalid"))
+                 ("uncounted", "omitted-uncounted"), ("byte_only", "kept-byte-rule-only"),
+                 ("invalid", "skipped-invalid"))
 
 
 def log_line(used, fingerprint, status=None) -> str:

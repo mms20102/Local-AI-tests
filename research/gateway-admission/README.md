@@ -6,10 +6,10 @@ logins, chats or logs.
 
 | File | SHA-256 |
 |---|---|
-| `chat_contract.py` | `b4baa33bc6cbd318a90b96c6e952116be1933c6bc6c4ccd738f16478772e66aa` |
+| `chat_contract.py` | `3f16bbe67b75fdee318cbda7e7803b0fb5c5407e495f108b8573712b56e740a8` |
 | `gateway_auth.py` | `a4046a9949ff0758e58aab35a9103ec4a1f237b5a98ffd1ba43adef4917d5db7` |
 | `token_count.py` | `a68b24734564a3f4664638406a5b50a7b81e55abc523a37573dc005c791b42a6` |
-| `tests/test_token_admission.py` | `5569851aa1e012234475dcb120c6eed7fdfc3f59d2d7cc3ae86f97c7b1f35586` |
+| `tests/test_token_admission.py` | `31827f40883e1c906745160aef08776d28b06874fc390a8894994aade87e4760` |
 
 Laptop local commits: `28753be` (the change) and `aa545f9` (tests runnable from this copy).
 `changes-since-baseline.diff` is the exact diff of `chat_contract.py` and `gateway_auth.py`
@@ -35,6 +35,10 @@ the revised files; the version loaded on the laptop is still the one at `6c12983
 4. **Boundaries exercised with the real tokenizer** (laptop only): prompts found by search to be
    exactly one below, at, and one above the largest admissible count, for 256 and 64 output
    tokens, and an Arabic conversation with history on each side of the limit.
+
+Follow-up (laptop commit `83a6f58`, not loaded), from the preliminary review at `79dd21f`: the
+content-type check now runs before the reasoning-tag check, so null, numeric or boolean content
+is a controlled refusal on both routes and the counter is not called.
 
 Not addressed: the 32-token allowance is still a judgment, not a bound.
 
@@ -80,6 +84,6 @@ Not addressed: the 32-token allowance is still a judgment, not a bound.
 python -m unittest discover -s tests
 ```
 
-Needs nothing beyond the standard library for 21 tests. The 6 tests that need the real tokenizer are
+Needs nothing beyond the standard library for 22 tests. The 6 tests that need the real tokenizer are
 skipped unless the `tokenizers` package and the pinned tokenizer file are present, which is only
 the case on the laptop.

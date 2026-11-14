@@ -20,18 +20,19 @@ The laptop copy is the working one; this folder is for reading and review.
 | 13 | `25b519f` | commit `cb98726` | Fixes for both findings: omissions are counted against every applicable note, by reason (`omitted-note-cap`, `omitted-no-room`); a malformed active entry is skipped on its own and counted (`skipped-invalid`), and the valid notes are still applied. Independent result relayed in co-chat at `f5d7aec`: 97 passed, 5 skipped; two defects remained (diagnostics from a second read could describe a different store version; lone-surrogate text suppressed valid neighbours). Not loaded. The omission is still reported in the gateway log only. |
 | 14 | `8228816` | commit `fce4615` | Fixes for both: entries, fingerprint and the invalid count come from the same single read, with no second read; an entry whose text, keywords or date cannot be encoded as strict UTF-8 is skipped on its own and counted, its stored text untouched. Independent offline pass relayed in co-chat at `44c016f`: 100 passed, 5 skipped, no blocking regression in the two repairs. Not loaded. The omission is still reported in the gateway log only. |
 | 15 | `7dd479f` | commit `87351de` | A left-out note is reported as `omitted-no-room` only when the room was measured; when a token count could not be made (no counter, or it failed) it is reported as `omitted-uncounted`. **Not independently reviewed, and not loaded.** |
-| 16 | `d8d25e2` | this commit | From the gateway review at `f32776b`: whenever a token counter exists, the complete request that will be sent after notes are added is counted, also on the short path; if it does not fit, the notes are withdrawn and the request is sent without them. The hook uses the same served-profile binding as the gateway. **Not independently reviewed, and not loaded.** |
+| 16 | `d8d25e2` | commit `b111a64` | From the gateway review at `f32776b`: whenever a token counter exists, the complete request that will be sent after notes are added is counted, also on the short path; if it does not fit, the notes are withdrawn and the request is sent without them. The hook uses the same served-profile binding as the gateway. Preliminary independent result relayed in co-chat at `79dd21f`: 104 passed, 5 skipped; one defect: notes kept after a failed final count were not labelled. Not loaded. |
+| 17 | `83a6f58` | this commit | Notes added on the byte rule alone, with no successful token count of the final request (no counter, or the final count failed), are counted as `byte_only` and logged as `kept-byte-rule-only:N`. Zero means every added note is covered by a successful count of exactly the request sent. **Not independently reviewed, and not loaded.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 16 files, byte-identical to the laptop's:
+Revision 17 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `063bddf5753ca5f1bab0a5bd32c4213c44d20fbacdf760e77a09bc6a8e7ea36b` |
-| `teach_hook.py` | `7a9e60e3e9b0df63e2f7d8277d1cfa940777c1886acaafc503a512a2e05cc966` |
-| `tests/test_teach_store.py` | `95c706d4da28b89da79d1813b47a8e84db2ff0dd6870c904e1928890b0e4ec4c` |
+| `teach_store.py` | `797e0961bf33b1632a9ea99e748ecf93d4c8c123dc7bc4c67a8f66fb97a5b535` |
+| `teach_hook.py` | `13eca6777be17664ed5c0bedb3d1edef227faf32c8ee82c2167842cc5d5ea0ea` |
+| `tests/test_teach_store.py` | `99eef06bd24ad6b9bffc1de07f64fcf59adeec0b7897048f70b53c54d27dcb72` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
 | `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` (unchanged since revision 11) |
 
@@ -52,7 +53,8 @@ The token counter itself (`token_count.py`) belongs to the gateway and is publis
 | Revision 13 (commit `cb98726`) | 97 passed, 5 skipped; two defects found, addressed in revision 14. |
 | Revision 14 (commit `fce4615`) | Offline pass: 100 passed, 5 skipped. Still open per the reviewer: counter identity and margin, user-visible notice, loaded revision. |
 | Revision 15 (commit `87351de`) | **Not reviewed.** |
-| Revision 16 (this folder) | **Not reviewed.** |
+| Revision 16 (commit `b111a64`) | Preliminary: 104 passed, 5 skipped; one defect found, addressed in revision 17. |
+| Revision 17 (this folder) | **Not reviewed.** |
 
 These are results on the published source. None of them is a test of the running gateway.
 
@@ -115,7 +117,7 @@ python -B -m unittest tests.test_teach_store
 
 109 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 109 pass, and the project suite is 236 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
+the real gateway rules: 109 pass, and the project suite is 237 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5

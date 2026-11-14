@@ -2938,3 +2938,18 @@ Written by Claude on the AI laptop. **Exploratory, not the release check.** Twel
 *Derived:* the end-to-end target looks comfortably met. The first-text median is about one second over its target under contention; it needs a quiet run before anyone concludes either way.
 
 The drafts stay on the laptop. This result does not fill check 2 or check 3 of the goal.
+
+## Rev16 preliminary findings: both reproduced and fixed · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Rev16 preliminary review" at `79dd21f`. **Offline only; not loaded.** Laptop local commit `83a6f58`; files refreshed in [gateway-admission/](gateway-admission/README.md) and [teach-store/](teach-store/README.md) (revision 17).
+
+| Finding | Reproduced | Change | Offline evidence (*measured*, Windows) |
+|---|---|---|---|
+| 1. Assistant content null, integer or boolean raised `TypeError` | Yes. I had placed the tag check above the string check | The content-type check runs first; the tag check follows it | For assistant, user and system roles, with content null, integer, boolean, float, a list and an object: a controlled refusal on both routes, and the counter is called zero times |
+| 2. A failed final count kept the notes and reported nothing | Yes | Notes added on the byte rule alone, with no successful token count of the final request, are counted as `byte_only` and logged `kept-byte-rule-only:N`. This covers both "no counter" and "final count failed". Zero means every added note is covered by a successful count of exactly the request sent. A final count that succeeds and says "does not fit" still withdraws the notes and sends the base request | Three failing counters and the no-counter case each give `byte_only: 1` and the labelled line; a successful final count gives 0 and the plain line |
+
+I kept the byte-rule placement when the final count cannot be made, and now label it, since you offered either policy. Withdrawing the notes in that case would be a two-line change if Mohamed or the reviewer prefers it.
+
+*Measured:* project suite 237 passing; admission tests 28 with the real tokenizer on the laptop, 22 run from the published folder; teach 109, 5 skipped from the published folder.
+
+On the separate candidate for distinct reason codes through `ProxyException`: understood, the older full patch is not applied. If the remaining reason-code delta is published, I can read it against the current `chat_contract.py`. Nothing from it is on the laptop.

@@ -736,6 +736,12 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
     list that was already filtered. An entry is in exactly one of: used, note_cap, no_room,
     uncounted.
 
+    One more count describes the entries that WERE used:
+      "byte_only": notes that were added on the strength of the byte rule alone, with no
+                  successful token count of the final request (there is no counter, or the
+                  final count failed). Zero means every added note is covered by a successful
+                  count of exactly the request that is sent.
+
     The byte rule (apply_to_messages) is tried first and its result is kept whenever it places
     every relevant entry. Only when it leaves some out, and count_tokens(messages) -> prompt
     tokens is given, the complete candidate request is built with the notes block and the policy
@@ -750,15 +756,15 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
     """
     legacy, legacy_ids = apply_to_messages(messages, entries, limits, output_tokens, budget_units)
     if not messages or messages[-1].get("role") != "user" or already_applied(messages):
-        return legacy, legacy_ids, {"note_cap": 0, "no_room": 0, "uncounted": 0}
+        return legacy, legacy_ids, {"note_cap": 0, "no_room": 0, "uncounted": 0, "byte_only": 0}
     applicable = relevant(entries, messages[-1]["content"])
     wanted = select(entries, messages[-1]["content"], budget_units)
     over_cap = len(applicable) - len(wanted)
 
-    def left(used_ids, measured=True):
+    def left(used_ids, measured=True, byte_only=0):
         missing = len(wanted) - len(used_ids)
         return {"note_cap": over_cap, "no_room": missing if measured else 0,
-                "uncounted": 0 if measured else missing}
+                "uncounted": 0 if measured else missing, "byte_only": byte_only}
     def fits(candidate):
         """True/False from a successful count of the complete candidate; None when it cannot be counted."""
         try:
@@ -769,18 +775,25 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
             return None
         return prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]
 
-    if legacy_ids and count_tokens is not None and fits(legacy) is False:
-        # The byte rule placed notes, but the complete request that would be sent does not fit
-        # when counted. Send the request without notes. (A count that cannot be made leaves the
-        # byte rule's result in place: bytes are an upper bound on tokens for this text.)
-        return list(messages), [], {"note_cap": over_cap, "no_room": len(wanted), "uncounted": 0}
+    kept_on_bytes = 0               # notes the byte rule placed without a successful final token count
+    if legacy_ids:
+        verdict = fits(legacy) if count_tokens is not None else None
+        if verdict is False:
+            # The byte rule placed notes, but the complete request that would be sent does not
+            # fit when counted. Send the request without notes.
+            return list(messages), [], {"note_cap": over_cap, "no_room": len(wanted), "uncounted": 0,
+                                        "byte_only": 0}
+        if verdict is None:
+            # No counter, or the final count failed. The byte rule's placement is kept (bytes
+            # are an upper bound on tokens for this text) and is reported as exactly that.
+            kept_on_bytes = len(legacy_ids)
     if len(legacy_ids) >= len(wanted):
-        return legacy, legacy_ids, left(legacy_ids)
+        return legacy, legacy_ids, left(legacy_ids, byte_only=kept_on_bytes)
     has_system = messages[0].get("role") == "system"
     if not has_system and len(messages) >= limits["max_messages"]:
-        return legacy, legacy_ids, left(legacy_ids)        # no room for a system message: a measured fact
+        return legacy, legacy_ids, left(legacy_ids, byte_only=kept_on_bytes)   # no room for a system message
     if count_tokens is None:
-        return legacy, legacy_ids, left(legacy_ids, measured=False)
+        return legacy, legacy_ids, left(legacy_ids, measured=False, byte_only=kept_on_bytes)
     measured = True
     has_policy = has_system and messages[0]["content"].endswith(POLICY)
     chosen = list(wanted)
@@ -799,7 +812,7 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
         elif verdict:
             return result, [e["id"] for e in chosen], left(chosen, measured)
         chosen.pop()
-    return legacy, legacy_ids, left(legacy_ids, measured)
+    return legacy, legacy_ids, left(legacy_ids, measured, kept_on_bytes)
 
 
 def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,

@@ -109,12 +109,12 @@ def validate_chat(body: Any, s: dict[str, Any], count_tokens: Any = None) -> int
         if message["role"] == "system" and index:
             # The engine refuses this shape with its own error; say so here, clearly.
             raise ContractError("A system message is only accepted as the first message.")
+        if not isinstance(message["content"], str):
+            raise ContractError("Attachments and multimodal messages are disabled.")
         if message["role"] == "assistant" and "</think>" in message["content"]:
             # The engine moves text before this tag into a reasoning block. That treatment is
             # not mirrored by the byte rule or the token counter, so the shape is not served.
             raise ContractError("Assistant history containing a reasoning tag is not supported.")
-        if not isinstance(message["content"], str):
-            raise ContractError("Attachments and multimodal messages are disabled.")
         try:
             size = len(message["content"].encode("utf-8"))
         except UnicodeEncodeError:
