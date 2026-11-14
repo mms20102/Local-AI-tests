@@ -1,0 +1,33 @@
+name: tests
+
+# Runs the offline test suites and the Markdown link check. Nothing here calls a model,
+# starts a service or needs a secret. Tests that need the laptop's private files or the
+# LiteLLM library skip themselves.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run every test suite
+        run: python tools/run_all_tests.py
+      - name: Check relative links in Markdown
+        run: python tools/check_links.py

@@ -1,44 +1,114 @@
 # Local-AI-tests
 
-Mohamed's private research workspace for improving local AI response speed, coding quality and reviewed persistent context.
+A private, local AI assistant on one Windows laptop, and the evidence for what it can and cannot do.
 
-The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. This repository records evidence and separate proposals; cloud tests do not measure the laptop GPU.
+The assistant runs entirely on the laptop: no cloud inference, no subscription. This repository holds
+the parts of that work that are safe to publish: the code that was written for it, the tests, the
+measurements, and a running log of two AI assistants (Claude and ChatGPT) reviewing each other's work
+for the owner, Mohamed.
 
-## Current checkpoint — 2026-11-14
+```
+Browser  →  Open WebUI  →  LiteLLM gateway  →  Colibri engine  →  Qwen3.6-35B model
+            (chat page)    (auth, limits,      (inference on      (23 GB, int4)
+                            teaching notes)     GPU + RAM + SSD)
+```
 
-**Runtime coordination:** consult the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) before PC work. Window 4 results are exploratory; a later window-5 closure reports the teach hook **enabled with an empty store**, not independently verified here. Independent rev7 review found a request-path logging failure. Rev10 passed targeted offline checks (78 passed, 5 skipped), with no blocking regression in scope; output shape is not issued-ID provenance, and synchronous logging can still block. After a reported restart, the exact loaded hook revision is independently unverified. No runtime change is made here.
+The laptop: Ryzen 9 7940HS, 23 GiB usable RAM, RTX 4070 Laptop (8 GB), Windows 11.
 
-**Independent runtime checkpoint:** after window 3 closed, the PC worker confirmed 2.0 running with its prior verified binary hash, no 2.1 process, unchanged original launchers and a clean tree at local 7111656. Workbench checksum drift and a missing 2.1-launcher manifest entry need [source review before trust renewal](research/MANIFEST_REVIEW_2026-11-14.md). No tests were rerun or files changed. Recheck [active reservations](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) before local work.
+## The goal
 
-| Workstream | Verified or reported progress | Next boundary |
+> Give Mohamed a private local assistant he can use every day for routine coding in Arabic or English:
+> complete, reviewable answers; demonstrated correctness on a declared task set; useful response times;
+> editable teaching notes; and simple, recoverable operation, without a required inference subscription.
+
+Six checks define "done". The full wording and thresholds are in
+[research/FINAL_GOAL.md](research/FINAL_GOAL.md).
+
+| # | Check | Where it stands (2026-11-15) |
 |---|---|---|
-| Teach store | Rev6 persistence and rev10 diagnostic hardening have scoped independent offline passes | Callback enabled is reported; exact loaded revision/live invariance are unverified; synchronous output can still block |
-| Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; exploratory drafts exist separately | No independently established CODE-Q1 semantic pass rate. Generated-code execution remains disabled; reviewed semantic isolation is absent |
-| Cache experiment | [Exploratory result audit](research/audits/cap4-cap32-exploratory-audit-2026-11-14.md): arithmetic reproduces 26.73% lower recorded completion time | Split invocations with lifecycle failure; no semantic assessment. Full schema-4 study still not run |
-| Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
-| Context preflight | Source audit, 24 saved count pairs and [four window-7 synthetic pairs](research/context-preflight/window7-observation-2026-11-14.json) agree within their profiles | No universal parity/full release fit claim; [note budgeting still needs alignment](research/context-preflight/note-budget-alignment.md) |
+| 1 | Long conversations, with the full answer allowance reserved | Working on the laptop. A 1,717-token prompt with a 256-token answer was served; over-long requests are refused with a clear reason |
+| 2 | Coding quality: at least 9 of 12 tasks pass on the first attempt | 12 of 12 answers are complete and well-formed. They have not yet been run against their 116 test cases; that grading has been handed to the independent reviewer |
+| 3 | Speed: median 15 s to first text, 60 s per task | Exploratory: 35 s per task, 16 s to first text, measured while a large download was running |
+| 4 | Start, stop and recover without help | Three clean stop-start cycles and a 20-request session. An owner guide exists on the laptop |
+| 5 | Teaching notes with visible limits | Store and hook reviewed through revision 18. An in-chat "notes left out" notice is a tested prototype, not loaded |
+| 6 | Private operation | The stack's processes were observed connecting to nothing outside the laptop. Sampling, not a packet capture |
 
-Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**coding scope and primary targets relayed as accepted; gateway findings open**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
+For the detailed, dated status with every qualification, see [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md).
 
-The [CODE-Q1 exploration](research/experiments/2026-11-14-codeq1-exploratory-first-pass.json) reports 12/12 static passes with contended timings; semantic correctness and first-useful-text remain unmeasured, so release checks 2/3 are incomplete. The [published gateway review](research/gateway-admission-review.md) reports **15 passed / 3 skipped**, without restart or live-integration clearance. Profile binding, unsupported shapes, final post-hook validation and user-visible omission/status remain open. Conditional restart approval is Claude-relayed; no runtime action is performed here.
+## Quick start
 
-## Where active work lives
+You need Python 3.12 or newer. No packages are required.
 
-- [Live shared co-chat on Claude's branch](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) — read the latest turn before replying.
-- [Reviewed teach revision 6](https://github.com/mms20102/Local-AI-tests/tree/015a2ecd63468445b9ebed1f01b95291fa577177/research/teach-store).
-- [Frozen CODE-Q1 fixtures](https://github.com/mms20102/Local-AI-tests/tree/de9398a167b64c79510b470b7d60b3a0931aad04/research/coding-quality-v1).
-- [Published schema-4 planner](https://github.com/mms20102/Local-AI-tests/tree/974e667cfdcc389a56797f042dcb61cc13d435be/research/planners/cap4-cap32-schema4).
+```
+git clone https://github.com/mms20102/Local-AI-tests.git
+cd Local-AI-tests
+python tools/run_all_tests.py
+```
 
-Main and Claude's branch have diverged; these links are intentional. No merge or branch reset is implied. Draft PR #1 is also the coordination webhook bridge and remains open and unmerged. The coordinator observed a real wake; delivery/continuity is not guaranteed.
+Expected: 229 tests in 5 suites, all suites passing, 16 tests skipped. The skipped tests need files
+that exist only on the laptop (the model's tokenizer, the gateway's settings) or the LiteLLM library.
+Nothing in the test suites starts a service, calls a model or uses the network.
 
-## Working rules
+## What is in here
 
-Claude has contributed the teach implementation and CODE-Q1 fixtures; PC-side work has contributed runtime observations and adapter components; Codex contributes shared evidence and review. Claude completed a reported renderer/tokenizer preflight. The tagged Qwen36 text path adds no separate BOS/EOS; installed native count and independent renderer/tokenizer parity remain unresolved.
+| Path | What it is | Runs offline |
+|---|---|---|
+| [research/teach-store/](research/teach-store/) | The teaching notes: a small store of rules and facts the owner writes, and the gateway hook that adds them to chat requests | 109 tests |
+| [research/gateway-admission/](research/gateway-admission/) | The gateway's request check: text-only rules, and admission by real token count | 30 tests |
+| [research/teach-status-adapter-prototype/](research/teach-status-adapter-prototype/) | Prototype: one status line in a streamed answer when notes were left out | 46 tests |
+| [research/coding-quality-v1/](research/coding-quality-v1/) | CODE-Q1: 12 small coding tasks (9 English, 3 Arabic), 116 test cases, a grader, and the model's first-pass answers | 31 tests |
+| [research/context-preflight/](research/context-preflight/) | Evidence that the gateway's token count equals the engine's | data and audits |
+| [research/experiments-claude/](research/experiments-claude/) | Measurements taken on the laptop, with the scripts that produced them | data |
+| [research/experiments/](research/experiments/), [research/audits/](research/audits/) | Independent review records | data |
+| [research/co-chat.md](research/co-chat.md) | The shared log between the two assistants. Append-only | — |
+| [tools/](tools/) | `run_all_tests.py`, and a watcher that reports new turns in the log | 13 tests |
+| [docs/](docs/) | Architecture, current state, glossary, history | — |
 
-Preserve the working launcher/model and all authors' turns. Keep credentials, private chats, raw personal logs, model weights and `.git` folders out of handoffs. Do not execute generated code or enable the teach hook under the current offline work.
+A fuller map with a suggested reading order is in [research/README.md](research/README.md).
 
-[Roadmap](research/ROADMAP.md) · [Benchmark protocol](research/BENCHMARK_PROTOCOL.md) · [Runtime source research](research/RUNTIME_MEMORY_RESEARCH_2026-11-14.md) · [Version/advisory verification](research/VERSION_VERIFICATION_2026-11-14.md) · [Initial briefing](CLAUDE_BRIEFING.md)
+## What is not in here, on purpose
 
-Earlier documents remain in Git history. This update replaces stale landing-page checkpoints; it does not publish the blocked benchmark components or establish a performance gain.
+The laptop project itself is private and is not published: its launchers, configuration, keys, chats,
+logs, and the model files. What appears here from that project was copied file by file with the
+owner's approval. See [SECURITY.md](SECURITY.md) for the rules.
 
-The exploratory audit independently recomputes published metadata; it does not rerun static grading or execute model outputs. Source results, including the first invocation's aborted/failed-restoration status, remain unchanged.
+## How the work is done
+
+Two assistants work for the owner and check each other. Neither result counts until the other side
+has had the chance to break it.
+
+- **Claude** works on the laptop: writes the code here, runs the model, takes measurements.
+- **ChatGPT** works from the published files: reads source, audits numbers, and relays an
+  independent reviewer who runs the published tests in a separate environment.
+- **The owner decides.** Scope, targets, anything that restarts the laptop's services, and anything
+  published from the laptop need his word.
+
+Every claim in the log is labelled *measured*, *recorded*, *derived*, *documented*, *reported* or
+*inferred*, so a reader can tell an observation from a conclusion. The full conventions are in
+[CONTRIBUTING.md](CONTRIBUTING.md), and the terms used throughout are in
+[docs/GLOSSARY.md](docs/GLOSSARY.md).
+
+## Branches
+
+Work currently lives on two lines that this branch combines:
+
+- `main`: documentation, audits and review records.
+- `claude/cloud-environment-setup-ha4b84`: the code, the laptop measurements and the shared log.
+
+A draft pull request from the second into the first stays open as the coordination channel. Merging
+it is the owner's decision.
+
+## Documents worth reading first
+
+1. [research/FINAL_GOAL.md](research/FINAL_GOAL.md): what "done" means.
+2. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the pieces fit.
+3. [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md): the dated status.
+4. [research/README.md](research/README.md): where everything else is.
+
+The previous landing page is kept as
+[docs/history/README-checkpoint-2026-11-14.md](docs/history/README-checkpoint-2026-11-14.md).
+
+## License
+
+No license has been chosen. Until the owner adds one, all rights are reserved: you may read the
+repository, but there is no permission to reuse the code.

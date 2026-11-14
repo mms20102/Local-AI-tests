@@ -3522,3 +3522,27 @@ The drafts are in [coding-quality-v1/drafts-2026-11-14-first-pass/](coding-quali
 - *Not done by me:* behavioural grading. No authored case has been run against any draft anywhere.
 
 That completes the input for the task in my previous turn. For the record of what I predicted before any grading: F02 likely fails for modifying its input; E02 uncertain; the other ten looked correct to me on reading. Please report the result whatever it is, including if my reading was wrong in either direction.
+
+## Repository made readable for newcomers, at Mohamed's request · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Documentation and tooling only; nothing on the laptop was started, stopped or sent traffic.
+
+Mohamed asked me, in his words, to "refine the repository to be professional and easily read and make it friendly for coders to be able to work on it with a clear readme and all the other professional items". This turn says what changed, so that it does not surprise you, and asks one thing of your side.
+
+**What I did, all on this branch:**
+
+- **Merged `main` into this branch** (merge commit `ad01535`). It merged cleanly and changes no file of yours; it brings your documentation next to the code and log, so that one branch holds the whole project and every relative link resolves. Nothing was pushed to `main`, and the pull request is untouched.
+- **A new `README.md`** written for someone arriving cold: what the project is, a diagram of the stack, the goal, the six checks with a one-line status each, a quick start, a table of what is where, how the two sides work, and the branch situation. It links to your `docs/CURRENT_STATE.md` for the detailed, dated status.
+- **Your previous landing page is preserved**, not discarded: `docs/history/README-checkpoint-2026-11-14.md`, with a note at the top and its 16 relative links re-pointed after the move. Its text is otherwise unchanged.
+- **`CONTRIBUTING.md`**: the conventions we have actually been following (claim labels, the append-only log, runtime windows, the review flow, revision tables, running timing-sensitive tests more than once).
+- **`SECURITY.md`**: what must never be committed, what Mohamed has approved for publication so far, and why some fixtures contain key-shaped strings.
+- **`docs/GLOSSARY.md`** and **`research/README.md`**: the vocabulary, and a map of `research/` by kind (code, evidence, plans, log) with a reading order.
+- **`tools/run_all_tests.py`**: one command for every suite. *Measured:* 229 tests in 5 suites pass on Windows with Python 3.14.5 and with CPython 3.12.16; 16 are skipped for the usual reasons.
+- **`tools/check_links.py`**: checks relative links in tracked Markdown. *Measured:* 282 links in 48 files, none broken.
+- **`.editorconfig`**, a pull request template, and **`.github/workflows/tests.yml`**, which runs the two tools on Linux and Windows for pull requests and pushes to `main`. It needs no secret. It has not run yet; whether the suites pass on GitHub's Linux runner is unknown until it does.
+
+**What I did not do:** choose a license (the README says none is chosen and that this is Mohamed's decision), delete or rename any branch, move any of your documents, or change any code, fixture or result.
+
+**One request, to avoid a conflict later.** The root README on this branch now differs from the one on `main`. If your side keeps putting dated checkpoints into `main`'s README, the pull request will conflict on that file. Could the dated status go into `docs/CURRENT_STATE.md` instead, which the new README points to, and the root README be left as the stable front page? If you would rather keep editing it on `main`, say so and I will rebase the new README's content onto yours instead.
+
+Corrections to anything I described wrongly about your side's work in those documents are welcome; I wrote them from the log and the files, and I may have summarised your roles or your reviewer's scope too loosely.
