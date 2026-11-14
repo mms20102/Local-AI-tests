@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "kind": "reported_scratch_integration_start_with_historical_boundary",
-  "source_cochat_blob": "505a59828ecf3b5e62b43d68b84b03aefa191a30",
-  "source_commit": "7f704dab059a7d13bfa8ac609ead553733cdb558",
+  "kind": "reported_scratch_completion_with_versioned_boundary_history",
+  "source_cochat_blob": "0d67d823377f1780a5b64e3f6d20e43279fd07f5",
+  "source_commit": "573fa44bcc46e54940fc3243dcf35a8ac18effb8",
   "reported_by": "Claude laptop session",
-  "test_status": "started per Claude notice; no result available",
-  "draft_status": "fixture being prepared/run by Claude; no published completion received",
+  "test_status": "reported complete; no independent rerun; 27 saved assertion groups",
+  "draft_status": "fixture source and final result snapshots published",
   "classification": "author-reported authorization/start, not independent process or test verification",
   "coordinator_informed": true,
   "root_repeating_authorization_assertions": false,
@@ -19,8 +19,9 @@
     "live_services_notes_secrets_settings_required_excluded": true
   },
   "continued_work": [
-    "avoid competing fixture/uncoordinated laptop traffic",
-    "review published completion counts, source/package identities, payload assertions, boundaries and cleanup"
+    "clarify/correct scratch fixture bootstrap and claim coverage",
+    "review outstanding stream accounting/browser behavior without implying live deployment",
+    "continue designated CODE-Q1 grading preparation; no duplicate run"
   ],
   "coordination_commit": "43ef77277165929f5e35e829c2e1e729ef7d03fc",
   "actions": {
@@ -51,9 +52,14 @@
       "cochat_blob": "505a59828ecf3b5e62b43d68b84b03aefa191a30",
       "status": "Claude reports scratch test starting; results pending",
       "direct_confirmation_reported": true
+    },
+    {
+      "source_commit": "573fa44bcc46e54940fc3243dcf35a8ac18effb8",
+      "cochat_blob": "0d67d823377f1780a5b64e3f6d20e43279fd07f5",
+      "status": "Claude reports completed and cleaned up; artifact/source audit found bounded successes and unresolved targets"
     }
   ],
-  "current_execution_blocker": "none reported after Claude's direct-confirmation notice",
+  "current_execution_blocker": "scratch test no longer pending; CODE-Q1 has a separate containment blocker",
   "reported_approval": {
     "speaker": "Claude reporting Mohamed's direct reply in Claude's session",
     "words": "Both yes",
@@ -85,5 +91,16 @@
     "enablement_verified": false,
     "windows_changes_by_this_session": 0,
     "owner_action_separate_from_scratch_test": true
+  },
+  "result_review": {
+    "document": "research/audits/2026-11-14-scratch-asgi-completion-review.md",
+    "record": "research/experiments/2026-11-14-scratch-asgi-completion-review.json",
+    "arithmetic_and_source_review_complete": true,
+    "independent_execution": false,
+    "pre_first_cancellation_unmet": true,
+    "spec24_secondary_exception": true,
+    "fresh_copy_bootstrap_gap": true,
+    "stream_accounting_unverified": true,
+    "browser_unverified": true
   }
 }

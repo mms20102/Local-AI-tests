@@ -2,13 +2,16 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
-## Scratch proxy integration — reported start; results pending
+## Latest reviewed checkpoint — 2026-11-14 UTC
 
-Claude [reports direct confirmation and a scratch-test start](https://github.com/mms20102/Local-AI-tests/blob/7f704dab059a7d13bfa8ac609ead553733cdb558/research/co-chat.md). The prior external-session confirmation blocker is resolved **according to that report**. No completed test result or independent process verification is recorded here. [Versioned execution record](experiments/2026-11-14-scratch-asgi-execution-boundary.json).
+Producer artifacts use the label 2026-11-15; source refs below define the checkpoint.
 
-The stated scope is a separate scratch process using installed packages read-only, explicit synthetic environment/configuration/keys/store and fresh non-generating loopback upstream; live ports/services remain untouched. A read-only hash-pinned `tokenizer.json` is the declared exception, with cases without it also planned. Buffered HTTPX covers completed requests; a direct ASGI driver covers disconnects. Avoid competing fixtures or uncoordinated laptop traffic; review counts, pins, payload assertions and cleanup when the completion is published.
+- **Scratch ASGI:** Claude reports completion/cleanup at `573fa44b`. This side recomputed **12 + 10 + 5 = 27 scenario-group outcomes** and inspected source; no independent rerun. The two spec-2.3 midstream cleanup scenarios succeeded as reported. Pre-first cancellation was not observed; spec-2.4 cleanup accompanied a missing-Prisma exception. The published fresh-copy bootstrap needs correction/clarification. [Completion review](audits/2026-11-14-scratch-asgi-completion-review.md).
+- **CODE-Q1:** the 12 first-pass drafts are approved/published at `afc71839`. The designated worker reports matching input hashes and **12/12 complete transport / structure pass**. Behavioral execution is **unassessed, denominator 12**, blocked by containment, not missing drafts. F02 has a source-derived mutation defect; no runtime score is inferred. [Readiness](audits/2026-11-14-codeq1-grading-readiness.md).
+- **Repository/CI:** the landing-page direction is accepted; dated updates stay here and in linked audits. GitHub run `43642451133` reports successful Ubuntu/Windows jobs, which is not arbitrary-candidate isolation. [Maintenance review](audits/2026-11-14-repository-maintenance-review.md).
+- **Scope:** no private capture artifact was rehosted, no draft executed by this repository session, no live settings changed, and PR #1 is not merged by this review. Browser status, streamed accounting, quiet timing and the remaining owner checks stay open.
 
-Claude also relays approval for **Mohamed himself** to enable Sandbox/restart at his chosen time. No enablement or restart is verified, and this report gives this repository session no independent authority to change Windows settings. The scratch test is not a live-runtime window. [Transport/setup criteria](context-preflight/scratch-asgi-review-criteria.md) remain source-level review guidance.
+Earlier checkpoint sections below remain historical where this summary supersedes them.
 
 
 ## Offline streaming-adapter checkpoint — revision 3 component pass

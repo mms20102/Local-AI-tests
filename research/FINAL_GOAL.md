@@ -2,6 +2,14 @@
 
 Status: **shared coding goal; primary numerical targets accepted according to Claude’s relay**, 2026-11-14. In [“Mohamed’s decisions; gateway source published”](https://github.com/mms20102/Local-AI-tests/blob/6c1298375d265680313424c36dcecf32a6c4c71f/research/co-chat.md), Claude quotes “Yes to all” for publication, at least 9/12 first-attempt coding passes, median first useful text ≤15 seconds, median task time ≤60 seconds, and one later restart to load rev14 after counter review. These are attributed reports, not independently verified authorization for this session to operate the PC. Later bounded reason-code and teach15–18 reviews passed; see the current checkpoint below. Full integration evidence remains incomplete, and this session does not infer runtime authority from a source review. The targets are acceptance criteria, not achieved results.
 
+## Latest evidence checkpoint — not a release pass
+
+Published first-pass drafts at `afc71839` are now available. The designated worker reports input hashes matching and all 12 transport/structure checks passing. **Behavioral execution remains unassessed, with all 12 tasks retained**, because the available isolation probe failed and the Sandbox service needs authorization. The source-derived F02 mutation finding is not an executed score; do not infer 11/12. [Grading readiness](audits/2026-11-14-codeq1-grading-readiness.md).
+
+The [scratch ASGI completion review](audits/2026-11-14-scratch-asgi-completion-review.md) advances actual proxy/callback/payload evidence and two midstream cleanup paths. It does not establish prompt pre-first cancellation, clean spec-2.4 errors, browser visibility, streamed accounting, native/margin proof or live deployment. Quiet correctness-qualified speed, owner guide/Ctrl+C checks and isolated semantic grading remain open. A post-run live health probe is separate from the guarded synthetic test.
+
+The [maintenance review](audits/2026-11-14-repository-maintenance-review.md) records successful GitHub Linux/Windows CI metadata and preserves the stable root landing page. CI suite success is not model behavioral grading or a verified candidate sandbox. Earlier pending-input/review wording below is historical where superseded here.
+
 ## One final goal
 
 **Give Mohamed a private local assistant he can use every day for routine coding in Arabic or English: complete, reviewable answers; demonstrated correctness on a declared task set; useful response times; editable teaching notes; and simple, recoverable operation on his existing laptop, without a required inference subscription.**

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "review_checkpoint_utc": "2026-11-14 21:32 UTC",
+  "kind": "public_source_grading_preparation_with_relayed_designated_worker_results",
+  "grader_fixture_ref": "df66094212d76b89fdcfe0c0468008bd0d30a78a",
+  "published_draft_ref": "afc71839667c0c212787afae982d4e217e6dc1d4",
+  "exact_git_ids": {
+    "grader": "c3d5387cb708354659864bca52ae2e00b5af5040",
+    "manifest": "bf1ac49bb49020767a2f92f3ea7d54b83c23f411",
+    "grader_tests": "c13d16eb8cc85e1186b20bd541f78b0a6a050190",
+    "fixtures_tree": "56bbc4b1b0866b93690698c0187367128533276c",
+    "draft_index": "3c3b27e0c79750befb166a332c7dc5f1b170d889",
+    "F02": "49b2cdc81ee64ce0ea75451925806e5ff48e31d2"
+  },
+  "designated_worker_report": {
+    "git_blobs_verified": 91,
+    "fixture_manifest_hashes_verified": true,
+    "draft_file_hashes_verified": 12,
+    "draft_content_hashes_verified": 12,
+    "static_complete": 12,
+    "static_structure_pass": 12,
+    "behavioral_execution": false,
+    "private_handoff_artifacts_published": false
+  },
+  "independently_tallied_fixture_cases": {
+    "tasks": 12,
+    "arabic_tasks": 3,
+    "english_tasks": 9,
+    "public": 13,
+    "hidden": 103,
+    "total": 116,
+    "arabic_cases": 26,
+    "english_cases": 90,
+    "expected_exception_cases": 10,
+    "new_outer_object_cases": 3
+  },
+  "own_source_observation": {
+    "F02_mutates_aliased_input_row": true,
+    "example": "[[1,3],[2,6]] aliases first row; assignment changes it to [1,6]",
+    "basis": "read-only reasoning from published code, not execution",
+    "executed_failure_count": null,
+    "other_task_semantics_not_assessed_by_this_session": true
+  },
+  "execution_state": {
+    "canonical_manifest_gate": false,
+    "behavioral_tasks_run": 0,
+    "first_attempt_denominator": 12,
+    "behavioral_score": null,
+    "actual_blocker": "unverified/unavailable containment; inputs are published"
+  },
+  "worker_reported_blocks": {
+    "bubblewrap": "loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted",
+    "harmless_probe_executed": false,
+    "vercel_project_lookup": "403 requiring owner-team authorization",
+    "resources_created": 0,
+    "weakened_protection": false
+  },
+  "alternative_evidence": {
+    "github_ci_run": 43642451133,
+    "linux_job_success": true,
+    "windows_job_success": true,
+    "candidate_containment_proved": false,
+    "new_workflow_or_grade_job_started": false
+  },
+  "actions": {
+    "generated_code_executed_by_this_session": 0,
+    "duplicate_grading_run": false,
+    "pc_access": false,
+    "canonical_gate_changed": false,
+    "private_laptop_drafts_fetched": false
+  }
+}
