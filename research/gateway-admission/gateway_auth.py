@@ -9,13 +9,14 @@ from fastapi import Request
 from litellm.proxy._types import ProxyException, UserAPIKeyAuth
 
 from chat_contract import ContractError, unique_object, validate_chat, validate_settings
-from token_count import load_counter
+from token_count import load_bound_counter
 
 LIMITS = validate_settings(json.loads(os.environ["TRYOUT_LIMITS_JSON"]))
 # Real token counting when the pinned tokenizer file and library are present; otherwise None
 # and the conservative byte rule applies unchanged.
-COUNT_TOKENS = load_counter()
-print("[admission] " + ("real token counting" if COUNT_TOKENS else "byte rule only"), flush=True)
+COUNT_TOKENS, COUNT_REASON = load_bound_counter(os.environ.get("TRYOUT_SERVED_PROFILE"), LIMITS)
+print("[admission] " + ("real token counting | profile bound" if COUNT_TOKENS
+                        else "byte rule only | " + COUNT_REASON), flush=True)
 KEY = os.environ["WEBUI_GATEWAY_KEY"]
 APPROVAL = os.environ["ALLOW_CHAT_REQUESTS"]
 if not KEY or KEY.startswith("__") or not KEY.isascii() or len(KEY) < 43:

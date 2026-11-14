@@ -2884,3 +2884,27 @@ Written by Claude on the AI laptop. **Offline only; neither change is loaded.** 
 Next on the laptop, at Mohamed's instruction: an exploratory first pass of the 12 CODE-Q1 tasks through the running stack, graded statically only. It is not the release check, which needs behavioural grading in reviewed isolation; it is to learn how far the model is from 9 of 12. About 12 short requests; no restart, so no window notice.
 
 **Added after reading "Published gateway: independent review and next repairs" at `f32776b`**, which arrived while this turn was being pushed. The four findings are accepted. Finding 2's later-system-turn case is the gateway change described above; the `</think>` history case, the profile binding, validation of the final enriched request on the short path, and boundary tests with the real tokenizer are not done yet and are the next offline revision. Loading stays held, as you say.
+
+## Gateway review findings: offline revision · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Published gateway: independent review and next repairs" at `f32776b`. **Offline only. Nothing here is loaded; the laptop still runs the gateway as published at `6c12983` and teach revision 11. Loading stays held.**
+
+Laptop local commit `d8d25e2`. Revised files are in [gateway-admission/](gateway-admission/README.md) and [teach-store/](teach-store/README.md) (revision 16).
+
+| Finding | Change | Offline evidence (*measured*, Windows) |
+|---|---|---|
+| 1. Bind the actual served profile | One named profile: engine 2.0.0, the SHA-256 of the installed renderer file, thinking off, context 2048, tokenizer hash. The launcher reports what it really starts, read from its own command line and the files on disk; the gateway uses real counting only if that report equals the profile field by field and its own context setting agrees. Otherwise the byte rule applies and the start-up log gives a fixed reason word | Ten mismatching or malformed reports each give no counter and the expected reason (other engine version, thinking on, other context, unknown renderer hash, other tokenizer hash, an extra field). A report is built from a real command line in a test. With the matching profile on the laptop the counter loads |
+| 2. Reject unsupported shapes before either route | A system message that is not first, and assistant history containing `</think>`, are refused with a clear message before the byte rule or the counter is consulted. The same tag in a user message is ordinary text and is served | Tests on both routes |
+| 3. Validate exactly what is sent after teaching | Whenever a counter exists, the complete request with notes and policy in place is counted, now also on the short path. If it does not fit with the full output reserved, the notes are withdrawn and the request goes without them. The hook loads its counter through the same profile binding as the gateway | Tests: the one counted candidate is exactly the returned request; a count at the limit keeps the notes, one over withdraws them |
+| 4. Exercise boundaries and uncertainty | Real-tokenizer tests search for a prompt of exactly a given count and check one below, at, and one above the largest admissible prompt, for 256 and 64 output tokens; an Arabic conversation with history is checked on each side of the limit | Pass on the laptop with the real tokenizer. From the published folder these 6 are skipped, since the tokenizer is not there |
+
+*Measured:* project suite 236 passing; admission tests 27 passing with the real tokenizer on the laptop, 21 run from the published folder; teach 109, 5 skipped from the published folder.
+
+**Stated limits.**
+- *Finding 3, one deliberate exception:* if the final count on the short path cannot be made, the byte rule's placement is kept. My reasoning: a text of n bytes cannot be more than n tokens with this tokenizer, and the byte rule's fixed overheads exceed the frames. That is an argument, not a measurement; say if you want it refused instead.
+- The 32-token allowance is unchanged and still a judgment. The boundary tests show the rule is applied exactly at the stated limit; they do not show the limit is right.
+- The profile binding checks what the launcher reports about its own start. It does not query the running engine. A changed engine binary with the same version folder and renderer file would not be noticed.
+- Two small edits outside the three published files carry the launcher's report (one environment variable set by the launcher, passed on by the service starter). They are described in the README; those two files are not published.
+- Still open: the user-visible omission notice.
+
+A review of this revision would be the useful next step from your side. No acknowledgement needed otherwise.

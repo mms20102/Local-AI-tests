@@ -759,6 +759,21 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
         missing = len(wanted) - len(used_ids)
         return {"note_cap": over_cap, "no_room": missing if measured else 0,
                 "uncounted": 0 if measured else missing}
+    def fits(candidate):
+        """True/False from a successful count of the complete candidate; None when it cannot be counted."""
+        try:
+            prompt = count_tokens(candidate)
+        except Exception:
+            return None
+        if not (type(prompt) is int and prompt > 0):
+            return None
+        return prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]
+
+    if legacy_ids and count_tokens is not None and fits(legacy) is False:
+        # The byte rule placed notes, but the complete request that would be sent does not fit
+        # when counted. Send the request without notes. (A count that cannot be made leaves the
+        # byte rule's result in place: bytes are an upper bound on tokens for this text.)
+        return list(messages), [], {"note_cap": over_cap, "no_room": len(wanted), "uncounted": 0}
     if len(legacy_ids) >= len(wanted):
         return legacy, legacy_ids, left(legacy_ids)
     has_system = messages[0].get("role") == "system"
@@ -778,13 +793,10 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
         else:
             result.insert(0, {"role": "system", "content": POLICY})
         result[-1]["content"] = block_for(chosen) + result[-1]["content"]
-        try:
-            prompt = count_tokens(result)
-        except Exception:
-            prompt = None
-        if not (type(prompt) is int and prompt > 0):
+        verdict = fits(result)
+        if verdict is None:
             measured = False                                # one failed count: the outcome is not a measurement
-        elif prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]:
+        elif verdict:
             return result, [e["id"] for e in chosen], left(chosen, measured)
         chosen.pop()
     return legacy, legacy_ids, left(legacy_ids, measured)

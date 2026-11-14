@@ -67,6 +67,60 @@ class LoadCounterTests(unittest.TestCase):
             self.assertIsNone(token_count.load_counter(path, pinned=None))
 
 
+class ProfileBindingTests(unittest.TestCase):
+    """The counter is used only for the one served profile it was checked against."""
+
+    def served(self, **changes):
+        import json
+        return json.dumps(dict(token_count.PROFILE, **changes))
+
+    def test_reason_is_always_a_fixed_word(self):
+        cases = {None: "no-profile-reported", "": "no-profile-reported", "not json": "profile-unreadable",
+                 "[1, 2]": "profile-unreadable", self.served(engine="2.1.0"): "profile-mismatch",
+                 self.served(thinking="on"): "profile-mismatch", self.served(context=4096): "profile-mismatch",
+                 self.served(renderer_sha256="unknown"): "profile-mismatch",
+                 self.served(tokenizer_sha256="0" * 64): "profile-mismatch",
+                 self.served(extra="CANARY"): "profile-mismatch"}
+        for served, reason in cases.items():
+            counter, got = token_count.load_bound_counter(served, limits())
+            self.assertIsNone(counter)
+            self.assertEqual(got, reason)
+            self.assertIn(got, token_count.REASONS)
+
+    def test_gateway_context_must_equal_the_profile(self):
+        counter, reason = token_count.load_bound_counter(self.served(), dict(limits(), context_tokens=4096))
+        self.assertEqual((counter, reason), (None, "context-mismatch"))
+
+    def test_matching_profile_without_the_tokenizer_file_is_unavailable(self):
+        counter, reason = token_count.load_bound_counter(self.served(), limits(),
+                                                         Path(tempfile.gettempdir()) / "no-such-tokenizer.json")
+        self.assertEqual((counter, reason), (None, "tokenizer-unavailable"))
+
+    @unittest.skipIf(REAL is None, "pinned tokenizer file or tokenizers package not available")
+    def test_matching_profile_loads_the_counter(self):
+        counter, reason = token_count.load_bound_counter(self.served(), limits())
+        self.assertEqual(reason, "ok")
+        self.assertEqual(counter([{"role": "user", "content": "hi"}]), REAL([{"role": "user", "content": "hi"}]))
+
+    def test_launcher_report_is_read_from_the_real_command_line(self):
+        import json
+        with tempfile.TemporaryDirectory() as folder:
+            runtime = Path(folder)
+            (runtime / "openai_server.py").write_text("renderer", encoding="utf-8")
+            tokenizer = runtime / "tokenizer.json"
+            tokenizer.write_text("{}", encoding="utf-8")
+            command = ["python", "coli", "serve", "--ctx", "2048", "--no-think"]
+            got = json.loads(token_count.served_profile("2.0.0", command, runtime, tokenizer))
+            self.assertEqual((got["engine"], got["thinking"], got["context"]), ("2.0.0", "off", 2048))
+            self.assertEqual(len(got["renderer_sha256"]), 64)
+            self.assertEqual(json.loads(token_count.served_profile("2.0.0", ["serve", "--ctx", "4096"], runtime, tokenizer))["thinking"], "on")
+            self.assertEqual(json.loads(token_count.served_profile("2.0.0", ["serve"], runtime, tokenizer))["context"], "unknown")
+            self.assertEqual(json.loads(token_count.served_profile("2.0.0", command, runtime / "missing", tokenizer))["renderer_sha256"],
+                             "unknown")
+            # a report built from other files never equals the pinned profile
+            self.assertNotEqual(got, token_count.PROFILE)
+
+
 class AdmissionTests(unittest.TestCase):
     def setUp(self):
         self.s = limits()
@@ -138,6 +192,18 @@ class AdmissionTests(unittest.TestCase):
                     validate_chat(dict(self.body, messages=messages), self.s, counter)
                 self.assertIn("first message", str(caught.exception))
 
+    def test_assistant_history_with_a_reasoning_tag_is_refused_on_both_routes(self):
+        messages = [{"role": "user", "content": "a"}, {"role": "assistant", "content": "thought</think>answer"},
+                    {"role": "user", "content": "b"}]
+        for counter in (None, words(10)):
+            with self.assertRaises(ContractError) as caught:
+                validate_chat(dict(self.body, messages=messages), self.s, counter)
+            self.assertIn("reasoning tag", str(caught.exception))
+        messages[1]["content"] = "a plain answer"                    # the same history without the tag is served
+        validate_chat(dict(self.body, messages=messages), self.s)
+        messages[0]["content"] = "what does </think> mean?"           # the tag in a USER message is ordinary text
+        validate_chat(dict(self.body, messages=messages), self.s)
+
     def test_messages_not_modified(self):
         before = copy.deepcopy(self.body)
         validate_chat(self.body, self.s, words(500))
@@ -160,6 +226,49 @@ class RealTokenizerTests(unittest.TestCase):
 
     def test_frames_are_single_special_tokens(self):
         self.assertLess(REAL([{"role": "user", "content": "hi"}]), 16)
+
+    def boundary_text(self, target_prompt_tokens):
+        """A user text whose real prompt count is exactly the target, found by adding one word at a time."""
+        text = "alpha " * (target_prompt_tokens - 40)
+        count = REAL([{"role": "user", "content": text}])
+        self.assertLess(count, target_prompt_tokens)
+        while count < target_prompt_tokens:
+            text += "beta "
+            count = REAL([{"role": "user", "content": text}])
+        self.assertEqual(count, target_prompt_tokens)
+        return text
+
+    def test_real_tokenizer_boundary_below_equal_and_over(self):
+        from chat_contract import TOKEN_MARGIN
+        for output in (256, 64):
+            limit = self.s["context_tokens"] - output - TOKEN_MARGIN       # the largest admissible prompt
+            for prompt_tokens, admitted in ((limit - 1, True), (limit, True), (limit + 1, False)):
+                body = {"model": "local-qwen36-chat", "temperature": 0, "max_tokens": output,
+                        "messages": [{"role": "user", "content": self.boundary_text(prompt_tokens)}]}
+                if admitted:
+                    self.assertEqual(validate_chat(body, self.s, REAL), prompt_tokens + output + TOKEN_MARGIN)
+                else:
+                    with self.assertRaises(ContractError) as caught:
+                        validate_chat(body, self.s, REAL)
+                    self.assertEqual(caught.exception.status, 413)
+
+    def test_real_tokenizer_arabic_and_history_boundary(self):
+        from chat_contract import TOKEN_MARGIN
+        history = [{"role": "system", "content": "أجب بإيجاز."}, {"role": "user", "content": "ما عاصمة مصر؟"},
+                   {"role": "assistant", "content": "القاهرة."}]
+        filler = "كلمة "
+        text = filler * 300
+        limit = self.s["context_tokens"] - 256 - TOKEN_MARGIN
+        while REAL(history + [{"role": "user", "content": text}]) <= limit:
+            text += filler
+        over = history + [{"role": "user", "content": text}]
+        under = history + [{"role": "user", "content": text[:-len(filler)]}]
+        self.assertLessEqual(REAL(under), limit)
+        self.assertGreater(REAL(over), limit)
+        body = {"model": "local-qwen36-chat", "temperature": 0, "max_tokens": 256}
+        validate_chat(dict(body, messages=under), self.s, REAL)
+        with self.assertRaises(ContractError):
+            validate_chat(dict(body, messages=over), self.s, REAL)
 
     def test_long_english_request_is_admitted_and_too_long_refused(self):
         body = {"model": "local-qwen36-chat", "temperature": 0, "max_tokens": 256,

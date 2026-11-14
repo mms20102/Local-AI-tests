@@ -6,14 +6,37 @@ logins, chats or logs.
 
 | File | SHA-256 |
 |---|---|
-| `chat_contract.py` | `26ddfdae334c2b35f7f753fdc338578af8aeef8e26c941f2cdc74dda70473be5` |
-| `gateway_auth.py` | `17af7b5f25f3b956ea8ce21250b3b2dc24f87f1b0b35f2d751662bb9b8f093f1` |
-| `token_count.py` | `6833251bd4d70538716cc528be26db41a7ed327b7dad1b8757ab5d83aca85a6d` |
-| `tests/test_token_admission.py` | `20b3df36f9a8e55d0c30c1e2ac16df855b7bf100ddf933c207c6cf0b885c223d` |
+| `chat_contract.py` | `b4baa33bc6cbd318a90b96c6e952116be1933c6bc6c4ccd738f16478772e66aa` |
+| `gateway_auth.py` | `a4046a9949ff0758e58aab35a9103ec4a1f237b5a98ffd1ba43adef4917d5db7` |
+| `token_count.py` | `a68b24734564a3f4664638406a5b50a7b81e55abc523a37573dc005c791b42a6` |
+| `tests/test_token_admission.py` | `5569851aa1e012234475dcb120c6eed7fdfc3f59d2d7cc3ae86f97c7b1f35586` |
 
 Laptop local commits: `28753be` (the change) and `aa545f9` (tests runnable from this copy).
 `changes-since-baseline.diff` is the exact diff of `chat_contract.py` and `gateway_auth.py`
 against the laptop baseline commit; `token_count.py` and the test file are new.
+
+## Revision after the independent review (laptop commit `d8d25e2`, NOT loaded)
+
+The review of commit `6c12983` (15 passed, 3 skipped) raised four findings. This folder now holds
+the revised files; the version loaded on the laptop is still the one at `6c12983`.
+
+1. **Served profile bound.** `token_count.PROFILE` names the one profile the render and counts
+   were checked against: engine 2.0.0, the SHA-256 of the installed `openai_server.py` that holds
+   the renderer, thinking off, context 2048, and the tokenizer hash. The launcher reports what it
+   actually starts, read from its real command line and files (`served_profile`), and the gateway
+   uses real counting only if that report equals the profile field by field and its own context
+   setting agrees (`load_bound_counter`). Otherwise the byte rule applies, and the start-up log
+   line gives a fixed reason word. The 2.1.0 launcher therefore gets the byte rule.
+   Two small edits outside these files carry the report: the launcher sets one environment
+   variable from `served_profile(...)` and the service starter passes it to the gateway process.
+2. **Unsupported shapes refused before either route:** a system message that is not first, and
+   assistant history containing `</think>`.
+3. **Final enriched request validated:** see `../teach-store/` revision 16.
+4. **Boundaries exercised with the real tokenizer** (laptop only): prompts found by search to be
+   exactly one below, at, and one above the largest admissible count, for 256 and 64 output
+   tokens, and an Arabic conversation with history on each side of the limit.
+
+Not addressed: the 32-token allowance is still a judgment, not a bound.
 
 ## Status
 
@@ -57,6 +80,6 @@ against the laptop baseline commit; `token_count.py` and the test file are new.
 python -m unittest discover -s tests
 ```
 
-Needs nothing beyond the standard library for 16 tests. The 3 tests in `RealTokenizerTests` are
+Needs nothing beyond the standard library for 21 tests. The 6 tests that need the real tokenizer are
 skipped unless the `tokenizers` package and the pinned tokenizer file are present, which is only
 the case on the laptop.

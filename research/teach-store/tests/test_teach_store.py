@@ -1256,14 +1256,43 @@ class TokenBudgetTests(Base):
                                                      count_tokens=lambda m: next(answers))
         self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 0, "uncounted": 2}))
 
-    def test_short_request_is_decided_by_bytes_and_counter_is_not_called(self):
+    def test_short_request_keeps_the_byte_rule_result_and_the_final_request_is_counted_once(self):
         self.store.add("Be brief.")
         messages = [{"role": "user", "content": "hi"}]
-        calls = []
+        counted = []
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
-                                                     count_tokens=lambda m: calls.append(1) or 1)
+                                                     count_tokens=lambda m: counted.append(m) or 1)
         self.assertEqual((result, used), ts.apply_to_messages(messages, self.store.entries(), LIMITS, 128))
-        self.assertEqual((used, omitted, calls), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}, []))
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
+        self.assertEqual(counted, [result])              # exactly the request that will be sent was counted
+
+    def test_byte_rule_placement_is_withdrawn_when_the_final_request_does_not_fit_in_tokens(self):
+        self.store.add("Be brief.")
+        messages = [{"role": "user", "content": "hi"}]
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
+                                                     count_tokens=lambda m: 10**9)
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 1, "uncounted": 0}))
+
+    def test_final_count_at_the_exact_limit_is_kept_and_one_over_is_withdrawn(self):
+        self.store.add("Be brief.")
+        messages = [{"role": "user", "content": "hi"}]
+        limit = LIMITS["context_tokens"] - 128 - ts.TOKEN_MARGIN
+        _, used, _ = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128, count_tokens=lambda m: limit)
+        self.assertEqual(used, ["t001"])
+        _, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
+                                                count_tokens=lambda m: limit + 1)
+        self.assertEqual((used, omitted["no_room"]), ([], 1))
+
+    def test_unmade_final_count_leaves_the_byte_rule_result(self):
+        self.store.add("Be brief.")
+        messages = [{"role": "user", "content": "hi"}]
+
+        def broken(candidate):
+            raise RuntimeError("tokenizer fault")
+        for counter in (broken, lambda m: None, lambda m: 0):
+            result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
+                                                         count_tokens=counter)
+            self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
 
     def test_without_counter_result_equals_the_byte_rule_and_omission_is_counted(self):
         self.store.add("Be brief.")

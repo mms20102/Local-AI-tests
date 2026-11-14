@@ -167,8 +167,9 @@ class TeachHook(CustomLogger):
         from chat_contract import read_json, validate_settings     # the gateway's own settings loader
         self.limits = validate_settings(read_json(ROOT / "settings.json"))
         try:                                    # real token counting is optional; None means bytes only
-            from token_count import load_counter
-            self.count_tokens = load_counter()
+            import os
+            from token_count import load_bound_counter      # same profile binding as the gateway check
+            self.count_tokens, _ = load_bound_counter(os.environ.get("TRYOUT_SERVED_PROFILE"), self.limits)
         except Exception:
             self.count_tokens = None
 

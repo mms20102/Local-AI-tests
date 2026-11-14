@@ -1,5 +1,5 @@
 diff --git a/chat_contract.py b/chat_contract.py
-index 0c715ca..ae1c944 100644
+index 0c715ca..9c8f501 100644
 --- a/chat_contract.py
 +++ b/chat_contract.py
 @@ -62,8 +62,24 @@ def validate_settings(s: dict[str, Any]) -> dict[str, Any]:
@@ -29,7 +29,7 @@ index 0c715ca..ae1c944 100644
      if not isinstance(body, dict):
          raise ContractError("Expected a JSON object.", 400)
      tool_fields = {"tools", "tool_choice", "parallel_tool_calls", "functions", "function_call"}
-@@ -85,11 +101,14 @@ def validate_chat(body: Any, s: dict[str, Any]) -> int:
+@@ -85,11 +101,18 @@ def validate_chat(body: Any, s: dict[str, Any]) -> int:
      if not isinstance(messages, list) or not 1 <= len(messages) <= s["max_messages"]:
          raise ContractError("Conversation has no messages or exceeds the message limit.")
      units = s["context_reserve_units"] + output
@@ -42,10 +42,14 @@ index 0c715ca..ae1c944 100644
 +        if message["role"] == "system" and index:
 +            # The engine refuses this shape with its own error; say so here, clearly.
 +            raise ContractError("A system message is only accepted as the first message.")
++        if message["role"] == "assistant" and "</think>" in message["content"]:
++            # The engine moves text before this tag into a reasoning block. That treatment is
++            # not mirrored by the byte rule or the token counter, so the shape is not served.
++            raise ContractError("Assistant history containing a reasoning tag is not supported.")
          if not isinstance(message["content"], str):
              raise ContractError("Attachments and multimodal messages are disabled.")
          try:
-@@ -99,6 +118,18 @@ def validate_chat(body: Any, s: dict[str, Any]) -> int:
+@@ -99,6 +122,18 @@ def validate_chat(body: Any, s: dict[str, Any]) -> int:
          units += size + s["per_message_overhead_units"]
      if messages[-1]["role"] != "user":
          raise ContractError("Send a new user message to continue the conversation.")
@@ -65,24 +69,25 @@ index 0c715ca..ae1c944 100644
          raise ContractError(
              "Conversation exceeds the conservative input budget. Start a new chat "
 diff --git a/gateway_auth.py b/gateway_auth.py
-index 4040d5c..0739bc4 100644
+index 4040d5c..19471f8 100644
 --- a/gateway_auth.py
 +++ b/gateway_auth.py
-@@ -9,8 +9,13 @@ from fastapi import Request
+@@ -9,8 +9,14 @@ from fastapi import Request
  from litellm.proxy._types import ProxyException, UserAPIKeyAuth
  
  from chat_contract import ContractError, unique_object, validate_chat, validate_settings
-+from token_count import load_counter
++from token_count import load_bound_counter
  
  LIMITS = validate_settings(json.loads(os.environ["TRYOUT_LIMITS_JSON"]))
 +# Real token counting when the pinned tokenizer file and library are present; otherwise None
 +# and the conservative byte rule applies unchanged.
-+COUNT_TOKENS = load_counter()
-+print("[admission] " + ("real token counting" if COUNT_TOKENS else "byte rule only"), flush=True)
++COUNT_TOKENS, COUNT_REASON = load_bound_counter(os.environ.get("TRYOUT_SERVED_PROFILE"), LIMITS)
++print("[admission] " + ("real token counting | profile bound" if COUNT_TOKENS
++                        else "byte rule only | " + COUNT_REASON), flush=True)
  KEY = os.environ["WEBUI_GATEWAY_KEY"]
  APPROVAL = os.environ["ALLOW_CHAT_REQUESTS"]
  if not KEY or KEY.startswith("__") or not KEY.isascii() or len(KEY) < 43:
-@@ -42,7 +47,7 @@ async def authenticate(request: Request, api_key: str) -> UserAPIKeyAuth:
+@@ -42,7 +48,7 @@ async def authenticate(request: Request, api_key: str) -> UserAPIKeyAuth:
              reject("Request exceeds the configured byte limit.", 413)
          try:
              body = json.loads(raw, object_pairs_hook=unique_object)
