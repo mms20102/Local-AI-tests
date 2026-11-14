@@ -6,14 +6,18 @@ Needs the `tokenizers` package (any environment that already has it). It reads t
 file and the fixtures, and prints one JSON document. Nothing is sent anywhere.
 
 What is counted, per task:
-  prompt_tokens     the request as the model would see it under ChatML framing:
-                    <|im_start|>system\\n{system}<|im_end|>\\n<|im_start|>user\\n{prompt}<|im_end|>\\n<|im_start|>assistant\\n
+  prompt_tokens     the request rendered the way the installed server renders it for this model
+                    with thinking off (Colibri 2.0.0, openai_server.py, render_chat_qwen):
+                      <|im_start|>system\\n{system}<|im_end|>\\n     (only when a system text is sent)
+                      <|im_start|>user\\n{prompt}<|im_end|>\\n
+                      <|im_start|>assistant\\n<think>\\n\\n</think>\\n\\n  (generation prompt, think block pre-closed)
   reference_tokens  the reference answer in the frozen answer format (one fenced block per file),
                     plus one end-of-turn token. The model's own answer may be longer or shorter.
 
-Assumption to verify before relying on the numbers: that the serving engine frames messages with
-plain ChatML and adds nothing else (no default system text, no tool or thinking preamble). The
-engine's actual template was not read for this script.
+Read from the installed source, not assumed: the frames above, that no default system text is
+added when the client sends none, and the pre-closed think block. NOT established: whether the
+engine binary adds a beginning-of-sequence token or anything else after rendering. That would be
+a small constant; only a real `usage.prompt_tokens` value can confirm it.
 """
 from __future__ import annotations
 
@@ -29,7 +33,7 @@ def chatml(system: str, user: str) -> str:
     parts = []
     if system:
         parts.append(f"<|im_start|>system\n{system}<|im_end|>\n")
-    parts.append(f"<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n")
+    parts.append(f"<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n")
     return "".join(parts)
 
 
@@ -74,7 +78,9 @@ def main() -> int:
     print(json.dumps({
         "fixture_revision": manifest["fixture_revision"], "context": args.context,
         "output_ceiling": args.output_ceiling, "system_tokens": count(args.system),
-        "framing": "ChatML (assumed, not read from the engine)",
+        "renderer": "Colibri 2.0.0 openai_server.py render_chat_qwen, thinking off, no tools (read from the installed source)",
+        "generation_prefix": "<|im_start|>assistant\\n<think>\\n\\n</think>\\n\\n",
+        "engine_added_tokens": None,
         "largest_prompt_tokens": worst_prompt, "largest_reference_tokens": worst_answer,
         "all_prompts_fit": all(r["fits_context"] for r in rows.values()),
         "all_references_fit": all(r["reference_fits_ceiling"] for r in rows.values()),
