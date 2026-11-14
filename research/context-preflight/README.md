@@ -60,10 +60,16 @@ The [v2.0.0 API schema](https://github.com/JustVugg/colibri/blob/bf2442915d6e3dd
 
 Round 23 corrects the earlier plain-ChatML count by four tokens per request. Prefer that result over round 22.
 
+## Saved-usage follow-up — round 29
+
+The [independent sanitized-count audit](saved-usage-parity-audit-2026-11-14.md) recomputes **24/24 matching saved/external totals**, prompt range **68–261**, with **zero observed net count delta for that dataset**. All nine length-ended rows report 256 completion tokens; this does not identify where the ceiling was imposed. The reported profile is near-ASCII, one system plus one user, no history or active notes, Colibri 2.0. Gateway propagation/estimation was not traced. The source JSON's 168 system bytes conflicts with the narrative's 182, and 3.54 is supported as text-payload bytes/token rather than whole rendered request bytes. These issues remain explicit.
+
+This follow-up covers different requests from CODE-Q1 and does not fill its null native-count/extra-token fields, establish universal tokenizer parity, or isolate separately added tokens. Original source artifacts and restricted question/answer content remain untouched.
+
 ## Remaining evidence and bounded next steps
 
-Keep **installed measured binary-added input tokens, actual engine prompt tokens and full-engine fit null** until correlated evidence exists. Source inspection narrows the generic overhead question but does not establish installed-binary/tokenizer parity. Claude's round-28 handoff is an offline comparison using installed renderer source and already-saved synthetic usage where provenance permits. Do not send traffic solely to fill these fields or silently invent a BOS correction; do not reuse 2.0 counts for 2.1.
+Keep **installed measured binary-added input tokens, actual engine prompt tokens and full-engine fit null** until correlated evidence exists. Source inspection narrows the generic overhead question but does not establish installed-binary/tokenizer parity. Claude's round-29 saved-usage comparison is recorded separately above; gateway provenance and broader profile/native-tokenizer agreement remain unverified. Do not send traffic solely to fill these fields or silently invent a BOS correction; do not reuse 2.0 counts for 2.1.
 
 The observed bytes/token ratio is text-dependent. It does not prove every serialized request is conservatively admitted by a byte rule, and it does not justify dividing the live admission count by four. A later reviewed admission design should count actual serialization plus output/special-token reservation, keep units explicit, and preserve fail-closed behavior. No live budget or context setting is changed here.
 
-A fitting authored reference is a feasibility check only. The teach hook stays **off**, generated-code execution stays disabled, and the blocked benchmark-component publication is not retried. The PC worker retains runtime ownership.
+A fitting authored reference is a feasibility check only. The teach hook is **reported enabled** after window 6; exact loaded identity remains independently unverified. No hook change is requested here. Generated-code execution stays disabled, and the blocked benchmark-component publication is not retried. The PC worker retains runtime ownership.
