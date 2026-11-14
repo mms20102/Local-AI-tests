@@ -1702,3 +1702,32 @@ Mohamed asked me to look for updates. *Documented* from the projects' own pages 
 | NVIDIA driver | 596.36 | not determinable | The vendor pages did not render a version |
 
 None of these is applied. An engine or gateway update is a change to the running stack and belongs to an agreed window with the PC worker.
+
+## Research round 24 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Mohamed instructed me to download the update package and install it. This turn records exactly what was done. The running stack was not stopped, restarted or reconfigured, and no model request was sent.
+
+### Colibri 2.1.0 installed beside 2.0.0 · Claude
+
+*Measured* on the laptop:
+
+- **Download:** `colibri-v2.1.0-windows-x86_64.zip` (17,540,387 bytes, the Vulkan build) and `SHA256SUMS.txt`, from the project's GitHub release `v2.1.0`, into a new folder under the user's Downloads.
+- **Verification:** SHA-256 `195ee0be129d563789f1ade2383e023bde5519230d6fb508516e63767ee85465`. It matches the release's `SHA256SUMS.txt` and the digest GitHub's release API reports for that asset. Archive listing checked for unsafe paths before extraction: none.
+- **Install:** extracted to a new runtime folder `colibri-v2.1.0` next to `colibri-v2.0.0`. Nothing in the 2.0.0 folder, the Colibri setup file or the model folder was changed; the 2.0.0 engine binary hash is unchanged.
+- **Checks without starting an engine:** `coli --version` prints `colibri 2.1.0`. `coli serve --help` lists the same options as 2.0.0, including every flag the project launcher passes. The 2.1.0 `qwen36.exe` contains the strings `Q36_KV`, `Q36_MTP`, `COLI_PARK` and `COLI_VK_TIER_HOST`, which the 2.0.0 binary does not.
+- **Not run:** the 2.1.0 engine itself, `coli plan` or `coli doctor` from 2.1.0 (I did not want a second version writing its analysis cache into the model folder that the live 2.0.0 engine is using).
+
+### One additive change to the launcher · Claude
+
+PC worker, this touches a file you own, so here it is exactly: `workbench.py` gained an optional `--engine-version {2.0.0, 2.1.0}` argument, default `2.0.0`, a check that the chosen runtime folder exists, and the version in the startup message. A new file `Start-Fast-Local-Chat-2.1.cmd` passes `--engine-version 2.1.0` with the 32-slot profile. The two existing launchers and their behaviour are unchanged. Laptop local commit `cf4d369`; revert is one `git revert`. Your `SHA256SUMS.txt` lists `workbench.py`, so its recorded hash is now stale.
+
+*Measured:* the project suite passes (173). A `--check-startup --engine-version 2.1.0` attempt while the live stack was up refused at the port check and started nothing; the three production listeners were still present afterwards.
+
+### What this is not · Claude
+
+- 2.1.0 has **not been started** on this machine. No speed, memory or correctness claim follows from installing it.
+- It changes defaults (float16 KV, host pool, parking). A 2.0.0 against 2.1.0 comparison is its own frozen study, separate from cap 4 against 32, as ChatGPT said in round 8–9.
+- The commit-headroom restriction still applies to any start.
+- The benchmark plan's identity hashes pin the 2.0.0 binaries; a 2.1.0 arm needs its own identity.
+
+I am not starting it. The first start belongs to an idle window agreed with Mohamed and the PC worker.
