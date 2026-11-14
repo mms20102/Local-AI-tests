@@ -13,15 +13,15 @@ The `1024` count cap is a prototype input guard, not a claim about a production 
 
 ## Verification status
 
-There are **21 authored unittest methods; they have not been executed in this session**. The cloud shell returned "No usable execution environment is available." Source review and JavaScript checks of a separate handwritten SSE fixture do not validate these Python files.
+There are **21 authored unittest methods**. Claude reports **21 passed / 0 skipped** on Windows Python 3.14.5 and again on the project's CPython 3.12.16, using isolated scratch copies of the exact two published blobs. This is Claude's execution report, not independent review or framework validation. This repository session still has no usable shell and did not rerun them.
 
-A test-capable isolated cloud worker can run:
+Reproduction command for an isolated test environment:
 
 ```sh
 python -m unittest discover -s research/teach-status-prototype -p 'test_*.py' -v
 ```
 
-Tests use synthetic values only. They do not import LiteLLM/Open WebUI, start services, execute model output, read user stores or contact the laptop. Do not replace the unexecuted status with a pass until the exact published files are tested.
+Tests use synthetic values only. They do not import LiteLLM/Open WebUI, start services, execute model output, read user stores or contact the laptop. The reported source blobs are core c07df5220f2064163ed5d11d035f6382fc4a9191 and tests ec60cd821b1ec593e9906d67b6cc1a925e1f24b4. No framework/PC operation follows from this core test result.
 
 ## Framework seam still to implement and verify
 
@@ -36,3 +36,11 @@ This is tagged normal-path evidence, not proof about all routes or the installed
 Future integration must preserve responsibility for closing the model iterator on cancellation and failure, and verify LiteLLM output accounting. Do not add an untested asynchronous wrapper that leaks its source or claims bounded cleanup.
 
 No nonstream display path is implemented. See the [pinned display contract](../teach-status-display-contract.md) and [final-payload plan](../context-preflight/final-payload-evidence-plan.md). This prototype does not change the accepted operating limitations or authorize runtime work.
+
+## Claude's rev18 mapping proposal
+
+Claude's [test/mapping reply](https://github.com/mms20102/Local-AI-tests/blob/b5010ee2ec77f1b3394013150a0cffe1fd8d5a62/research/co-chat.md) maps `omitted_cap` to `note_cap`, `omitted_no_room` to `no_room`, `omitted_uncounted` to `uncounted`, and `invalid`/`byte_only` unchanged; `applied = len(used)`; `relevant = applied + cap + no_room + uncounted`. This is a proposed integration mapping, not an implemented/tested bridge.
+
+Fingerprint `none` or a 12-hex value maps to available, `unknown` to unavailable; `not-read` represents an ineligible request and should bypass the notice rather than become a false "could not verify" warning. The real adapter must use the same final snapshot, not reread the store.
+
+The core requires an explicit `en` or `ar` locale. The original request has no language setting. A latest-message script heuristic was suggested by Claude but is not adopted here; synthetic tests should use an explicit locale, with any eventual configured default/UI locale behavior stated separately.

@@ -8,7 +8,6 @@
     "test_teach_status_core.py"
   ],
   "authored_test_methods": 21,
-  "tests_executed": false,
   "execution_blocker": "No usable execution environment is available",
   "framework_adapter_implemented": false,
   "provider_carrier_implemented": false,
@@ -19,5 +18,30 @@
     "real_store_access": false,
     "runtime_changes": false
   },
-  "next_step": "Run exact files in an isolated test-capable cloud environment; then implement and verify the framework seam with fake upstream."
+  "next_step": "Implement and verify the request-data carrier, response iterator and actual LiteLLM/fake-upstream integration; retain unloaded status.",
+  "tests_executed_by_this_session": false,
+  "current_status": "author_reported_core_tests_passed; framework seam unimplemented/unverified",
+  "author_reported_tests": {
+    "source_commit": "3f528cc7abad202067a1f0f7d194f4380c294b71",
+    "cochat_blob": "ec6ec793ec6e958cd45251b9fa3406813f82af05",
+    "source_blobs": {
+      "core": "c07df5220f2064163ed5d11d035f6382fc4a9191",
+      "tests": "ec60cd821b1ec593e9906d67b6cc1a925e1f24b4"
+    },
+    "runs": [
+      {
+        "environment": "Windows Python 3.14.5",
+        "passed": 21,
+        "skipped": 0
+      },
+      {
+        "environment": "Windows CPython 3.12.16",
+        "passed": 21,
+        "skipped": 0
+      }
+    ],
+    "command": "python -I -B -m unittest discover -s . -p 'test_*.py'",
+    "independent_review": false,
+    "runtime_deployment": false
+  }
 }
