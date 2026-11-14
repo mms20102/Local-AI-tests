@@ -11,6 +11,14 @@ A script cannot wake a chat session by itself. What it does on every new reply:
         .notify/for-chatgpt-latest.md   ready-to-paste text for the ChatGPT chat
   3. with --toast, shows a Windows notification so Mohamed can relay it.
 
+First run: the current branch heads are recorded as the baseline and nothing is
+reported. Only commits that arrive afterwards produce events. To replay history on
+purpose, pass --since <commit>: every commit after it is reported once.
+
+A commit is reported once, whichever branch it shows up on first; `main` catching up
+with the Claude branch later is silent. A commit that does not touch the shared log
+is reported as "repo update, no new log turns", not as a reply.
+
 Usage:
     python tools/watch_cochat.py                 # poll every 60 s until stopped
     python tools/watch_cochat.py --once          # one check, then exit
@@ -78,24 +86,37 @@ def speaker_of(title: str) -> str | None:
     return None
 
 
-def describe(old: str, new: str) -> dict:
-    """Summarise what the range old..new added to the shared log."""
-    diff = git("diff", "--unified=0", old, new, "--", LOG_PATH)
-    headings, speakers = [], []
-    for line in diff.splitlines():
-        match = HEADING.match(line)
-        if not match:
-            continue
-        title = match.group(2).strip()
-        headings.append(title)
-        name = speaker_of(title)
-        if name and name not in speakers:
-            speakers.append(name)
-    added = sum(1 for l in diff.splitlines() if l.startswith("+") and not l.startswith("+++"))
-    files = [f for f in git("diff", "--name-only", old, new).splitlines() if f]
-    subjects = [s for s in git("log", "--format=%s", f"{old}..{new}").splitlines() if s]
+def commits_between(old: str, new: str) -> list[str]:
+    """Non-merge commits in old..new, oldest first."""
+    out = git("rev-list", "--reverse", "--no-merges", f"{old}..{new}")
+    return [line for line in out.split() if SHA.match(line)]
+
+
+def describe(commits: list[str]) -> dict:
+    """Summarise what these commits added to the shared log (each against its parent)."""
+    headings, speakers, files, subjects, added = [], [], [], [], 0
+    for commit in commits:
+        diff = git("show", "--format=", "--unified=0", commit, "--", LOG_PATH)
+        for line in diff.splitlines():
+            if line.startswith("+") and not line.startswith("+++"):
+                added += 1
+            match = HEADING.match(line)
+            if not match:
+                continue
+            title = match.group(2).strip()
+            headings.append(title)
+            name = speaker_of(title)
+            if name and name not in speakers:
+                speakers.append(name)
+        for name in git("show", "--format=", "--name-only", commit).splitlines():
+            if name and name not in files:
+                files.append(name)
+        subjects.append(git("show", "-s", "--format=%s", commit).strip())
     return {
-        "old": old[:7], "new": new[:7],
+        "id": commits[-1],
+        "kind": "reply" if added else "files",
+        "commits": [c[:7] for c in commits],
+        "new": commits[-1][:7], "new_full": commits[-1],
         "speakers": speakers or ["unknown"],
         "log_lines_added": added,
         "headings": headings[:40],
@@ -141,53 +162,77 @@ def toast(title: str, body: str) -> None:
         pass
 
 
+def append_once(path: Path, event: dict) -> None:
+    """Append the event unless this inbox already holds it (safe to repeat after a failure)."""
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            try:
+                if json.loads(line).get("id") == event["id"]:
+                    return
+            except ValueError:
+                continue
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(event, ensure_ascii=False) + "\n")
+
+
 def check(inbox: Path, state: dict, use_toast: bool) -> int:
-    """Fetch once, report every branch that moved. Returns the number of events."""
+    """Fetch once and report commits not reported before. Returns the number of events.
+
+    `state` is only changed after every inbox write and the state file succeeded, so a
+    failure part-way is retried on the next check (delivery is at-least-once to stdout,
+    exactly-once per inbox file).
+    """
     git("fetch", "--all", "--prune", "--quiet")
-    current = heads()
-    seen = state.setdefault("heads", {})
-    events: dict[tuple[str, str], dict] = {}
-    for branch, new in current.items():
+    seen = dict(state.get("heads", {}))
+    reported = list(state.get("reported", []))
+    known = set(reported)
+    events: dict[tuple[str, ...], dict] = {}
+    for branch, new in heads().items():
         old = seen.get(branch)
-        if old is None:          # first sight of this branch: remember, do not report
-            seen[branch] = new
+        seen[branch] = new
+        if old is None or old == new:      # first sight of a branch is a baseline, not a reply
             continue
-        if old == new:
+        # A commit already reported on another branch (main catching up) is not reported again.
+        fresh = [c for c in commits_between(old, new) if c not in known]
+        if not fresh:
             continue
-        # Report forward movement only (a rewind or an unrelated --since is just recorded).
-        if subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", old, new],
-                          capture_output=True, timeout=60).returncode != 0:
-            seen[branch] = new
-            continue
-        key = (old, new)
+        key = tuple(fresh)
         if key not in events:
-            event = describe(old, new)
-            event.update(branches=[], new_full=new,
-                         time_utc=datetime.datetime.now(datetime.timezone.utc)
+            event = describe(fresh)
+            event.update(branches=[], time_utc=datetime.datetime.now(datetime.timezone.utc)
                          .strftime("%Y-%m-%dT%H:%M:%SZ"))
             events[key] = event
         events[key]["branches"].append(branch)
-        seen[branch] = new
+    for key in events:
+        for commit in key:
+            if commit not in known:
+                known.add(commit)
+                reported.append(commit)
     inbox.mkdir(parents=True, exist_ok=True)
     for event in events.values():
-        record = json.dumps(event, ensure_ascii=False)
         for key, name in READERS.items():
             if event["speakers"] != [name]:      # do not notify an author of their own reply
-                with (inbox / f"for-{key}.jsonl").open("a", encoding="utf-8") as handle:
-                    handle.write(record + "\n")
-        if event["speakers"] != ["ChatGPT"]:
+                append_once(inbox / f"for-{key}.jsonl", event)
+        if event["kind"] == "reply" and event["speakers"] != ["ChatGPT"]:
             (inbox / "for-chatgpt-latest.md").write_text(paste_text(event), encoding="utf-8")
-        summary = (f"COCHAT new reply from {'+'.join(event['speakers'])} | "
-                   f"{event['old']}..{event['new']} on {','.join(event['branches'])} | "
-                   f"+{event['log_lines_added']} log lines | "
-                   f"{'; '.join(event['headings'][:4]) or 'no new headings'}")
-        print(summary, flush=True)
-        if use_toast:
-            toast("Co-chat: new reply from " + "+".join(event["speakers"]),
-                  "; ".join(event["headings"][:3]) or event["new"])
+    new_state = {"heads": seen, "reported": reported[-2000:]}
     tmp = inbox / "state.json.tmp"
-    tmp.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+    tmp.write_text(json.dumps(new_state, indent=2) + "\n", encoding="utf-8")
     os.replace(tmp, inbox / "state.json")
+    state.clear()
+    state.update(new_state)
+    for event in events.values():
+        where = f"{'+'.join(event['commits'])} on {','.join(event['branches'])}"
+        if event["kind"] == "reply":
+            print(f"COCHAT new reply from {'+'.join(event['speakers'])} | {where} | "
+                  f"+{event['log_lines_added']} log lines | "
+                  f"{'; '.join(event['headings'][:4]) or 'no new headings'}", flush=True)
+            if use_toast:
+                toast("Co-chat: new reply from " + "+".join(event["speakers"]),
+                      "; ".join(event["headings"][:3]) or event["new"])
+        else:
+            print(f"COCHAT repo update, no new log turns | {where} | "
+                  f"{', '.join(event['files_changed'][:6])}", flush=True)
     return len(events)
 
 
@@ -216,6 +261,7 @@ def main() -> int:
             raise SystemExit("--since needs a commit id")
         base = git("rev-parse", "--verify", args.since + "^{commit}").strip()
         state["heads"] = {branch: base for branch in BRANCHES}
+        state["reported"] = []
     interval = max(30, args.interval)
     while True:
         try:
