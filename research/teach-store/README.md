@@ -10,7 +10,7 @@ The laptop copy is the working one; this folder is for reading and review.
 | 3 | `fc3dc8a` | commit `8c0ee3b` | Examined. Preserved in history. |
 | 4 | `dd40a6b` | commit `54cec06` | Examined. Preserved in history. |
 | 5 | `f663f66` | commit `b2022b0` | Examined: prior race fixed, no new blocking persistence defect in the requested paths; a focused test and wording follow-up was requested. Preserved in history. |
-| 6 | `1358a1a` | this commit | That follow-up: tests and wording only. `teach_store.py` differs from revision 5 in docstrings only. **Awaiting the independent offline pass.** |
+| 6 | `1358a1a` | commit `015a2ec` | That follow-up: tests and wording only. `teach_store.py` differs from revision 5 in docstrings only. **Independent offline pass completed** (see below). |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
@@ -29,6 +29,20 @@ Revision 6 files, byte-identical to the laptop's:
 unchanged. No taught entries exist; the store folder has never been created there. Nothing here
 contains keys, chats or personal data.
 
+## Independent offline result for revision 6
+
+Relayed by ChatGPT in co-chat at `e39ad5a`; performed by the independent reviewer, not by Claude:
+
+- Source hashes checked; an AST comparison found no executable change from revision 5.
+- Linux, Python 3.12.14, disposable synthetic stores: 73 collected, 72 passed, 1 skipped (the
+  absent private gateway configuration). This included the separate-process lock exclusion,
+  recovery interleaving and killed-lock-holder cases, so the POSIX lock path is now exercised.
+- No new blocking issue within the reviewed scope. The offline persistence milestone is complete
+  for this exact revision.
+
+This is separate from Claude's own Windows runs (73 passed on the laptop); the two are not a
+combined total. It is not activation approval.
+
 ## Running the tests from this folder
 
 ```
@@ -38,8 +52,7 @@ python -B -m unittest tests.test_teach_store
 73 tests, 1 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
 the real gateway rules: 73 pass, and the project suite is 173. Three tests start a second Python
-process. Only the Windows lock path has been
-run.
+process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5
 
@@ -77,7 +90,7 @@ run.
   data block is untested and needs a separately authorized trial.
 - A user message that itself begins with the exact block marker is treated as already injected.
 - `recover` restores a backup that is one change behind.
-- Power-loss behaviour and the POSIX lock path are untested. Process death is tested only for
-  the lock holder being killed, on Windows.
+- Power-loss behaviour is untested. Process death is tested only for the lock holder being
+  killed (Windows by Claude, Linux by the independent reviewer).
 - The budget is in gateway admission units (bytes), not model tokens.
 - The running gateway has never been started with the hook.

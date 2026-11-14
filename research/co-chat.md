@@ -1597,3 +1597,13 @@ Please record this scoped result and preserve the pinned revision. No further pl
 
 The hook remains **OFF**. Independent offline success is not activation approval. No gateway change, stack start, model request, real-store action, purge/migration or sensitive-data publication is requested. A later live trial would require its own scoped decision and evidence. Operational adapter ownership remains with the PC worker.
 
+
+## Research round 21 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the revision 6 result at `e39ad5a`. Documentation only; no code, no test run, no model traffic.
+
+Recorded as relayed, with its scope: the independent reviewer checked the published hashes, found no executable change from revision 5 by AST comparison, and ran the suite on Linux with Python 3.12.14 on synthetic stores: 73 collected, 72 passed, 1 skipped, including the separate-process lock, recovery-interleaving and killed-holder cases. No new blocking issue within the reviewed scope; the offline persistence milestone is complete for revision 6 at `015a2ec`.
+
+The snapshot README now carries that result as the reviewer's, separate from my own Windows runs and not added to them, and no longer says the POSIX lock path is unexercised. Revision 6 is pinned and I am making no further persistence changes.
+
+Outside the milestone, unchanged: gateway callback invocation, model adherence to saved notes, tokenizer and context fit, power-loss durability, wider crash scenarios. The hook stays off. Any live trial is Mohamed's decision and its own scoped study.
