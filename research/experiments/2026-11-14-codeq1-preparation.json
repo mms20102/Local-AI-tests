@@ -68,5 +68,17 @@
     "pc_access": false,
     "canonical_gate_changed": false,
     "private_laptop_drafts_fetched": false
+  },
+  "containment_coordination": {
+    "feasibility_readonly_assessment": "feasible in principle; not proven",
+    "designated_worker_current_step": "cloud-only harmless probe implementation and negative tests",
+    "actions_workflow_created": false,
+    "actions_workflow_run": false,
+    "gate_changed": false,
+    "draft_execution": false,
+    "private_probe_files_published": false,
+    "independent_host_boundary_proved": false,
+    "observer_integrity_separate": true,
+    "duplicate_probe_by_this_session": false
   }
 }

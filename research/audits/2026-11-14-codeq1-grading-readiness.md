@@ -48,6 +48,12 @@ Sandbox tools were discovered here, but no sandbox was provisioned or validated.
 
 A new [GitHub CI run](https://github.com/mms20102/Local-AI-tests/actions/runs/43642451133) independently reports successful Linux and Windows test jobs. That proves the existing CI workflow ran its selected tests, **not containment for arbitrary model output**. A dedicated bounded no-network container/guest path could be assessed by the designated worker; no grading workflow, isolation probe or new run was created by this review.
 
+## CI-containment prerequisite — current coordination
+
+The designated worker completed a read-only GitHub Actions feasibility assessment: a dedicated isolated candidate job is feasible in principle, **not proven or cleared for drafts**. It is now preparing a cloud-workspace-only harmless probe and negative tests. No Actions workflow has been created/edited/run for that work, no gate enabled and no draft executed. This repository session is not implementing a competing probe.
+
+Actual runner/Docker containment must be verified, including denied network, explicit read-only input mounts, finite resources, bounded output and exact cleanup. Unit tests of the probe do not prove the runner boundary. The separate candidate/reporter integrity issue also remains; a successful Docker probe alone must not enable the canonical execution gate.
+
 ## Supplied grader limits that the runner must retain or address
 
 - [Semantic gate](https://github.com/mms20102/Local-AI-tests/blob/afc71839667c0c212787afae982d4e217e6dc1d4/research/coding-quality-v1/grade.py#L270) checks declarations but creates/verifies no isolation. Do not flip the shared canonical gate to make a host run proceed.

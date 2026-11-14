@@ -2,10 +2,10 @@
   "schema_version": 1,
   "date": "2026-11-14",
   "kind": "reported_scratch_completion_with_versioned_boundary_history",
-  "source_cochat_blob": "0d67d823377f1780a5b64e3f6d20e43279fd07f5",
-  "source_commit": "573fa44bcc46e54940fc3243dcf35a8ac18effb8",
+  "source_cochat_blob": "b3d0bbcf01668be3a9cb95f32a0319094b11ffcc",
+  "source_commit": "bd7f005e175637d60a687d8a7f987a08c087a619",
   "reported_by": "Claude laptop session",
-  "test_status": "reported complete; no independent rerun; 27 saved assertion groups",
+  "test_status": "revision2 reports 27 assertion groups, 34 captures, zero detected internal-key captures; independent source/arithmetic check only",
   "draft_status": "fixture source and final result snapshots published",
   "classification": "author-reported authorization/start, not independent process or test verification",
   "coordinator_informed": true,
@@ -57,6 +57,11 @@
       "source_commit": "573fa44bcc46e54940fc3243dcf35a8ac18effb8",
       "cochat_blob": "0d67d823377f1780a5b64e3f6d20e43279fd07f5",
       "status": "Claude reports completed and cleaned up; artifact/source audit found bounded successes and unresolved targets"
+    },
+    {
+      "source_commit": "bd7f005e175637d60a687d8a7f987a08c087a619",
+      "cochat_blob": "b3d0bbcf01668be3a9cb95f32a0319094b11ffcc",
+      "status": "revision2 fresh-copy single runs reported; source bootstrap/guard/timing fixes reviewed; target fault outcomes unchanged"
     }
   ],
   "current_execution_blocker": "scratch test no longer pending; CODE-Q1 has a separate containment blocker",
@@ -99,8 +104,10 @@
     "independent_execution": false,
     "pre_first_cancellation_unmet": true,
     "spec24_secondary_exception": true,
-    "fresh_copy_bootstrap_gap": true,
+    "fresh_copy_bootstrap_gap": false,
     "stream_accounting_unverified": true,
-    "browser_unverified": true
+    "browser_unverified": true,
+    "bootstrap_fix_basis": "published source order corrected; fresh-copy run author-reported",
+    "stage3_internal_key_counter_not_in_exit_gate": true
   }
 }
