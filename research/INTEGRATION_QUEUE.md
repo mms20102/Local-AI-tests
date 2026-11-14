@@ -2,21 +2,29 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
-## Published reason-code implementation: focused review pending
+## Current component reviews and reported operating decision
 
-Claude’s published reason-code implementation at `be282e303283d3b18bed77ddd51531adfc2ebc4a` (reported local `094b373`) is offline/not loaded. Static intake confirms the fixed reason/type allowlists and unchanged `token_count.py` blob. The author reports 30 admission passes on the laptop, 24 passed / 6 skipped from publication, and installed exception-class checks; **HTTP serialization remains unverified**. [Focused existing-reviewer scope](gateway-reason-codes-review.md) · [intake record](experiments/2026-11-14-gateway-reason-implementation-intake.json). No independent result for this source is confirmed yet, and no duplicate review or acknowledgment was started. The private diff remains unpublished/unapplied. Absent-counter teaching, profile/fallback/margin/final-payload evidence and user-visible omission remain open; no restart clearance.
+The existing independent reviews are complete: **reason codes at `be282e3`: 24 passed / 6 tokenizer skips**, plus synthetic checks; **teach15–18 at `8ef7d505`: 104 passed / 5 skips**, plus 45 synthetic matrix cases. No new blocking defect was reproduced in those bounded paths. [Reason review](gateway-reason-codes-review.md) · [teach record](experiments/2026-11-14-teach15-18-independent-offline-review.json). Tests were coordinator-relayed, not rerun here; proxy checks used a stub, not HTTP serialization.
 
-## Latest reported fallback distinction: rev18
+Claude's [later plan/UI report](https://github.com/mms20102/Local-AI-tests/blob/8ef7d5057aef98bc1d5c59a938b5b36c7cf2e897/research/co-chat.md) relays Mohamed retaining absent-counter byte-only notes and accepting the heuristic 32-token margin and launcher-report limitation as stated limits before a separately authorized, coordinated restart after the bounded reviews. This is an attributed policy report, **not proof of a native-token bound, actual process identity, final-payload equivalence, loaded revision or runtime authority for this repository session**.
+
+The pinned UI is reported as Open WebUI 0.13.3 / LiteLLM 1.108.5, plain provider connection, Functions disabled and no response hook. Pinned-source research identified a **streaming provider-event candidate independent of Function enablement**, not a tested integration. [Display contract](teach-status-display-contract.md) · [exact downstream-payload evidence plan](context-preflight/final-payload-evidence-plan.md). Nonstream display and request-scoped transport remain open; manual log/status lookup is not automatic answer-linked disclosure. No PC/model traffic or deployment is made here.
+
+**Latest coordination notice:** [runtime window 8](https://github.com/mms20102/Local-AI-tests/blob/fe032023f4d6fdbefedb0c02e36341fa80fb5a42/research/co-chat.md) is reported **OPEN**: planned restart/cycle and synthetic checks, not results. This repository research sends no traffic to ports 8000/4001/8080 and makes no PC changes. Do not infer loaded revisions or outcomes before a matching closure.
+
+The earlier source/revision checkpoints below are historical; their pending-review or pending-policy wording is superseded by this section.
+
+## Historical rev18 intake — before the bounded pass
 
 Claude’s [rev18 report](https://github.com/mms20102/Local-AI-tests/blob/da0db284590c718fb74558fc464dff7048ed78ec/research/co-chat.md), local `9514353`, is offline/not loaded and not independently reviewed here. A configured counter that fails or returns an invalid count now withdraws notes, preserves the admitted base and reports `uncounted`; successful over-limit counts remain `no_room`. **No counter configured is a separate unresolved case:** byte-rule notes are still injected with `kept-byte-rule-only`, without a demonstrated bound. Claude plans to ask Mohamed about disabling teaching in that case; no answer is recorded. Profile trust, independent auth/teach loads, exact final-payload evidence, heuristic margin, unpublished report-carrier edits and user-facing omission remain open. Reported publication tests: 109 run / 5 skipped; these are not an independent integration pass.
 
-## Latest reported coding and successor progress
+## Historical coding and successor intake
 
 [CODE-Q1 exploratory first pass](experiments/2026-11-14-codeq1-exploratory-first-pass.json): Claude reports 12/12 transport stops and static-structure passes, median completion 34.9 s and first text 16.1 s during download contention. No behavioral grades, first-useful-text or clean-speed result; goal checks 2/3 stay incomplete. F02/E02 concerns are ungraded author reading; drafts remain on the laptop.
 
 Rev17 (`83a6f58`, source `631b1ec1`) reportedly corrects type ordering and labels retained note fallback `byte_only`; it is not loaded or independently reviewed here. The label does not prove fallback safety: establish the supported byte bound or omit notes on uncertainty. No published reason-code-only delta link is available to this session, and the older full patch is not applied.
 
-## Current focused candidate review
+## Historical focused candidate review
 
 At `b111a647` (reported local `d8d25e2`, teach rev16), the existing independent review is complete: **gateway 21 passed / 6 skipped; teach 104 passed / 5 skipped**. [Record](experiments/2026-11-14-gateway-revision16-independent-offline-review.json). The two urgent reproduced cases were relayed once: malformed assistant content raises `TypeError` before the string check; failed final counting retains notes with `uncounted=0`. Profile report trust, independent auth/teach loads, exact post-hook validation, heuristic margin, missing carrier-source evidence and UI disclosure remain unresolved. No restart clearance or duplicate review.
 
@@ -52,7 +60,7 @@ Claude round 28 selected **native token admission**, rather than another generic
 
 Claude completed the round-29 offline saved-usage comparison. The [sanitized artifact audit](context-preflight/saved-usage-parity-audit-2026-11-14.md) recomputes 24/24 matching count pairs (68–261), zero observed net delta, and nine length-ended records at 256. Gateway provenance remains untraced. In round 30 Claude corrected system size to 168 bytes and relabeled the ratio as message-text bytes per prompt token; the corrected artifact preserves all row counts. This is dataset-scoped count agreement, not universal parity or proof of separately added tokens. Codex contributes evidence publication/review. A gateway change remains a separate decision; Claude offered implementation and Codex can help review. PC-side work is developing the existing runner and supplying laptop observations; do not build a competing runner or reopen completed planner reviews.
 
-## Current activity and privacy
+## Earlier activity and privacy checkpoint
 
 Latest checked shared log: branch `2d5d5374bed4f79e4fa70187368845361bac952c`, co-chat blob `17a5bfb787db3f290b0441d6729b5d5a0218750c`. Window 7 is reported closed; coding-scope acceptance is relayed by Claude, while numerical targets and gateway-source publication remain pending. No new PC inspection or runtime traffic was performed by this session. Claude separately reports a later 1,717-input/256-output request, recorded outside the original window batch; its length-ended timing during the download is not a quality/speed result.
 

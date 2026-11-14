@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "handwritten_wire_fixture_integrity_check",
+  "fixture_path": "research/fixtures/teach-status-stream.sse",
+  "executor": "functions.exec JavaScript; trusted handwritten fixture only",
+  "assertions_passed": 9,
+  "assertions": [
+    "four delimited SSE data frames",
+    "one choice-free status event",
+    "status type fixed",
+    "fixed bounded description",
+    "completed visible status",
+    "assistant JSON content exact",
+    "terminal model stop retained",
+    "terminal DONE retained",
+    "no note text or private fields"
+  ],
+  "limits": [
+    "Not a LiteLLM/Open WebUI pipeline test",
+    "No adapter executed, emitter called, browser observed or runtime contacted",
+    "No model call, private notes, generated candidate execution or configuration change",
+    "Nonstream display not covered"
+  ],
+  "source_versions": {
+    "open_webui": "b0e6098e940942281d9c83f3529ea117287a3a22",
+    "litellm": "2a61f2114d45016bae77930903e65172cd8e762c"
+  }
+}

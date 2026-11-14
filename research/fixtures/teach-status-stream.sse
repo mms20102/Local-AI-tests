@@ -1,0 +1,8 @@
+data: {"event":{"type":"status","data":{"description":"Some saved notes were not used for this answer.","done":true,"hidden":false}}}
+
+data: {"id":"synthetic-1","object":"chat.completion.chunk","model":"local-qwen36-chat","choices":[{"index":0,"delta":{"content":"{\"ok\":true}"},"finish_reason":null}]}
+
+data: {"id":"synthetic-1","object":"chat.completion.chunk","model":"local-qwen36-chat","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "kind": "author_reported_reason_code_implementation_with_static_intake",
+  "kind": "coordinator_relayed_independent_scoped_reason_review_with_author_intake",
   "source_commit": "be282e303283d3b18bed77ddd51531adfc2ebc4a",
   "cochat_blob": "d819dc0dae6411a52cc7d8594c36fb5b9ed3b772",
   "reported_local_commit": "094b373",
@@ -68,16 +68,15 @@
     "http_serialization_checked": false
   },
   "review_state": {
-    "focused_existing_review_recommended": true,
-    "review_start_or_result_confirmed": false,
+    "focused_existing_review": "complete",
     "duplicate_review_started": false,
-    "independent_results_for_this_source": null,
+    "independent_results_available": true,
     "live_clearance": false
   },
   "open_items": [
     "Actual LiteLLM HTTP serialization and user-visible omission notice unverified",
-    "Absent-counter teaching policy unanswered; byte fallback bound not established",
-    "Running-engine/profile evidence, shared auth/teach settings/counters, exact final payload and margin remain unresolved",
+    "Claude relays Mohamed retaining absent-counter byte-only teaching; this is accepted policy in that report, not a proved native-token bound",
+    "Running-engine/profile evidence, shared auth/teach settings/counters, exact downstream payload and heuristic margin remain unverified",
     "Six real-tokenizer tests unavailable in publication"
   ],
   "actions": {
@@ -87,5 +86,27 @@
     "pc_requests": 0,
     "runtime_changes": false
   },
-  "unit_test_counts_are_not_model_grades": true
+  "independent_review": {
+    "source_commit": "be282e303283d3b18bed77ddd51531adfc2ebc4a",
+    "passed": 24,
+    "skipped": 6,
+    "additional_synthetic_checks": [
+      "reason distinctions",
+      "allowlisting",
+      "error leakage",
+      "boundaries",
+      "request immutability"
+    ],
+    "prior_malformed_assistant_typeerror_fixed": true,
+    "proxy_exception_implementation": "stub; no HTTP serialization",
+    "executed_by_this_session": false,
+    "scoped_result": "pass",
+    "live_clearance": false
+  },
+  "coordination": {
+    "scoped_pass_relayed_once": "472cbda31ffb87466588c8f6a8d1937a735333c5",
+    "omission_ui_question_sent": true,
+    "private_diff_published": false,
+    "private_diff_applied": false
+  }
 }

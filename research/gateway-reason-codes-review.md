@@ -1,23 +1,23 @@
 # Focused check: Claude's reason-code implementation
 
-2026-11-14. **Static intake complete; focused verification by the existing reviewer recommended, not yet confirmed.** No second review or code execution was started by this repository session.
+2026-11-14. **Existing independent scoped review complete: 24 passed / 6 real-tokenizer skips**, with additional synthetic checks. Results were relayed by the coordinator; this repository session did not execute tests or start another review.
 
-Source: [`be282e303283d3b18bed77ddd51531adfc2ebc4a`](https://github.com/mms20102/Local-AI-tests/tree/be282e303283d3b18bed77ddd51531adfc2ebc4a/research/gateway-admission), reported laptop commit `094b373`. [Intake record](experiments/2026-11-14-gateway-reason-implementation-intake.json).
+Source: [`be282e303283d3b18bed77ddd51531adfc2ebc4a`](https://github.com/mms20102/Local-AI-tests/tree/be282e303283d3b18bed77ddd51531adfc2ebc4a/research/gateway-admission), reported laptop commit `094b373`. [Evidence record](experiments/2026-11-14-gateway-reason-implementation-intake.json).
 
-## Published progress and its scope
+## Result and evidence levels
 
-Claude reports implementing the shared description independently, without the private diff, offline and **not loaded**. The published source contains the four fixed contract reasons and their fixed `ProxyException.type` mappings. Git blob comparison shows changes to the contract/auth/tests plus README/baseline diff; `token_count.py` is unchanged from the preceding checkpoint. This establishes a narrow intake scope, not a behavior or runtime pass.
+Claude independently implemented the shared description without the private diff. Static intake confirms four fixed contract reasons and their fixed proxy-type mappings; `token_count.py` is unchanged from the preceding checkpoint. The existing review additionally checked reason distinctions, allowlisting, error leakage, boundaries and request immutability. The prior malformed-assistant-content `TypeError` is fixed in the reviewed paths.
 
-Author-reported tests: nine counter cases, **30 admission passes on the laptop**, **24 passed / 6 skipped from the publication**, and project suite 239. The installed LiteLLM exception class was reportedly exercised on the laptop; **HTTP serialization was not**. This session did not rerun those tests. Keep these counts separate from the privately supplied candidate's different test suite.
+The independent checks used a **stub `ProxyException`**, not real HTTP serialization. Separately, Claude reports installed LiteLLM exception-class checks on the laptop, 30 admission passes there, 24 passed / 6 skipped from publication, and project suite 239. These author observations do not turn the stub checks into a real HTTP test. Keep them separate from the privately supplied candidate's different suite.
 
-## Focus for the existing independent reviewer
+## What the scoped pass establishes
 
-Use the exact published snapshot and check the error-classification delta, retaining previously identified integration limits rather than reopening the entire project:
+Missing, raising and invalid counters are distinguished from a successful positive count over the configured budget. Only allowlisted reasons propagate to fixed proxy types; unknown reasons retain generic policy behavior. Synthetic boundary/immutability and nonleakage checks passed. These results close the bounded reason-classification milestone.
 
-1. Missing, raising and invalid counters are distinguished from a successful positive count that exceeds the configured budget. Include bool/nonpositive/noninteger outputs; do not imply the counter's count or margin is thereby a proven native bound.
-2. Only allowlisted reasons propagate to fixed proxy types. Unknown reasons preserve generic policy behavior; exception details, request text, credentials and environment values do not leak into messages/metadata.
-3. Existing HTTP statuses, route/auth/profile/content guards, output reservation, token arithmetic and request immutability remain intact. Unsupported/malformed requests should fail before counter calls.
-4. Check the actual contract-to-auth propagation path with available offline fixtures, and distinguish stubs, installed exception-class checks and HTTP response serialization. If the real framework path is unavailable, report that limit explicitly.
-5. Run the available tests and preserve all six native-tokenizer skips unless the exact artifact is legitimately available. Record results for this source, not the parallel private candidate.
+The native tokenizer/profile, actual running-engine identity, heuristic margin, shared authentication/teaching settings, exact final downstream payload, omission UI and loaded revision remain unverified. The six real-tokenizer skips remain skips. There is no end-to-end or runtime clearance from this component result.
 
-No model/server/PC request, restart, real store, generated-code execution or private-diff publication/application is requested. The original private artifact remains untouched. The absent-counter teaching decision, byte/profile/margin proof, final enriched-payload evidence and omission UI remain open; no restart or integration clearance follows from this intake.
+## Next contribution
+
+The [bounded teach15–18 result](experiments/2026-11-14-teach15-18-independent-offline-review.json) is a separate milestone. Claude now relays Mohamed retaining absent-counter byte-only notes as a stated operating limitation; that report is not proof of a native-token bound or independent permission for this session to operate the PC.
+
+Continue with a request-correlated display contract and actual-profile/final-payload evidence. The private diff remains unpublished and unapplied. No model request, restart, real-store action, generated-code execution or source-code deployment was performed here.

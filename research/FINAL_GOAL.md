@@ -1,6 +1,6 @@
 # Shared finish line for the local AI workbench
 
-Status: **shared coding goal; primary numerical targets accepted according to Claude’s relay**, 2026-11-14. In [“Mohamed’s decisions; gateway source published”](https://github.com/mms20102/Local-AI-tests/blob/6c1298375d265680313424c36dcecf32a6c4c71f/research/co-chat.md), Claude quotes “Yes to all” for publication, at least 9/12 first-attempt coding passes, median first useful text ≤15 seconds, median task time ≤60 seconds, and one later restart to load rev14 after counter review. These are attributed reports, not independently verified authorization for this session to operate the PC. The counter reviews (6c129837 and the b111a647 successor) are complete with unresolved findings and **does not clear a restart/live work**. The targets are acceptance criteria, not achieved results.
+Status: **shared coding goal; primary numerical targets accepted according to Claude’s relay**, 2026-11-14. In [“Mohamed’s decisions; gateway source published”](https://github.com/mms20102/Local-AI-tests/blob/6c1298375d265680313424c36dcecf32a6c4c71f/research/co-chat.md), Claude quotes “Yes to all” for publication, at least 9/12 first-attempt coding passes, median first useful text ≤15 seconds, median task time ≤60 seconds, and one later restart to load rev14 after counter review. These are attributed reports, not independently verified authorization for this session to operate the PC. Later bounded reason-code and teach15–18 reviews passed; see the current checkpoint below. Full integration evidence remains incomplete, and this session does not infer runtime authority from a source review. The targets are acceptance criteria, not achieved results.
 
 ## One final goal
 
@@ -29,15 +29,23 @@ Claude’s [first CODE-Q1 pass](experiments/2026-11-14-codeq1-exploratory-first-
 
 The subsequent rev17 report (`83a6f58`, source `631b1ec1`) says type ordering is corrected and retained fallback notes are labeled `byte_only`; it remains unloaded/unreviewed here. The fallback still needs a supported bound or omission on uncertainty. Only the remaining reason-code delta should be coordinated; no older full patch is applied.
 
-## Published reason-code implementation: focused review pending
+## Current component reviews and reported operating decision
 
-Claude’s published reason-code implementation at `be282e303283d3b18bed77ddd51531adfc2ebc4a` (reported local `094b373`) is offline/not loaded. Static intake confirms the fixed reason/type allowlists and unchanged `token_count.py` blob. The author reports 30 admission passes on the laptop, 24 passed / 6 skipped from publication, and installed exception-class checks; **HTTP serialization remains unverified**. [Focused existing-reviewer scope](gateway-reason-codes-review.md) · [intake record](experiments/2026-11-14-gateway-reason-implementation-intake.json). No independent result for this source is confirmed yet, and no duplicate review or acknowledgment was started. The private diff remains unpublished/unapplied. Absent-counter teaching, profile/fallback/margin/final-payload evidence and user-visible omission remain open; no restart clearance.
+The existing independent reviews are complete: **reason codes at `be282e3`: 24 passed / 6 tokenizer skips**, plus synthetic checks; **teach15–18 at `8ef7d505`: 104 passed / 5 skips**, plus 45 synthetic matrix cases. No new blocking defect was reproduced in those bounded paths. [Reason review](gateway-reason-codes-review.md) · [teach record](experiments/2026-11-14-teach15-18-independent-offline-review.json). Tests were coordinator-relayed, not rerun here; proxy checks used a stub, not HTTP serialization.
 
-## Latest reported candidate: rev18
+Claude's [later plan/UI report](https://github.com/mms20102/Local-AI-tests/blob/8ef7d5057aef98bc1d5c59a938b5b36c7cf2e897/research/co-chat.md) relays Mohamed retaining absent-counter byte-only notes and accepting the heuristic 32-token margin and launcher-report limitation as stated limits before a separately authorized, coordinated restart after the bounded reviews. This is an attributed policy report, **not proof of a native-token bound, actual process identity, final-payload equivalence, loaded revision or runtime authority for this repository session**.
+
+The pinned UI is reported as Open WebUI 0.13.3 / LiteLLM 1.108.5, plain provider connection, Functions disabled and no response hook. Pinned-source research identified a **streaming provider-event candidate independent of Function enablement**, not a tested integration. [Display contract](teach-status-display-contract.md) · [exact downstream-payload evidence plan](context-preflight/final-payload-evidence-plan.md). Nonstream display and request-scoped transport remain open; manual log/status lookup is not automatic answer-linked disclosure. No PC/model traffic or deployment is made here.
+
+**Latest coordination notice:** [runtime window 8](https://github.com/mms20102/Local-AI-tests/blob/fe032023f4d6fdbefedb0c02e36341fa80fb5a42/research/co-chat.md) is reported **OPEN**: planned restart/cycle and synthetic checks, not results. This repository research sends no traffic to ports 8000/4001/8080 and makes no PC changes. Do not infer loaded revisions or outcomes before a matching closure.
+
+The earlier source/revision checkpoints below are historical; their pending-review or pending-policy wording is superseded by this section.
+
+## Historical rev18 intake — before the bounded pass
 
 Claude’s [rev18 report](https://github.com/mms20102/Local-AI-tests/blob/da0db284590c718fb74558fc464dff7048ed78ec/research/co-chat.md), local `9514353`, is offline/not loaded and not independently reviewed here. A configured counter that fails or returns an invalid count now withdraws notes, preserves the admitted base and reports `uncounted`; successful over-limit counts remain `no_room`. **No counter configured is a separate unresolved case:** byte-rule notes are still injected with `kept-byte-rule-only`, without a demonstrated bound. Claude plans to ask Mohamed about disabling teaching in that case; no answer is recorded. Profile trust, independent auth/teach loads, exact final-payload evidence, heuristic margin, unpublished report-carrier edits and user-facing omission remain open. Reported publication tests: 109 run / 5 skipped; these are not an independent integration pass.
 
-## Current candidate checkpoint
+## Historical candidate checkpoint
 
 Claude’s published offline `d8d25e2` / teach rev16 is **not loaded**. The focused independent [review](experiments/2026-11-14-gateway-revision16-independent-offline-review.json) at `b111a647` reports gateway 21 passed / 6 skipped and teach 104 passed / 5 skipped, with no restart clearance. Type-check ordering and failed-final-count status have reproduced defects; actual running-engine identity, coherent auth/teach counter evidence, exact final post-hook validation, margin and user-visible notice remain open. Two report-carrier files are unpublished. The current gateway/teach revisions and static-only CODE-Q1 plan are Claude-reported; no results are observed here.
 
@@ -57,6 +65,9 @@ The [normalized window-7 record](context-preflight/window7-observation-2026-11-1
 No check is promoted to complete from a log format, a single probe, source-only reasoning or a test count.
 
 ## Admission when the count is uncertain
+
+**Evidence target versus reported operating policy:** the formula below describes the stronger admission evidence we would like to establish. Claude now relays Mohamed retaining the no-counter byte fallback and accepting the 32-token allowance and launcher-report identity limit as declared operating limitations. Those choices do not satisfy the stronger bound/identity target by themselves, and are not silently revoked by this research. Count failures with a configured counter withdraw notes under the reviewed current behavior. Do not describe the retained fallback as token-verified or make a new runtime change from this document.
+
 
 For a supported, pinned profile, let `P` be the exact native-compatible count or a **proven conservative upper bound**, `R` the full desired output reservation, `U` a justified bounded uncertainty allowance, and `C` the effective context capacity. Admit only when `P + R + U ≤ C`.
 
@@ -89,7 +100,7 @@ If pursued, first establish artifact identity, footprint, resource admission and
 ## Choices to put to Mohamed when concrete
 
 - The primary coding/quality/speed choices are now recorded as accepted on Claude’s relay; do not repeat those questions merely because they were pending in earlier snapshots.
-- Claude relays conditional approval for one rev14 restart after counter review. The present review leaves actionable findings and no restart clearance; a concrete live step still needs the appropriate coordinated window and applicable authorization.
+- Claude's later plan report relays one restart after the bounded current review, retaining byte-only fallback and accepting the margin/profile-report limits. Those component reviews have passed. A concrete live step still follows the applicable user direction and coordinated window; current loaded identity and end-to-end evidence are not inferred here.
 - Whether a Windows optional-feature/reboot change or a separate model/time/disk budget is acceptable, if the prepared design needs it.
 
 Offline documentation/source review can continue now. There is no new live-system authorization in this proposal.
