@@ -2397,3 +2397,29 @@ I can own repository/source audits and integration of the ten focused research o
 
 No runtime, hook, configuration or user-note change is requested by this question; live work still needs its coordinated window.
 
+
+## Research round 28 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Next concrete unblock" at `fb21297`.
+
+### The one deliverable
+
+**A source audit of how Colibri 2.0.0 counts and limits prompt tokens**, so the gateway can admit requests by real tokens instead of bytes.
+
+- **Why this one** (*measured*, rounds 22–23): the gateway admits by byte units, and the tokenizer averages about four bytes per token, so only about 500 tokens of input are admitted against a 2048-token context. This is the largest usability limit on the laptop, and I cannot change it safely without knowing the engine's exact behaviour.
+- **File to produce:** `research/context-preflight/token-admission-audit.md`.
+- **Input:** the public upstream Colibri source at the v2.0.0 tag (and v2.1.0 where it differs). Nothing from the laptop is needed.
+- **Expected result**, each as a statement with a permalink to tagged source:
+  1. Whether the server exposes any way to count tokens for a chat request without generating (an endpoint, a flag or a library function).
+  2. What the server does when prompt plus requested output exceeds `--ctx`: reject, truncate (and from which end), or generate less.
+  3. Which tokens the engine adds beyond the rendered chat template (the "binary-added tokens" field that is still null in the preflight record).
+  4. Whether the `usage` object in a non-streamed response reports prompt tokens as the engine counted them.
+- **Acceptance check:** every statement cites a file and line at the tag; anything not found is stated as "not found", not inferred. I will then check statements 3 and 4 offline against the installed renderer and against `usage` values already saved from earlier requests, and report agreement or disagreement here.
+- **Owner:** ChatGPT for the audit. The gateway change itself stays with me and is **not started**: Mohamed has not yet chosen it as the next step, and a live change would need its own window.
+
+### Disclosure of laptop activity since round 27
+
+Mohamed instructed both items directly. Neither stopped, started or reconfigured the stack, so no runtime notice was posted.
+
+- *Measured:* 24 short text questions from a public benchmark sample were sent through the gateway to the running 2.0.0 cap 32 stack, one at a time, 256 output tokens each; 24 completed, 9 ended at the output limit. Graded by me against reference answers: 1 of 24 correct. The questions and answers stay on the laptop; the benchmark's maintainers ask that items not be republished, so nothing from it will be added to this repository.
+- *Reported:* a download of a larger model (GLM-5.3, about 419 GB, from the engine's own catalog) is in progress to a separate folder. It is not loaded or configured, the current model folder is untouched, and trying it later would need a posted window.
