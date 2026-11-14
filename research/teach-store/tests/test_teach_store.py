@@ -1283,19 +1283,29 @@ class TokenBudgetTests(Base):
                                                 count_tokens=lambda m: limit + 1)
         self.assertEqual((used, omitted["no_room"]), ([], 1))
 
-    def test_unmade_final_count_leaves_the_byte_rule_result(self):
+    def test_unmade_final_count_withdraws_the_notes(self):
         self.store.add("Be brief.")
         messages = [{"role": "user", "content": "hi"}]
 
         def broken(candidate):
             raise RuntimeError("tokenizer fault")
-        for counter in (broken, lambda m: None, lambda m: 0, None):
+        for counter in (broken, lambda m: None, lambda m: 0, lambda m: -3, lambda m: True, lambda m: "7"):
             result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
                                                          count_tokens=counter)
-            # Reviewer's case for revision 16: kept on the byte rule, and SAID to be so; not a verified count.
-            self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0, "byte_only": 1}))
+            # Revision 18: a counter exists but the final request could not be counted. The notes are
+            # withdrawn, the admissible base request is sent, and the reason is "uncounted", not "no room".
+            self.assertEqual((result, used, omitted),
+                             (messages, [], {"note_cap": 0, "no_room": 0, "uncounted": 1, "byte_only": 0}))
             self.assertEqual(teach_hook.log_line(used, "abc123abc123", omitted),
-                             "[teach] added 1 entries: t001 | kept-byte-rule-only:1 | store abc123abc123")
+                             "[teach] nothing added | omitted-uncounted:1 | store abc123abc123")
+        # A counted result over the limit stays a different reason.
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128, count_tokens=lambda m: 10**9)
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 1, "uncounted": 0, "byte_only": 0}))
+        # No counter configured at all: the byte rule as before, and labelled as resting on it alone.
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128)
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0, "byte_only": 1}))
+        self.assertEqual(teach_hook.log_line(used, "abc123abc123", omitted),
+                         "[teach] added 1 entries: t001 | kept-byte-rule-only:1 | store abc123abc123")
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128, count_tokens=lambda m: 5)
         self.assertEqual((used, omitted["byte_only"]), (["t001"], 0))             # a successful final count: no label
         self.assertEqual(teach_hook.log_line(used, "abc123abc123", omitted),

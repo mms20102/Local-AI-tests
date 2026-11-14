@@ -738,9 +738,9 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
 
     One more count describes the entries that WERE used:
       "byte_only": notes that were added on the strength of the byte rule alone, with no
-                  successful token count of the final request (there is no counter, or the
-                  final count failed). Zero means every added note is covered by a successful
-                  count of exactly the request that is sent.
+                  token counter configured at all. When a counter exists, a note is added
+                  only after a successful count of exactly the request that is sent; if that
+                  count cannot be made the notes are withdrawn ("uncounted"), so this is zero.
 
     The byte rule (apply_to_messages) is tried first and its result is kept whenever it places
     every relevant entry. Only when it leaves some out, and count_tokens(messages) -> prompt
@@ -783,9 +783,15 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
             # fit when counted. Send the request without notes.
             return list(messages), [], {"note_cap": over_cap, "no_room": len(wanted), "uncounted": 0,
                                         "byte_only": 0}
+        if verdict is None and count_tokens is not None:
+            # A counter exists but the count of the final request could not be made. Nothing
+            # verifies that the enriched request fits, so the notes are withdrawn and the base
+            # request, which the gateway already admitted, is sent. Reported as "uncounted".
+            return list(messages), [], {"note_cap": over_cap, "no_room": 0, "uncounted": len(wanted),
+                                        "byte_only": 0}
         if verdict is None:
-            # No counter, or the final count failed. The byte rule's placement is kept (bytes
-            # are an upper bound on tokens for this text) and is reported as exactly that.
+            # No counter at all: the whole gateway is on the byte rule, as before real counting
+            # existed. The placement is kept and reported as resting on the byte rule alone.
             kept_on_bytes = len(legacy_ids)
     if len(legacy_ids) >= len(wanted):
         return legacy, legacy_ids, left(legacy_ids, byte_only=kept_on_bytes)

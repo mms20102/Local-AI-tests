@@ -21,18 +21,19 @@ The laptop copy is the working one; this folder is for reading and review.
 | 14 | `8228816` | commit `fce4615` | Fixes for both: entries, fingerprint and the invalid count come from the same single read, with no second read; an entry whose text, keywords or date cannot be encoded as strict UTF-8 is skipped on its own and counted, its stored text untouched. Independent offline pass relayed in co-chat at `44c016f`: 100 passed, 5 skipped, no blocking regression in the two repairs. Not loaded. The omission is still reported in the gateway log only. |
 | 15 | `7dd479f` | commit `87351de` | A left-out note is reported as `omitted-no-room` only when the room was measured; when a token count could not be made (no counter, or it failed) it is reported as `omitted-uncounted`. **Not independently reviewed, and not loaded.** |
 | 16 | `d8d25e2` | commit `b111a64` | From the gateway review at `f32776b`: whenever a token counter exists, the complete request that will be sent after notes are added is counted, also on the short path; if it does not fit, the notes are withdrawn and the request is sent without them. The hook uses the same served-profile binding as the gateway. Preliminary independent result relayed in co-chat at `79dd21f`: 104 passed, 5 skipped; one defect: notes kept after a failed final count were not labelled. Not loaded. |
-| 17 | `83a6f58` | this commit | Notes added on the byte rule alone, with no successful token count of the final request (no counter, or the final count failed), are counted as `byte_only` and logged as `kept-byte-rule-only:N`. Zero means every added note is covered by a successful count of exactly the request sent. **Not independently reviewed, and not loaded.** |
+| 17 | `83a6f58` | commit `631b1ec` | Notes added on the byte rule alone, with no successful token count of the final request (no counter, or the final count failed), are counted as `byte_only` and logged as `kept-byte-rule-only:N`. Zero means every added note is covered by a successful count of exactly the request sent. **Not independently reviewed, and not loaded.** |
+| 18 | `9514353` | this commit | When a token counter is configured and the count of the final request cannot be made, the notes are withdrawn and the base request is sent, reported as `omitted-uncounted`. `kept-byte-rule-only` now appears only when no counter is configured at all, where the whole gateway is on the byte rule. **Not independently reviewed, and not loaded.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 17 files, byte-identical to the laptop's:
+Revision 18 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `797e0961bf33b1632a9ea99e748ecf93d4c8c123dc7bc4c67a8f66fb97a5b535` |
-| `teach_hook.py` | `13eca6777be17664ed5c0bedb3d1edef227faf32c8ee82c2167842cc5d5ea0ea` |
-| `tests/test_teach_store.py` | `99eef06bd24ad6b9bffc1de07f64fcf59adeec0b7897048f70b53c54d27dcb72` |
+| `teach_store.py` | `d960c9d0139f607ce133fd6e0f51a02d2ea9227f69d0e42f2f56543dde797218` |
+| `teach_hook.py` | `13eca6777be17664ed5c0bedb3d1edef227faf32c8ee82c2167842cc5d5ea0ea` (unchanged since revision 17) |
+| `tests/test_teach_store.py` | `621170e67356c00f302d318eb81bb76ef94465604aa08bc79a134c3cadd7cb0a` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
 | `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` (unchanged since revision 11) |
 
@@ -54,7 +55,8 @@ The token counter itself (`token_count.py`) belongs to the gateway and is publis
 | Revision 14 (commit `fce4615`) | Offline pass: 100 passed, 5 skipped. Still open per the reviewer: counter identity and margin, user-visible notice, loaded revision. |
 | Revision 15 (commit `87351de`) | **Not reviewed.** |
 | Revision 16 (commit `b111a64`) | Preliminary: 104 passed, 5 skipped; one defect found, addressed in revision 17. |
-| Revision 17 (this folder) | **Not reviewed.** |
+| Revision 17 (commit `631b1ec`) | Not reviewed as a whole; the reviewer's clarification at `d715ee7` asked for the change made in revision 18. |
+| Revision 18 (this folder) | **Not reviewed.** |
 
 These are results on the published source. None of them is a test of the running gateway.
 

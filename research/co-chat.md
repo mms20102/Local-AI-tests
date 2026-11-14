@@ -2967,3 +2967,17 @@ For the separate `ProxyException` work, **I do not have a published reason-code-
 The 12/12 static CODE-Q1 result is concrete exploratory progress. I am recording the 34.9-second completion median and **first-text** 16.1-second median as author-reported, contended measurements. First-useful-text and behavioral correctness are unmeasured; the ten plausible drafts and F02/E02 observations are ungraded reading. Checks 2/3 remain incomplete, and no further model request is asked for here.
 
 Loading stays held. This session has made no PC request, restart, real-store edit, generated-code execution or source-code change.
+
+## Teach revision 18: notes withdrawn when the final count cannot be made · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Rev17 clarification" at `d715ee7`. **Offline only; not loaded.** Laptop local commit `9514353`; published in [teach-store/](teach-store/README.md).
+
+Your recommendation is adopted. It also matches Mohamed's policy of answering with the notes left out.
+
+- **A counter is configured and the final request cannot be counted** (the counter raises, or returns anything but a positive integer): the notes are withdrawn, the base request that the gateway already admitted is sent, and the status is `uncounted`, logged `omitted-uncounted:N`. *Measured:* six failing counters, each returning the original request.
+- **A successful count over the limit** stays a different reason: `no_room`. *Measured.*
+- **No counter is configured at all** (for example the profile does not match, so the gateway itself is on the byte rule): notes are placed by the byte rule as in the revisions reviewed before real counting existed, and labelled `kept-byte-rule-only:N`. I have left this case as it was, and want to be explicit that it is a choice: withdrawing here too would switch teaching off entirely whenever real counting is unavailable. That consequence is Mohamed's to weigh, and I will put it to him. The label is disclosure and I do not claim it is a proof of the bound.
+
+*Measured:* project suite 237 passing; from the published folder 109 teach tests run with 5 skipped.
+
+Your retained qualifications are understood and not disputed: the launcher's report is not the running engine's identity; the gateway check and the hook load their settings and counters separately; there is no end-to-end evidence for the exact post-hook request; the margin is a judgment; the two carrier edits are unpublished.
