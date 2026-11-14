@@ -150,6 +150,65 @@ class WatcherTests(unittest.TestCase):
         self.state.update(heads={b: base for b in w.BRANCHES}, reported=[])
         self.assertEqual(self.check()[0], 1)
 
+    def test_overlapping_ranges_in_one_poll_do_not_repeat_a_turn(self):
+        self.commit("\n### A1 · ChatGPT answers\nfirst\n", "work")
+        run(self.author, "push", "-q", "origin", "work:main")       # main gets [A]
+        self.commit("\n### A2 · Claude answers\nsecond\n", "work")   # work gets [A, B]
+        count, out = self.check()
+        self.assertEqual(count, 2)
+        lines = [l for l in out.splitlines() if l.startswith("COCHAT")]
+        self.assertEqual(sum("A1 · ChatGPT answers" in l for l in lines), 1)
+        self.assertEqual(sum("A2 · Claude answers" in l for l in lines), 1)
+        self.assertEqual(len(self.inbox_lines("claude")), 1)        # only the ChatGPT turn
+        self.assertEqual(len(self.inbox_lines("chatgpt")), 1)       # only the Claude turn
+
+    def test_branch_created_later_is_reported(self):
+        w.BRANCHES = None
+        self.assertEqual(self.check()[0], 0)
+        run(self.author, "checkout", "-q", "-b", "codex/review", "work")
+        self.commit("\n### Review · ChatGPT\ntext\n", "codex/review")
+        count, out = self.check()
+        self.assertEqual(count, 1)
+        self.assertIn("origin/codex/review", out)
+        self.assertIn("new reply from ChatGPT", out)
+        self.assertEqual(self.check(), (0, ""))
+
+    def test_plain_merge_is_silent_and_merge_only_edit_is_reported(self):
+        self.commit("\n### A1 · ChatGPT answers\nfrom work\n", "work")
+        self.commit("main side\n", "main", path="research/OTHER.md")
+        self.assertEqual(self.check()[0], 2)
+        run(self.author, "checkout", "-q", "main")
+        run(self.author, "merge", "-q", "--no-ff", "-m", "merge work", "work")
+        run(self.author, "push", "-q", "origin", "main")
+        self.assertEqual(self.check(), (0, ""))                 # merge added nothing itself
+        run(self.author, "checkout", "-q", "work")
+        run(self.author, "merge", "-q", "--no-ff", "--no-commit", "main")
+        with (self.author / "research/co-chat.md").open("a", encoding="utf-8", newline="\n") as handle:
+            handle.write("\n### Decision · Mohamed\nwritten inside the merge\n")
+        run(self.author, "add", "-A")
+        run(self.author, "commit", "-q", "-m", "merge main with an edit")
+        run(self.author, "push", "-q", "origin", "work")
+        count, out = self.check()
+        self.assertEqual(count, 1)
+        self.assertIn("new reply from Moderator", out)
+        self.assertNotIn("A1 · ChatGPT answers", out)
+
+    def test_half_written_inbox_line_does_not_join_the_next_record(self):
+        self.inbox.mkdir(parents=True, exist_ok=True)
+        (self.inbox / "for-claude.jsonl").write_bytes(b'{"id": "trunc')
+        self.commit("\n### A1 · ChatGPT answers\ntext\n", "work")
+        self.assertEqual(self.check()[0], 1)
+        lines = (self.inbox / "for-claude.jsonl").read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(json.loads(lines[1])["speakers"], ["ChatGPT"])
+
+    def test_second_watcher_is_refused_until_the_lock_is_stale(self):
+        self.assertTrue(w.take_lock(self.inbox, 60))
+        self.assertFalse(w.take_lock(self.inbox, 60))
+        old = w.time.time() - 600
+        w.os.utime(self.inbox / "watcher.lock", (old, old))
+        self.assertTrue(w.take_lock(self.inbox, 60))
+
     def test_speaker_is_the_first_name_after_the_last_separator(self):
         self.assertEqual(w.speaker_of("Coordination request · ChatGPT to Claude — pending"), "ChatGPT")
         self.assertEqual(w.speaker_of("A6 · Claude answers Q6"), "Claude")
