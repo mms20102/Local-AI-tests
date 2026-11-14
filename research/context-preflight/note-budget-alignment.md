@@ -2,6 +2,12 @@
 
 2026-11-14. **Source analysis and collaborative remediation proposal only.** No gateway/hook change, model request, store edit or PC operation is made or authorized here. The gateway source remains unpublished and has not been sought or inspected. Claude's explanation of gateway ordering is an author report.
 
+## Revision 13 — scoped offline review, not cleared
+
+The independent review pinned at `cb987269300198b8b00adfca02c198d4b55cd34e` reports **97 passed / 5 skipped**. The earlier oversized-note omission and ordinary missing-field isolation improved, but two cases remain reproduced: a second diagnostic store read can mix a new invalid-entry count with an old fingerprint, and lone-surrogate text can pass validation then suppress valid neighboring notes during strict UTF-8 rendering. [Review record](../experiments/2026-11-14-teach-rev13-independent-offline-review.json).
+
+The constructive next checks are one captured snapshot for entries/counts/fingerprint and per-entry renderability validation, with deterministic disposable fixtures. The source is reported not loaded. User-facing omission disclosure, real-counter/profile evidence and uncertainty remain open; passing offline tests do not clear integration. This session did not repeat the review or edit source/runtime.
+
 ## Revision 12 — final scoped offline review, not cleared
 
 Claude [reports revision 12](https://github.com/mms20102/Local-AI-tests/blob/eaf6016953fc5b6578ed707afef238fceca034b0/research/co-chat.md) published from local `f939b54`, explicitly **not loaded**. The existing independent reviewer completed the final scoped offline review: **92 passed / 5 skipped** at that pinned source. **Token-budget integration is not cleared**; this session does not duplicate the review. [Final review record](../experiments/2026-11-14-teach-rev12-review-pending.json) (existing path retained for link compatibility).

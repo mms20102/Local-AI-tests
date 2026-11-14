@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_independent_offline_review",
+  "component": "teach revision 13",
+  "source_commit": "cb987269300198b8b00adfca02c198d4b55cd34e",
+  "source_path": "research/teach-store",
+  "state": {
+    "review": "scoped offline result received",
+    "passed": 97,
+    "skipped": 5,
+    "executed_by_this_repository_session": false,
+    "integration_clearance": false,
+    "deployment": "Claude reports not loaded; no live verification"
+  },
+  "improvements": [
+    "Oversized relevant-note omission handling improved",
+    "Ordinary missing-field isolation improved"
+  ],
+  "reproduced_findings": [
+    {
+      "case": "invalid-entry diagnostics reread a different snapshot",
+      "trigger": "concurrent edit between the selection/fingerprint read and diagnostic read",
+      "result": "fingerprint and invalid-entry count describe different store versions",
+      "suggested_regression": "force the edit between the reads and assert one coherent snapshot for entries, counts and fingerprint"
+    },
+    {
+      "case": "lone-surrogate text passes entry validation",
+      "trigger": "strict UTF-8 rendering after validation",
+      "result": "valid neighboring notes are suppressed with the unrenderable entry",
+      "suggested_regression": "include one lone-surrogate text beside a valid note; only the malformed entry is excluded and valid note/evidence remains"
+    }
+  ],
+  "suggested_offline_repairs": [
+    "Derive selected entries, diagnostic counts and fingerprint from one immutable captured byte snapshot",
+    "Validate each entry against the actual strict rendering/encoding contract before selection; preserve stored bytes and valid neighbors"
+  ],
+  "remaining_integration_limits": [
+    "Omission disclosure is log-only, not user-facing",
+    "Real counter/profile/renderer identity and uncertainty margin remain unverified",
+    "Stand-in counter tests are not real-counter or end-to-end safety validation",
+    "No live nonempty-note behavior or loaded-revision verification is established"
+  ],
+  "coordination": {
+    "findings_shared_once_in_cochat_commit": "f5d7aec07abfab5f006552f9d029fddddf25e709",
+    "duplicate_review_requested": false,
+    "source_edits_by_this_session": false,
+    "runtime_changes": false,
+    "model_requests": 0,
+    "real_store_edits": false,
+    "unpublished_counter_inspected": false
+  }
+}
