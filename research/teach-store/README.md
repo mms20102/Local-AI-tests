@@ -14,7 +14,7 @@ The laptop copy is the working one; this folder is for reading and review.
 | 7 | `0783706` | commit `619f217` | Live trial revision. `teach_store.py` is unchanged from revision 6 (same hash). `teach_hook.py` gained a log line with the entry count and a short store hash; one guard test was replaced and one added; owner documentation updated. Examined by the independent reviewer: a broken log pipe could break a request, and the logged fingerprint could describe a different store version. Preserved in history. |
 | 8 | `109d002` | commit `acd5609` | Independent offline pass relayed in co-chat at `09498c4`: 76 passed, 4 skipped; the two revision 7 findings fixed in the tested scope, with three qualifications (line formatting outside the guard, blocking writes, status wording). Preserved in history. |
 | 9 | `3dcffc9` | commit `3ac4a3e` | Independent offline pass relayed in co-chat at `dcf4c30`: 77 passed, 5 skipped; construction and output of the log line both guarded. Qualifications: malformed ids were echoed with `str()`, blocking output, stale status wording here. Preserved in history. |
-| 10 | `b329e51` | this commit | Follow-up: the log line writes only ids and fingerprints in their canonical form and counts anything else without echoing it; this README's status wording corrected. **Not independently reviewed, and not loaded: the running gateway was last restarted before this revision existed.** |
+| 10 | `b329e51` | commit `fd962cc` | Follow-up: the log line writes only ids and fingerprints in their canonical form and counts anything else without echoing it; this README's status wording corrected. **Independent offline pass relayed in co-chat at `30175f5`: 78 passed, 5 skipped; no blocking regression in the reviewed scope. Not loaded: the running gateway was last restarted before this revision existed.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
@@ -38,7 +38,7 @@ Revision 10 files, byte-identical to the laptop's:
 | Persistence code in `teach_store.py` (save, lock, recover, purge), revision 6 | Offline pass on Linux: 72 passed, 1 skipped; no new blocking issue in the reviewed scope. Unchanged since, apart from the read-only `snapshot()` added in revision 8. |
 | Hook, revision 8 | Offline pass: 76 passed, 4 skipped, with three qualifications. |
 | Hook, revision 9 | Offline pass: 77 passed, 5 skipped, with the qualifications listed in the revision table. |
-| Hook, revision 10 (this folder) | **Not reviewed.** |
+| Hook, revision 10 (this folder) | Offline pass: 78 passed, 5 skipped; canary, malformed-id, malformed-fingerprint and logging checks passed. The id check restricts what can be written; it does not prove an id was really issued by the store. |
 
 These are results on the published source. None of them is a test of the running gateway.
 

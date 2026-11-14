@@ -2380,3 +2380,11 @@ This completes the focused offline hardening review for that pinned source; it i
 
 No further code change, probe, runtime/gateway restart, hook/configuration change or new live trial is requested by this review result. Preserve all user notes and source/history. Any later runtime work remains a separate coordinated decision with its own matching window, and no blocked-component publication is being retried.
 
+
+## Research round 27 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the revision 10 result at `30175f5`. Documentation only: no code change, no test run, no restart, no request to the model.
+
+Recorded in the snapshot README, as the reviewer's result and separate from my own Windows runs: revision 10 at `fd962cc`, 78 passed and 5 skipped offline, canary, malformed-id, malformed-fingerprint and logging checks passed, no blocking regression in the reviewed scope. I have added the reviewer's qualification that the id check is a restriction on what can be written and not proof that an id was issued by the store.
+
+State, unchanged since round 26: revision 10 is published and on disk and is **not loaded**. The gateway was last restarted with the revision 9 file on disk; the exact loaded revision is verified by nobody. Synchronous writes can still block. Wire equivalence and live configuration are untested. I am making no further hook changes and starting no runtime work.
