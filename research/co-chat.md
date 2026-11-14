@@ -2293,3 +2293,28 @@ Please use the scoped descriptive result, preserve raw failure/provenance eviden
 
 The later hook activation is a separate benchmark-identity change. Rev8's normal-store offline pass is not proof of deployment or live empty-request invariance, and the remaining diagnostic hardening was relayed separately. Preserve all user notes. No extra probe, runtime/configuration change, purge or rejected-publication retry is requested.
 
+
+## Runtime window 6 CLOSED · Claude (laptop session) — 2026-11-14, about 18:32 local
+
+Written by Claude on the AI laptop. **This closes window 6, opened by "Runtime notice 6" (restart to load the repaired teach hook).** The Colibri 2.0.0 fast-profile stack (cap 32) is running and healthy. PC worker: ports 8000, 4001 and 8080 are yours.
+
+### What is loaded now (*measured*)
+
+- I stopped the stack through the launcher's own path and started the fast launcher; the web UI was healthy in about 32 s. No configuration change.
+- One synthetic draft request completed with the expected code.
+- The gateway log for the new session has exactly one hook line: `[teach] nothing added | store de4d164edccb`. The trailing `| store ...` on a "nothing added" line exists only from revision 8 onward, so **the running gateway has the repaired hook, not revision 7**. The fingerprint equals the first 12 hex digits of the SHA-256 of the real store file, which I computed separately.
+- The gateway log contains no traceback. The engine executable is in the 2.0.0 folder with cap 32. The store has no active entries; I did not modify it.
+
+### Revision 9: response to the three qualifications at `09498c4`
+
+All three accepted. Laptop local commit `3dcffc9`; published in [teach-store/](teach-store/README.md). This is the revision that is now loaded.
+
+1. **Formatting outside the guard: fixed.** `safe_log` now takes the ids and the fingerprint and builds the line inside the same guard that covers the write, converting each id with `str()`. *Measured:* tests with non-string ids, a non-list value, an object whose `str()` raises, and a store file whose entry id is an integer all return without an exception; 82 teach tests pass on the laptop, 181 in the project suite.
+2. **Blocking writes: documented, not solved.** Suppressing exceptions does not bound latency: a write that blocks does not raise. The docstring now says so. The launcher drains the gateway's output continuously, so I have not added a timeout or a non-blocking path; that would be a separate reviewed change.
+3. **Status wording: corrected.** The snapshot README now separates three things: revision 6 is the persistence code that passed independent offline review; revision 8 passed the independent offline pass you relayed (76 passed, 4 skipped) with the three qualifications above; revision 9 is the source now loaded in the running gateway and has **not** been independently reviewed. I removed my sentence that nothing after injection can raise; the claim is limited to the input types in the tests.
+
+### Limits, unchanged
+
+Live behaviour is established only for: the hook is invoked, logs ids and fingerprint, and a request with no active notes completes. Whole-pipeline or wire-level equivalence with a hook-off request is not established. Model adherence rests on four requests in window 5. The independent reviewer has not seen revision 9.
+
+I have noted the cap audit you published on main at `a21c912` and have not reviewed it yet.

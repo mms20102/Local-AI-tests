@@ -67,10 +67,16 @@ def log_line(used: list[str], fingerprint: str) -> str:
     return f"[teach] nothing added | store {fingerprint}"
 
 
-def safe_log(line: str) -> None:
-    """Diagnostics must never break a chat: a closed or broken log pipe is ignored."""
+def safe_log(used, fingerprint) -> None:
+    """Diagnostics must never break a chat.
+
+    Building the line and writing it are both inside the guard, so neither odd values (an id that
+    is not a string) nor a closed or broken log pipe can raise into the request. Limit: a write
+    that BLOCKS does not raise, so this does not bound how long logging can take; the gateway's
+    log pipe is drained continuously by the launcher, and nothing here adds a timeout.
+    """
     try:
-        print(line, flush=True)
+        print(log_line([str(item) for item in used], str(fingerprint)), flush=True)
     except Exception:
         pass
 
@@ -91,7 +97,7 @@ class TeachHook(CustomLogger):
         if call_type not in ("completion", "acompletion"):
             return data
         changed, used, fingerprint = inject_with_evidence(data, self.limits)
-        safe_log(log_line(used, fingerprint))
+        safe_log(used, fingerprint)
         return changed
 
 

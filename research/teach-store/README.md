@@ -12,24 +12,33 @@ The laptop copy is the working one; this folder is for reading and review.
 | 5 | `f663f66` | commit `b2022b0` | Examined: prior race fixed, no new blocking persistence defect in the requested paths; a focused test and wording follow-up was requested. Preserved in history. |
 | 6 | `1358a1a` | commit `015a2ec` | That follow-up: tests and wording only. `teach_store.py` differs from revision 5 in docstrings only. **Independent offline pass completed** (see below). |
 | 7 | `0783706` | commit `619f217` | Live trial revision. `teach_store.py` is unchanged from revision 6 (same hash). `teach_hook.py` gained a log line with the entry count and a short store hash; one guard test was replaced and one added; owner documentation updated. Examined by the independent reviewer: a broken log pipe could break a request, and the logged fingerprint could describe a different store version. Preserved in history. |
-| 8 | `109d002` | this commit | Repair for the revision 7 findings: logging can no longer break a request; ids and fingerprint come from one read of the store. `teach_store.py` gains only a read-only `snapshot()`; its persistence code is unchanged from revision 6. **Not yet reviewed, and not yet running: the live gateway still has revision 7 loaded until its next restart.** |
+| 8 | `109d002` | commit `acd5609` | Independent offline pass relayed in co-chat at `09498c4`: 76 passed, 4 skipped; the two revision 7 findings fixed in the tested scope, with three qualifications (line formatting outside the guard, blocking writes, status wording). Preserved in history. |
+| 9 | `3dcffc9` | this commit | Follow-up to those qualifications: the log line is built inside the guard; the blocking-write limit is documented. **This is the source loaded in the running gateway since the restart of 2026-11-14 about 18:30 local. Not independently reviewed.** |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 8 files, byte-identical to the laptop's:
+Revision 9 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `2b33ebd52e508430f3ac3d449b61638cf7dc20070ae05e2f3d9df7acb17b0f60` |
-| `teach_hook.py` | `efbf05262a0f9c6e42a026645413fd748cf492cc718040b49c101bcbf8850f13` |
-| `tests/test_teach_store.py` | `00a34cbab8df35833b66defcb831b16149d546ac8484e3d28710776e226bb1d3` |
+| `teach_store.py` | `2b33ebd52e508430f3ac3d449b61638cf7dc20070ae05e2f3d9df7acb17b0f60` (unchanged since revision 8) |
+| `teach_hook.py` | `4b0660e7fd362bc81955e43df31c59ac04de392ce5104499e4835b52c96ea0f7` |
+| `tests/test_teach_store.py` | `840a44643bd0647df7107342c46ec80bdac13ffb0bcaf2be84f49dde598bbffe` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
-| `TEACH.md` | `cd1f02e12ed6610e230ac2f8ebfab385b735650915337a7099937518a0c28e1d` |
+| `TEACH.md` | `c8fdd8d7c695f1ee5e9e9c4c754cac76aecb75315cff1372673aba7d45f059ad` |
 
-**Status:** the gateway hook is **enabled on the laptop** since the live trial of 2026-11-14
-(co-chat, "Runtime window 5 CLOSED"), on Mohamed's instruction. The store is empty: the trial's two
-synthetic notes were purged. Nothing here contains keys, chats or personal data.
+## Status: three different things
+
+| What | State |
+|---|---|
+| Persistence code (`teach_store.py` save, lock, recover, purge) | Passed independent offline review at revision 6. Unchanged since, apart from the read-only `snapshot()` added in revision 8. |
+| Hook source, revision 8 | Passed an independent offline pass (76 passed, 4 skipped) with three qualifications. |
+| Hook source, revision 9 | Claude's follow-up to those qualifications. Not independently reviewed. |
+| What is running on the laptop | The gateway was restarted on 2026-11-14 at about 18:30 local and, by its log line format and fingerprint, has revision 9 loaded with the callback enabled. This is Claude's observation; nobody else has verified the live state. |
+| The store | No active entries at that time. The two synthetic notes from the live trial were purged. |
+
+Nothing here contains keys, chats or personal data.
 
 ## The log line and its fingerprint (revision 8)
 
@@ -38,8 +47,10 @@ For each chat request the hook writes one line to the gateway log:
 The fingerprint is the first 12 hex digits of the SHA-256 of the `store.json` bytes that the
 injected entries were parsed from, taken in the same single read. Other values: `none` (no store
 file), `unknown` (the store could not be read; the request was left unchanged), `not-read` (the
-request was not an eligible plain-text chat). The line never contains note text, and a failure to
-write it is ignored so that logging cannot break a chat.
+request was not an eligible plain-text chat). The line never contains note text. Building the
+line and writing it are both inside one guard, so an odd id or a closed or broken log pipe cannot
+raise into the request; this is tested for the input types in the test file, not proven for
+every possible value. A write that blocks does not raise, so logging latency is not bounded.
 
 ## Independent offline result for revision 6
 
@@ -61,9 +72,9 @@ combined total. It is not activation approval.
 python -B -m unittest tests.test_teach_store
 ```
 
-80 tests, 4 skipped when run from this folder (the check that the laptop's gateway configuration
+82 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 80 pass, and the project suite is 179. Three tests start a second Python
+the real gateway rules: 82 pass, and the project suite is 181. Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5
