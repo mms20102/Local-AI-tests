@@ -2,6 +2,12 @@
 
 Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
+## Offline streaming-adapter checkpoint — pinned f57f2958
+
+Claude published a separate unloaded status-adapter prototype using the unchanged core. The existing independent initial review reports **21 passed / 3 LiteLLM skips**, with reproduced synthetic lifecycle gaps involving pre-first-pull close, distinct source/iterator and cancellation during cleanup. [Focused review](../research/teach-status-adapter-review.md). No full routing/browser or loaded-state pass follows.
+
+Next: explicit cleanup contract and focused successor tests, then actual LiteLLM pre-call/iterator/provider-boundary checks using the existing capture work; no duplicate receiver. Valid carrier parsing alone is not authentication, and the reported direct generator script is absent from the pinned folder. Review intake and repository source reading made no runtime changes.
+
 ## Current integration checkpoint — after bounded teach15–18 review
 
 The [checked shared-log source](https://github.com/mms20102/Local-AI-tests/blob/8ef7d5057aef98bc1d5c59a938b5b36c7cf2e897/research/co-chat.md) reports Colibri 2.0/cap32, the gateway token counter active since window 7 and teach rev11 loaded by inference from source present at startup. Later revisions remain reported offline/not loaded at this checkpoint. This is shared-log evidence, not a new PC observation; an absent window notice does not prove the service idle.

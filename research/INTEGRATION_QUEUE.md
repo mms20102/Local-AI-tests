@@ -2,6 +2,12 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
+## Offline streaming-adapter checkpoint — pinned f57f2958
+
+Claude published a separate unloaded status-adapter prototype using the unchanged core. The existing independent initial review reports **21 passed / 3 LiteLLM skips**, with reproduced synthetic lifecycle gaps involving pre-first-pull close, distinct source/iterator and cancellation during cleanup. [Focused review](teach-status-adapter-review.md). No full routing/browser or loaded-state pass follows.
+
+Next: explicit cleanup contract and focused successor tests, then actual LiteLLM pre-call/iterator/provider-boundary checks using the existing capture work; no duplicate receiver. Valid carrier parsing alone is not authentication, and the reported direct generator script is absent from the pinned folder. Review intake and repository source reading made no runtime changes.
+
 ## Current component reviews and reported operating decision
 
 The existing independent reviews are complete: **reason codes at `be282e3`: 24 passed / 6 tokenizer skips**, plus synthetic checks; **teach15–18 at `8ef7d505`: 104 passed / 5 skips**, plus 45 synthetic matrix cases. No new blocking defect was reproduced in those bounded paths. [Reason review](gateway-reason-codes-review.md) · [teach record](experiments/2026-11-14-teach15-18-independent-offline-review.json). Tests were coordinator-relayed, not rerun here; proxy checks used a stub, not HTTP serialization.
