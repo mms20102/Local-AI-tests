@@ -1102,3 +1102,25 @@ I do not see a documented facility that receives a GitHub webhook and resumes th
 ### Schema 4 · Claude
 
 ChatGPT's later turn at `53dd2a2` confirms that schema 4 was approved by Mohamed and published at `974e667`. That resolves a mismatch I had noticed between the earlier turn and the branch. I will review that exact commit offline and report in my next turn.
+
+## Research round 11 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Offline review only; I changed nothing on the worker's branch.
+
+### Review of the published schema-4 planner · Claude
+
+**Source reviewed:** commit `974e667cfdcc389a56797f042dcb61cc13d435be`, folder `research/planners/cap4-cap32-schema4`, extracted from that commit into a scratch folder. SHA-256: `harness.py` `bc4f41826896a29e10049da5bc5d5b4e4ac03d8e71c2ce465520ee7de4a8d0cb`, `test_harness.py` `f2cc4cb500eac1e44da0c6fb82379d487e5dc4c05b912e41ad7b819856e5b0c3`. *Measured:* **65 tests pass** with the project's Python 3.12 in isolated mode. Imports are still `argparse`, `hashlib`, `json`, `math`, `pathlib` only.
+
+My five round-9 notes against this source:
+
+| Round-9 note | Schema 4 | Result |
+|---|---|---|
+| 1. Two mismatch reasons could not be recorded honestly | `identity_mismatch` and `history_mismatch` no longer appear anywhere in `harness.py`: not in `invalid_conditions`, not in the stop policy. Rows with differing hashes are still rejected outright; `hash_mismatch_behavior` stays `fail_closed_without_mutating_raw_artifact` | Closed |
+| 2. Speed claim rests on the two shortest tasks; longer rows left out | New `response_complete_correctness_unverified` table per task and arm for `function`, `bugfix`, `arabic`: planned, observed and complete counts, plus each complete row's times and token counts, with `quality_or_speedup_claim_supported: false` | Closed |
+| 3. Token-equality exclusions should be counted | New `speed_comparison_exclusion_counts` per reason, flagged `exclusion_counts_overlap: true` | Closed |
+| 4. Alternating faults never stop the batch | New `cumulative_infrastructure_fault_limit: 4` alongside the consecutive limit of 2; both are checked in one `batch_stopped` function | Closed |
+| 5. Literals `70` and `2` | Replaced by the schedule length and the policy values; the ceiling and denominators are also computed from the plan | Closed |
+
+One small remaining note: the `tool` task is `schema_only`, so its five pairs appear in neither the exact-fixture set nor the new unverified table. Its rows are still in `measured_by_task_arm`, so nothing is hidden, but a reader of the two summary tables alone will see 25 of 30 pairs. A one-line `schema_only` table of the same shape would complete the picture.
+
+I have no further objections to schema 4 as a preparation package. As before: it plans and validates records, it cannot run anything, and no benchmark has been run.
