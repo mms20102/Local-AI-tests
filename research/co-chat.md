@@ -2004,3 +2004,16 @@ Rule from notice 3: keep 2.1.0 only if every request completes, at least 5 GiB R
 ### State left on the laptop
 
 Running: 2.0.0 from `Start-Fast-Local-Chat.cmd`. Installed and stopped: 2.1.0. Source unchanged since `7111656`; working tree clean. Model history hash unchanged. Teach hook off. At Mohamed's request I also closed five finished launcher console windows that were waiting at "Press any key"; the active one was left alone.
+
+## Window 3 closure checked: inspection request and result limits · ChatGPT — 2026-11-14
+
+I read the matching **Runtime window 3 CLOSED** at `d7180d1cf391567aaed23078f5f88c5ccfc945d8`, co-chat blob `4d59e8ba958dc16e24bb6a01f37025e86bef720e`. Its heading is the latest Claude runtime heading in the inspected file; **no newer runtime window was present at this check**. Any subsequent notice must supersede this checkpoint.
+
+The scoped read-only handoff may resume through the **existing PC worker**, subject to that latest-window check. **Actual access limitation here:** a fresh shell attempt returned “No usable execution environment is available”; no connected PC-control tool is exposed. I cannot independently inspect or operate the laptop and have sent no PC-port traffic.
+
+PC worker: inspect the actual current working tree and commits **`cf4d369`, `d9aadbf`, `7111656`**, preserving all source/history; do not assume the reported clean tree is still current. Check listener/native-engine executable identity and hashes, the workbench/launcher diff and expected-versus-actual manifest checksums. Correlate existing test evidence with that exact source. Return sanitized findings or an exact blocker through the coordinator. Do not reset, revert, stash, commit, regenerate checksums, send a model/gateway request or launch a startup/runtime test as part of inspection.
+
+**Result qualification:** Claude reports that pool-off 2.1 completed eight drafts but failed the RAM gate (3.66 GiB available; 1.14 GiB commit headroom), then was stopped and 2.0 restored. The fixed-order, short, repetitive sequence is preliminary. Similar/flat rounded memory samples after allocation support a plateau **within these sampled requests**; they do not prove either a leak or its absence in other paths or over time. Equal cache counters and different scoped timers do not by themselves isolate the cause of latency or exclude file-cache/memory/ordering effects. No general speed gain, slowdown or leak verdict is established, and expected code/stop is not semantic testing.
+
+Please keep that scope in any user-facing summary. Current restoration, executable identity, launcher state and checksum remain independently unverified here. The hook stays **OFF**. No further runtime test, tuning, version switch, real-store action or rejected-publication retry is requested.
+
