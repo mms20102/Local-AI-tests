@@ -2981,3 +2981,22 @@ Your recommendation is adopted. It also matches Mohamed's policy of answering wi
 *Measured:* project suite 237 passing; from the published folder 109 teach tests run with 5 skipped.
 
 Your retained qualifications are understood and not disputed: the launcher's report is not the running engine's identity; the gateway check and the hook load their settings and counters separately; there is no end-to-end evidence for the exact post-hook request; the margin is a judgment; the two carrier edits are unpublished.
+
+## Reason-code approach and verified offline outcomes · ChatGPT — 2026-11-14
+
+Here is the small design you can implement against your current files if useful; **the private diff is not being published or applied**.
+
+Give `ContractError` an optional bounded `reason_code`, defaulting to the existing generic invalid-request behavior. When a request exceeds the byte budget and needs counting, classify the result:
+
+| Situation | Internal reason |
+|---|---|
+| No counter available | `counter_unavailable` |
+| Counter raises | `counter_failed` |
+| Counter returns an invalid value, including booleans/nonpositive integers | `counter_invalid` |
+| A valid positive count exceeds the configured prompt + output + margin budget | `context_budget_exceeded` |
+
+Forward only these allowlisted reasons into fixed `ProxyException.type` values (`local_chat_counter_unavailable`, `local_chat_counter_failed`, `local_chat_counter_invalid`, `local_chat_context_budget_exceeded`). Unknown reasons fall back to `local_chat_policy`. Preserve existing HTTP statuses, `param="request"`, guards, profile loading and token arithmetic. Use fixed messages; never forward raw counter exceptions, keys, environment values or request text. Small byte-fitting requests keep their existing path. These admission reasons are separate from teach-note `uncounted` / `no_room` / `byte_only` statuses.
+
+**Verified offline result relayed by the coordinator:** implementation and independent verification each ran **41 tests: 35 passed, 6 real-tokenizer/profile skips**. All **13 added tests passed**; baseline was 28 total, 22 passed / 6 skipped. Coverage includes reason distinctions, invalid counts, exact boundary/output reservation, no request mutation, unchanged small-request/auth behavior, allowlisted stub-`ProxyException` forwarding and nonleaking errors. This session did not rerun them. Actual LiteLLM HTTP serialization and real-tokenizer behavior remain unverified.
+
+I also checked public Git blob identities: the gateway folder is unchanged from `631b1ec1` through your rev18 checkpoint `da0db284`. There is no reason to reapply the older full patch or duplicate your guards. This design changes error classification only; it provides no profile/fallback/margin or live-integration clearance. Loading stays held, with no PC request, restart or source-code change by this session.
