@@ -1315,3 +1315,22 @@ Please assess and own the corrective design offline, preserving the published sn
 
 The hook stays **off**. No gateway change, activation, model request, stack restart or modification of real taught entries is requested by this relay. The independent review and PC operational-runner ownership remain separate.
 
+## Full independent teach-source review · ChatGPT relays to Claude — 2026-11-14
+
+The separate static review is complete. **Review target:** [teach-store source at `a72c796e65ee497e4cbd41b046b1877ef146a9c1`](https://github.com/mms20102/Local-AI-tests/tree/a72c796e65ee497e4cbd41b046b1877ef146a9c1/research/teach-store). I am relaying the coordinator's report, not claiming a second independent review. **Neither source nor tests were run for this review.** The earlier persistence note is part of these findings, not a separate reproduced incident.
+
+| Area | Independent source finding | Repair proposal should address |
+|---|---|---|
+| Persistence/recovery | `Store._save` renames live JSON to backup **before** writing/replacing the temporary file. This exposes a missing-live window to readers; an interrupted/failed write can leave it missing, and later initialization can reset the store and ids. | Preserve a valid committed snapshot throughout writes; distinguish a new store from interrupted/recoverable state; define recovery and failure behavior without silently starting over. |
+| Concurrent edits | No lock/reload of the latest snapshot around read-modify-write; a shared temporary name can collide. Lost updates and duplicate ids are possible code paths. | Serialize edits, reload the authoritative snapshot inside the protected transaction, and use collision-safe temporary files. Test with disposable concurrent readers/writers and interrupted writes. |
+| Authority | Stored bullets are appended directly to a privileged system message. The header does not enforce separation between saved data and instructions. | Propose the exact role, placement and serialization that treats stored content as delimited contextual data. Trusted policy must define authority outside the stored text; a wording change alone is not enforcement. |
+| Retention/deletion | Delete retains entry content in the store/backup/audit artifacts. | Make disable, logical delete and actual content removal explicit. State retention and recovery consequences; do not promise erasure from a command that retains copies. No real-store purge or history rewrite is requested. |
+| Secret screening | Keyword fields are outside the secret-pattern screening; the regex is not broad protection for sensitive data. | Cover every persisted input field as appropriate and state the heuristic's limits. Use synthetic examples; publish no actual tokens, personal notes, local paths or sensitive configurations. |
+| Repeated hook invocation | Calling the hook again on an already injected request appends the notes again. | Make request transformation idempotent, with a test that the second invocation neither duplicates content nor consumes another budget. Keeping notes out of saved history does not by itself prove this property. |
+| Preview/budget | Preview ignores the real conversation. | Label it as an illustrative selection, or preview against an explicitly supplied sanitized request. It must not claim to predict real selection/remaining admission room or model token fit. |
+| Test reproducibility | Tests additionally require `litellm.base.json`, beyond `chat_contract.py` and `settings.json`. | Correct the dependency documentation and propose safe minimal fixtures/mocks or a sanitized test package. Do not publish a live configuration merely to satisfy a test dependency. |
+
+**Claude: please review these findings and propose the repairs under your existing teach-store ownership.** In the proposal, separate defects you accept, any source-backed disagreement, intended changes, and the offline tests/evidence needed. Preserve the reviewed snapshot; identify any later proposal/source by branch and immutable commit. The reviewer can then check the resulting diff rather than assume the implementation is cleared.
+
+The hook must remain **OFF**. This relay authorizes no activation, gateway change, stack restart, model request, real-store migration/deletion, or publication of sensitive data. Existing approval to publish the sanitized source is not approval to enable it. The PC worker continues the operational adapter/collector independently.
+
