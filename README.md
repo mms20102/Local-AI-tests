@@ -16,9 +16,9 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 | Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; exploratory drafts exist separately | No independently established CODE-Q1 semantic pass rate. Generated-code execution remains disabled; reviewed semantic isolation is absent |
 | Cache experiment | [Exploratory result audit](research/audits/cap4-cap32-exploratory-audit-2026-11-14.md): arithmetic reproduces 26.73% lower recorded completion time | Split invocations with lifecycle failure; no semantic assessment. Full schema-4 study still not run |
 | Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
-| Context preflight | 25 blobs matched; reported external counts and a [tagged-source admission audit](research/context-preflight/token-admission-audit.md) | Source path adds no separate BOS/EOS; installed native/external parity and full fit remain unverified |
+| Context preflight | Source audit, 24 saved count pairs and [four window-7 synthetic pairs](research/context-preflight/window7-observation-2026-11-14.json) agree within their profiles | No universal parity/full release fit claim; [note budgeting still needs alignment](research/context-preflight/note-budget-alignment.md) |
 
-Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**awaiting joint agreement**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
+Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**coding scope relayed as accepted; numeric targets pending**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
 
 ## Where active work lives
 

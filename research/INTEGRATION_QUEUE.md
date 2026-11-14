@@ -4,9 +4,11 @@ This page turns the coordinator's focused research handoffs into shared next ste
 
 ## Shared finish line
 
-[FINAL_GOAL.md](FINAL_GOAL.md) is the joint draft prompted by Mohamed and Claude's six-check proposal; Codex's measurable amendments await Claude's response. Routine local coding usefulness is the release goal. Larger/overnight models are a stretch. The [Windows isolation proposal](WINDOWS_ISOLATION_PROPOSAL.md) is a design for review, not a tested sandbox. Captured runner `1f067428` is not ready for live use; no delivery date or current-PC claim is inferred.
+[FINAL_GOAL.md](FINAL_GOAL.md) records the shared bounded-check direction. Claude relayed Mohamed's coding-scope acceptance; numeric targets and gateway publication are still undecided. The new [context/teaching alignment analysis](context-preflight/note-budget-alignment.md) is the immediate offline contribution. Routine Arabic/English coding usefulness remains the first-release goal on that attributed scope report. Larger/overnight models are a stretch. The [Windows isolation proposal](WINDOWS_ISOLATION_PROPOSAL.md) is a design for review, not a tested sandbox. Captured runner `1f067428` is not ready for live use; no delivery date or current-PC claim is inferred.
 
 ## Immediate handoff
+
+**Window-7 follow-up:** the closure reports four admitted count matches and one refusal. [Arithmetic record](context-preflight/window7-observation-2026-11-14.json). Published teach source still budgets bytes, so long token-admitted conversations can omit saved notes; an empty-store probe cannot validate note behavior. Use the [shared-budget contract](context-preflight/note-budget-alignment.md) for design discussion before any separately authorized change. Exact loaded rev11 is inferred, not independently verified.
 
 Claude round 28 selected **native token admission**, rather than another generic research choice. [The tagged-source audit](context-preflight/token-admission-audit.md) is now integrated: Qwen36 clamps the answer ceiling to remaining context; the audited text path adds no separate BOS/EOS; external/native tokenizer parity remains unproved. The audit distinguishes no dedicated HTTP route from actual native C/test interfaces and the v2.1 `TOK_ONLY` diagnostic.
 
@@ -14,11 +16,13 @@ Claude completed the round-29 offline saved-usage comparison. The [sanitized art
 
 ## Current activity and privacy
 
-Latest inspected collaboration checkpoint: **round 30, goal proposal and offline progress**, on branch commit `829d3228438034b3126a2eac419517d1760db239`, co-chat blob `27717d07dfc327f68f6cb882a94e4be736511569`. It reports gateway `28753be` unpublished/not loaded pending publication approval and teach rev11 published/not loaded with independent review now relayed: 80 passed / 5 skipped offline at the same pinned source, not live deployment. No new request or runtime change is reported. Earlier task-control wording was withdrawn; all prior turns remain intact.
+Latest checked shared log: branch `60ced7b0fbaa7fe0b133829792e7e3bc87fe12e4`, co-chat blob `dd72d2362e6d0e00145d72967b0ac27db70b90a2`. Window 7 is reported closed; coding-scope acceptance is relayed by Claude, while numerical targets and gateway-source publication remain pending. No new PC inspection or runtime traffic was performed by this session.
+
+Previous inspected collaboration checkpoint: **round 30, goal proposal and offline progress**, on branch commit `829d3228438034b3126a2eac419517d1760db239`, co-chat blob `27717d07dfc327f68f6cb882a94e4be736511569`. It reports gateway `28753be` unpublished/not loaded pending publication approval and teach rev11 published/not loaded with independent review now relayed: 80 passed / 5 skipped offline at the same pinned source, not live deployment. No new request or runtime change is reported. Earlier task-control wording was withdrawn; all prior turns remain intact.
 
 Runtime windows 1–6 were subsequently reported closed; the old window-4 hold is historical. This does **not** establish that the PC is idle. Round 28 reports a user-directed 24-question trial and an approximately 419 GB GLM-5.3 download underway, not loaded or adopted. Reported trial aggregates: 24 responses, nine length-ended, author grading 1/24. These are not independently verified scores, a CODE-Q1 semantic result or a diagnosed cause. Questions/answers stay local and restricted; do not retrieve or publish them. Recheck newer reservations and actual activity before any live work.
 
-Callback enabled was reported after window 6; rev10 is offline/published and was explicitly not loaded through round 27. Exact currently loaded revision, middleware/wire equivalence and current user notes are independently unverified. Do not infer an empty store or edit/purge it.
+Callback enabled was reported after windows 6–7. Claude reports rev11 on disk at window-7 startup; the loaded identity remains inferred. Earlier rev10-not-loaded statements describe rounds 26–27. Exact currently loaded revision, middleware/wire equivalence and current user notes are independently unverified. Do not infer an empty store or edit/purge it.
 
 ## Shared next steps
 
