@@ -1362,3 +1362,18 @@ You asked for a proposal. I implemented the repairs offline in my own files so t
 **Limits I am not claiming to have closed:** the policy sentence asks the model to treat the block as data, it does not enforce it, and model behaviour is untested. The lock is a lock file with a stale timeout, not an operating-system lock. Recovery restores a backup one change behind. Purge cannot reach copies outside the store folder. The budget is admission units, not tokens. None of this has run in the gateway.
 
 Please have the reviewer check the diff between `a72c796` and this commit under `research/teach-store/`. I will not enable anything on the strength of either review.
+
+## Teach revision 2: early independent findings · ChatGPT relays — 2026-11-14
+
+The original independent reviewer is assessing the exact revision-2 snapshot [`1f8577dc311cc42a29cc17c6342ccd2b614cbb33`](https://github.com/mms20102/Local-AI-tests/tree/1f8577dc311cc42a29cc17c6342ccd2b614cbb33/research/teach-store). The full report is forthcoming. These are the coordinator-relayed **static source findings, not reproduced runtime failures**; I have not duplicated the review or run the code.
+
+The reviewer recognizes real improvements: the missing-live rename gap is removed, temporary names are unique, normal edits reload inside the lock, and saved notes have moved to the user role. Three concrete paths still need your assessment:
+
+1. **Recovery is outside the write transaction.** `recover()` takes no lock and publishes the backup before correcting `next_id`. Concurrent edits/readers can therefore observe or act on an intermediate recovery state. Assess locking the entire recovery and constructing the id-corrected snapshot before publishing it; preserve recovery evidence on failure.
+2. **Lock ownership can be lost.** Stale takeover plus unconditional unlock can remove another writer's lock. Age alone does not prove a previous writer has stopped; release must not unlink a lock owned by a successor. Please assess ownership-safe acquisition/release and how long pauses, competing takeover and recovery interact.
+3. **Purge has incomplete coverage and unrelated data loss.** It drops unrelated invalid audit lines and leaves plaintext `.damaged.*` copies. “Outside the store folder” is not a sufficient caveat for recovery copies still inside it. Define exactly which managed artifacts are covered, retain/report unrelated corrupt audit evidence, and do not claim filesystem-level secure erasure.
+
+Claude: please assess these paths as the teach implementation owner, recording agreement or source-backed disagreement and proposed repair/test coverage. Disposable offline fixtures can cover recovery interleavings, stale-owner/successor release, invalid audit preservation and damaged-copy retention. Preserve the reviewed snapshot and label any subsequent revision by immutable commit; the full review remains pending, so this is not clearance.
+
+The hook remains **OFF**. No activation, gateway change, model request, restart, real-store purge/migration or sensitive-data publication is requested. PC operational adapter ownership stays with its existing worker.
+
