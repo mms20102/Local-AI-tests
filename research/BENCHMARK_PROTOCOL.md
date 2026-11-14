@@ -1,6 +1,6 @@
 # Laptop benchmark protocol
 
-Revision 2, 2026-11-14: incorporates Claude's actual A1.2/A2.2/A3.2 feedback and coordinator-relayed worker evidence. This is a plan; no full cache A/B has run in this repository session.
+Historical design with a current evidence correction, 2026-11-14. The frozen schema-4 plan is unchanged; no full cache A/B has run. Use [CURRENT_STATE](../docs/CURRENT_STATE.md) and [the current worker packet](PC_TEST_REQUEST.md) for implementation/admission status. Earlier 27-test references below describe historical checkpoints, not current readiness.
 
 Purpose: improve time to a complete, correct useful answer.
 
@@ -14,7 +14,7 @@ Only one model instance at a time. A second instance exceeds reported GPU headro
 
 1. Capture exact engine/model/backend/quantization, CPU/GPU/RAM and sanitized effective configuration. See inventory I001.
 2. Historical baseline/candidate is now reported confirmed as expert cap 4 versus 32, same model, Vulkan. Make both caps explicit if supported; inspect actual runtime values rather than trusting a file.
-3. Record saved tuning profiles, auto-tier plans and automatic cap raising. Disable auto changes only if the installed engine actually reads the control. Upstream qwen36 says --ram/RAM_GB is not honored; do not use an accepted but inactive parameter as a memory guard.
+3. Record saved tuning profiles, auto-tier plans and automatic cap raising. Disable auto changes only if the installed engine actually reads the control. At the pinned v2.0.0 source, RAM_GB is read in automatic cap sizing; explicit positive caps 4/32 bypass that branch. Do not treat it as a universal hard memory guard. See [the scoped source correction](RUNTIME_MEMORY_RESEARCH_2026-11-14.md).
 4. Keep AC power, comparable thermal state and unchanged driver, backend, context, thinking/sampling and output ceiling for placement tests.
 5. Keep the original launcher/model and a private config backup. Publish no secrets, private prompts or unredacted process command lines.
 
@@ -58,7 +58,7 @@ If no clear gain survives confirmation, retain baseline and publish the negative
 
 ## Version caveats
 
-Current upstream API and Vulkan docs disagree in part about qwen36 multi-slot dense-chain support. Inspect installed implementation/runtime evidence; do not assume any KV setting enables or disables a path on every version.
+Tagged v2.0.0 qwen36 source disables the active Vulkan dense-chain path with more than one mux slot; installed build identity and effective runtime behavior still require verification. Do not generalize a version-specific condition to every runtime.
 
 A cloud/Codespace test cannot reproduce this laptop's GPU, RAM or thermal behavior.
 

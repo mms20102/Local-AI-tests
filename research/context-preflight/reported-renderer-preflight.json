@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "normalized_author_reported_tokenizer_preflight",
+  "source": {
+    "commit": "3851799d5553da7240778763e245d834a9843638",
+    "path": "research/coding-quality-v1/token_preflight_result.json",
+    "result_blob": "c03d426df416dd44592fea241b7c860e48db4b20",
+    "script_blob": "103df8551654df7935c2347269392dc542010082",
+    "reporter": "Claude laptop session, round 23",
+    "token_counts_independently_rerun_by_this_session": false,
+    "fixture_git_blobs_unchanged_from_static_audit": 25
+  },
+  "reported_identities": {
+    "fixture_revision": 2,
+    "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_library": "tokenizers",
+    "tokenizer_library_version": "0.23.3",
+    "vocabulary": 248070,
+    "installed_renderer_sha256": "67817219f7e7bb649eaae4f3570e7e43e9d4f388a7de1ea4b9031ad15bd7e43d",
+    "installed_renderer_version": "Colibri 2.0.0",
+    "renderer_function": "render_chat_qwen"
+  },
+  "request_profile": {
+    "system_text": "Provide concise code for review only. Never execute it.",
+    "user_text": "Pinned CODE-Q1 task prompt",
+    "tools": [],
+    "history": [],
+    "enable_thinking": false,
+    "teach_notes": false,
+    "library_add_special_tokens": false,
+    "reference_includes_one_im_end_token": true,
+    "renderer_is_manual_reconstruction_from_installed_source": true,
+    "independent_installed_renderer_byte_parity_verified": false
+  },
+  "limits": {
+    "context": 2048,
+    "output_ceiling": 256
+  },
+  "checks_by_this_session": {
+    "task_ids_match": true,
+    "prompt_code_points_and_utf8_bytes_match_static_audit": true,
+    "reported_prompt_plus_reservation_arithmetic_matches": true,
+    "reported_maxima_match": true,
+    "actual_tokenization_performed": false
+  },
+  "summary": {
+    "min_reported_rendered_input_tokens": 118,
+    "max_reported_rendered_input_tokens": 300,
+    "min_reported_fenced_reference_tokens_with_eot": 31,
+    "max_reported_fenced_reference_tokens_with_eot": 137,
+    "largest_reported_rendered_input_plus256": 556,
+    "binary_added_input_tokens": null,
+    "actual_engine_prompt_tokens": null,
+    "full_engine_context_fit": null,
+    "engine_usage_validation": "pending; no traffic requested solely to obtain it",
+    "generated_answer_fit_or_correctness_established": false
+  },
+  "tasks": {
+    "A01": {
+      "reported_rendered_input_tokens": 156,
+      "reported_fenced_reference_tokens_with_eot": 44,
+      "reported_rendered_input_plus256": 412,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "A02": {
+      "reported_rendered_input_tokens": 160,
+      "reported_fenced_reference_tokens_with_eot": 127,
+      "reported_rendered_input_plus256": 416,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "A03": {
+      "reported_rendered_input_tokens": 222,
+      "reported_fenced_reference_tokens_with_eot": 53,
+      "reported_rendered_input_plus256": 478,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "B01": {
+      "reported_rendered_input_tokens": 218,
+      "reported_fenced_reference_tokens_with_eot": 54,
+      "reported_rendered_input_plus256": 474,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "B02": {
+      "reported_rendered_input_tokens": 161,
+      "reported_fenced_reference_tokens_with_eot": 31,
+      "reported_rendered_input_plus256": 417,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "B03": {
+      "reported_rendered_input_tokens": 208,
+      "reported_fenced_reference_tokens_with_eot": 80,
+      "reported_rendered_input_plus256": 464,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "E01": {
+      "reported_rendered_input_tokens": 218,
+      "reported_fenced_reference_tokens_with_eot": 89,
+      "reported_rendered_input_plus256": 474,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "E02": {
+      "reported_rendered_input_tokens": 270,
+      "reported_fenced_reference_tokens_with_eot": 137,
+      "reported_rendered_input_plus256": 526,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "E03": {
+      "reported_rendered_input_tokens": 300,
+      "reported_fenced_reference_tokens_with_eot": 125,
+      "reported_rendered_input_plus256": 556,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "F01": {
+      "reported_rendered_input_tokens": 118,
+      "reported_fenced_reference_tokens_with_eot": 53,
+      "reported_rendered_input_plus256": 374,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "F02": {
+      "reported_rendered_input_tokens": 180,
+      "reported_fenced_reference_tokens_with_eot": 77,
+      "reported_rendered_input_plus256": 436,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    },
+    "F03": {
+      "reported_rendered_input_tokens": 175,
+      "reported_fenced_reference_tokens_with_eot": 108,
+      "reported_rendered_input_plus256": 431,
+      "reported_renderer_only_fit": true,
+      "reported_reference_fits_ceiling": true,
+      "actual_engine_input_tokens": null,
+      "full_engine_context_fit": null
+    }
+  }
+}

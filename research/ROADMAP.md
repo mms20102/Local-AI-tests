@@ -1,37 +1,47 @@
-# Research roadmap
+# Project roadmap
 
-## Phase 0 — Shared handover
-- [x] Locate the private repository and inspect existing work.
-- [x] Preserve Claude's original co-chat.
-- [x] Reconstruct a sanitized briefing from visible project history.
-- [x] Open real questions for Claude with source-linked constraints.
-- [ ] Receive Claude's actual response; no response is fabricated or assumed.
+Updated 2026-11-14. Ownership and status here reflect the [current checkpoint](../docs/CURRENT_STATE.md); historical plans remain in Git history.
 
-## Phase 1 — Recover reproducibility
-- [ ] Access the AI laptop and inventory actual runtime/model/hardware.
-- [ ] Recover earlier timing artifacts, scripts and lockfiles where available.
-- [ ] Publish sanitized configurations and record exact versions.
-- [ ] Run a fresh smoke test and freeze a baseline.
-Done when another session can reproduce the baseline without needing private chats or secrets.
+## Completed
 
-## Phase 2 — Low-risk speed
-- [ ] Expert-cache sizing under real free RAM/VRAM limits.
-- [ ] Concise coding instructions.
-- [ ] Prompt-prefix reuse through the UI and gateway.
-- [ ] Prompt lookup only on a supported installed backend; include non-repetitive controls.
-Done when paired tests show a useful speed gain with no task-quality regression and a tested rollback.
+- [x] Shared briefing published; real Claude collaboration established.
+- [x] Hardware/runtime configuration inventoried by the PC worker and independently checked by Claude.
+- [x] Schema-4 preparation package published and independently reviewed.
+- [x] CODE-Q1 fixture revision 2 frozen: 12 tasks, 116 authored cases; model execution disabled.
+- [x] Teach revision-6 offline persistence milestone: independent Linux pass, 72 passed / 1 skipped of 73.
+- [x] Static context input audit: 25 prompt/reference Git blobs matched across 12 tasks.
 
-## Phase 3 — Better coding model
-- [ ] Resource/format/license check for Qwen3-Coder-30B-A3B.
-- [ ] Separate side-by-side install if appropriate.
-- [ ] Frozen correctness, tool and Arabic evaluation.
-- [ ] Select a route/default only from measured tradeoffs.
+These checks establish preparation/persistence evidence, not runtime speed or model correctness.
 
-## Phase 4 — Coding execution
-The working draft helper does not execute code. Autonomous execution is a separate design task: isolated workspace, explicit tool permissions, bounded commands, tests, logs and recovery. Do not infer that structured tool-call output has already enabled this phase.
+## In progress: highest-value unblocked work
 
-## Ownership and bounded work
+1. **Tokenizer/context preflight — reported measurements complete; engine overhead pending.** Claude reports 118–300 input and 31–137 reference tokens; Codex matched fixture bytes and arithmetic. Keep binary-added tokens null until a later otherwise-authorized engine observation; no special traffic or model loading now.
+2. **Operational components — PC worker.** Continue locally owned, reviewable offline implementation/validation. Return exact lifecycle/identity/stop-gate status. Preserve the 18-file commit; its rejected publication is not being retried.
+3. **Shared evidence — Codex.** Keep this roadmap, current state and worker packet aligned with actual artifacts and distinguish author-reported, independently tested and proposed results.
 
-Codex/ChatGPT maintains handover/evidence and proposes reproducible experiments. Claude reviews and challenges through co-chat, and may own an experiment when coordination records it. Mohamed moderates scope and decisions. Only one owner operates the laptop at a time.
+## Gates before a controlled runtime measurement
 
-Do not leave open-ended agent loops or assume repository messages trigger the other agent automatically. If blocked on PC access or a reply, finish independent documentation/review and report the exact blocker.
+- [ ] Independently pinned installed model/engine identity.
+- [ ] Request serialization/tokenizer fit, with output and special-token overhead recorded.
+- [ ] Complete owned-arm lifecycle, checkpoint/stop handling and restoration evidence.
+- [ ] Fresh physical/commit/GPU headroom satisfying the frozen admission policy.
+- [ ] Coordinated idle maintenance window; one model instance and one runtime owner.
+- [ ] Then the existing frozen cap4/cap32 plan, without teach injection or silent plan changes.
+
+The full benchmark remains disabled. Publishing its components is separately blocked by approval review; do not bypass that rejection.
+
+## Later studies, kept separate
+
+- Teach hook integration and English/Arabic behavior: only a separately authorized scoped trial; hook remains **off**.
+- CODE-Q1 model drafts: after preflight/runtime gates; generated code stays unexecuted.
+- Semantic grading: reviewed containment, resource limits and trustworthy external observation/judging first.
+- Lookup off/on, cap32/48, tier/thread sweeps: separate frozen comparisons after memory clearance and baseline reproduction.
+- Alternative coding models or engine 2.1: preserve the baseline. Claude reports 2.1 staged but unstarted, with a local launcher-selector change; reconcile worker-owned source/checksums before a separately frozen comparison.
+
+Do not reopen completed persistence/planner work without a concrete new defect. A blocked live step does not stop offline source, fixture, contract or documentation work.
+
+## Ownership
+
+PC worker: runtime/operational adapter. Claude: teach/CODE-Q1 implementation and requested tokenizer-only check. Original reviewer: independent teach verification. Codex: evidence, primary-source research and coordination. Mohamed: project scope and live-trial decisions.
+
+Use the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md), read current heads, append only your own turn with the latest blob SHA, and avoid acknowledgement loops.

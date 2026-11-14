@@ -1,33 +1,36 @@
 # Local-AI-tests
 
-Private research workspace for Mohamed, Claude and Codex/ChatGPT.
+Mohamed's private research workspace for improving local AI response speed, coding quality and reviewed persistent context.
 
-**Start with [CLAUDE_BRIEFING.md](CLAUDE_BRIEFING.md), then [research/co-chat.md](research/co-chat.md).**
+The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. This repository records evidence and separate proposals; cloud tests do not measure the laptop GPU.
 
-The project improves an existing Windows local workbench: Open WebUI → LiteLLM → Colibri → Qwen. The focus is measured response speed, coding correctness and tool reliability.
+## Current checkpoint — 2026-11-14
 
-## Documents
-- [Current state and evidence](docs/CURRENT_STATE.md)
-- [Architecture and cache distinctions](docs/ARCHITECTURE.md)
-- [Historical reports and experiment queue](research/EXPERIMENTS.md)
-- [Benchmark protocol](research/BENCHMARK_PROTOCOL.md)
-- [Model comparison plan](research/MODEL_CANDIDATES.md)
-- [Roadmap](research/ROADMAP.md)
-- [Primary sources](research/SOURCES.md)
+| Workstream | Verified or reported progress | Next boundary |
+|---|---|---|
+| Teach store | Revision 6 independently checked on Linux/Python 3.12.14: 73 tests collected, 72 passed, 1 skipped; focused persistence review completed | **Hook OFF**. Live callback, model adherence and actual token fit unverified |
+| Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; 31 grader tests reported passing | No model pass rate. Generated-code execution is disabled; reviewed semantic isolation is absent |
+| Cache experiment | Published schema-4 preparation package; 65 planner tests independently rerun by Claude | Full cap4/cap32 experiment has not run |
+| Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
+| Context preflight | 25 prompt/reference blobs matched; Claude reports 118–300 rendered input and 31–137 reference tokens | Binary-added tokens remain null; no full-engine fit claim |
 
-This initial handover reconstructs the visible project history. Prior laptop test reports are explicitly labelled reported until raw artifacts or new measurements support them. No new laptop benchmarks were run by this documentation session.
+Start with [current state](docs/CURRENT_STATE.md), [next worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
 
-The shared log contains each assistant's own turns only. Repository updates do not automatically wake another assistant; pull the latest branch before replying.
+## Where active work lives
 
-Do not commit local.env, credentials, private logs/chats, personal data or model weights. Codespaces/cloud checks do not measure the laptop's GPU. Preserve the working launcher and model while testing alternatives.
+- [Live shared co-chat on Claude's branch](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) — read the latest turn before replying.
+- [Reviewed teach revision 6](https://github.com/mms20102/Local-AI-tests/tree/015a2ecd63468445b9ebed1f01b95291fa577177/research/teach-store).
+- [Frozen CODE-Q1 fixtures](https://github.com/mms20102/Local-AI-tests/tree/de9398a167b64c79510b470b7d60b3a0931aad04/research/coding-quality-v1).
+- [Published schema-4 planner](https://github.com/mms20102/Local-AI-tests/tree/974e667cfdcc389a56797f042dcb61cc13d435be/research/planners/cap4-cap32-schema4).
 
-## Latest review round
+Main and Claude's branch have diverged; these links are intentional. No merge or branch reset is implied. Draft PR #1 is also the coordination webhook bridge and remains open and unmerged. The coordinator observed a real wake; delivery/continuity is not guaranteed.
 
-Claude's genuine replies and ChatGPT's responses are in [co-chat](research/co-chat.md). Read the appended round 2 for current status; [Claude's HANDOFF.md](HANDOFF.md) remains an earlier author-preserved snapshot.
+## Working rules
 
-- [Optimization review](research/OPTIMIZATION_REVIEW.md)
-- [Installed inventory and preparation artifact](research/experiments/2026-11-14-pc-inventory.json)
-- [Output-budget test report](research/experiments/2026-11-14-output-budget.json)
-- [Next worker evidence/test requests](research/PC_TEST_REQUEST.md)
+The PC worker owns runtime operations; Claude owns the teach implementation and CODE-Q1 fixtures; Codex maintains shared evidence and coordinates review. Claude completed a reported renderer/tokenizer preflight. Binary-added tokens and independent installed-renderer parity remain unresolved.
 
-An offline planner/validator package is prepared. It is not a full runner, and no new cache A/B batch is complete.
+Preserve the working launcher/model and all authors' turns. Keep credentials, private chats, raw personal logs, model weights and `.git` folders out of handoffs. Do not execute generated code or enable the teach hook under the current offline work.
+
+[Roadmap](research/ROADMAP.md) · [Benchmark protocol](research/BENCHMARK_PROTOCOL.md) · [Runtime source research](research/RUNTIME_MEMORY_RESEARCH_2026-11-14.md) · [Version/advisory verification](research/VERSION_VERIFICATION_2026-11-14.md) · [Initial briefing](CLAUDE_BRIEFING.md)
+
+Earlier documents remain in Git history. This update replaces stale landing-page checkpoints; it does not publish the blocked benchmark components or establish a performance gain.
