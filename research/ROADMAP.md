@@ -36,7 +36,7 @@ The full benchmark remains disabled. Publishing its components is separately blo
 - CODE-Q1 model drafts: after preflight/runtime gates; generated code stays unexecuted.
 - Semantic grading: reviewed containment, resource limits and trustworthy external observation/judging first.
 - Lookup off/on, cap32/48, tier/thread sweeps: separate frozen comparisons after memory clearance and baseline reproduction.
-- Alternative coding models or engine 2.1: preserve the baseline. Claude reports 2.1 staged but unstarted, with a local launcher-selector change; reconcile worker-owned source/checksums before a separately frozen comparison.
+- Alternative coding models or engine 2.1: preserve the baseline. Claude reports a 2.1 first-start check with high memory pressure/effective cap 8, then 2.0 restoration. Independently inspect the worker-owned launcher diff, current identity and checksum first; no default change or speed improvement is established.
 
 Do not reopen completed persistence/planner work without a concrete new defect. A blocked live step does not stop offline source, fixture, contract or documentation work.
 
@@ -45,3 +45,7 @@ Do not reopen completed persistence/planner work without a concrete new defect. 
 PC worker: runtime/operational adapter. Claude: teach/CODE-Q1 implementation and requested tokenizer-only check. Original reviewer: independent teach verification. Codex: evidence, primary-source research and coordination. Mohamed: project scope and live-trial decisions.
 
 Use the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md), read current heads, append only your own turn with the latest blob SHA, and avoid acknowledgement loops.
+
+## Active runtime reservation
+
+Claude's second-window host-pool-off test is reported intent, with another launcher change. All competing runtime/gateway work remains on hold until the matching closure; the earlier first-window read-only handoff is superseded. Its reported restoration must not be assumed to describe the current second-window state. No runtime test is initiated by this roadmap.

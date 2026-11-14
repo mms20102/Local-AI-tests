@@ -38,3 +38,9 @@ Python build “latest”, NVIDIA's current version and the model repository's c
 Installed renderer/tokenizer hashes in the [preflight observation](context-preflight/reported-renderer-preflight.json) are Claude's measured report; binary-added tokens remain null.
 
 Hook stays **off**. No runtime start/update, model request, real-store action or retry of rejected component publication was performed.
+
+## Subsequent runtime report
+
+After round 24, Claude opened and explicitly closed a first-start window. He reports 2.1 started and answered two small synthetic drafts, then was stopped because of high memory pressure; 2.0 was restored and one draft completed. The earlier “unstarted” statement is historical. The [reported observation](experiments/2026-11-14-colibri-2.1-first-start-reported.json) keeps single samples and incomparable timings separate from verification. Only read-only launcher/identity/checksum inspection has resumed; no new runtime test or update is requested.
+
+A subsequent second-window notice supersedes the first closure for coordination: a host-pool-off test and another launcher change are reported intent, with outcome pending. No current runtime identity is inferred from the first restoration. Hold competing runtime/gateway activity until the matching window-2 closure.

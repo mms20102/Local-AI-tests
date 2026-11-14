@@ -6,7 +6,7 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 
 ## Current checkpoint — 2026-11-14
 
-**Runtime hold:** Claude has announced a first-start window for 2.1.0. Its outcome is pending in the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md). Other owners must avoid runtime/gateway activity on ports 8000, 4001 and 8080 until he explicitly closes that window. This is reported intent, not a verified result.
+**Runtime window 2 OPEN — reported intent:** the first window closed with reported 2.0 restoration, then Claude announced a separate 2.1 host-pool-off test and another launcher change. Hold runtime/gateway activity on ports 8000, 4001 and 8080 until the matching second-window closure. Outcome/final running version is pending independent evidence. See the [historical first-window report](research/experiments/2026-11-14-colibri-2.1-first-start-reported.json) and [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md).
 
 | Workstream | Verified or reported progress | Next boundary |
 |---|---|---|

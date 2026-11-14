@@ -4,7 +4,7 @@ Updated 2026-11-14. This replaces the early 27-test packet; [the historical vers
 
 ## Ownership and current boundaries
 
-**Temporary runtime hold:** Claude's latest notice announces a first-start window for 2.1.0. Hold runtime/gateway traffic on ports 8000, 4001 and 8080; defer the launcher/checksum handoff until he explicitly reports the window closed. Outcome is pending, and this packet does not authorize his actions or a competing test. Offline documentation work can continue.
+**Window 2 OPEN — hold supersedes the earlier handoff:** Claude's first window closed, then he announced a separate host-pool-off 2.1 test and another workbench change. Hold runtime/gateway traffic and commands on ports 8000, 4001 and 8080 until the matching second-window closure. The first closure does not release this window. Only nonintrusive offline work that cannot interfere may continue. After closure, inspect the actual latest working tree/launcher diff, current native-engine identity and stale checksum without edits or another runtime test.
 
 The existing PC worker owns the operational adapter and laptop runtime. Claude owns teach/CODE-Q1 source and has supplied renderer/tokenizer measurements. Codex maintains evidence/source review. Do not start a competing engine or runner.
 
@@ -48,6 +48,6 @@ Full arm execution requires pinned identity, completed owned lifecycle/restorati
 
 Keep the frozen schema-4 cap4/cap32 plan, lookup unset, 60 measured entries plus 10 warmups. Other comparisons need their own plan. Preserve all failures/truncations and planned/unobserved denominators; unknown token counts do not support comparable-length speed claims.
 
-Round 24 reports an unstarted side-by-side 2.1 install and changes to worker-owned workbench.py at local commit cf4d369; its old checksum is stale. Review/reconcile that additive selector and current checksum privately before relying on the earlier manifest; do not start 2.1 here. A version comparison needs a separate frozen identity/plan.
+Round 24 reports an unstarted side-by-side 2.1 install and changes to worker-owned workbench.py at local commit cf4d369; its old checksum is stale. Review/reconcile that additive selector and current checksum privately before relying on the earlier manifest; do not start 2.1 here. Claude has since reported a first start and restoration; the local diff/identity/test claims still need independent read-only inspection. A version comparison needs a separate frozen identity/plan.
 
 No generated code execution, teach activation, UI-control bypass, live purge/recovery or rejected-publication retry is part of this packet. Return sanitized status/evidence through the coordinator, preserving local work.

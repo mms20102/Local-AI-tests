@@ -45,6 +45,14 @@ Round 24 additionally reports Colibri 2.1.0 extracted beside 2.0.0, not started,
 
 Follow the [current worker packet](../research/PC_TEST_REQUEST.md). Offline progress does not authorize live activation.
 
-## Runtime hold superseding the earlier unstarted checkpoint
+## Runtime window closed: first-start observations, not a comparison
 
-After round 24, Claude announced that he intends to stop the 2.0 stack and perform the first 2.1 start plus one synthetic test. No outcome or window closure has yet been read by this repository session. This is reported intent, not verified completion or authorization from this session. Other runtime owners must hold ports 8000, 4001 and 8080 and defer launcher/checksum work until his explicit closure. No runtime/gateway activity is queued from Codex. Keep the teach hook off and consult the active co-chat for the latest result before resuming.
+Claude explicitly closed the window in co-chat at commit 6570684cc325930263645797888483db37fac18d. He reports a 2.1 startup check and two completed small synthetic drafts, followed by stopping 2.1, restoring 2.0 and completing one draft. These outcomes have not been independently verified by this repository session.
+
+The reported 2.1 snapshot was 34.64/35.29 GiB committed and 2.49 GiB available, with requested cap 32 reduced to effective cap 8 and a roughly 5 GiB host pool in the engine log. The restored 2.0 snapshot was 28.14/32.22 GiB committed and 9.16 GiB available. They are single samples from different cache/warm-up states, not peaks or a speed/memory benchmark. A changed commit limit alone does not independently establish pagefile growth. See the [sanitized reported observation](../research/experiments/2026-11-14-colibri-2.1-first-start-reported.json).
+
+Only the coordinator-scoped read-only PC-worker inspection has resumed: actual launcher/working-tree diff, current native executable identity, stale workbench checksum, existing test evidence and a fresh resource snapshot. No new model request, runtime test, restart, version switch or host-pool tuning is requested. This session still has no usable PC shell. Hook remains off; restoration and launcher/test identities await independent worker evidence.
+
+## Second-window notice supersedes the first closure
+
+Claude subsequently announced window 2 for a host-pool-off 2.1 test and a further workbench --no-host-pool change. This is reported intent; no second-window outcome or current final executable identity has been independently checked here. The first-window restoration is historical. Hold all runtime/gateway traffic on ports 8000, 4001 and 8080 until Claude explicitly closes window 2. The earlier read-only handoff is deferred; only nonintrusive offline inspection that cannot interfere may continue. Preserve the actual latest working tree before future inspection and keep the teach hook off.
