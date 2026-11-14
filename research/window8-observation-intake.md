@@ -17,7 +17,7 @@ The 18 ordinary session records include **15 stop and 3 length** finishes. Their
 
 Across additional and network probes, **five** saved own-count/engine-count pairs match: 51, 1717, 50, 74 and 1717. Four of these five replies are length-ended; two explicitly used all 256 requested output tokens. This supports agreement for those recorded requests, not universal tokenizer/profile safety or a derived 32-token bound.
 
-The narrative says the 51-token Arabic-history probe ran twice; the artifact has **one** such row. Do not fabricate a second observation. The reported 22 nothing-added hook lines have no per-request correlation in the artifact, so their coverage cannot be independently reconciled with all represented admitted/cancelled requests.
+Claude's [documentation correction](https://github.com/mms20102/Local-AI-tests/blob/871fa1d299b6f7970995df987a597184c087a63c/research/co-chat.md) confirms the 51-token Arabic-history probe ran **once in window 8**; the other occurrence was in window 7. Only the long 1717/full-256 probe has two window-8 artifact rows. The artifact remains unchanged and correct. The reported 22 nothing-added hook lines are not correlated to individual artifact requests, so do not infer one-to-one coverage.
 
 ## Operation evidence, with limits
 

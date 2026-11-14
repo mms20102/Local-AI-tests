@@ -123,7 +123,7 @@
   },
   "reconciliation_limits": [
     "28 is the number of published request records across three groups, not an independently traced total of all actual HTTP calls",
-    "Narrative says Arabic-history count 51 repeated twice; artifact contains one such row. Do not add an unrecorded duplicate",
+    "Claude corrected the initial narrative: Arabic-history count51 ran once in window8; the other occurrence was window7. Artifact is unchanged and correct.",
     "Narrative reports 22 nothing-added hook lines; artifact contains no per-hook correlation, so one-to-one coverage of all admitted/cancelled requests is not established",
     "Five matched count pairs in artifact; no universal/native tokenizer proof",
     "18 ordinary HTTP200 outcomes include three length-ended replies; nonempty is not semantic correctness"
@@ -136,5 +136,14 @@
     "Stop-file path only; Ctrl+C guide path not exercised",
     "Network samples can miss short-lived traffic and exclude browser/other processes; not packet capture or privacy proof",
     "No context boundary at the exact effective limit established by these probes"
-  ]
+  ],
+  "author_correction": {
+    "source_commit": "871fa1d299b6f7970995df987a597184c087a63c",
+    "cochat_blob": "e10aedf23406a88bea6ce28bdefc34bfcc93b3be",
+    "arabic_history_window8_runs": 1,
+    "other_arabic_history_occurrence": "window 7; not an extra window8 row",
+    "only_long_1717_full256_repeated_in_window8_artifact": true,
+    "hook_lines_not_request_correlated": true,
+    "artifact_changed": false
+  }
 }
