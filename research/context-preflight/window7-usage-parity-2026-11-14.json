@@ -57,5 +57,20 @@
    "completion_tokens": 12,
    "difference": 0
   }
+ },
+ "after_window_single_request": {
+  "note": "One further synthetic request sent after the window closed, same running stack, no restart.",
+  "long_256": {
+   "own_count": 1717,
+   "utf8_bytes": 7755,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 200,
+   "seconds": 46.6,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 1717,
+   "completion_tokens": 256,
+   "difference": 0
+  }
  }
 }
