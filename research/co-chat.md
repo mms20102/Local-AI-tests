@@ -1953,3 +1953,54 @@ Window 3's eight-draft memory-sampling test is **reported intent**, not a comple
 
 Please match the closure explicitly to **window 3**. Teach hook stays **OFF**. No competing test, startup/restart, version switch, gateway change, real-store action or rejected-publication retry is requested.
 
+
+## Runtime window 3 CLOSED · Claude (laptop session) — 2026-11-14, about 17:20 local
+
+Written by Claude on the AI laptop. **This closes window 3, opened by "Runtime notice 3".** **The Colibri 2.0.0 fast-profile stack is running**; the engine executable is in the 2.0.0 runtime folder. No further runtime action is planned by me. PC worker: ports 8000, 4001 and 8080 are yours.
+
+All values *measured* in this session; memory values are single samples taken right after each request.
+
+### Design
+
+Each version was freshly started with the 32-slot profile (2.1.0 with the host pool off), then given the same eight synthetic drafts in the same order: "add", "clamp", alternating. No source change in this window.
+
+### Memory after each request (GiB)
+
+| After request | 2.1.0: engine private | 2.1.0: RAM available | 2.1.0: commit headroom | 2.0.0: engine private | 2.0.0: RAM available | 2.0.0: commit headroom |
+|---|---|---|---|---|---|---|
+| idle | 7.39 | 8.09 | 3.32 | 7.33 | 8.45 | 3.72 |
+| 1 | 11.77 | 3.68 | 1.22 | 9.56 | 5.90 | 1.43 |
+| 2 | 11.90 | 3.70 | 1.11 | 9.69 | 5.90 | 1.37 |
+| 4 | 11.90 | 3.70 | 1.14 | 9.69 | 5.84 | 1.31 |
+| 8 | 11.90 | 3.66 | 1.14 | 9.69 | 5.82 | 1.34 |
+
+Both versions jump at the first request and then stay flat. So the extra memory seen in window 2 is not a leak: 2.1.0 settles about 2.2 GiB above 2.0.0 and stays there. The commit limit was 34.23 GiB during the 2.1.0 run and 32.22 GiB during the 2.0.0 run.
+
+### Request times (seconds, total / first visible text)
+
+| Request | 2.1.0 | 2.0.0 |
+|---|---|---|
+| 1 add | 9.95 / 6.58 | 8.78 / 5.72 |
+| 2 clamp | 9.31 / 5.36 | 6.24 / 3.08 |
+| 3 add | 7.94 / 4.22 | 3.92 / 2.20 |
+| 4 clamp | 8.50 / 4.64 | 4.33 / 2.11 |
+| 5 add | 6.73 / 3.83 | 3.49 / 1.89 |
+| 6 clamp | 7.95 / 4.41 | 3.98 / 2.01 |
+| 7 add | 6.42 / 3.86 | 3.19 / 1.73 |
+| 8 clamp | 7.78 / 4.38 | 3.86 / 1.91 |
+
+Engine counters over the same 168 forward steps: host routed-expert time 55.4 s on 2.1.0 against 30.9 s on 2.0.0; waiting for the device 7.5 s against 5.7 s. Cache behaviour was the same: RAM hits 24,137 and disk loads 27,215 on 2.1.0; 24,055 and 27,151 on 2.0.0. All sixteen answers were complete (`finish_reason: stop`) with the expected code.
+
+### Rule and outcome
+
+Rule from notice 3: keep 2.1.0 only if every request completes, at least 5 GiB RAM is available and commit headroom is at least 1 GiB at the end. 2.1.0 ended at 3.66 GiB available, so it failed the RAM condition (headroom 1.14 GiB passed). 2.0.0 was restored.
+
+### What this supports, and its limits
+
+- Windows 2 and 3 agree, on two fresh starts each: **on this laptop, with this profile, 2.1.0 used about 2.2 GiB more engine memory and took roughly twice as long on the repeated requests.** The cache counters are equal, so the difference is in how long the host-side expert work takes, not in how often it happens. I have not found the cause. Candidates I can name but have not tested: the new row-interleaved expert kernel (the 2.1.0 log says "rows interleaved by 16 ... Q36_ILV16=0 keeps the rows"), and less RAM left for the Windows file cache.
+- Limits: two tiny tasks repeated, sixteen requests in all, one order (2.1.0 first, then 2.0.0), fixed tasks that favour prefix reuse. It is a consistent small observation, not the planned benchmark, and it says nothing about long prompts or long answers.
+- **Recommendation to Mohamed: stay on 2.0.0.** A proper 2.0.0 against 2.1.0 study, including `Q36_ILV16=0`, is the PC worker's to design if anyone wants to pursue it.
+
+### State left on the laptop
+
+Running: 2.0.0 from `Start-Fast-Local-Chat.cmd`. Installed and stopped: 2.1.0. Source unchanged since `7111656`; working tree clean. Model history hash unchanged. Teach hook off. At Mohamed's request I also closed five finished launcher console windows that were waiting at "Press any key"; the active one was left alone.
