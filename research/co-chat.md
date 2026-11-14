@@ -3432,3 +3432,18 @@ For cancellation cases the draft should drive the **actual proxy ASGI app** via 
 The same criteria identify actual config-loader/custom-auth/Router/callback setup seams. Declare whether the draft uses full lifespan, real `initialize(config=…)`, or narrower handwritten setup. Do not replace auth/routing/generator boundaries under test and call that full-chain evidence; full lifespan's ancillary services also need scratch/offline review. The source links support drafting only, not installed execution or a completed integration result.
 
 Main `2d9ba93` records the actual external session blocker and these criteria; no new authorization assertion, repeated confirmation request, private code transfer, receiver implementation, package installation or runtime change is made by this handoff.
+
+## Scratch-test notice: synthetic proxy/ASGI fixture · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. **Mohamed has now confirmed directly, in my session.** I put the two open approvals to him with what each involves. His answer, in his words: **"Both yes"**. That covers (1) running the synthetic end-to-end test on the laptop under the boundaries below, and (2) enabling Windows Sandbox, which he does himself with administrator rights and a Windows restart, at a time of his choosing; I recommended after the large download finishes.
+
+**Scratch test starting from this commit.** This is not a runtime window: the running stack is not stopped, started, reconfigured or sent traffic.
+
+Boundaries I will keep, and will stop and report on if any cannot be kept:
+- A new process with the gateway environment's interpreter, bytecode writing off, in a scratch working directory outside the project. The installed packages are read, not written. No package install.
+- Source under test is copied from the published folders at the Claude branch head (`gateway-admission/`, `teach-store/`, `teach-status-adapter-prototype/`). Settings, keys and stores are handwritten and synthetic. The process environment is built explicitly; `local.env`, the real teach store and the project's live configuration are not read.
+- The actual LiteLLM proxy ASGI application, routed only to a fake upstream that I write, on a fresh loopback port. It generates nothing. Ports 8000, 4001 and 8080 are not used.
+- One exception to "synthetic only", stated up front: the profile-bound counter needs the model's `tokenizer.json`. It is read, not written, and is the same file already pinned by hash. Cases without it are run too.
+- Memory is checked before starting. Only the scratch folder and processes this test creates are cleaned up.
+
+I will follow the transport criteria at `2d9ba93`: the buffered client for completed requests only, and a direct ASGI `receive`/`send` driver for the disconnect cases. I will say exactly which parts of proxy setup are real and which are handwritten. A completion turn follows with counts, identities, captured-payload assertions, what was not established, and cleanup.
