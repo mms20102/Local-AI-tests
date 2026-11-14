@@ -4,6 +4,20 @@ Review checkpoint: **2026-11-14 21:32 UTC**. Producer artifact label: **2026-11-
 
 **Artifact arithmetic and source inspection completed; no independent rerun.** Claude's reported execution is useful bounded integration evidence. It is not a five-for-five disconnect-success result, a live deployment check or a coding-quality score. [Structured intake](../experiments/2026-11-14-scratch-asgi-completion-review.json).
 
+## Latest fixture revision 2 — source corrections checked
+
+The successor [`bd7f005e`](https://github.com/mms20102/Local-AI-tests/tree/bd7f005e175637d60a687d8a7f987a08c087a619/research/experiments-claude/2026-11-15-scratch-asgi) resolves the earlier **published-source** bootstrap/order gaps: both stages write settings/config before constructing the candidate, and install the guard before candidate/proxy imports. The store-path check now uses resolved ancestry. Claude confirms revision 1 depended on leftover smoke settings; the new fresh-copy execution is an author report, not a rerun here.
+
+The three new snapshots recompute to **12 + 10 + 5 = 27 assertion groups** and **13 + 11 + 10 = 34 upstream captures**, with **zero detected internal-key captures** and zero recorded guard refusals. A check at the common receiver now accounts for each parsed capture. This resolves the earlier selected-assertion-only observation gap for the saved zero counts. Raw capture bodies remain unpublished.
+
+There is one narrow regression-gate inconsistency: stage 2 returns failure when the internal-key counter is nonzero, but stage 3's final exit status checks only failed scenario groups. Thus the blanket statement “every stage fails if a key is found” is not implemented in stage 3. This does not contradict its current zero count or show a leak; it is a small remaining gate/wording correction.
+
+The timing measurement now excludes the later 0.5-second wait and recovery request. The saved **30.03 s** is the interval from beginning to await the app call until its end; it is not a live-service measurement. Pre-first disconnection remains unobserved with HTTP 408 and zero adapter streams. Spec-2.4 still records the secondary Prisma import failure alongside cleanup/recovery. Those behavioral gaps are not fixed by the bootstrap correction.
+
+Revision 2 contains one published snapshot per stage/mode; repeat-run statements about revision 1 remain author reports. The revised README correctly separates scenario groups, the two successful midstream behaviors, remaining fault outcomes and the operator's one post-run live health probe. No live configuration or `cancel_on_disconnect` setting was changed.
+
+The review below describes revision 1 and remains historical where superseded.
+
 ## What the saved results establish
 
 The three JSON files contain **27 final scenario groups**, not 27 HTTP requests: 12 bound-counter completed groups, 10 no-counter completed groups, and five direct-driver groups. All saved group results are `pass`, matching the reported count fields. There is no separate skipped-count field; the completion reports no skips.

@@ -2,6 +2,12 @@
 
 Review checkpoint: **2026-11-14 21:32 UTC**. Reviewed Claude's [`00565c1d`](https://github.com/mms20102/Local-AI-tests/tree/00565c1d74bf91a7cc3dfb523963ed6686df471d) documentation/tooling turn, whose producer date is 2026-11-15. No merge, rebase, workflow dispatch, runtime action or local test execution was performed by this review.
 
+## Latest documentation pass
+
+At [`bd7f005e`](https://github.com/mms20102/Local-AI-tests/tree/bd7f005e175637d60a687d8a7f987a08c087a619), Claude accepts all seven wording corrections. Source inspection confirms the README now uses first-*useful*-text/correct-answer timing and marks it unmeasured; context comparisons are scoped; CONTRIBUTING/SECURITY distinguish the laptop host from reviewed guests and declarations from containment; authorization is environment-specific; code origin and 229-run/16-skip wording are corrected.
+
+The newly reported 288-link/51-file and repeated Windows suite results are author observations, not reruns here. The independently read CI result below is the earlier `00565c1d` run, not a claim of a new run at this successor. The original suggestions below are historical where resolved.
+
 ## Stable landing page accepted
 
 Keep the root README as the newcomer-facing landing page. Future dated checkpoints from this side go to **docs/CURRENT_STATE.md** and linked audit/result files. The prior landing-page archive and append-only history are preserved. This review does not replace the root README or choose a license.

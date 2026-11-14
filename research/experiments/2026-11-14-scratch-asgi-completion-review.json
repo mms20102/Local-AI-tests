@@ -204,5 +204,121 @@
     "pc_traffic_by_this_session": 0,
     "runtime_changes": false,
     "private_capture_code_rehosted": false
-  }
+  },
+  "current_reviewed_ref": "bd7f005e175637d60a687d8a7f987a08c087a619",
+  "revision2": {
+    "source_ref": "bd7f005e175637d60a687d8a7f987a08c087a619",
+    "cochat_blob": "b3d0bbcf01668be3a9cb95f32a0319094b11ffcc",
+    "source_manifest": [
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/README.md",
+        "git_blob": "ebf98993219996293bca011ee5a803c50d4ad224"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/fixture_common.py",
+        "git_blob": "d17ccb524b98568d322b5acbd45901aab3992ecd"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/launch.py",
+        "git_blob": "d54205fe73a9891fa9c2a07d08ca2572ea33684c"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2-bound.json",
+        "git_blob": "277f3a63aa3f1018d51b06317da68a27983a03da"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2-nocounter.json",
+        "git_blob": "97382341e01da301e5420dfeb35c20637fdf2cd4"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage2.py",
+        "git_blob": "0f10d97a664767b09f3aa85dc630cb1edf1acf97"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage3.json",
+        "git_blob": "426649276f83842fdf7590217516dde286af24ac"
+      },
+      {
+        "path": "research/experiments-claude/2026-11-15-scratch-asgi/stage3.py",
+        "git_blob": "9cdf232cc4f0f2ff421af1ea4439b265222bd257"
+      }
+    ],
+    "review_kind": "independent artifact arithmetic and source inspection; no execution rerun",
+    "result_snapshots": [
+      {
+        "file": "stage2-bound.json",
+        "sha": "277f3a63aa3f1018d51b06317da68a27983a03da",
+        "groups": 12,
+        "passed": 12,
+        "failed": 0,
+        "counts_match": true,
+        "captures": 13,
+        "internal_key_captures": 0,
+        "guard_refusals": 0,
+        "only_reported_upstream_port": true
+      },
+      {
+        "file": "stage2-nocounter.json",
+        "sha": "97382341e01da301e5420dfeb35c20637fdf2cd4",
+        "groups": 10,
+        "passed": 10,
+        "failed": 0,
+        "counts_match": true,
+        "captures": 11,
+        "internal_key_captures": 0,
+        "guard_refusals": 0,
+        "only_reported_upstream_port": true
+      },
+      {
+        "file": "stage3.json",
+        "sha": "426649276f83842fdf7590217516dde286af24ac",
+        "groups": 5,
+        "passed": 5,
+        "failed": 0,
+        "counts_match": true,
+        "captures": 10,
+        "internal_key_captures": 0,
+        "guard_refusals": 0,
+        "only_reported_upstream_port": true
+      }
+    ],
+    "scenario_groups": 27,
+    "upstream_captures": 34,
+    "reported_internal_key_captures": 0,
+    "author_reported_fresh_copy_single_run": true,
+    "repeat_runs_independently_retained": false,
+    "resolved_in_published_source": {
+      "settings_and_config_before_candidate_import": true,
+      "guard_before_candidate_and_proxy_import": true,
+      "canonical_store_path_containment_check": true,
+      "every_upstream_body_increments_detection_counter": true,
+      "stage2_exit_gate_includes_internal_key_counter": true,
+      "timing_excludes_sleep_and_recovery_probe": true
+    },
+    "remaining_narrow_gate_gap": {
+      "stage3_reports_counter_but_exit_gate_checks_only_failed_groups": true,
+      "observed_internal_key_count_is_zero": true,
+      "no_actual_leak_observed": true
+    },
+    "unchanged_behavior": {
+      "pre_first_receive_disconnects": 0,
+      "pre_first_adapter_streams": 0,
+      "pre_first_status": 408,
+      "pre_first_recorded_wait_seconds": 30.03,
+      "timing_origin": "test begins awaiting application call",
+      "not_live120s_prediction": true,
+      "spec24_app_call": "raised ModuleNotFoundError",
+      "spec24_cleanup_done": true,
+      "two_spec23_midstream_cleanup_scenarios_reported_successful": true
+    },
+    "scope": {
+      "author_reports_cleanup": true,
+      "no_independent_pc_verification": true,
+      "no_stream_accounting": true,
+      "no_browser_display": true,
+      "no_model_or_canonical_gate_changes_by_this_review": true
+    }
+  },
+  "kind": "versioned_artifact_and_source_review",
+  "record_scope_note": "Top-level source_ref and initial findings describe revision1 at573fa44b; revision2/current_reviewed_ref contain the successor assessment."
 }
