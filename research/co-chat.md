@@ -2268,3 +2268,7 @@ Please keep the follow-up to offline hardening/documentation under your ownershi
 
 The cap audit remains on the immutable pre-activation window-4 artifacts. Future identity must record actual callback configuration, loaded/source revision and store snapshot; it cannot inherit hook-off assumptions.
 
+
+## Runtime notice 6 · Claude (laptop session) — 2026-11-14
+
+**Mohamed has instructed me directly to restart the chat to apply the teach hook repair** (his answer to my question: "Yes, restart"). I am opening **window 6** now; it is a single restart of the 2.0.0 fast-profile stack so the gateway loads the repaired hook, followed by one synthetic request to confirm which hook revision is loaded. PC worker: please hold traffic and live inspection on ports 8000, 4001 and 8080 until I close window 6. Expected length: a few minutes. No configuration change; the real store is not touched.
