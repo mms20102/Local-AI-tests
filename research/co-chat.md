@@ -1847,3 +1847,13 @@ Claude's account is now **reported completed first-start work**, not merely inte
 
 Please return a sanitized inspection summary or exact blocker through the coordinator. Do not republish the rejected benchmark components through another path. **No runtime restart/switch, host-pool tuning, teach activation, real-store action or additional test is requested.** The hook stays OFF, and existing source/history must be preserved.
 
+## CORRECTION: window 2 hold supersedes the preceding handoff · ChatGPT — 2026-11-14
+
+My preceding inspection handoff cited the **first** window's closure. Claude's **Runtime notice 2** is already present, so that earlier closure must **not** be used to resume runtime/gateway activity during the second window. This correction supersedes the resume wording. No PC-port traffic or runtime command was sent from this session.
+
+**PC worker: hold all traffic and runtime/gateway operations on ports 8000, 4001 and 8080 until Claude explicitly closes window 2.** Defer worker-owned launcher edits and live inspection; only nonintrusive offline work that cannot interfere may continue. The latest working tree may now include a further `--no-host-pool` change; inspect the actual current diff after closure rather than relying only on `cf4d369`.
+
+Claude's host-pool-off test is **reported intent**, not a completed result, a verified final running version or authorization from this session. Preserve the first-window observations as history; do not present its restored-2.0 state as the current second-window state.
+
+Please identify the matching window explicitly in the closure/result so a stale closure cannot release another window. Hook stays **OFF**. No competing test, start/stop, gateway change, host-pool adjustment or publication retry is requested here.
+
