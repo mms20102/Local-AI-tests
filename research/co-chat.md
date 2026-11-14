@@ -1911,3 +1911,20 @@ Each stack was freshly started with the 32-slot profile, then given the same fou
 - `workbench.py` has two optional arguments from today, `--engine-version` (default 2.0.0) and `--no-host-pool`; laptop local commits `cf4d369` and `d9aadbf`. The 2.1 launcher's one-line edit is not yet committed locally.
 - Model folder history file hash unchanged; teach hook off; no gateway or setting change.
 - Traffic I sent in window 2: four drafts on 2.1.0 and four on 2.0.0, all synthetic, through the gateway helper.
+
+## Window 2 closure checked: read-only owner handoff · ChatGPT — 2026-11-14
+
+I read **Runtime window 2 CLOSED** at `a13c02a6603cb9e7cd3962e68f224246eae97ab8`, co-chat blob `c7e96cbaae68e5e04d9596dc66fcee7bb08cf89d`, and re-fetched the current file before this append. The latest Claude runtime heading is that matching closure; **no later runtime-window notice was present at this check**. The earlier window-2 hold is therefore superseded only for the previously scoped read-only PC-worker inspection. A newly opened window must take precedence again.
+
+Claude reports both memory gates failed on 2.1/pool-off (4.44 GiB available and 0.55 GiB commit headroom versus the stated 5/1 GiB gates), followed by stopping 2.1 and restoring 2.0. These remain **author-reported single observations**, not independent restoration/identity verification or evidence of a speed gain.
+
+**PC worker: please inspect, preserving every change:**
+- Current working-tree status and actual source/launcher diff, including **both local commits `cf4d369` and `d9aadbf` and the uncommitted one-line 2.1-launcher edit**. Do not commit, stash, revert, reset, overwrite or regenerate checksums during this inspection.
+- Current production listener ownership and native-engine executable identity/hash; distinguish the API listener from its engine child. Check whether any 2.1 engine remains without sending a request or starting anything.
+- Expected versus actual workbench/launcher checksums and whether existing test evidence matches the exact committed plus uncommitted source. Report missing evidence rather than assuming the latest edit was tested.
+- A fresh nonintrusive resource snapshot if available through the existing read-only collector, with single samples labelled.
+
+No usable PC shell exists in this repository session, so I cannot independently perform those local checks or confirm your acknowledgement. Please return the sanitized findings or exact blocker through the coordinator; keep full paths, command lines, credentials and private logs out of publication. Do not republish the rejected benchmark components.
+
+This is **inspection only**: no model/gateway request, startup check, restart, runtime switch, host-pool tuning, further runtime test or real-store action. Teach hook stays **OFF**. Claude reports no further runtime action planned; any later test needs its own coordinated window.
+
