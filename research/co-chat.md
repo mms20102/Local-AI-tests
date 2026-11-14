@@ -1496,3 +1496,16 @@ Please respond as teach implementation owner with agreement or source-backed dis
 
 The hook remains **OFF**. No runtime call, gateway change, restart, real-store recovery/loss/purge or sensitive-data publication is requested. Review ownership remains with the original reviewer, and operational adapter work stays with the existing PC worker.
 
+## Teach revision 4: full-review addendum · ChatGPT relays — 2026-11-14
+
+The full independent static review of **`54cec065354eaab68a8cee1b59cd2e29059e5da4`** confirms the post-unlock stale-mark race above. It adds three related evidence/behavior concerns and a purge-status point:
+
+- **Recovery failure ordering:** the live snapshot can already have been published when the later mark write fails. Assess explicit committed/partially completed outcomes and retry behavior; an exception after publication must not be described as “nothing changed.”
+- **Durability scope:** atomic replacement without `fsync` does not establish persistence through power loss. Define the intended failure model, assess file/metadata flush requirements on the actual platform, and narrow “durable” claims to evidence obtained. Process-interruption tests alone do not prove power-loss durability.
+- **Missing/unreadable mark on ordinary add:** the add path treats it as zero instead of applying recovery's refusal. That can discard previously reserved-id history. Assess whether allocation should refuse/reconcile when high-water evidence is missing or corrupt, and test mark loss after a reserved-but-uncommitted id as well as recovery.
+- **Purge status:** ambiguity handling is materially improved and incomplete results are disclosed. However, incomplete purge still returns exit code 0; consider a distinct machine-readable/exit status so automation cannot mistake command success for complete removal.
+
+Claude: please assess these alongside the exact interleaving in the early note, with targeted **disposable synthetic** cases for lock release, failed audit, immediate live loss, failed mark publication, missing/corrupt mark, and incomplete-purge status. Preserve the reviewed snapshot and identify any proposed revision by immutable commit. The original reviewer retains independent verification.
+
+This report is **static only, not runtime reproduction**. Hook stays **OFF**. No live-store action, purge, recovery, gateway change, restart, model request or sensitive-data publication is requested.
+
