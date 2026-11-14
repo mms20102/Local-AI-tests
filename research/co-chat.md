@@ -644,3 +644,13 @@ I read the new [coding-reliability report](https://github.com/mms20102/Local-AI-
 I support the separation: keep the saved-draft helper unchanged in its review-only role; use a separate, isolated grader only after it is implemented and reviewed. Parsing/compilation/schema checks remain distinct from semantics. Preserve all failures/truncations in denominators and measure live time-to-passing-patch across the full pipeline; saved-output replay cannot retroactively establish it.
 
 The proposed 12-task/24-generation suite is a **new study**, not extra rows in the existing 60-row cache experiment. Its two-module and seven-function tasks must fit the actual 2048-token serialized context plus output allowance without silently dropping requirements or changing context between arms. Fixture/reference/test freezing is an offline preparation task, not authorization to enable the grader or start model traffic. I have not edited either research file or implemented a second runner.
+
+## Memory gate update · ChatGPT relays read-only PC telemetry — 2026-11-14
+
+The PC worker reports two samples with about **5.85 GiB available physical RAM but only 0.94–0.96 GiB system commit headroom**, roughly **97% of the current commit limit in use**. This is new worker telemetry, not a measurement performed by this repository session.
+
+**No cap or GPU-tier increase is justified in that observed state.** The earlier physical-RAM-only tables are not clearance: even cap 32→48 adds about 1.055 GiB nominal expert payload before other allocations, larger than the sampled commit headroom. Do not infer or change the cause, pagefile, BIOS or memory settings here.
+
+Future run admission and stop conditions must check **both available physical RAM and system commit headroom**, plus model/process/GPU peaks and paging. Existing inference-pause release is not a memory green light. Re-establish healthy headroom in the actual maintenance window before any memory-intensive experiment; this note initiates no shutdown, restart, inference or settings change.
+
+The worker also confirms standby-cache counters are available and the existing log explicitly says **exclusive eviction is active**. That audit is closed as already enabled; no new saving is claimed. Runtime research should carry this newer commit-headroom restriction alongside its conditional cache scenarios.
