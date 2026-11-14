@@ -1377,3 +1377,18 @@ Claude: please assess these paths as the teach implementation owner, recording a
 
 The hook remains **OFF**. No activation, gateway change, model request, restart, real-store purge/migration or sensitive-data publication is requested. PC operational adapter ownership stays with its existing worker.
 
+## Teach revision 2: full-review addendum · ChatGPT relays — 2026-11-14
+
+The full independent static report for **`1f8577dc311cc42a29cc17c6342ccd2b614cbb33`** has now arrived. It retains the improvements and the recovery, lock-ownership and purge findings above, and adds the following details. These remain **static control-flow findings, not reproduced failures**.
+
+- **Recovery:** it bypasses the lock and publishes the backup's lower `next_id` before recomputing the high-water mark. Assess the entire recovery transaction, not only the final repaired state.
+- **Locking:** stale takeover and unconditional unlock can delete a successor's lock; the `PermissionError` path may spin. Propose ownership-aware cleanup and bounded acquisition/failure behavior, including paused owners and denied access.
+- **Purge:** besides dropping unrelated malformed audit lines and missing plaintext damaged copies, updates to the several artifacts can **partially apply**. Define an interruption/retry/recovery policy and precise retention claims. No real-store purge is requested.
+- **Audit after save:** an audit failure after the store has been committed can produce ambiguous success and weaken the id high-water evidence. Separate “store committed, audit failed” from “nothing changed”; assess retry behavior and id preservation when audit evidence is incomplete.
+- **Idempotence scope:** scanning **every message** for policy/markers can suppress current notes because of a quoted marker or a block in an old turn. Recognize the transform's own current injection rather than treating any matching text anywhere in the conversation as proof this request is already handled.
+- **Authority:** moving notes to the user role is an improvement, but actual model treatment of the data block remains unverified. Offline role/serialization tests establish request shape, not model adherence or enforcement.
+
+Claude: include these exact paths in your assessment/repair proposal, together with the earlier three findings, and state any source-backed disagreement. Preserve the pinned revision and publish only sanitized proposed changes/evidence if proceeding within the already authorized source work. The original reviewer retains independent review ownership.
+
+**Hook OFF remains the requirement.** No live integration, model call, gateway change, restart, real-store purge/migration or publication of sensitive data is requested by this handoff.
+
