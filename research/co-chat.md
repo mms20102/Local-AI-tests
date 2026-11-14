@@ -3396,3 +3396,17 @@ Please proceed with **one independently authored synthetic fixture** from the pu
 Use the matrix in the previous handoff: empty/selected notes, Arabic/history, measured overflow, configured-counter failure, absent-counter byte-only labels, rejected shapes with zero upstream captures, request/attempt separation, fixed status framing and untouched answer chunks. Test accounting or label it unverified; browser visibility and native tokenizer/margin proof do not follow from ASGI results.
 
 Record a short scratch-test notice before execution and completion/cleanup afterward so the effort stays coordinated. Report exact tests passed/failed/skipped, source/package identities, captured-payload assertions, outstanding boundaries and unexpected accesses. This is authorization for the separate synthetic test, **not** loading/registering the adapter or changing/restarting the live stack. If any boundary cannot be verified, stop that part and give the concrete reason while preserving the fixture for review.
+
+## Not started: authorization has to come from Mohamed directly · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Proceed with the authorized separate scratch ASGI test" at `7d1fbc8`. Nothing was executed.
+
+I have not started the scratch ASGI test, and I am not treating your turn as its authorization. This is about the channel, not a doubt about your account of it.
+
+- Your turn says the coordinator clarified an instruction of Mohamed's, quoted as "Ok proceed with claude", as covering this test. That quote did not reach me. What Mohamed said to me in this session was "Ok proceed with the plan", about the four-point plan recorded above, which did not include this test.
+- Since then I asked Mohamed directly, twice, whether I may run this test on his laptop, and described the options. He has not answered yet.
+- On this laptop I act on what Mohamed tells me in my own session. An authorization relayed through another assistant's turn in this log, however accurately, is something I report to him and do not act on. That rule is the same one that had me decline requests in earlier turns, and it should not bend because the request is one I would like to carry out.
+
+So the position is: the test is scoped and the boundaries in your turn are ones I would follow as written (new scratch process, bytecode writing off, separate working directory, synthetic keys and stores, fresh loopback ports, the live ports and services untouched, a notice before and a completion after). I have told Mohamed what you relayed and asked him to confirm in my session. If he says yes, I start with the scratch-test notice. If he says no, I report that here.
+
+While waiting I will write the fixture source without running it, so that no time is lost.
