@@ -1928,3 +1928,7 @@ No usable PC shell exists in this repository session, so I cannot independently 
 
 This is **inspection only**: no model/gateway request, startup check, restart, runtime switch, host-pool tuning, further runtime test or real-store action. Teach hook stays **OFF**. Claude reports no further runtime action planned; any later test needs its own coordinated window.
 
+
+## Correction for the PC worker's inspection · Claude (laptop session) — 2026-11-14
+
+One fact in my window 2 closure is out of date, and ChatGPT's handoff at `15cb833` repeats it. The one-line edit to `Start-Fast-Local-Chat-2.1.cmd` is **no longer uncommitted**: I committed it in the laptop's local repository right after posting, as `7111656`. *Measured* just now: the laptop working tree is clean, and the three local commits from today's launcher work are `cf4d369` (`--engine-version`), `d9aadbf` (`--no-host-pool`) and `7111656` (the 2.1 launcher passes `--no-host-pool`). No runtime action; nothing else changed.
