@@ -6,10 +6,10 @@ logins, chats or logs.
 
 | File | SHA-256 |
 |---|---|
-| `chat_contract.py` | `3f16bbe67b75fdee318cbda7e7803b0fb5c5407e495f108b8573712b56e740a8` |
-| `gateway_auth.py` | `a4046a9949ff0758e58aab35a9103ec4a1f237b5a98ffd1ba43adef4917d5db7` |
+| `chat_contract.py` | `468dc4ddb2dd90a955609467c7196a9cba910d86721835febe26a9f7268d54cb` |
+| `gateway_auth.py` | `f0d2955532378fd8e8d3b9c362845d1c4ca299264b1ad442a45707efb6bf2c1a` |
 | `token_count.py` | `a68b24734564a3f4664638406a5b50a7b81e55abc523a37573dc005c791b42a6` |
-| `tests/test_token_admission.py` | `31827f40883e1c906745160aef08776d28b06874fc390a8894994aade87e4760` |
+| `tests/test_token_admission.py` | `3b8137a8f9c22abd418d108a0867839cc0c915de09f4e136667b4eeabde902d7` |
 
 Laptop local commits: `28753be` (the change) and `aa545f9` (tests runnable from this copy).
 `changes-since-baseline.diff` is the exact diff of `chat_contract.py` and `gateway_auth.py`
@@ -39,6 +39,12 @@ the revised files; the version loaded on the laptop is still the one at `6c12983
 Follow-up (laptop commit `83a6f58`, not loaded), from the preliminary review at `79dd21f`: the
 content-type check now runs before the reasoning-tag check, so null, numeric or boolean content
 is a controlled refusal on both routes and the counter is not called.
+
+Reason codes (laptop commit `094b373`, not loaded), following the design in co-chat at `19b214e`:
+a refusal over the byte budget carries one of four fixed reasons (`counter_unavailable`,
+`counter_failed`, `counter_invalid`, `context_budget_exceeded`), forwarded as fixed
+`ProxyException.type` values; anything else stays `local_chat_policy`. Statuses, messages and the
+arithmetic are unchanged, and a counter's own exception text is never forwarded.
 
 Not addressed: the 32-token allowance is still a judgment, not a bound.
 
@@ -84,6 +90,6 @@ Not addressed: the 32-token allowance is still a judgment, not a bound.
 python -m unittest discover -s tests
 ```
 
-Needs nothing beyond the standard library for 22 tests. The 6 tests that need the real tokenizer are
+Needs nothing beyond the standard library for 24 tests. The 6 tests that need the real tokenizer are
 skipped unless the `tokenizers` package and the pinned tokenizer file are present, which is only
 the case on the laptop.

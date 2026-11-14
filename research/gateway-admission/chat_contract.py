@@ -7,10 +7,15 @@ from typing import Any
 from urllib.parse import urlsplit
 
 
+# Why a request over the byte budget was refused. Fixed words only; never request text.
+ADMISSION_REASONS = ("counter_unavailable", "counter_failed", "counter_invalid", "context_budget_exceeded")
+
+
 class ContractError(ValueError):
-    def __init__(self, message: str, status: int = 422):
+    def __init__(self, message: str, status: int = 422, reason_code: str | None = None):
         super().__init__(message)
         self.status = status
+        self.reason_code = reason_code if reason_code in ADMISSION_REASONS else None
 
 
 def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -122,23 +127,27 @@ def validate_chat(body: Any, s: dict[str, Any], count_tokens: Any = None) -> int
         units += size + s["per_message_overhead_units"]
     if messages[-1]["role"] != "user":
         raise ContractError("Send a new user message to continue the conversation.")
-    if count_tokens is not None and units > s["context_tokens"]:
+    if units <= s["context_tokens"]:
+        return units
+    reason = "counter_unavailable"
+    if count_tokens is not None:
         try:
             prompt = count_tokens(messages)
-        except Exception:
-            prompt = None
+        except Exception:                       # the exception itself is never forwarded
+            prompt, reason = None, "counter_failed"
+        else:
+            reason = "counter_invalid"
         if type(prompt) is int and prompt > 0:
             needed = prompt + output + TOKEN_MARGIN
             if needed > s["context_tokens"]:
                 raise ContractError(
                     "Conversation is too long for this model's context. Start a new chat "
-                    "or shorten the text; history was NOT silently truncated.", 413)
+                    "or shorten the text; history was NOT silently truncated.", 413,
+                    "context_budget_exceeded")
             return needed
-    if units > s["context_tokens"]:
-        raise ContractError(
-            "Conversation exceeds the conservative input budget. Start a new chat "
-            "or shorten the text; history was NOT silently truncated.", 413)
-    return units
+    raise ContractError(
+        "Conversation exceeds the conservative input budget. Start a new chat "
+        "or shorten the text; history was NOT silently truncated.", 413, reason)
 
 
 def load_local_env(path: Path) -> dict[str, str]:

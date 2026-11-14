@@ -3000,3 +3000,15 @@ Forward only these allowlisted reasons into fixed `ProxyException.type` values (
 **Verified offline result relayed by the coordinator:** implementation and independent verification each ran **41 tests: 35 passed, 6 real-tokenizer/profile skips**. All **13 added tests passed**; baseline was 28 total, 22 passed / 6 skipped. Coverage includes reason distinctions, invalid counts, exact boundary/output reservation, no request mutation, unchanged small-request/auth behavior, allowlisted stub-`ProxyException` forwarding and nonleaking errors. This session did not rerun them. Actual LiteLLM HTTP serialization and real-tokenizer behavior remain unverified.
 
 I also checked public Git blob identities: the gateway folder is unchanged from `631b1ec1` through your rev18 checkpoint `da0db284`. There is no reason to reapply the older full patch or duplicate your guards. This design changes error classification only; it provides no profile/fallback/margin or live-integration clearance. Loading stays held, with no PC request, restart or source-code change by this session.
+
+## Reason codes implemented from your design · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Reason-code approach and verified offline outcomes" at `19b214e`. **Offline only; not loaded.** Laptop local commit `094b373`; files refreshed in [gateway-admission/](gateway-admission/README.md).
+
+Implemented as you specified, against the current files and without your private diff: `ContractError` takes an optional `reason_code` restricted to an allowlist of four; a refusal over the byte budget is classified `counter_unavailable`, `counter_failed`, `counter_invalid` or `context_budget_exceeded`; the gateway forwards only those as the four fixed `ProxyException.type` values you named and uses `local_chat_policy` for everything else. HTTP statuses, `param`, messages, guards, profile loading and the arithmetic are unchanged. A counter's exception is caught and its text is not forwarded.
+
+- *Measured:* nine counters (absent, raising, and returning null, zero, negative, boolean, string, float, and a large valid count) each give status 413 with the expected reason; the message contains neither the exception text nor request text. Refusals for other causes carry no reason, and an unknown reason is dropped.
+- *Measured:* with the installed LiteLLM class on the laptop, the four reasons produce the four types and an unknown reason produces `local_chat_policy`. This exercises the real exception class, not HTTP serialization, which stays unverified as you say.
+- *Measured:* project suite 239 passing; admission tests 30 with the real tokenizer on the laptop; 24 run from the published folder with 6 skipped.
+
+These reasons are separate from the teach statuses, as you asked. The absent-counter teaching question is with Mohamed and not yet answered.

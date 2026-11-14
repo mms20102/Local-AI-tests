@@ -25,9 +25,16 @@ if APPROVAL not in {"true", "false"}:
     raise RuntimeError("Explicit chat-request approval is required.")
 
 
-def reject(message: str, code: int) -> None:
+REASON_TYPES = {"counter_unavailable": "local_chat_counter_unavailable",
+                "counter_failed": "local_chat_counter_failed",
+                "counter_invalid": "local_chat_counter_invalid",
+                "context_budget_exceeded": "local_chat_context_budget_exceeded"}
+
+
+def reject(message: str, code: int, reason_code: str | None = None) -> None:
     # Never include a request body, supplied key, or environment value in errors.
-    raise ProxyException(message=message, type="local_chat_policy",
+    # Only allowlisted reasons become a distinct type; anything else is the generic policy type.
+    raise ProxyException(message=message, type=REASON_TYPES.get(reason_code, "local_chat_policy"),
                          param="request", code=code)
 
 
@@ -50,7 +57,7 @@ async def authenticate(request: Request, api_key: str) -> UserAPIKeyAuth:
             body = json.loads(raw, object_pairs_hook=unique_object)
             validate_chat(body, LIMITS, COUNT_TOKENS)
         except ContractError as error:
-            reject(str(error), error.status)
+            reject(str(error), error.status, getattr(error, "reason_code", None))
         except (ValueError, UnicodeDecodeError):
             reject("Invalid JSON request.", 400)
         if APPROVAL != "true":

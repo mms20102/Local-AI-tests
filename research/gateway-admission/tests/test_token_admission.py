@@ -221,6 +221,27 @@ class AdmissionTests(unittest.TestCase):
                         validate_chat(dict(self.body, messages=messages), self.s, use)
         self.assertEqual(calls, [])
 
+    def test_refusal_reasons_are_distinct_and_fixed(self):
+        def broken(messages):
+            raise RuntimeError("CANARY tokenizer fault")
+        cases = [(None, "counter_unavailable"), (broken, "counter_failed"), (lambda m: None, "counter_invalid"),
+                 (lambda m: 0, "counter_invalid"), (lambda m: -4, "counter_invalid"), (lambda m: True, "counter_invalid"),
+                 (lambda m: "9", "counter_invalid"), (lambda m: 2.0, "counter_invalid"),
+                 (lambda m: 10**9, "context_budget_exceeded")]
+        for counter, reason in cases:
+            with self.assertRaises(ContractError) as caught:
+                validate_chat(self.body, self.s, counter)
+            self.assertEqual((caught.exception.status, caught.exception.reason_code), (413, reason))
+            self.assertNotIn("CANARY", str(caught.exception))
+            self.assertNotIn("word word", str(caught.exception))          # no request text in the message
+
+    def test_other_refusals_carry_no_admission_reason(self):
+        with self.assertRaises(ContractError) as caught:
+            validate_chat(dict(self.body, tools=[]), self.s, words(10))
+        self.assertIsNone(caught.exception.reason_code)
+        self.assertIsNone(ContractError("x", 400, "CANARY-unknown-reason").reason_code)
+        self.assertIsNone(ContractError("x").reason_code)
+
     def test_messages_not_modified(self):
         before = copy.deepcopy(self.body)
         validate_chat(self.body, self.s, words(500))
