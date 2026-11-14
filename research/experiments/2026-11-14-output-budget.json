@@ -1,0 +1,66 @@
+{
+  "id": "R001",
+  "date": "2026-11-14",
+  "title": "Output-budget completeness on a seven-function coding task",
+  "status": "preliminary-worker-report",
+  "provenance": "PC worker report forwarded through the coordinating thread; no raw response or run log supplied in this repository",
+  "independently_reproduced_by_this_session": false,
+  "configuration": {
+    "model": null,
+    "engine_version": null,
+    "backend": null,
+    "request_route": null,
+    "prompt_text": null,
+    "prompt_hash": null,
+    "sampling": null,
+    "cache_state": null,
+    "exact_output_budget_parameter": null,
+    "note": "Reported token budgets below are ceilings, not measured output token counts."
+  },
+  "runs": [
+    {
+      "output_budget_tokens": 32,
+      "elapsed_seconds": 18.28,
+      "first_text_seconds": null,
+      "completion_tokens": null,
+      "finish_reason": null,
+      "outcome": "truncated",
+      "reported_static_check": null,
+      "functional_tests_executed": false
+    },
+    {
+      "output_budget_tokens": 192,
+      "elapsed_seconds": 30.41,
+      "first_text_seconds": 10.22,
+      "completion_tokens": null,
+      "finish_reason": null,
+      "outcome": "reported complete",
+      "reported_static_check": "AST matched expected; matching criterion not supplied",
+      "functional_tests_executed": false
+    }
+  ],
+  "resource_observation": {
+    "minimum_sampled_free_ram_gib": 5.62,
+    "peak_vram_gib": null,
+    "sampling_interval_seconds": null,
+    "limitation": "Minimum sampled free RAM is not proof of peak-memory headroom or absence of brief spikes."
+  },
+  "safety": {
+    "generated_code_executed": false,
+    "reported_non_disruptive": true,
+    "full_cache_comparison_deferred": true,
+    "reason": "Worker reports a second model instance exceeds available GPU memory; use a single instance and an agreed idle window for restart-based tests."
+  },
+  "interpretation": [
+    "The lower budget finished sooner by returning an incomplete result; this is not a valid quality-preserving speed win.",
+    "192 completed this one task by the reported AST criterion; it is not a universal optimum or proof of semantic correctness.",
+    "No decoding throughput can be calculated reliably without actual output-token counts.",
+    "Do not infer statistical significance from one reported run per ceiling."
+  ],
+  "required_followup": [
+    "Exact model/container, engine and gateway versions; effective expert cap, context and KV_SLOTS.",
+    "Synthetic prompt, actual completion_tokens, finish_reason, output completeness and exact AST-check criterion.",
+    "Whether first text excludes reasoning, SSE keepalives and tool payloads.",
+    "Repeated serial trials through the already running server, with no duplicate model instance."
+  ]
+}

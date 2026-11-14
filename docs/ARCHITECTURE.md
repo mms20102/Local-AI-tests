@@ -31,3 +31,13 @@ The laptop runs inference. A GitHub Codespace can edit repository files and run 
 Inventory versions → save sanitized baseline → single override → bounded paired test → correctness/memory review → adopt or rollback.
 
 Keep secrets in the existing private local environment, preserve authentication and loopback binding, and avoid uploading local chat databases or raw prompts.
+
+## Full state checklist for experiments
+
+The three mechanisms above are not the full set of cross-run state:
+- OS file/page cache survives engine restarts.
+- Live KV prefix state can survive successive requests, independently of persisted KV files where the engine supports them.
+- Expert-usage history can be read even when USAGE_SAVE=0 prevents writes; in-memory adaptation may still occur.
+- Saved tuning profiles and planner defaults can alter an apparently unchanged launcher.
+
+Fix or record each independently. Match the installed engine: current upstream qwen36 documents --ram as inactive, and generic persistence/auto-cap flags must not be assumed to apply. See the revised [protocol](../research/BENCHMARK_PROTOCOL.md) and [inventory I001](../research/experiments/2026-11-14-pc-inventory.json).

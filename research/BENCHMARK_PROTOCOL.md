@@ -1,51 +1,63 @@
 # Laptop benchmark protocol
 
-Purpose: improve time to a correct useful answer, not merely make a short test print faster.
+Revision 2, 2026-11-14: incorporates Claude's actual A1.2/A2.2/A3.2 feedback and coordinator-relayed worker evidence. This is a plan; no full cache A/B has run in this repository session.
+
+Purpose: improve time to a complete, correct useful answer.
+
+## Ownership and resource boundary
+
+A separate PC worker can reach the laptop. Its offline planner/validator package is prepared with 27 reported tests, but an operational benchmark runner is not yet implemented. Codex/ChatGPT handles repository evidence/review; Claude provides independent review through co-chat. Do not ask Mohamed to duplicate work already owned by that worker.
+
+Only one model instance at a time. A second instance exceeds reported GPU headroom. Baseline/candidate restarts require an agreed idle maintenance window; do not interrupt active user chat.
 
 ## Prerequisites
 
-1. Verify actual executable/model identity and supported flags. Save a private full config and publish only sanitized values.
-2. Use AC power and a stable power profile. Record thermals, CPU/GPU utilization and memory. Do not globally disable security or OS protections.
-3. Keep one experiment owner and no unrelated generation traffic. Stop only the experiment's own temporary processes.
-4. Retain the original launcher and model. Do not upgrade engine and model and change tuning simultaneously.
+1. Capture exact engine/model/backend/quantization, CPU/GPU/RAM and sanitized effective configuration. See inventory I001.
+2. Historical baseline/candidate is now reported confirmed as expert cap 4 versus 32, same model, Vulkan. Make both caps explicit if supported; inspect actual runtime values rather than trusting a file.
+3. Record saved tuning profiles, auto-tier plans and automatic cap raising. Disable auto changes only if the installed engine actually reads the control. Upstream qwen36 says --ram/RAM_GB is not honored; do not use an accepted but inactive parameter as a memory guard.
+4. Keep AC power, comparable thermal state and unchanged driver, backend, context, thinking/sampling and output ceiling for placement tests.
+5. Keep the original launcher/model and a private config backup. Publish no secrets, private prompts or unredacted process command lines.
 
-## Workload
+## Workload and correctness
 
-Use at least six fixed, synthetic, non-private tasks:
-- Short factual instruction with a strict expected format.
-- Small pure-function coding task with meaningful edge-case tests.
-- Bug fix in a supplied function with frozen regression tests.
-- Repetitive edit with a known expected change.
-- Structured tool request with JSON-schema validation and a simulated result; do not execute model requests on the PC.
-- Short Arabic explanation plus a coding question.
+Use fixed synthetic tasks: short instruction, pure function, bug fix, repetitive edit, schema-checked mock tool request, and Arabic plus coding. Keep functional tests hidden from the model; reserve additional holdout tasks.
 
-Keep correctness tests hidden from the model. Reserve additional tasks for final holdout. Record prompt/template hashes and input/output token counts; do not compare answers of substantially different completeness as pure runtime gains.
+Record expected deliverables and actual input/output tokens. Truncated answers fail completeness; do not count their shorter latency as a speed win. Capture finish_reason and context clamping. An AST parse or signature/structure match is a static check, not proof that code behaves correctly. Do not execute generated code under the current draft-only workflow; functional testing requires a separately defined isolated runner.
 
-## Ordering and repetitions
+## State control: distinct sources
 
-- Begin with one unscored warm-up per configuration.
-- For each prompt, alternate paired runs in AB/BA order; aim for at least five measured pairs initially.
-- Keep an independent untouched snapshot of expert-history state for each arm, or reset both to the same starting snapshot before a pair. Do not let the second arm inherit the first arm's trained placement telemetry.
-- Report cold-load/start latency separately from warm request latency. Do not clear OS caches using privileged system tricks just for a prettier number.
-- Discard a run only for a predeclared invalid condition; retain the failure in the log.
-- Use a request deadline and stop the batch after repeated faults or unsafe memory pressure; save the checkpoint.
+- Expert resident state and adaptive placement: start each profile block from the same unmodified history when the active backend uses it. USAGE_SAVE=0 prevents history writes; it still reads prior history and does not prove in-memory adaptation is frozen.
+- GPU-tier histories: apply snapshot controls only where the installed engine actually records/loads them. CPU-only paths may differ.
+- Prefix/KV state: persistence control and in-memory reuse are separate. KVSAVE=0 is useful only if this engine honors it; it does not clear live context. A new UI chat may still send the same cacheable prefix.
+- Saved tuning profiles and auto plans: record and control them rather than silently inheriting settings.
+- OS file cache: restarting an engine does NOT clear it. Counterbalance order and record file I/O/memory; describe unmeasured file-cache bias honestly. Do not use privileged cache flushes.
+- Thermal and power state: record and avoid comparing cold hardware with a throttled later arm.
 
-## Metrics
+For a profile comparison, use fresh processes sequentially per arm/block, equal starting histories and the same unscored warm-up/workload order. Measure startup separately. Where a supported reset exists, verify that it resets the intended state. A warm conversational-reuse test is separate and intentionally preserves prefixes.
 
-At the client: time to first nonempty visible answer text; time to complete; input/output token counts and tokens/sec where reported reliably. Tool-only outputs are timed separately. Streaming keepalives, reasoning text and HTTP-header arrival are not first visible answer text.
+## Ordering and sample size
 
-Also record peak process/host RAM, GPU dedicated/shared memory, available memory, hard paging, expert hit rate, disk reads, queue wait, errors and user cancellation. Do not equate upstream gateway histograms with client TTFT; see [sources](SOURCES.md).
+- Use AB/BA counterbalancing; no simultaneous A/B servers.
+- The worker's prepared plan is five paired blocks across six tasks (60 measured entries plus 10 warmups), explicitly exploratory and not yet run. Six or more pairs can be planned for confirmation if practical; do not change a saved run budget silently.
+- Six pairs are not a blanket significance guarantee. Dependence, multiple tasks/metrics and run-order effects matter. A two-sided sign-test minimum p-value is not a substitute for a sound design or confidence interval.
+- Publish every paired result, medians, spread and exclusions. Do not claim a production p95 from a tiny sample.
+- Stop for active user traffic, repeated faults, unsafe resource pressure or an expired run deadline; save the checkpoint.
+- Use the same synthetic request sequence per arm. A repeated exact prompt with cached prefix is not equivalent to cold prefill.
 
-## Acceptance
+## Metrics and adoption
 
-- Correctness and required content must not regress; faster wrong answers do not pass.
-- For pure placement/scheduling experiments, compare deterministic outputs when the installed engine/backend promises invariance. Investigate differences rather than assuming they are harmless.
-- A changed prompt is evaluated for equivalent task completion, not necessarily byte equality.
-- Tool-call tests must validate schema and arguments, reject malformed/unknown requests and test a synthetic error/recovery case.
-- Report median, spread and each paired difference. Five pairs are exploratory and do not justify a production p95 claim.
-- Adopt only after a confirmatory reverse-order run and successful original-launcher rollback.
-- If no clear benefit is reproduced, retain baseline and publish the negative result.
+At the client: first nonempty visible answer text, completion time, actual token counts and finish reason. Record reasoning/tool output separately; SSE keepalives and header arrival are not answer text.
 
-## Scope limits
+Also capture peak/sampled host and GPU memory, paging pressure, queue wait, expert hit/I/O and active lookup telemetry. Minimum sampled free RAM does not establish peak headroom.
 
-Cloud/Codespace tests cannot substitute for laptop RAM/GPU/thermal measurements. Colibri's default speculative path and backend limitations may change between commits. Pin exact versions and document any upgrade as a separate experiment.
+For CPU-only pure residency changes, demand byte-identical deterministic text where the installed engine promises arithmetic invariance. GPU placement/backend changes may alter rounding; investigate and retain meaningful task checks rather than treating every byte change as either harmless or automatically wrong.
+
+A proposed screening gate is at least 10% median paired completion improvement with equivalent completeness/correctness, no sustained memory-pressure regression, and a confirmatory reverse-order block. This threshold is a project decision, not a statistical theorem. Publish no causal lookup claim until lookup-off versus lookup-on is actually run and the feature's active state is verified.
+
+If no clear gain survives confirmation, retain baseline and publish the negative result. Verify original-launcher rollback after the maintenance test.
+
+## Version caveats
+
+Current upstream API and Vulkan docs disagree in part about qwen36 multi-slot dense-chain support. Inspect installed implementation/runtime evidence; do not assume any KV setting enables or disables a path on every version.
+
+A cloud/Codespace test cannot reproduce this laptop's GPU, RAM or thermal behavior.

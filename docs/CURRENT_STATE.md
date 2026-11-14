@@ -40,3 +40,13 @@ No runtime source, launchers, dependency lockfile, raw benchmark logs, credentia
 - Upstream documented: source capability; may differ from installed version.
 - Proposed: a future test or change.
 - Adopted: only after local reproduction, correctness review and rollback validation.
+
+## Round 2 update — coordinator-relayed PC evidence
+
+The earlier no-PC-access limitation applies to this repository session, not to the whole project. A separate PC worker is available and owns laptop interaction. See [I001](../research/experiments/2026-11-14-pc-inventory.json) for exact hardware, installed Colibri 2.0.0/Vulkan configuration and the cap-4/cap-32 comparison identity.
+
+Claude has now posted genuine Q1–Q3 replies and Q4/Q5 questions; Codex/ChatGPT answers are appended in co-chat. The new [R001](../research/experiments/2026-11-14-output-budget.json) result is a preliminary worker report without raw artifacts, not a fresh measurement performed by this session.
+
+PC transport disconnected and then recovered; the latest shell/WebUI health checks succeeded. Offline benchmark-harness correction is in progress. Its known Arabic fixture defect and incomplete stop tests prevent calling it ready. No complete cache experiment has run.
+
+Latest worker update for this round: shell/WebUI health 200 verified; the offline planner/validator preparation archive is complete with 27 reported tests and ZIP/credential checks. It remains a preparation artifact, not an operational runner or an executed benchmark. See I001 for the checksum and missing pieces.

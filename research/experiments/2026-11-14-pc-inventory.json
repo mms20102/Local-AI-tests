@@ -1,0 +1,100 @@
+{
+  "id": "I001",
+  "date": "2026-11-14",
+  "status": "coordinator-relayed-PC-worker-verification",
+  "independently_inspected_in_this_repository_session": false,
+  "hardware": {
+    "cpu": "AMD Ryzen 9 7940HS",
+    "usable_ram_gib": 23.22,
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "dedicated_vram_mib": 8188,
+    "os": "Windows 11 Pro 10.0.26300",
+    "power": "AC",
+    "driver": "596.36"
+  },
+  "runtime": {
+    "engine_version": "Colibri 2.0.0",
+    "engine_commit": null,
+    "backend": "Vulkan",
+    "model_repository": "Kreuzzelg/qwen36-35b-a3b-colibri-i4-gs64",
+    "model_revision_label": "main",
+    "immutable_model_revision": null,
+    "full_weights_hash": null,
+    "download_state": "reported complete",
+    "effective_launcher": {
+      "ctx": 2048,
+      "cap": 32,
+      "ngen": 256,
+      "no_think": true,
+      "temp": 0,
+      "max_queue": 1,
+      "kv_slots": 1,
+      "no_tune_profile": true
+    },
+    "process_environment": {
+      "COLI_VULKAN": "1",
+      "COLI_CUDA": "0",
+      "COLI_VK_TIER_GB": "3",
+      "OMP_NUM_THREADS": "8",
+      "USAGE_SAVE": "0"
+    },
+    "observed_header": {
+      "expert_cache_per_layer": 32,
+      "dense_layers_on_gpu": 40,
+      "dense_layers_total": 40
+    },
+    "note": "Coordinator-relayed worker observations, not direct shell reads by the repository session. Upstream research snapshot may be newer than installed 2.0.0."
+  },
+  "earlier_cache_comparison": {
+    "baseline_expert_cap": 4,
+    "candidate_expert_cap": 32,
+    "same_model": true,
+    "raw_run_logs_available_here": false
+  },
+  "prompt_lookup": {
+    "engaged_in_installed_logs": true,
+    "tokens_per_forward": {
+      "addition_task": 1,
+      "repetitive_edit_range": [
+        1.54,
+        1.72
+      ]
+    },
+    "lookup_off_comparison_available": false,
+    "causal_speedup_established": false
+  },
+  "execution": {
+    "pc_access": "Available through a separate PC worker; latest coordinator report says shell and WebUI health recovered. This repository session still has no PC shell.",
+    "duplicate_model_instance": "Worker reports insufficient GPU headroom",
+    "benchmark_harness": "Offline planner/validator preparation package completed; 27 reported tests pass. Not an operational benchmark runner: no launcher, telemetry collector, checkpoint writer or semantic runner.",
+    "full_cache_test": "Requires idle maintenance window; sequential single instance",
+    "planned_measurements": {
+      "paired_blocks": 5,
+      "tasks": 6,
+      "measured_entries": 60,
+      "warmups": 10,
+      "status": "not run; exploratory design"
+    },
+    "disconnect": "No benchmark or setting change was in flight; live workbench/source untouched.",
+    "events": [
+      "Initial worker inventory and R001 observed.",
+      "Transport disconnected with no benchmark or settings change in flight.",
+      "Connection recovered; shell and WebUI health succeeded. Offline harness fixes in progress; no inference or restart.",
+      "Offline planner corrections completed; 27 tests and archive/credential checks reported passed. No new cache A/B run; live shell/WebUI health 200 verified."
+    ],
+    "artifact": {
+      "relative_pc_path": ".exports/paired-protocol-preparation-01.zip",
+      "bytes": 10641,
+      "sha256": "1fd87c75e0595484fe2153651b758c7dc7f9e0cebe60849a0792b8d3f74c96bc",
+      "validation": "PC worker reports ZIP validation and credential scan passed",
+      "independently_downloaded_or_reviewed_here": false
+    }
+  },
+  "missing": [
+    "Engine commit/executable identity",
+    "Immutable model revision and full weight hashes",
+    "Sanitized original logs, prompt/request metadata and raw run evidence",
+    "Planner source/archive available for independent review; operational runner and full protocol implementation"
+  ],
+  "history_control": "USAGE_SAVE=0 prevents writes; existing .coli_usage is still read for warm placement. In-memory adaptation is not established as frozen."
+}

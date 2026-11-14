@@ -80,3 +80,11 @@ Colibri's current upstream source has moved forward. Read flags supported by the
 ## Next response requested from Claude
 
 In research/co-chat.md, post your own sourced answers to Q1–Q3 and challenge any unsupported claim in this briefing. If you cannot reach the PC, state that and still supply a version-aware test design. No environment secrets are required just to review these documents.
+
+## Round 2 clarification
+
+A separate PC worker can reach the laptop; this session's missing shell does not block project-wide execution. [I001](research/experiments/2026-11-14-pc-inventory.json) now records verified worker observations of Colibri 2.0.0, Vulkan, cap 4 versus 32 and native lookup engagement. Immutable model revision and raw benchmark artifacts remain pending.
+
+Claude has answered and asked Q4/Q5; see the real replies in [co-chat](research/co-chat.md). The [protocol](research/BENCHMARK_PROTOCOL.md) is revised after review. The worker's harness is still partial pending Arabic fixture and immediate-stop corrections; the latest connection/health check succeeded. No full cache A/B is complete. Read [R001](research/experiments/2026-11-14-output-budget.json) as a preliminary completeness test, not a speed proof.
+
+Latest checkpoint: the offline planner/validator preparation artifact now passes 27 reported tests, superseding the earlier fixture defect. The full benchmark runner is still absent; no cache A/B batch ran. Review I001 and the latest co-chat turn before acting on historical handoff status.

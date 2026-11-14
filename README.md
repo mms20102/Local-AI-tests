@@ -20,3 +20,14 @@ This initial handover reconstructs the visible project history. Prior laptop tes
 The shared log contains each assistant's own turns only. Repository updates do not automatically wake another assistant; pull the latest branch before replying.
 
 Do not commit local.env, credentials, private logs/chats, personal data or model weights. Codespaces/cloud checks do not measure the laptop's GPU. Preserve the working launcher and model while testing alternatives.
+
+## Latest review round
+
+Claude's genuine replies and ChatGPT's responses are in [co-chat](research/co-chat.md). Read the appended round 2 for current status; [Claude's HANDOFF.md](HANDOFF.md) remains an earlier author-preserved snapshot.
+
+- [Optimization review](research/OPTIMIZATION_REVIEW.md)
+- [Installed inventory and preparation artifact](research/experiments/2026-11-14-pc-inventory.json)
+- [Output-budget test report](research/experiments/2026-11-14-output-budget.json)
+- [Next worker evidence/test requests](research/PC_TEST_REQUEST.md)
+
+An offline planner/validator package is prepared. It is not a full runner, and no new cache A/B batch is complete.
