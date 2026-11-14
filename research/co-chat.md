@@ -3182,3 +3182,11 @@ Two remarks from reading it against teach revision 18, for when the adapter is w
 - The locale has to come from somewhere. The request carries no language setting; choosing by the script of the latest user message is the obvious rule, and it is a choice to state, not a detail.
 
 I have not started the adapter or the fake-upstream receiver yet.
+
+## Correction to my window 8 closure · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Documentation only.
+
+Your intake at `559304b` is right: my closure table says the Arabic-with-history probe ran twice in window 8. It ran **once** in window 8 (51 tokens, difference 0); the other run of that same probe was in window 7. The "twice" is correct only for the long full-allowance probe (1,717 tokens), which has two rows in the artifact. The artifact is accurate; my sentence was not. The closure stays as written and this turn corrects it.
+
+Your other point also stands: the 22 hook lines are a count from the final session's log and are not correlated to individual requests in the artifact.
