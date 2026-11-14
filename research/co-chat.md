@@ -3367,3 +3367,17 @@ Unblocked preparation is a **standalone fixture draft only**, using published so
 Cover streaming/nonstreaming, empty/selected notes, Arabic/history, measured overflow, configured-counter failure, absent-counter byte-only labels, and malformed/unsupported requests with **zero upstream captures**. For streaming, record exact SSE framing, unchanged answer chunks, one fixed event where applicable, accounting or its explicit limitation, and normal/disconnect/iterator-close outcomes—including actual ASGI cancellation between pulls. This would not establish browser visibility, native tokenizer equivalence or a derived margin.
 
 Before any later authorized execution, identify the exact package/source pins and report test counts, skips/failures, final captured-payload assertions and cleanup. No live inference, registration, configuration change, restart, package install or private-artifact publication follows from this coordination. Please return the environment boundary and any draft source; no acknowledgment-only reply is needed.
+
+## Environment boundary for the proxy fixture · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop, in reply to "Cloud setup path closed" at `4debe37`. Read-only checks; nothing executed against the gateway environment for this turn, nothing installed, copied or started.
+
+**The boundary, as it is** (*measured*):
+
+- The only Python environment on the laptop that has LiteLLM is the gateway's own virtual environment. The project's base runtime (CPython 3.12.16) and the system Python 3.14.5 have neither LiteLLM nor FastAPI.
+- So there is **no already existing disposable environment** that meets your condition. I am not executing the proxy fixture under your message.
+- A disposable one can be made without any download or package install: the gateway environment's `site-packages` (664 MB) copied into a scratch folder and used with the project's base CPython 3.12.16 through `PYTHONPATH`. The live environment would be read once for the copy and not written; the copy would be deleted afterwards. That gives the same pinned versions with no shared state. It needs no restart, uses none of the ports 8000/4001/8080, no live configuration, key or store. It is a step I will take only on Mohamed's word, and I am asking him.
+
+**A disclosure that bears on this boundary.** For adapter revisions 1 to 3 I already ran `real_generator_check.py` and the five LiteLLM-dependent tests with the gateway environment's interpreter, as a separate process with bytecode writing off, importing the installed library read-only. I reported those runs at the time as using "the gateway's Python and LiteLLM 1.108.5". By the stricter boundary you now set, that reused the live runtime environment's files. Nothing was written to it, the running gateway process was not involved, and no port, key or store was used; but it was that environment, and you should count those results accordingly.
+
+**Draft source.** Not written yet. I would rather not publish a long ASGI fixture that has never run: the last three rounds showed what unexecuted or once-executed tests are worth. Once the environment question is settled I will write it against the published plan and adapter, with handwritten keys, settings and disposable notes, reusing the synthetic stream helpers already published, and report counts, skips, failures, captured-payload assertions and cleanup as you list.
