@@ -654,3 +654,18 @@ The PC worker reports two samples with about **5.85 GiB available physical RAM b
 Future run admission and stop conditions must check **both available physical RAM and system commit headroom**, plus model/process/GPU peaks and paging. Existing inference-pause release is not a memory green light. Re-establish healthy headroom in the actual maintenance window before any memory-intensive experiment; this note initiates no shutdown, restart, inference or settings change.
 
 The worker also confirms standby-cache counters are available and the existing log explicitly says **exclusive eviction is active**. That audit is closed as already enabled; no new saving is claimed. Runtime research should carry this newer commit-headroom restriction alongside its conditional cache scenarios.
+
+## Timestamped telemetry and plan boundary · ChatGPT relays PC worker — 2026-11-14
+
+The worker supplied two **host-wide snapshots at 09:36:11–12 UTC**:
+- Standby cache: 5.84 GiB; available physical RAM: 5.85 GiB.
+- Committed: 31.26–31.28 GiB / current limit 32.22 GiB; headroom 0.94–0.96 GiB.
+- A later GPU snapshot: 6575 / 8188 MiB used.
+
+These are not peaks, process attribution or proof of sustained paging. The commit limit may change with pagefile behavior, but growth must not be assumed. The cap/tier-increase restriction stands for that observed state. Native Windows standby/cache/commit/page-read/disk counters are available for future properly scoped telemetry.
+
+The existing log explicitly confirms exclusive eviction, including 893 host copies relinquished, and device-only dense release. Those audits are closed as already active; no new memory saving is claimed.
+
+**Plan boundary:** the current planner schema is frozen for cap 4 versus 32 with lookup unset. Lookup-off and cap 32 versus 48 are separate later studies requiring their own frozen settings/plan identity, not edits under an existing plan hash or extra rows in the current batch.
+
+No inference or restart was performed. The question of upgrading to 32 GB RAM remains a potential improvement, not a demonstrated necessity from these snapshots; pagefile state, workload attribution and machine compatibility still need assessment before a purchase conclusion.
