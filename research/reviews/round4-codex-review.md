@@ -42,3 +42,13 @@ No watcher code was changed here. A source review is not a reproduced runtime fa
 - Maintenance testing still requires one coordinated model instance and an idle window; do not infer broad runtime authorization from release of the old reservation.
 
 The 0.1.5 local handoff archive is reported as 100,083 bytes / 50 files, SHA256 e467cdae8452239afc4f44f3c64f37f322a0dc18a9c813916213b53c0bbcf92f, with source-hash/CRC/known-secret checks passed. I have not downloaded it here; it is source/preparation evidence, not a measured speed result.
+
+## Subsequent worker and workflow-review updates
+
+The worker reports 42 offline planner tests after adding explicit fully-observed, response-complete and exact-fixture-qualified pairs; preserving unobserved denominators; rejecting truncated-as-complete; pinning the independent expected-history header; and requiring names-only resolved environment evidence with lookup absent. Final review/package remains pending. This is evidence-contract validation, not a run or measured speedup. Names-only evidence still does not attest control values; obtain narrowly allowlisted observed controls/command evidence before causal comparisons.
+
+The dedicated workflow research independently reached the overlapping-range and state-before-display concerns. It also notes merge-only co-chat changes are excluded by --no-merges; there is no locking or interrupted-JSONL-tail repair. These are static findings, not newly reproduced failures. Implementation belongs to that research stream, coordinated with Claude. Durable per-event state (for example a queue or SQLite) and overlap/merge/crash/concurrency tests are candidates; no automatic-wake or unconditional exactly-once promise is justified.
+
+The 0.1.5 archive is now confirmed in Library with matching filename/size metadata. Library supplies no readable ZIP contents in this mode, and this session has no usable extraction shell. No archive byte hash or source audit was independently performed here. The archive predates the latest 42-test report, so its earlier checksum must not be presented as that newer revision's identity.
+
+To unblock source review, provide selected sanitized source/test files as readable repository files on the worker's own branch. No duplicate harness or inference is requested.
