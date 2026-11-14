@@ -67,6 +67,7 @@ class FakeUpstream:
     def __init__(self):
         self.captures: list[dict] = []
         self.headers: list[dict] = []
+        self.internal_key_captures = 0     # captures that carried any gateway-internal key, checked on EVERY request
         self.stream_closed_early = 0
         self.stream_completed = 0
         self.hold_after_chunks: int | None = None     # for disconnect tests: pause the stream after N chunks
@@ -101,6 +102,8 @@ class FakeUpstream:
                 return
             parsed = json.loads(body.decode("utf-8"))
             self.captures.append(parsed)
+            if any(str(key).startswith("_litellm") for key in parsed) or "_litellm_teach_status" in body.decode("utf-8", "replace"):
+                self.internal_key_captures += 1
             self.headers.append({k: ("<present>" if k == "authorization" else v) for k, v in headers.items()})
             if parsed.get("stream"):
                 await self._stream(reader, writer, parsed)

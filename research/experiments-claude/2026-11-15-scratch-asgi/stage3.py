@@ -106,15 +106,17 @@ async def finish(task):
 
 
 async def main():
-    import integration_candidate as ic
-    import teach_store as ts
     guard = Guard()
     guard.install()
     upstream = FakeUpstream()
     port = await upstream.start()
     config = write_scratch_files(port)
+    # Imported only now: the candidate builds its hook at import and reads settings.json, which the
+    # line above has just written. The network guard is already installed.
+    import integration_candidate as ic
+    import teach_store as ts
     store_dir = ts.DEFAULT_DIR
-    check("asgi-scratch" in str(store_dir), "store is not in the scratch folder")
+    check(Path(__file__).resolve().parent in store_dir.resolve().parents, "store is not inside the fixture folder")
 
     def reset_store(*notes):
         shutil.rmtree(store_dir, ignore_errors=True)
@@ -143,7 +145,9 @@ async def main():
                 return r.status_code == 200 and r.json()["choices"][0]["message"]["content"] == ANSWER_TEXT
 
         async def observe(driver, task, streams_before, closed_before, completed_before):
+            waiting_since = asyncio.get_running_loop().time()
             ended = await finish(task)
+            call_ended_after = round(asyncio.get_running_loop().time() - waiting_since, 2)
             upstream.release.set()                             # let a held upstream try to continue and notice
             await asyncio.sleep(0.5)
             new_streams = ic.STREAMS[streams_before:]
@@ -154,7 +158,9 @@ async def main():
                       "adapter_cleanup_states": [s.cleanup for s in new_streams],
                       "adapter_close_errors": [list(s.close_errors) for s in new_streams],
                       "upstream_stream_closed_before_finishing": upstream.stream_closed_early - closed_before,
-                      "upstream_stream_completed": upstream.stream_completed - completed_before}
+                      "upstream_stream_completed": upstream.stream_completed - completed_before,
+                      # from the moment the test started waiting for the application call, to its end; nothing else included
+                      "seconds_until_application_call_ended": call_ended_after}
             record["proxy_still_serves_afterwards"] = await still_serves()
             return record
 
@@ -217,10 +223,8 @@ async def main():
             task = await driver.run()
             await asyncio.wait_for(upstream.reached_hold.wait(), DEADLINE)
             check(not task.done() and not driver.bodies, "something was sent before the first chunk")
-            started = asyncio.get_running_loop().time()
             driver.disconnect.set()
             record = await observe(driver, task, *marks)
-            record["seconds_until_application_call_ended"] = round(asyncio.get_running_loop().time() - started, 1)
             record["disconnect_observed_by_application"] = record["disconnect_delivered_by_receive"] > 0
             # What must hold whatever the framework does: nothing of the adapter is left open, the
             # upstream connection is closed in the end, and the proxy keeps serving.
@@ -273,6 +277,7 @@ async def main():
     await upstream.stop()
     shutil.rmtree(store_dir, ignore_errors=True)
     summary = {"passed": sum(r["result"] == "pass" for r in RESULTS), "failed": sum(r["result"] != "pass" for r in RESULTS),
+               "upstream_captures": len(upstream.captures), "upstream_captures_with_internal_keys": upstream.internal_key_captures,
                "guard_violations": guard.violations, "loopback_ports_connected": sorted(guard.loopback_ports),
                "upstream_port": port, "results": RESULTS}
     Path("stage3.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")

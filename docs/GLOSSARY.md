@@ -25,7 +25,7 @@ Terms used across this repository, in plain words.
 | **Margin** | 32 tokens added to a real count before comparing with the context. A judgment, not a derived bound |
 | **Served profile** | The exact setup the token counter was verified against: engine version, renderer file, thinking off, context size and tokenizer file. Real counting is used only when the launcher reports exactly this |
 | **Reason code** | Why a too-long request was refused: no counter available, the counter failed, it returned nonsense, or the request truly does not fit |
-| **Usage parity** | Agreement between the gateway's token count and the count the engine reports in its response |
+| **Usage parity** | Agreement between the gateway's token count and the count the engine reports in its response, for a given request. Shown for the shapes tested, not in general |
 
 ## Teaching
 
@@ -46,7 +46,7 @@ Terms used across this repository, in plain words.
 | Term | Meaning |
 |---|---|
 | **CODE-Q1** | The coding task set: 12 tasks (nine English, three Arabic) with 116 authored test cases, frozen at fixture revision 2 |
-| **Draft** | The model's answer to a task, saved as text. Never executed on the laptop |
+| **Draft** | The model's answer to a task, saved as text. Never executed on the laptop's own system |
 | **Static grade** | Checks that an answer is complete, not cut off, and has the required files and functions. Does not run the code |
 | **Behavioural grade** | Runs the authored cases against the answer. Allowed only in an isolated environment |
 | **First attempt** | The model's first answer to a task, with no retry or repair |

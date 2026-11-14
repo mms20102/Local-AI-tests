@@ -38,12 +38,25 @@ One real file is read: the model's `tokenizer.json`, for the profile-bound count
 
 ## Results
 
-Stage 2, completed requests: **12 of 12 cases pass with the counter bound; 10 of 10 with no counter.**
-Stage 3, disconnects: **5 of 5 cases meet their assertions**, two of them recorded as observed
-outcomes that differ from what the library's source suggested (below). Stage 3 was run three times
-with the same outcome; stage 2 twice per mode.
+These are counts of **scenario groups, not HTTP requests**: 12 + 10 + 5 = 27 groups.
 
-Network guard, every run: zero refused connections; the only port connected to was the fake upstream's.
+Stage 2, completed requests: **12 of 12 groups pass with the counter bound; 10 of 10 with no counter.**
+Stage 3, disconnects: **5 of 5 groups meet their assertions. That is not five successful disconnect
+behaviours**: two groups succeed as intended (disconnect between pulls, and during a backend pull);
+in one the disconnect was never observed; in one the application call ended in an error. Details below.
+
+The result files here are from **revision 2 of the fixture, run once from a fresh copy** made only of
+the files listed above. Revision 1 was run several times with the same outcomes, but only its final
+snapshots were kept, so those repeats are the author's report.
+
+Network guard, during the guarded interval of every run: zero refused connections; the only port
+connected to was the fake upstream's. In revision 2 the guard is installed before the candidate and
+the proxy are imported. It refuses non-loopback connections and the three live-stack ports; it is not
+an operating-system sandbox and does not watch DNS, UDP or file access. Separately, after the runs,
+the operator made one read-only health request to the live chat page; that is outside the fixture.
+
+Every request the fake upstream receives is checked for gateway-internal keys as it arrives
+(`upstream_captures_with_internal_keys` in each result file): **0 of 13, 0 of 11 and 0 of 10**.
 
 ### Stage 2 (`stage2-*.json`)
 
@@ -77,7 +90,7 @@ Declared for every case: ASGI application version 3.0. HTTP `spec_version` 2.3 u
 | Complete stream | returned | — | 7 | `done` | no (completed) |
 | Disconnect while `send` is blocked between pulls | returned | yes; the parked send was cancelled | 2 | `done` | yes |
 | Disconnect during a backend pull | returned | yes | 3 | `done` | yes |
-| Disconnect requested before the first chunk | returned after 30.5 s with HTTP 408 | **no** | 1 (the error body) | no adapter stream was created | yes, at the upstream timeout |
+| Disconnect requested before the first chunk | returned after 30.03 s with HTTP 408 | **no** | 1 (the error body) | no adapter stream was created | yes, at the upstream timeout |
 | HTTP spec 2.4: `send` raises `OSError` | **raised `ModuleNotFoundError`** | — | 2 | `done` | yes |
 
 After every case the proxy served a normal request.
@@ -88,9 +101,12 @@ After every case the proxy served a normal request.
    `invalid_request_error` and param `request_body`. The gateway's own "Invalid JSON request." path
    is not reached on this route.
 2. **A disconnect before the first chunk was not observed by the application in this fixture.** It
-   never called `receive` again; the request ended when the upstream call hit its timeout (30 s in
-   the scratch config). The fake upstream had sent response headers and was holding the first event.
-   Whether this is the fixture's shape or the library's behaviour on this path is not settled here.
+   never called `receive` again; the application call ended 30.03 s after the test began waiting
+   for it, which is the scratch config's 30 s upstream timeout. Prompt cancellation is therefore
+   **not established**. The source review in `research/audits/` on `main` gives the reason from
+   tagged source: the router reads the first provider chunk before the response path's disconnect
+   monitor exists, and watching during that wait depends on a `cancel_on_disconnect` setting that
+   defaults to off. That is a source explanation, not a trace of the installed code.
 3. **Under HTTP spec 2.4 the application call ended with `ModuleNotFoundError: No module named
    'prisma'`**, raised from the proxy's exception handling after the framework reported the
    disconnect. The adapter and upstream were still cleaned up. The installed uvicorn declares HTTP
@@ -116,4 +132,7 @@ python launch.py bound stage3.py
 ```
 
 The stages expect an `app/` folder holding copies of the seven source files listed above beside
-`integration_candidate.py`, and they create and delete a throwaway store under `app/.runtime/`.
+`integration_candidate.py`. Nothing else needs preparing: each stage writes its synthetic
+`settings.json` and proxy config before it imports the candidate, and creates and deletes a throwaway
+store under `app/.runtime/`. (Revision 1 imported the candidate first and so depended on a settings
+file left by an earlier run; that was a real gap in the recipe, found in review.)

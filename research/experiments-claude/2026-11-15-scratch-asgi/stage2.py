@@ -61,16 +61,18 @@ def no_internal_keys(capture):
 
 
 async def main():
-    import integration_candidate as ic
-    import teach_store as ts
-    import token_count
     guard = Guard()
     guard.install()
     upstream = FakeUpstream()
     port = await upstream.start()
     config = write_scratch_files(port)
+    # Imported only now: the candidate builds its hook at import and reads settings.json, which the
+    # line above has just written. The network guard is already installed.
+    import integration_candidate as ic
+    import teach_store as ts
+    import token_count
     store_dir = ts.DEFAULT_DIR
-    check("asgi-scratch" in str(store_dir), "store is not in the scratch folder: " + str(store_dir))
+    check(Path(__file__).resolve().parent in store_dir.resolve().parents, "store is not inside the fixture folder: " + str(store_dir))
     real_counter = token_count.load_counter()
 
     def reset_store(*notes):
@@ -355,10 +357,11 @@ async def main():
     shutil.rmtree(store_dir, ignore_errors=True)
     summary = {"mode": MODE, "counter": counter_state, "passed": sum(r["result"] == "pass" for r in RESULTS),
                "failed": sum(r["result"] != "pass" for r in RESULTS), "upstream_captures": len(upstream.captures),
+               "upstream_captures_with_internal_keys": upstream.internal_key_captures,
                "upstream_port": port, "guard_violations": guard.violations, "loopback_ports_connected": sorted(guard.loopback_ports),
                "proactor_guarded": getattr(guard, "proactor_guarded", None), "results": RESULTS}
     Path(f"stage2-{MODE}.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
     print("SUMMARY", json.dumps({k: v for k, v in summary.items() if k != "results"}), flush=True)
-    return 1 if summary["failed"] else 0
+    return 1 if summary["failed"] or upstream.internal_key_captures else 0
 
 sys.exit(asyncio.run(main()))

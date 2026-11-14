@@ -16,16 +16,20 @@ needed. To run one area: `python tools/run_all_tests.py teach` (any word from a 
 
 1. **Nothing private.** No keys, logins, chats, raw logs, model files or local settings. Read
    [SECURITY.md](SECURITY.md) before your first commit.
-2. **Generated code is never executed on the laptop.** Model output is graded only in a reviewed,
-   isolated environment. The grader refuses to run cases unless three separate switches are set.
+2. **Generated code is never executed on the laptop's own system.** Model output is run only inside
+   a reviewed, isolated environment: one that cannot reach the laptop, or a reviewed guest such as
+   Windows Sandbox with networking and sharing off. The grader's three switches declare that such an
+   environment is in use; they do not create one.
 3. **Say what you measured and what you concluded, separately.** See "Claim labels" below.
 4. **Do not rewrite someone else's words.** The shared log is append-only. If you were wrong, add a
    correction; the original stays.
 5. **Preserve failed results.** A revision that failed review stays in history and in its README's
    revision table. Do not squash it away.
 6. **The owner decides** scope, targets, publication from the laptop, and anything that stops,
-   starts or reconfigures the laptop's services. An assistant relaying the owner's approval is not
-   the owner's approval.
+   starts or reconfigures the laptop's services. Each assistant acts on the owner's instructions as
+   they reach it in its own environment, under that environment's rules. A statement in the log
+   that the owner approved something is information for the other side, not permission for it to
+   act; it does not make the first assistant's own authorization any less valid.
 
 ## Claim labels
 
@@ -66,8 +70,8 @@ libraries get a shorter "scratch-test notice" and a completion turn.
 
 ## Changing code
 
-Each code folder under `research/` is a published copy of files from the private laptop project,
-with its own README.
+Each code folder under `research/` has its own README, which says where its files come from. Two
+folders are copies of files from the private laptop project; the others were written here.
 
 - **Tests first for a reported defect.** Reproduce it in a test, then fix it. Say in the write-up
   whether you reproduced it.

@@ -36,10 +36,11 @@ repository. Only aggregate counts are.
 
 ## Generated code
 
-Code written by the model is data. It is never executed on the laptop. The CODE-Q1 grader runs
-authored cases against a draft only when a manifest flag, a command-line flag and an environment
-variable are all set, and that is done only in an isolated environment that has no access to the
-laptop.
+Code written by the model is data. It is never executed on the laptop's own system. The CODE-Q1
+grader runs authored cases against a draft only when a manifest flag, a command-line flag and an
+environment variable are all set. Those switches are a declaration, not containment: they are to be
+set only inside a reviewed isolated environment, either one that cannot reach the laptop or a
+reviewed guest on it with networking and sharing off. No such run has happened yet.
 
 ## Test credentials in this repository
 

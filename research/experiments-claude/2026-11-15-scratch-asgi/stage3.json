@@ -1,11 +1,13 @@
 {
  "passed": 5,
  "failed": 0,
+ "upstream_captures": 10,
+ "upstream_captures_with_internal_keys": 0,
  "guard_violations": [],
  "loopback_ports_connected": [
-  61980
+  52159
  ],
- "upstream_port": 61980,
+ "upstream_port": 52159,
  "results": [
   {
    "case": "baseline: complete stream through the direct driver",
@@ -27,6 +29,7 @@
     ],
     "upstream_stream_closed_before_finishing": 0,
     "upstream_stream_completed": 1,
+    "seconds_until_application_call_ended": 0.33,
     "proxy_still_serves_afterwards": true,
     "bodies_in_real_time": 7
    }
@@ -51,6 +54,7 @@
     ],
     "upstream_stream_closed_before_finishing": 1,
     "upstream_stream_completed": 0,
+    "seconds_until_application_call_ended": 0.0,
     "proxy_still_serves_afterwards": true
    }
   },
@@ -70,8 +74,8 @@
     "adapter_close_errors": [],
     "upstream_stream_closed_before_finishing": 1,
     "upstream_stream_completed": 0,
+    "seconds_until_application_call_ended": 30.03,
     "proxy_still_serves_afterwards": true,
-    "seconds_until_application_call_ended": 30.5,
     "disconnect_observed_by_application": false
    }
   },
@@ -95,6 +99,7 @@
     ],
     "upstream_stream_closed_before_finishing": 1,
     "upstream_stream_completed": 0,
+    "seconds_until_application_call_ended": 0.0,
     "proxy_still_serves_afterwards": true
    }
   },
@@ -118,6 +123,7 @@
     ],
     "upstream_stream_closed_before_finishing": 1,
     "upstream_stream_completed": 0,
+    "seconds_until_application_call_ended": 0.05,
     "proxy_still_serves_afterwards": true,
     "application_error_tail": "<site-packages>/litellm/proxy/db/exception_handler.py\", line 180, in is_database_infrastructure_error //     import prisma // ModuleNotFoundError: No module named 'prisma'"
    }

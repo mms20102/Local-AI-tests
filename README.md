@@ -26,12 +26,12 @@ Six checks define "done". The full wording and thresholds are in
 
 | # | Check | Where it stands (2026-11-15) |
 |---|---|---|
-| 1 | Long conversations, with the full answer allowance reserved | Working on the laptop. A 1,717-token prompt with a 256-token answer was served; over-long requests are refused with a clear reason |
+| 1 | Long conversations, with the full answer allowance reserved | Working on the laptop for the request shapes tested: a 1,717-token prompt with the full 256-token answer, Arabic, and multi-turn. Over-long requests are refused with a clear reason. Not a proof for every conversation; the 32-token margin is a judgment |
 | 2 | Coding quality: at least 9 of 12 tasks pass on the first attempt | 12 of 12 answers are complete and well-formed. They have not yet been run against their 116 test cases; that grading has been handed to the independent reviewer |
-| 3 | Speed: median 15 s to first text, 60 s per task | Exploratory: 35 s per task, 16 s to first text, measured while a large download was running |
+| 3 | Speed: median 15 s to first useful text, 60 s per task, counted only for correct answers | Not measured yet. An exploratory run gave 34.9 s per task and 16.1 s to first text, while a large download was running and without checking correctness |
 | 4 | Start, stop and recover without help | Three clean stop-start cycles and a 20-request session. An owner guide exists on the laptop |
 | 5 | Teaching notes with visible limits | Store and hook reviewed through revision 18. An in-chat "notes left out" notice is a tested prototype, not loaded |
-| 6 | Private operation | The stack's processes were observed connecting to nothing outside the laptop. Sampling, not a packet capture |
+| 6 | Private operation | In one 82-second sample the stack's processes connected to nothing outside the laptop. Sampling, not a packet capture |
 
 For the detailed, dated status with every qualification, see [docs/CURRENT_STATE.md](docs/CURRENT_STATE.md).
 
@@ -45,9 +45,11 @@ cd Local-AI-tests
 python tools/run_all_tests.py
 ```
 
-Expected: 229 tests in 5 suites, all suites passing, 16 tests skipped. The skipped tests need files
+Expected: 229 tests run in 5 suites, 16 of them skipped, every suite passing. This is the count on
+2026-11-15; it grows. The skipped tests need files
 that exist only on the laptop (the model's tokenizer, the gateway's settings) or the LiteLLM library.
-Nothing in the test suites starts a service, calls a model or uses the network.
+Nothing in the test suites starts a service, calls a model or uses the network. The same command runs
+on GitHub for every pull request, on Linux and Windows.
 
 ## What is in here
 
@@ -57,7 +59,7 @@ Nothing in the test suites starts a service, calls a model or uses the network.
 | [research/gateway-admission/](research/gateway-admission/) | The gateway's request check: text-only rules, and admission by real token count | 30 tests |
 | [research/teach-status-adapter-prototype/](research/teach-status-adapter-prototype/) | Prototype: one status line in a streamed answer when notes were left out | 46 tests |
 | [research/coding-quality-v1/](research/coding-quality-v1/) | CODE-Q1: 12 small coding tasks (9 English, 3 Arabic), 116 test cases, a grader, and the model's first-pass answers | 31 tests |
-| [research/context-preflight/](research/context-preflight/) | Evidence that the gateway's token count equals the engine's | data and audits |
+| [research/context-preflight/](research/context-preflight/) | Comparisons of the gateway's token count with the engine's for the request shapes tested, with their limits | data and audits |
 | [research/experiments-claude/](research/experiments-claude/) | Measurements taken on the laptop, with the scripts that produced them | data |
 | [research/experiments/](research/experiments/), [research/audits/](research/audits/) | Independent review records | data |
 | [research/co-chat.md](research/co-chat.md) | The shared log between the two assistants. Append-only | — |
@@ -77,9 +79,9 @@ owner's approval. See [SECURITY.md](SECURITY.md) for the rules.
 Two assistants work for the owner and check each other. Neither result counts until the other side
 has had the chance to break it.
 
-- **Claude** works on the laptop: writes the code here, runs the model, takes measurements.
-- **ChatGPT** works from the published files: reads source, audits numbers, and relays an
-  independent reviewer who runs the published tests in a separate environment.
+- **Claude** works on the laptop: writes most of the code here, runs the model, takes measurements.
+- **ChatGPT** works from the published files: reads source, audits numbers, writes designs and some
+  code, and relays an independent reviewer who runs the published tests in a separate environment.
 - **The owner decides.** Scope, targets, anything that restarts the laptop's services, and anything
   published from the laptop need his word.
 

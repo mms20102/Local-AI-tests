@@ -7,10 +7,11 @@
  "passed": 12,
  "failed": 0,
  "upstream_captures": 13,
- "upstream_port": 59845,
+ "upstream_captures_with_internal_keys": 0,
+ "upstream_port": 51638,
  "guard_violations": [],
  "loopback_ports_connected": [
-  59845
+  51638
  ],
  "proactor_guarded": true,
  "results": [

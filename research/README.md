@@ -12,14 +12,16 @@ or audited, **plans** and designs, and the **log**. This page says which is whic
 ## Code
 
 Each folder is self-contained, has its own README with a revision history and review status, and
-runs offline with the standard library. Run all of them with `python tools/run_all_tests.py` from
+runs offline with the standard library. `teach-store/` and `gateway-admission/` are copies of files
+from the private laptop project; `coding-quality-v1/` and the adapter prototype were written in this
+repository. Run all of them with `python tools/run_all_tests.py` from
 the repository root.
 
 | Folder | What it does | Tests | Review status |
 |---|---|---|---|
 | [teach-store/](teach-store/) | `teach_store.py`: the notes store (add, list, disable, purge, recover) with locking and crash recovery. `teach_hook.py`: the gateway hook that adds applicable notes to a chat request and reports what it left out | 109, 5 skipped | Reviewed offline through revision 18 |
 | [gateway-admission/](gateway-admission/) | `chat_contract.py`: what a chat request may contain and whether it fits the context. `token_count.py`: the real token count, bound to one served profile. `gateway_auth.py`: the gateway's auth hook | 30, 6 skipped | Reviewed offline, including reason codes |
-| [teach-status-adapter-prototype/](teach-status-adapter-prototype/) | Carries the hook's decision to the response stream and shows one fixed status line when notes were left out | 46, 5 skipped | Revision 3 reviewed offline. Not loaded anywhere |
+| [teach-status-adapter-prototype/](teach-status-adapter-prototype/) | Carries the hook's decision to the response stream and shows one fixed status line when notes were left out. Built on a status core written on the ChatGPT side | 46, 5 skipped | Revision 3 reviewed offline. Not loaded anywhere |
 | [coding-quality-v1/](coding-quality-v1/) | CODE-Q1: 12 frozen tasks with 116 authored cases, `grade.py` (static and gated behavioural grading), a token preflight, and the model's first-pass drafts | 31 | Fixture revision 2. Behavioural grading of the drafts pending |
 
 Skipped tests need the laptop's tokenizer file, its gateway settings, or the LiteLLM library.
@@ -28,7 +30,7 @@ Skipped tests need the laptop's tokenizer file, its gateway settings, or the Lit
 
 | Path | What it shows |
 |---|---|
-| [context-preflight/](context-preflight/) | That the gateway's token count equals the engine's: 24 saved requests, then Arabic, multi-turn and long requests on the laptop, each with difference 0. Source audits of how the engine counts and limits tokens |
+| [context-preflight/](context-preflight/) | Count comparisons between the gateway and the engine: 24 saved requests, then a few Arabic, multi-turn and long requests on the laptop, each with difference 0. These cover the shapes tested and are not a general proof. Source audits of how the engine counts and limits tokens |
 | [experiments-claude/2026-11-14-cap4-cap32-exploratory/](experiments-claude/2026-11-14-cap4-cap32-exploratory/) | Cache setting 32 against 4: 705 s against 962 s over 48 requests. Exploratory |
 | [experiments-claude/2026-11-14-window8/](experiments-claude/2026-11-14-window8/) | Three stop-start cycles, a 20-request session, boundary probes and a network-endpoint check on the laptop |
 | [experiments-claude/2026-11-15-scratch-asgi/](experiments-claude/2026-11-15-scratch-asgi/) | A synthetic test through LiteLLM's real proxy application to a fake upstream: exact upstream body, status framing, and disconnects. Includes the fixture source |
