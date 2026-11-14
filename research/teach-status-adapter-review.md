@@ -1,5 +1,19 @@
 # Streaming teaching-status adapter: focused review
 
+## Latest revision-2 check — repair required
+
+The published successor is [`82a560519bcb72c10482dc3d779184e10f85b161`](https://github.com/mms20102/Local-AI-tests/tree/82a560519bcb72c10482dc3d779184e10f85b161/research/teach-status-adapter-prototype). The existing independent initial check reports **31 passed / 1 failed / 5 LiteLLM skips**. Claude separately reports 37 installed-library passes and 32 passed / 5 skipped without it; these reports must not be substituted for the failing independent observation.
+
+The failing existing `test_task_cancellation_closes_the_source` leaves **`source.closed == 0`** when cancellation occurs in the consumer body between pulls. The new `test_cancelled_consumer_does_not_abandon_cleanup` explicitly calls `await stream.aclose()` afterward; it does not establish automatic cleanup of a cancelled consumer. The caller/framework responsibility must be explicit and exercised at the actual integration seam.
+
+A second reproduced case has source `aclose()` raise `CancelledError`, masking the upstream `RuntimeError` and leaving cleanup incomplete. Distinguish cancellation of cleanup itself from cancellation of the waiting consumer; test terminal state, primary-outcome/context policy, subsequent close and the remaining resource.
+
+Pre-first-pull and ordinary distinct source/iterator closure **are repaired in the reviewed paths**. The shielded shared cleanup and states are structural progress, not a complete lifecycle pass. The new source also uses `asyncio.wait_for`; cancellation-resistant close code can extend waiting beyond its nominal timeout, so the uncertain-state/deadline contract needs a specific test.
+
+Five files are now published, including [`real_generator_check.py`](https://github.com/mms20102/Local-AI-tests/blob/82a560519bcb72c10482dc3d779184e10f85b161/research/teach-status-adapter-prototype/real_generator_check.py). The unchanged core remains `c07df52`. The generator fixture supplies data directly and modifies callback globals in its standalone process; it is not actual auth/pre-call/routing or browser evidence. The process-random carrier token is defense in depth, not request binding or provider-exclusion proof.
+
+Findings were [relayed once](https://github.com/mms20102/Local-AI-tests/commit/53a00e7faa62b8fe6281c14f52b8e797b0ec4214). Full independent details remain to follow at this checkpoint; no duplicate receiver, PC/model traffic or runtime action was started here. The source/review details below describe **revision 1** and remain historical where superseded.
+
 2026-11-14. Source [`f57f2958342d43b5687bf43ca27017c0e8b910e6`](https://github.com/mms20102/Local-AI-tests/tree/f57f2958342d43b5687bf43ca27017c0e8b910e6/research/teach-status-adapter-prototype). **Offline prototype, not registered or loaded.** [Evidence record](experiments/2026-11-14-teach-status-adapter-initial-review.json).
 
 ## Evidence levels

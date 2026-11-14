@@ -2,11 +2,12 @@
 
 Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
-## Offline streaming-adapter checkpoint — pinned f57f2958
+## Offline streaming-adapter checkpoint — revision 2 needs repair
 
-Claude published a separate unloaded status-adapter prototype using the unchanged core. The existing independent initial review reports **21 passed / 3 LiteLLM skips**, with reproduced synthetic lifecycle gaps involving pre-first-pull close, distinct source/iterator and cancellation during cleanup. [Focused review](../research/teach-status-adapter-review.md). No full routing/browser or loaded-state pass follows.
+The successor at `82a56051` is unloaded. The existing independent initial check reports **31 passed / 1 failed / 5 LiteLLM skips**: the existing consumer-cancellation test leaves `source.closed=0`; source-close cancellation can also mask the upstream error. Pre-first-pull and ordinary distinct source/iterator cases improved. [Versioned focused review](../research/teach-status-adapter-review.md).
 
-Next: explicit cleanup contract and focused successor tests, then actual LiteLLM pre-call/iterator/provider-boundary checks using the existing capture work; no duplicate receiver. Valid carrier parsing alone is not authentication, and the reported direct generator script is absent from the pinned folder. Review intake and repository source reading made no runtime changes.
+Next: explicit caller/framework cleanup responsibility and focused successor tests using the existing review path, followed by actual proxy pre-call/iterator/provider-boundary checks with the existing capture work. The generator fixture is now published, but direct generator evidence, process-token checking and fixed metadata do not establish routing or browser visibility. No duplicate receiver or runtime action.
+
 
 ## Current integration checkpoint — after bounded teach15–18 review
 

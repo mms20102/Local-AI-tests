@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-11-14",
-  "kind": "coordinator_relayed_initial_independent_review_with_separate_static_intake",
+  "kind": "versioned_coordinator_relayed_adapter_review_with_separate_static_intake",
   "source_commit": "f57f2958342d43b5687bf43ca27017c0e8b910e6",
   "source_directory": "research/teach-status-adapter-prototype",
   "source_manifest": [
@@ -81,5 +81,87 @@
     "duplicate_receiver_started": false,
     "private_capture_files_published": false
   },
-  "next_step": "Explicit lifecycle contract and focused repair tests, then existing-reviewer successor check and actual framework/fake-upstream boundary test; browser separately"
+  "next_step": "Explicit lifecycle contract and focused repair tests, then existing-reviewer successor check and actual framework/fake-upstream boundary test; browser separately",
+  "revision2": {
+    "source_commit": "82a560519bcb72c10482dc3d779184e10f85b161",
+    "cochat_blob": "b50319131c5ac16bcf3ad9dce97475c9710bf602",
+    "manifest": [
+      {
+        "path": "research/teach-status-adapter-prototype/README.md",
+        "git_blob": "2b27bc0b229368eeb37815b37ea8571681bb9ca6"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/real_generator_check.py",
+        "git_blob": "a76cd858cbe13141405c90447e70c0bb7175cecd"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/teach_status_adapter.py",
+        "git_blob": "e9306fab9384dbf078df416d843e47518f6bda02"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/teach_status_core.py",
+        "git_blob": "c07df5220f2064163ed5d11d035f6382fc4a9191"
+      },
+      {
+        "path": "research/teach-status-adapter-prototype/test_teach_status_adapter.py",
+        "git_blob": "82e35d39ca7a40bcd124cc60a4bc4747f1132f7d"
+      }
+    ],
+    "author_reported_tests": {
+      "with_installed_litellm": {
+        "passed": 37,
+        "skipped": 0
+      },
+      "without_litellm": {
+        "passed": 32,
+        "skipped": 5
+      }
+    },
+    "author_reported_changes": [
+      "Object wrapper permits pre-first-pull close",
+      "Distinct iterator/source both included in cleanup",
+      "Shielded shared cleanup task with explicit states and cooperative timeout",
+      "Primary error retained as cancellation context",
+      "Process-random carrier token as defense in depth",
+      "Real generator fixture and capability-detection tests published"
+    ],
+    "static_intake": {
+      "source_read": true,
+      "python_executed_by_this_session": false,
+      "unchanged_core_blob": true,
+      "generator_fixture_now_present": true,
+      "actual_generator_request_data_supplied_directly": true,
+      "real_proxy_routing_demonstrated": false
+    },
+    "existing_focused_review": {
+      "status": "initial result received; repair required",
+      "passed": 31,
+      "failed": 1,
+      "skipped": 5,
+      "failing_existing_test": "test_task_cancellation_closes_the_source",
+      "observed_failure": "source.closed == 0 during consumer-body cancellation between pulls",
+      "additional_reproduced_case": "source aclose raising CancelledError can mask upstream RuntimeError and leave cleanup incomplete",
+      "confirmed_repaired_paths": [
+        "pre-first-pull close",
+        "ordinary distinct iterable/iterator closure"
+      ],
+      "full_report_received": false,
+      "executed_by_this_session": false,
+      "duplicate_receiver_started": false,
+      "relayed_once": "53a00e7faa62b8fe6281c14f52b8e797b0ec4214"
+    },
+    "focus_questions": [
+      "How does cancellation-resistant aclose interact with asyncio.wait_for and uncertain state timing?",
+      "Does an internally cancelled/failed cleanup task reach a terminal state, preserve primary outcome and attempt all owed resources?",
+      "Are distinct iterable/iterator and framework double-close responsibilities explicit?",
+      "Can the actual proxy prove trusted attach, carrier survival/exclusion and retry association?",
+      "Output accounting remains separate from byte-identical answer frames"
+    ],
+    "limits": [
+      "Not registered/loaded",
+      "No browser/nonstream, actual provider exclusion or full pre-call routing proof",
+      "No model/PC/runtime traffic by this session",
+      "Process token is not request binding or routing evidence"
+    ]
+  }
 }
