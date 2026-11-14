@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "author_reported_first_start_not_benchmark",
+  "date": "2026-11-14",
+  "source": {
+    "reporter": "Claude laptop session",
+    "cochat_commit": "6570684cc325930263645797888483db37fac18d",
+    "cochat_blob": "6eb440ab9e19ba6b36b96e43de63d4b6f980238e",
+    "heading": "Runtime window CLOSED",
+    "independently_verified_by_this_session": false,
+    "private_runtime_logs_published": false
+  },
+  "reported_actions": {
+    "colibri_2_1_startup_check_passed": true,
+    "colibri_2_1_synthetic_drafts_completed": 2,
+    "colibri_2_1_stopped": true,
+    "colibri_2_0_restored": true,
+    "colibri_2_0_restored_drafts_completed": 1,
+    "teach_hook_enabled": false,
+    "runtime_window_closed": true,
+    "launcher_local_commit": "cf4d369"
+  },
+  "reported_observations": [
+    {
+      "stage": "before_stop_2_0",
+      "committed_gib": 30.87,
+      "commit_limit_gib": 32.22,
+      "available_ram_gib": 5.76
+    },
+    {
+      "stage": "stack_stopped",
+      "committed_gib": 18.33,
+      "commit_limit_gib": 32.22,
+      "available_ram_gib": 11.36,
+      "gpu_used_mib": 939
+    },
+    {
+      "stage": "colibri_2_1_running",
+      "requested_expert_cap": 32,
+      "effective_expert_cap": 8,
+      "committed_gib": 34.64,
+      "commit_limit_gib": 35.29,
+      "available_ram_gib": 2.49,
+      "engine_private_gib": 13.78,
+      "engine_working_set_gib": 8.42,
+      "gpu_used_mib": 6367,
+      "host_pool_gib_reported_in_engine_log": 5
+    },
+    {
+      "stage": "colibri_2_0_restored",
+      "committed_gib": 28.14,
+      "commit_limit_gib": 32.22,
+      "available_ram_gib": 9.16,
+      "engine_private_gib": 7.33,
+      "engine_working_set_gib": 2.1,
+      "gpu_used_mib": null
+    }
+  ],
+  "reported_drafts": [
+    {
+      "version": "2.1.0",
+      "task_label": "add",
+      "first_text_s": 3.88,
+      "total_s": 6.92,
+      "finish_reason": "stop"
+    },
+    {
+      "version": "2.1.0",
+      "task_label": "clamp",
+      "first_text_s": 1.84,
+      "total_s": 4.88,
+      "finish_reason": "stop"
+    },
+    {
+      "version": "2.0.0 restored",
+      "task_label": "unspecified synthetic draft",
+      "first_text_s": 5.34,
+      "total_s": 8.2,
+      "finish_reason": "stop"
+    }
+  ],
+  "interpretation": {
+    "all_values_single_author_observations_not_peaks": true,
+    "warmup_cache_states_differ": true,
+    "timings_comparable": false,
+    "speedup_claim_supported": false,
+    "generated_code_semantics_independently_tested": false,
+    "larger_commit_limit_alone_proves_pagefile_growth": false,
+    "no_configuration_adopted_by_this_session": true
+  },
+  "inspection_pending": {
+    "worker_owned_launcher_diff": true,
+    "current_production_engine_identity": true,
+    "workbench_manifest_checksum_mismatch": true,
+    "reported_test_results_correlated_to_exact_local_source": true,
+    "fresh_read_only_resource_snapshot": true
+  },
+  "current_scope": {
+    "first_window_report_is_historical": true,
+    "first_closure_superseded_by_reported_second_window": true,
+    "second_window_open_reported": true,
+    "second_window_outcome": null,
+    "read_only_handoff_deferred": true,
+    "runtime_gateway_activity_held": true,
+    "nonintrusive_offline_work_only_if_noninterfering": true,
+    "new_runtime_test_authorized_by_this_artifact": false,
+    "teach_hook_must_remain_off": true,
+    "rejected_component_publication_retry": false
+  }
+}

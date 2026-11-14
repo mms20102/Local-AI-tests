@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "sanitized_artifact_arithmetic_intake_with_author_reported_runtime_observations",
+  "source_commit": "370b6765feb4a1a5507334143eeaa575ad064092",
+  "source_path": "research/experiments-claude/2026-11-14-window8/result.json",
+  "source_blob": "0e209e478ccd5beaf2a2e36ede99a0f1c2eecc10",
+  "closure_cochat_blob": "b65c53cf03341ec8cfae8b018b933cbb8c68eaa9",
+  "verified_by_this_session": {
+    "source_read_as_json": true,
+    "arithmetic_recomputed_in_javascript": true,
+    "laptop_access": false,
+    "model_requests": 0,
+    "runtime_changes": false
+  },
+  "normalized_record_counts": {
+    "session_rows": 20,
+    "ordinary": 18,
+    "ordinary_status_200": 18,
+    "ordinary_nonempty": 18,
+    "ordinary_stop": 15,
+    "ordinary_length": 3,
+    "ordinary_median_seconds": 9,
+    "ordinary_max_seconds": 15.3,
+    "session_refused": 1,
+    "session_cancel": 1,
+    "session_healthy_after": 20,
+    "probe_rows": 5,
+    "network_request_rows": 3,
+    "total_logged_request_rows": 28,
+    "matched_observed_counts": 5,
+    "probe_and_network_length": 4
+  },
+  "cycle_observations": [
+    {
+      "cycle": 1,
+      "stop_seconds": 11.6,
+      "start_seconds": 46.3,
+      "leftover_process_count": 0,
+      "available_gib": 7.47,
+      "commit_headroom_gib_rounded": 2.41
+    },
+    {
+      "cycle": 2,
+      "stop_seconds": 11.6,
+      "start_seconds": 40.6,
+      "leftover_process_count": 0,
+      "available_gib": 7.46,
+      "commit_headroom_gib_rounded": 2.32
+    },
+    {
+      "cycle": 3,
+      "stop_seconds": 11.6,
+      "start_seconds": 40.6,
+      "leftover_process_count": 0,
+      "available_gib": 7.33,
+      "commit_headroom_gib_rounded": 2.26
+    }
+  ],
+  "reported_http_evidence": {
+    "session_request_number": 7,
+    "status": 413,
+    "error_type": "local_chat_context_budget_exceeded",
+    "level": "Claude's published runtime observation; not independently captured HTTP here",
+    "other_counter_reason_http_types_proved": false
+  },
+  "count_pairs": [
+    {
+      "group": "probes",
+      "name": "multi_turn_arabic",
+      "own_count": 51,
+      "engine_prompt_tokens": 51,
+      "difference": 0,
+      "finish_reason": "stop",
+      "completion_tokens": 13
+    },
+    {
+      "group": "probes",
+      "name": "long_256",
+      "own_count": 1717,
+      "engine_prompt_tokens": 1717,
+      "difference": 0,
+      "finish_reason": "length",
+      "completion_tokens": 256
+    },
+    {
+      "group": "network_requests",
+      "name": "arabic",
+      "own_count": 50,
+      "engine_prompt_tokens": 50,
+      "difference": 0,
+      "finish_reason": "length",
+      "completion_tokens": 96
+    },
+    {
+      "group": "network_requests",
+      "name": "multi_turn",
+      "own_count": 74,
+      "engine_prompt_tokens": 74,
+      "difference": 0,
+      "finish_reason": "length",
+      "completion_tokens": 64
+    },
+    {
+      "group": "network_requests",
+      "name": "long_256",
+      "own_count": 1717,
+      "engine_prompt_tokens": 1717,
+      "difference": 0,
+      "finish_reason": "length",
+      "completion_tokens": 256
+    }
+  ],
+  "network_observation": {
+    "method": "Get-NetTCPConnection filtered to the stack's 7 process ids, 9 samples over 82 s while three requests ran; plus one Get-NetUDPEndpoint read",
+    "listening": [
+      "127.0.0.1:4001",
+      "127.0.0.1:8000",
+      "127.0.0.1:8080"
+    ],
+    "non_loopback_remote_endpoints": [],
+    "udp_endpoints": []
+  },
+  "reconciliation_limits": [
+    "28 is the number of published request records across three groups, not an independently traced total of all actual HTTP calls",
+    "Claude corrected the initial narrative: Arabic-history count51 ran once in window8; the other occurrence was window7. Artifact is unchanged and correct.",
+    "Narrative reports 22 nothing-added hook lines; artifact contains no per-hook correlation, so one-to-one coverage of all admitted/cancelled requests is not established",
+    "Five matched count pairs in artifact; no universal/native tokenizer proof",
+    "18 ordinary HTTP200 outcomes include three length-ended replies; nonempty is not semantic correctness"
+  ],
+  "qualifications": [
+    "Runtime observations are Claude-authored, not independently reproduced by this session",
+    "Exact loaded teach18 identity remains inferred from source on disk at startup",
+    "No live nonempty-note behavior; no new status adapter loaded",
+    "Download contention; no clean speed or quality result",
+    "Stop-file path only; Ctrl+C guide path not exercised",
+    "Network samples can miss short-lived traffic and exclude browser/other processes; not packet capture or privacy proof",
+    "No context boundary at the exact effective limit established by these probes"
+  ],
+  "author_correction": {
+    "source_commit": "871fa1d299b6f7970995df987a597184c087a63c",
+    "cochat_blob": "e10aedf23406a88bea6ce28bdefc34bfcc93b3be",
+    "arabic_history_window8_runs": 1,
+    "other_arabic_history_occurrence": "window 7; not an extra window8 row",
+    "only_long_1717_full256_repeated_in_window8_artifact": true,
+    "hook_lines_not_request_correlated": true,
+    "artifact_changed": false
+  }
+}

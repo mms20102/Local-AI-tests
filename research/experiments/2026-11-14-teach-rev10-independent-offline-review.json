@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "kind": "independent_teach_revision10_offline_review",
+  "date": "2026-11-14",
+  "source": {
+    "repository": "mms20102/Local-AI-tests",
+    "commit": "fd962cc2060c5bde7b1cce01f85991d7acaf16e7",
+    "path": "research/teach-store",
+    "revision": 10,
+    "reviewer": "original independent reviewer",
+    "evidence": "coordinator relay",
+    "tests_executed_by_this_repository_session": false
+  },
+  "result": {
+    "passed": 78,
+    "skipped": 5,
+    "targeted_checks": [
+      "diagnostic canaries",
+      "malformed ids",
+      "malformed fingerprints",
+      "logging"
+    ],
+    "no_blocking_regression_found_in_scope": true
+  },
+  "limits": {
+    "restricted_output_shape_not_issued_id_provenance": true,
+    "invalid_ids_counted_not_echoed_within_tested_scope": true,
+    "synchronous_output_can_block": true,
+    "live_litellm_configuration_tested_by_this_review": false,
+    "exact_loaded_revision": null,
+    "wire_level_equivalence_verified": false
+  },
+  "deployment": {
+    "last_round26_author_report": "revision 10 not loaded",
+    "deployment_verified_by_this_review": false,
+    "restart_requested": false,
+    "restart_performed_by_this_session": false
+  },
+  "preservation": {
+    "user_notes_modified": false,
+    "source_or_history_reset": false,
+    "live_manifest_updated": false,
+    "rejected_component_publication_retried": false
+  }
+}

@@ -1,0 +1,353 @@
+{
+  "schema_version": "coding-quality-proposal/1",
+  "suite_id": "CODE-Q1-PROPOSED",
+  "date": "2026-11-14",
+  "author": "Codex/ChatGPT coding-quality research track",
+  "status": "proposed",
+  "executable": false,
+  "model_traffic_enabled": false,
+  "generated_code_execution_enabled": false,
+  "purpose": "Specification only. Consumer must reject until ready status, all pinned fixtures/hashes, runtime digest and reviewed containment are supplied. No schedule or execution client is included.",
+  "provenance": {
+    "main_commit": "982437cf0ab604a572a1da0c38ed2527d593860e",
+    "claude_branch_commit": "5dca2bb1755dad4b845cd75d307af1c6821049ad",
+    "new_measurements": false
+  },
+  "normalization": "UTF-8; no implicit Unicode normalization. JSON object key ordering ignored, list order preserved. Strict declared output types; bool is distinct from integer; numeric float tolerance task-specific and frozen.",
+  "runner": {
+    "runtime_image_digest": null,
+    "containment_review": null,
+    "fixture_review": null,
+    "network": "disabled",
+    "host_mounts": "none",
+    "credentials": "none",
+    "gpu": "none",
+    "proposed_limits": {
+      "cpus": 1,
+      "memory_mib": 512,
+      "processes": 32,
+      "scratch_mib": 64,
+      "combined_output_kib": 64,
+      "total_evaluation_wall_s": 10,
+      "case_wall_s": 2
+    }
+  },
+  "scoring": {
+    "task_run_deadline_s_proposed": 180,
+    "attempts_per_task_run": 1,
+    "repair_policy": "disabled",
+    "ttp_pass_requires_live_integrated_timeline": true,
+    "semantic_pass_requires_all_declared_tests": true,
+    "nonpass_deadline_penalty": true
+  },
+  "study": {
+    "calibration_fixtures_required": 4,
+    "scored_tasks": 12,
+    "arms": 2,
+    "firstpass_scored_generations": 24,
+    "design": "Counterbalanced paired task order. New batch separate from the 70-row cap plan. No run authorized or scheduled by this document.",
+    "fresh_confirmation_holdout_required": true
+  },
+  "tasks": [
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "F01",
+      "family": "function",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "solution.py"
+      ],
+      "required_callables": [
+        "solution.stable_unique"
+      ],
+      "contract": "stable_unique(values: list[str]) -> list[str]. Return first occurrence of each distinct, case-sensitive string in original order. Accept empty strings and Unicode. Do not mutate input."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "F02",
+      "family": "function",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "solution.py"
+      ],
+      "required_callables": [
+        "solution.merge_intervals"
+      ],
+      "contract": "merge_intervals(intervals: list[list[int]]) -> list[list[int]]. Each input is [start,end] with start<=end. Return new sorted closed intervals with all overlap merged, including equal endpoints. Consecutive disjoint integer intervals such as [1,2] and [3,4] stay separate. Empty input returns []; input order/content must remain unchanged."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "F03",
+      "family": "function",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "solution.py"
+      ],
+      "required_callables": [
+        "solution.parse_kv"
+      ],
+      "contract": "parse_kv(text: str) -> dict[str,str]. Split with str.splitlines(); ignore blank lines and lines whose first non-whitespace character is #. Split other lines at first =; strip outer whitespace from key/value; retain any later = in value. Duplicate keys use last value. Empty key or missing = raises ValueError. Empty value allowed. Preserve internal whitespace and Unicode."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "B01",
+      "family": "bugfix",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "windows.py"
+      ],
+      "required_callables": [
+        "windows.sliding_windows"
+      ],
+      "contract": "Repair pinned starter sliding_windows(values: list[int], size: int) -> list[list[int]]. Return every contiguous window, step 1, preserving order; size>len(values) returns []; size==len(values)>0 returns one window. size<=0 raises ValueError. Empty values with positive size returns []; input remains unchanged."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "B02",
+      "family": "bugfix",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "cache.py"
+      ],
+      "required_callables": [
+        "cache.lookup"
+      ],
+      "contract": "Repair pinned starter lookup(cache: dict[str, JSON], key: str, default: JSON) -> JSON. Return cache[key] whenever key exists, including null, false, 0, empty string/list/object; otherwise return default. Do not mutate arguments."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "B03",
+      "family": "bugfix",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "stats.py"
+      ],
+      "required_callables": [
+        "stats.median"
+      ],
+      "contract": "Repair pinned starter median(values: list[int]) -> float. Sort a copy; odd length uses middle, even uses arithmetic average of two middle values. Empty list raises ValueError. Values limited to integers of magnitude <=1000000; do not mutate input."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "E01",
+      "family": "edit",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "config.py"
+      ],
+      "required_callables": [
+        "config.to_seconds"
+      ],
+      "contract": "Modify pinned starter to_seconds(config: dict[str, JSON]) -> dict[str, JSON]. Return a new mapping; if timeout_ms exists, replace that key with timeout_s = timeout_ms / 1000 and retain unrelated values. timeout_ms is a nonnegative integer (bool excluded) for valid inputs. If both timeout_ms and timeout_s exist raise ValueError. If timeout_ms absent return equal copy. Do not mutate input."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "E02",
+      "family": "edit",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "bundle.py"
+      ],
+      "required_callables": [
+        "bundle.clamp",
+        "bundle.sign",
+        "bundle.is_even",
+        "bundle.first_or_none",
+        "bundle.last_or_none",
+        "bundle.count_nonempty",
+        "bundle.reverse_text"
+      ],
+      "contract": "Implement all seven pinned-starter functions: clamp(value:int,lo:int,hi:int)->int bounded inclusively (lo<=hi); sign(value:int)->int in {-1,0,1}; is_even(value:int)->bool; first_or_none(values:list[JSON])->JSON first item or null; last_or_none same for last; count_nonempty(values:list[str])->int number of strings with len>0 (whitespace counts); reverse_text(text:str)->str reversed by Unicode code points. No input mutation. This is a new synthetic fixture, not the recovered R001 prompt."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "E03",
+      "family": "edit",
+      "prompt_language": "en",
+      "allowed_paths": [
+        "invoice.py",
+        "summary.py"
+      ],
+      "required_callables": [
+        "invoice.subtotal",
+        "invoice.total",
+        "summary.render"
+      ],
+      "contract": "Patch pinned two-module starter while retaining public functions. subtotal(items:list[list[int]])->int: sum quantity*unit_cents for each two-item row, all nonnegative integers. total(items,discount_cents:int)->int: max(0,subtotal-discount_cents), discount nonnegative. summary.render(items,discount_cents)->dict: exactly line_count=len(items), subtotal_cents=subtotal, total_cents=total. Duplicate rows count separately; no input mutation."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "A01",
+      "family": "arabic",
+      "prompt_language": "ar",
+      "allowed_paths": [
+        "solution.py"
+      ],
+      "required_callables": [
+        "solution.word_counts"
+      ],
+      "contract": "word_counts(text: str) -> dict[str,int]. Count tokens from Python str.split() with no explicit separator. Preserve exact Unicode code points, case and punctuation; no normalization, diacritic removal or punctuation stripping. Whitespace-only input returns {}. Dictionary order irrelevant.",
+      "arabic_prompt": "اكتب الدالة word_counts(text) لعد الكلمات الناتجة من str.split() دون فاصل محدد. احتفظ بالحروف وعلامات الترقيم والتشكيل كما هي دون تطبيع. أعد قاموسا بعدد مرات ظهور كل كلمة؛ والنص الفارغ أو المكوّن من فراغات فقط يعطي قاموسا فارغا."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "A02",
+      "family": "arabic",
+      "prompt_language": "ar",
+      "allowed_paths": [
+        "solution.py"
+      ],
+      "required_callables": [
+        "solution.ascii_digits"
+      ],
+      "contract": "ascii_digits(text: str) -> str. Map U+0660..U+0669 and U+06F0..U+06F9 to corresponding ASCII 0..9. Preserve every other code point and its order, including existing ASCII digits and other numeral systems. Empty input returns empty string.",
+      "arabic_prompt": "اكتب الدالة ascii_digits(text) لتحويل الأرقام من المجالين U+0660 إلى U+0669 وU+06F0 إلى U+06F9 إلى الأرقام ASCII من 0 إلى 9. حافظ على جميع المحارف الأخرى وترتيبها، بما فيها الأرقام الموجودة أصلا بالصيغة ASCII. النص الفارغ يبقى فارغا."
+    },
+    {
+      "language": "python",
+      "python_runtime": "3.12-exact-patch-required",
+      "fixture_revision": null,
+      "input_policy": "Only JSON values satisfying the task contract; invalid inputs tested only where explicitly specified.",
+      "entrypoint_kind": "sync_function",
+      "output_ceiling_tokens": null,
+      "starter_sha256": null,
+      "public_tests_sha256": null,
+      "hidden_tests_sha256": null,
+      "reference_sha256": null,
+      "grading": "external_json_value_judge",
+      "status": "proposed",
+      "id": "A03",
+      "family": "arabic",
+      "prompt_language": "ar",
+      "allowed_paths": [
+        "chunks.py"
+      ],
+      "required_callables": [
+        "chunks.chunk_text"
+      ],
+      "contract": "Repair pinned starter chunk_text(text:str,width:int)->list[str]. Split text from left to right into slices of at most width Unicode code points, preserving all code points exactly; not bytes, grapheme clusters or display width. width<=0 raises ValueError, including for empty text. Empty text with positive width returns []. Joining output reconstructs text.",
+      "arabic_prompt": "أصلح الدالة chunk_text(text, width) لتقسيم النص من اليسار إلى اليمين إلى مقاطع لا يتجاوز طول كل منها width من نقاط Unicode، لا من البايتات أو العناقيد الكتابية أو عرض المحارف على الشاشة. حافظ على جميع المحارف كما هي. إذا كان width غير موجب فارفع ValueError حتى مع النص الفارغ؛ والنص الفارغ مع عرض موجب يعطي قائمة فارغة."
+    }
+  ]
+}

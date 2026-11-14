@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_independent_offline_review",
+  "component": "teach revision 14",
+  "source_commit": "fce461513d31b7257c1f247e9b7c57891c933078",
+  "source_path": "research/teach-store",
+  "review": {
+    "passed": 100,
+    "skipped": 5,
+    "executed_by_this_repository_session": false,
+    "scope": "snapshot diagnostic and UTF-8 entry-isolation repair paths",
+    "blocking_regression_found_in_tested_paths": false
+  },
+  "verified_repairs": [
+    "Forced mid-request store replacement preserves same-snapshot entries, fingerprint and invalid-entry count",
+    "Lone-surrogate cases no longer suppress valid neighboring notes"
+  ],
+  "state": {
+    "scoped_repair_milestone": "closed at reviewed revision",
+    "full_integration_clearance": false,
+    "live_deployment_verified": false,
+    "author_reported_loaded_state": "rev14 not loaded"
+  },
+  "remaining_limits": [
+    "Actual counter/profile/renderer identity remains unverified",
+    "The 32-token uncertainty allowance remains unverified",
+    "User-visible omission notice is absent; log-only disclosure remains",
+    "Counter failure remains conflated with no_room",
+    "Offline checks do not establish live nonempty-note behavior or loaded revision"
+  ],
+  "coordination": {
+    "findings_shared_in_cochat_commit": "44c016f0c431e59d79ebf0a9d3307db45b300bbc",
+    "duplicate_review_requested": false,
+    "source_edits": false,
+    "pc_access": false,
+    "model_requests": 0,
+    "runtime_changes": false,
+    "real_store_edits": false,
+    "unpublished_counter_inspected": false
+  }
+}

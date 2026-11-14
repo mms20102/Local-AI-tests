@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_final_scoped_offline_review",
+  "component": "gateway offline revision d8d25e2 and teach rev16",
+  "source_commit": "b111a6479adf3901fce5a1651c6f8e55eec40ee7",
+  "source_manifest": [
+    {
+      "path": "research/gateway-admission/README.md",
+      "git_blob": "8f0fafcadc2e5af00a40b0cc7baa8cc4f9cc2385"
+    },
+    {
+      "path": "research/gateway-admission/changes-since-baseline.diff",
+      "git_blob": "f707bff9722e58782b37e97d026e828444f3e3af"
+    },
+    {
+      "path": "research/gateway-admission/chat_contract.py",
+      "git_blob": "bd4d7326bb3e6751b2ab5eba4a7047763077e7cb"
+    },
+    {
+      "path": "research/gateway-admission/gateway_auth.py",
+      "git_blob": "19471f8c15d83cfc4cde5bcdb491fe21c7e72835"
+    },
+    {
+      "path": "research/gateway-admission/tests/test_token_admission.py",
+      "git_blob": "3758e4ac5541b4610d139e920de1785591e653a3"
+    },
+    {
+      "path": "research/gateway-admission/token_count.py",
+      "git_blob": "a0305173fe6d5bd5814e01a123a76cc4029e85d0"
+    },
+    {
+      "path": "research/teach-store/teach_hook.py",
+      "git_blob": "34b7b93e6f1af80db5a6bd169e3b761c31a10d7d"
+    },
+    {
+      "path": "research/teach-store/teach_store.py",
+      "git_blob": "092ee763bd216f5644ce54d081188f243bf6b2a4"
+    }
+  ],
+  "results": {
+    "gateway_passed": 21,
+    "gateway_skipped": 6,
+    "teach_passed": 104,
+    "teach_skipped": 5,
+    "real_tokenizer_tests_skipped": 6,
+    "executed_by_this_repository_session": false
+  },
+  "reproduced_findings": [
+    {
+      "case": "assistant marker membership tested before string validation",
+      "input_context": "assistant content null, integer or boolean",
+      "result": "uncaught TypeError rather than controlled ContractError",
+      "repair": "validate string type first; regression cases on both routes before counter call"
+    },
+    {
+      "case": "failed final count on short path",
+      "result": "injected notes retained while uncounted=0; contrary to docstring",
+      "comparison": "successful over-limit final count withdraws notes",
+      "repair": "prove byte fallback for supported profile or omit notes on uncertainty; distinguish fallback from verified final count"
+    }
+  ],
+  "integration_findings": [
+    "Launcher report validation is not verified running-engine identity",
+    "Authentication and teaching independently load settings/counters; coherent shared evidence and ordering are not demonstrated",
+    "No end-to-end test proves the exact final post-hook payload",
+    "32-token margin remains heuristic",
+    "Two report-carrier launcher/service-starter edits are described but unpublished",
+    "User-visible omission notice remains absent"
+  ],
+  "author_reported_state": {
+    "current_gateway": "6c12983",
+    "current_teach": "rev11",
+    "candidate_loaded": false,
+    "loading": "held",
+    "codeq1": "about 12 static-only requests planned; no results observed here"
+  },
+  "parallel_candidate": {
+    "reported_evidence": "36 tests with 3 real-tokenizer skips and 1092 role sequences, per coordinator; not rerun here",
+    "older_full_patch_applied": false,
+    "overlap_already_addressed_in_claude_candidate": [
+      "later-system-message guard",
+      "assistant </think> guard"
+    ],
+    "remaining_coordination": "distinct unavailable/failed/invalid-counter versus measured-overflow reasons through ProxyException",
+    "actual_litellm_serialization_verified": false
+  },
+  "disposition": {
+    "review": "complete at pinned source",
+    "restart_clearance": false,
+    "live_work_authorized_by_this_review": false,
+    "duplicate_review_started": false,
+    "preliminary_repros_shared_once": "79dd21fcc40f85828fe75882322475b83eddc40a",
+    "additional_duplicate_reply_posted": false
+  },
+  "actions": {
+    "pc_requests": 0,
+    "runtime_changes": false,
+    "real_store_edits": false,
+    "unpublished_report_carrier_files_inspected": false,
+    "source_code_mutated": false
+  },
+  "successor_report": {
+    "source_commit": "631b1ec1ce17102f0887481005c02067888ee82f",
+    "cochat_blob": "3a856ddeb046af7792a1039893095050661a97e4",
+    "reported_local_commit": "83a6f58",
+    "teach_revision": 17,
+    "loaded": false,
+    "independently_reviewed": false,
+    "author_reported_changes": [
+      "content type validation before assistant marker check across all three roles",
+      "retained note fallback labeled byte_only / kept-byte-rule-only"
+    ],
+    "author_reported_tests": {
+      "admission_laptop": 28,
+      "admission_publication_skipped": 6,
+      "admission_publication_phrase": "22 run",
+      "teach_reported": 109,
+      "teach_publication_skipped": 5
+    },
+    "fallback_bound_proven": false,
+    "remaining_requirement": "prove supported byte bound or omit notes when final counting is uncertain",
+    "clarification_handoff": "d715ee78d906576060f5d64f852b2366ed09cf88",
+    "reason_code_only_delta_published_link_available_to_this_session": false
+  },
+  "successor_report18": {
+    "source_commit": "da0db284590c718fb74558fc464dff7048ed78ec",
+    "cochat_blob": "a1ebcc326a1a32a54c6329432a8f9375e3d01b05",
+    "reported_local_commit": "9514353",
+    "reported_loaded": false,
+    "independently_reviewed": false,
+    "configured_counter_failure_or_invalid": "notes withdrawn; admitted base preserved; uncounted reported",
+    "successful_count_over_limit": "notes withdrawn; no_room reported",
+    "no_hook_counter_configured": "byte-rule note injection retained with kept-byte-rule-only",
+    "remaining_fallback_bound_proven": false,
+    "absent_counter_teaching_policy": "Claude plans to ask Mohamed; no decision recorded",
+    "reported_published_teach_tests_run": 109,
+    "reported_skipped": 5,
+    "user_visible_omission_notice": "still absent",
+    "new_acknowledgement_posted": false
+  }
+}

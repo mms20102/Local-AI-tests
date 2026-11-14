@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_independent_scoped_reason_review_with_author_intake",
+  "source_commit": "be282e303283d3b18bed77ddd51531adfc2ebc4a",
+  "cochat_blob": "d819dc0dae6411a52cc7d8594c36fb5b9ed3b772",
+  "reported_local_commit": "094b373",
+  "source_manifest": [
+    {
+      "path": "research/gateway-admission/README.md",
+      "git_blob": "686e16f9a11cc5efbc4cc55772a6663ace33b2f2"
+    },
+    {
+      "path": "research/gateway-admission/changes-since-baseline.diff",
+      "git_blob": "1546c587259cf081af017fae5ec3eff4e134aaaf"
+    },
+    {
+      "path": "research/gateway-admission/chat_contract.py",
+      "git_blob": "fe34991ee90ede71e2219ddf0c9972105c530856"
+    },
+    {
+      "path": "research/gateway-admission/gateway_auth.py",
+      "git_blob": "6451b2c4e6b662aff015c5c303aa6d4a462475f4"
+    },
+    {
+      "path": "research/gateway-admission/tests/test_token_admission.py",
+      "git_blob": "bdf8f72a7bbb49edc56e7c136240731c4e13fc20"
+    },
+    {
+      "path": "research/gateway-admission/token_count.py",
+      "git_blob": "a0305173fe6d5bd5814e01a123a76cc4029e85d0"
+    }
+  ],
+  "observed_static_intake": {
+    "changed_gateway_paths": [
+      "research/gateway-admission/README.md",
+      "research/gateway-admission/changes-since-baseline.diff",
+      "research/gateway-admission/chat_contract.py",
+      "research/gateway-admission/gateway_auth.py",
+      "research/gateway-admission/tests/test_token_admission.py"
+    ],
+    "token_count_blob_unchanged": true,
+    "contract_reason_allowlist_present": true,
+    "gateway_fixed_type_allowlist_present": true,
+    "source_read_as_text": true,
+    "tests_rerun_by_this_session": false
+  },
+  "author_reported_behavior": {
+    "reason_codes": [
+      "counter_unavailable",
+      "counter_failed",
+      "counter_invalid",
+      "context_budget_exceeded"
+    ],
+    "proxy_types": "four fixed local_chat_* types, otherwise local_chat_policy",
+    "http_statuses_guards_profile_arithmetic": "reported unchanged",
+    "raw_counter_exception_or_request_text_forwarded": false,
+    "private_diff_used": false,
+    "loaded": false
+  },
+  "author_reported_tests": {
+    "counter_cases": 9,
+    "laptop_admission_passed": 30,
+    "published_admission_passed": 24,
+    "published_skipped": 6,
+    "project_passed": 239,
+    "actual_installed_litellm_exception_class_checked": true,
+    "http_serialization_checked": false
+  },
+  "review_state": {
+    "focused_existing_review": "complete",
+    "duplicate_review_started": false,
+    "independent_results_available": true,
+    "live_clearance": false
+  },
+  "open_items": [
+    "Actual LiteLLM HTTP serialization and user-visible omission notice unverified",
+    "Claude relays Mohamed retaining absent-counter byte-only teaching; this is accepted policy in that report, not a proved native-token bound",
+    "Running-engine/profile evidence, shared auth/teach settings/counters, exact downstream payload and heuristic margin remain unverified",
+    "Six real-tokenizer tests unavailable in publication"
+  ],
+  "actions": {
+    "private_diff_published": false,
+    "private_diff_applied": false,
+    "source_code_changed": false,
+    "pc_requests": 0,
+    "runtime_changes": false
+  },
+  "independent_review": {
+    "source_commit": "be282e303283d3b18bed77ddd51531adfc2ebc4a",
+    "passed": 24,
+    "skipped": 6,
+    "additional_synthetic_checks": [
+      "reason distinctions",
+      "allowlisting",
+      "error leakage",
+      "boundaries",
+      "request immutability"
+    ],
+    "prior_malformed_assistant_typeerror_fixed": true,
+    "proxy_exception_implementation": "stub; no HTTP serialization",
+    "executed_by_this_session": false,
+    "scoped_result": "pass",
+    "live_clearance": false
+  },
+  "coordination": {
+    "scoped_pass_relayed_once": "472cbda31ffb87466588c8f6a8d1937a735333c5",
+    "omission_ui_question_sent": true,
+    "private_diff_published": false,
+    "private_diff_applied": false
+  }
+}

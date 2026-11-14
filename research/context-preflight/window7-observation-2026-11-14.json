@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "author_reported_runtime_window_with_independent_metadata_consistency_check",
+  "source": {
+    "commit": "6d04490a6305ea243c9687a0b700cdbff879e02c",
+    "path": "research/context-preflight/window7-usage-parity-2026-11-14.json",
+    "git_blob": "6c09aed624dd17b337d8611f3a69c8fa91990d44",
+    "cochat_blob": "62211687a7a61f0b209ca262a5131203a065418e",
+    "reporter": "Claude laptop session, runtime window 7 CLOSED",
+    "original_preserved": true
+  },
+  "author_reported_profile": {
+    "runtime": "Colibri 2.0.0",
+    "cache_cap": 32,
+    "thinking": false,
+    "teach_hook_enabled": true,
+    "active_teach_entries": false,
+    "download_active_during_test": true,
+    "loaded_teach_revision": 11,
+    "loaded_revision_evidence": "inferred from file at startup; not independently verified",
+    "gateway_source_published": false
+  },
+  "metadata_checks": {
+    "probes": 5,
+    "admitted": 4,
+    "refused": 1,
+    "all_admitted_recorded_count_pairs_match": true,
+    "admitted_net_count_deltas": [
+      {
+        "name": "arabic",
+        "calculated": 0,
+        "stored": 0,
+        "match": true
+      },
+      {
+        "name": "multi_turn",
+        "calculated": 0,
+        "stored": 0,
+        "match": true
+      },
+      {
+        "name": "multi_turn_arabic",
+        "calculated": 0,
+        "stored": 0,
+        "match": true
+      },
+      {
+        "name": "long_english",
+        "calculated": 0,
+        "stored": 0,
+        "match": true
+      }
+    ],
+    "over_limit": {
+      "count": 2400,
+      "http_status": 413,
+      "engine_usage_present": false
+    },
+    "long_probe": {
+      "prompt_tokens": 1641,
+      "requested_output_tokens": 48,
+      "recorded_completion_tokens": 12,
+      "reported_seconds": 23.3
+    },
+    "arabic_length_probe": {
+      "requested": 96,
+      "recorded_completion": 96
+    }
+  },
+  "scope": {
+    "zero_observed_net_count_delta": "four reported admitted synthetic probes only",
+    "arabic_examples": 2,
+    "history_examples": 2,
+    "arabic_history_overlap": 1,
+    "nonempty_note_behavior_tested": false,
+    "universal_parity_established": false,
+    "gateway_pipeline_independently_traced": false,
+    "clean_benchmark": false,
+    "live_observation_by_this_session": false,
+    "original_window_1700_plus256_example_met": false
+  },
+  "author_reported_resources": {
+    "committed_gib": 29.68,
+    "commit_limit_gib": 32.22,
+    "available_gib": 7.51,
+    "measurement": "single sample, not peak or admission clearance"
+  },
+  "limitations": [
+    "No requests, original prompts/answers, PC logs or unpublished gateway source were inspected by this session",
+    "The count artifact records no engine usage for the refused request; that is not itself independent proof it never reached the engine",
+    "Loaded callback identity remains inferred; an unchanged log format cannot identify rev11",
+    "One Arabic answer ended at its 96-token ceiling; answer quality was not independently assessed",
+    "Download contention and single samples prevent a performance benchmark conclusion"
+  ],
+  "actions": {
+    "model_requests": 0,
+    "pc_access": false,
+    "gateway_changes": false,
+    "runtime_changes": false,
+    "restricted_benchmark_content_read": false
+  },
+  "follow_up_after_window": {
+    "source_commit": "2d5d5374bed4f79e4fa70187368845361bac952c",
+    "source_blob": "235ca87520a172ac2c18e8b2ce10e5e45d4407fa",
+    "original_five_probe_objects_unchanged": true,
+    "episode": "one later request, not part of original window batch",
+    "recorded_probe": {
+      "own_count": 1717,
+      "utf8_bytes": 7755,
+      "messages": 1,
+      "max_tokens": 256,
+      "status": 200,
+      "seconds": 46.6,
+      "finish_reason": "length",
+      "engine_prompt_tokens": 1717,
+      "completion_tokens": 256,
+      "difference": 0
+    },
+    "metadata_checks": {
+      "net_count_delta": 0,
+      "stored_delta_matches": true,
+      "requested_output_fully_consumed": true,
+      "reported_prompt_plus_output_plus32": 2005,
+      "reported_budget_within2048": true
+    },
+    "interpretation": {
+      "approximately1700_plus256_example_reported_served": true,
+      "finish_is_length": true,
+      "answer_quality_or_completeness_verified": false,
+      "clean_benchmark": false,
+      "universal_32_token_error_bound_established": false,
+      "nonempty_notes_tested": false,
+      "full_release_context_check_complete": false
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_bounded_independent_teach15_to18_review",
+  "source_commit": "8ef7d5057aef98bc1d5c59a938b5b36c7cf2e897",
+  "relevant_path": "research/teach-store",
+  "reviewed_revision_range": "teach15–18",
+  "result": {
+    "passed": 104,
+    "skipped": 5,
+    "additional_synthetic_matrix_cases": 45,
+    "blocking_defect_reproduced_in_tested_paths": false,
+    "executed_by_this_session": false
+  },
+  "observed_behavior": {
+    "configured_counter_failure": "withdraw notes; preserve admitted base request; report uncounted",
+    "successful_count_overflow": "report no_room",
+    "no_configured_counter": "retain byte-selected notes; label byte_only"
+  },
+  "policy_report": {
+    "source_commit": "8ef7d5057aef98bc1d5c59a938b5b36c7cf2e897",
+    "cochat_blob": "e9dc6aea2eea5e1f1c601488ff61394d0000fe68",
+    "attributed_to": "Claude relaying Mohamed's 'Ok proceed with the plan'",
+    "retain_absent_counter_byte_notes": true,
+    "margin32_and_launcher_report_accepted_as_stated_limits": true,
+    "native_byte_bound_proved": false,
+    "independent_runtime_authorization_for_this_session": false
+  },
+  "qualifications": [
+    "Real tokenizer not available for skipped tests",
+    "No verified running-engine identity or launcher carrier",
+    "No demonstrated exact downstream enriched payload or live loaded revision",
+    "User-visible omission notice unverified",
+    "No proof byte counts bound native tokens; 32-token margin remains heuristic"
+  ],
+  "coordination": {
+    "result_relayed_once": "62eabc133f23e92ab55a8f3cc0029ee68927cb98",
+    "new_review_started": false
+  },
+  "actions": {
+    "source_code_changed": false,
+    "runtime_changes": false,
+    "model_requests": 0,
+    "real_store_changes": false
+  }
+}

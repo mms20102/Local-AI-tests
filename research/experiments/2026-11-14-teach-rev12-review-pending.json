@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "teach_revision12_final_independent_offline_review",
+  "source": {
+    "cochat_commit": "eaf6016953fc5b6578ed707afef238fceca034b0",
+    "cochat_blob": "011dea71be0e1bcd48774244f4602bf1951e1bf9",
+    "published_path": "research/teach-store",
+    "reported_local_commit": "f939b54",
+    "evidence": "Claude report and coordinator handoff; source code not independently reviewed in this session"
+  },
+  "state": {
+    "independent_review": "final scoped offline review complete",
+    "independent_test_results": {
+      "passed": 92,
+      "skipped": 5,
+      "pinned_commit": "eaf6016953fc5b6578ed707afef238fceca034b0",
+      "relayed_by": "coordinator",
+      "executed_by_this_session": false
+    },
+    "published": true,
+    "loaded": false,
+    "loaded_state_evidence": "Claude explicitly reports rev12 not loaded",
+    "duplicate_review_requested": false,
+    "duplicate_acknowledgement_posted": false,
+    "token_budget_integration_clearance": false,
+    "record_path_retained_for_link_compatibility": true
+  },
+  "author_reported_design": {
+    "short_path": "unchanged byte rule; token counter not called",
+    "long_path": "count complete enriched candidate only after byte-route failure",
+    "selection": "drop final selected note and rebuild/recount, at most once per relevant note",
+    "reservation": "full requested output plus 32-token allowance",
+    "omission": "base question/history sent unchanged; omitted-no-room count in gateway log",
+    "explicit_status_taxonomy": false
+  },
+  "policy": {
+    "statement": "answer and notes left out when they do not fit",
+    "attribution": "Claude relays Mohamed's answer; no separate user message inspected here",
+    "user_facing_omission_notice": "not implemented; log only"
+  },
+  "author_reported_checks": {
+    "windows_teach_passed": 97,
+    "project_suite_passed": 215,
+    "published_tests_reported_run": 97,
+    "published_skipped": 5,
+    "real_tokenizer_english_nonempty_examples": [
+      {
+        "base_prompt": 1614,
+        "enriched_prompt": 1670,
+        "output_reserved": 256
+      },
+      {
+        "base_prompt": 1690,
+        "enriched_prompt": 1746,
+        "output_reserved": 256
+      }
+    ],
+    "arabic_nonempty": "stand-in counter only",
+    "counter_fault_cases": 7,
+    "independently_rerun_by_this_session": false
+  },
+  "open_items": [
+    "Final 92 passed / 5 skipped scoped offline review does not clear token-budget integration",
+    "Counter source token_count.py remains unpublished and has not been sought or inspected",
+    "32-token margin is not a proven universal error bound",
+    "Short byte-route proof and final integration remain unverified",
+    "Later system-message and assistant-history marker cases are unchanged/unresolved",
+    "Omission is log-only, not shown to Mohamed in the chat",
+    "Explicit reasons cannot yet distinguish no counter from no room",
+    "Real-counter Arabic-with-notes and all live nonempty-note behavior for rev12 remain unverified",
+    "Filesystem, logging and counting wall time are not established as bounded"
+  ],
+  "actions": {
+    "pc_access": false,
+    "model_requests": 0,
+    "gateway_changes": false,
+    "store_edits": false,
+    "review_code_execution": false,
+    "blocked_component_publication_retry": false
+  },
+  "findings": [
+    {
+      "kind": "reviewer_reported_reproduction",
+      "case": "relevant 294-character note excluded by 320-byte wrapped-note cap",
+      "observed": "omitted=0",
+      "reported_cause": "wanted list already budget-filtered"
+    },
+    {
+      "kind": "reviewer_reported_reproduction",
+      "case": "malformed when metadata alongside a valid note",
+      "observed": "original request returned, unknown fingerprint, omitted=0"
+    },
+    {
+      "kind": "integration_gap",
+      "case": "omission disclosure",
+      "observed": "log only, no user-facing notice"
+    },
+    {
+      "kind": "evidence_gap",
+      "case": "counter boundary",
+      "observed": "fixed margin32 without identity/uncertainty evidence; real counter source absent"
+    },
+    {
+      "kind": "counter_identity_and_freshness_gap",
+      "case": "plausible stale positive count",
+      "observed": "indistinguishable from a valid count at the reviewed interface",
+      "actual_overflow_reproduced": false
+    }
+  ],
+  "validated_scope": {
+    "stand_in_counter_whole_candidate_counting": true,
+    "bounded_note_dropping": true,
+    "missing_counter_fails_closed_for_new_widening": true,
+    "real_counter_and_profile_validated": false,
+    "renderer_identity_validated": false,
+    "margin32_uncertainty_validated": false,
+    "legacy_byte_bound_safety_validated": false
+  },
+  "counter_interface_limit": "Missing/invalid counters are excluded, but a plausible stale positive count is indistinguishable from a valid count without identity/profile/uncertainty evidence. No actual overflow is claimed."
+}

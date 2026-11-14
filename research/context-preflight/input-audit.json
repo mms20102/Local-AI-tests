@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "kind": "CODE-Q1-static-context-input-audit",
+  "date": "2026-11-14",
+  "status": "input_inventory_complete_tokenizer_preflight_pending",
+  "model_requests_sent": 0,
+  "candidate_code_executed": false,
+  "teach_hook_enabled": false,
+  "source": {
+    "repository": "mms20102/Local-AI-tests",
+    "commit": "de9398a167b64c79510b470b7d60b3a0931aad04",
+    "fixture_revision": 2,
+    "manifest_path": "research/coding-quality-v1/manifest.json",
+    "manifest_blob": "bf1ac49bb49020767a2f92f3ea7d54b83c23f411",
+    "task_count": 12,
+    "source_files_inspected": 25,
+    "git_blob_identities_matched_to_same_commit": 25,
+    "manifest_sha256_independently_recomputed": false
+  },
+  "proposed_limits": {
+    "context_tokens": 2048,
+    "reserved_output_tokens": 256,
+    "limits_are_current_configuration_not_changed_by_this_audit": true
+  },
+  "counting": {
+    "code_points": "JavaScript Unicode code-point iteration; no Unicode normalization",
+    "utf8_bytes": "UTF-8 width per Unicode code point; no byte-to-token conversion",
+    "canonical_reference": "Manifest file order; LF line endings; trim final whitespace from each reference; one python fence per file; # file: filename.py first line only for multi-file answers; exactly one blank line between blocks; no final newline after closing fence",
+    "reference_text_is_authored_fixture_not_model_output": true,
+    "hidden_tests_included": false,
+    "engine_eos_or_stop_overhead_included": false
+  },
+  "source_review": {
+    "colibri_tag": "v2.0.0",
+    "commit": "bf2442915d6e3dd4cdfd2eb9c2a3d2aa44a25850",
+    "api_schema_paths": [
+      "/v1/chat/completions",
+      "/v1/completions",
+      "/v1/messages",
+      "/v1/models",
+      "/v1/models/{model}",
+      "/health",
+      "/experts",
+      "/profile"
+    ],
+    "documented_count_endpoint_found": false,
+    "renderer_path": "c/openai_server.py",
+    "renderer_blob": "5463051c8956fc7f429d0aeba8d5ca5c5b5262af",
+    "renderer_function": "render_chat_qwen",
+    "nonthinking_generation_suffix": "<|im_start|>assistant\n<think>\n\n</think>\n\n",
+    "installed_renderer_identity_verified": false,
+    "installed_tokenizer_identity_verified": false,
+    "tagged_source_is_not_installed_binary_proof": true
+  },
+  "rows": [
+    {
+      "task_id": "A01",
+      "prompt_language": "ar",
+      "files": [
+        "solution.py"
+      ],
+      "prompt_blob": "86db4fdb0f2c1771e7fcb11131ed34bdf0f05b27",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/A01/reference/solution.py",
+          "blob": "dcee50a5f87b224a4dd8409a42edcf113f6de7cf"
+        }
+      ],
+      "prompt_code_points": 389,
+      "prompt_utf8_bytes": 628,
+      "canonical_fenced_reference_code_points": 147,
+      "canonical_fenced_reference_utf8_bytes": 147,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "A02",
+      "prompt_language": "ar",
+      "files": [
+        "solution.py"
+      ],
+      "prompt_blob": "51e10626fffe65af59ccebe98b47220d0c9555b8",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/A02/reference/solution.py",
+          "blob": "cde1b508ae394ee61fdae087bb6669b7aaf74395"
+        }
+      ],
+      "prompt_code_points": 380,
+      "prompt_utf8_bytes": 600,
+      "canonical_fenced_reference_code_points": 351,
+      "canonical_fenced_reference_utf8_bytes": 351,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "A03",
+      "prompt_language": "ar",
+      "files": [
+        "chunks.py"
+      ],
+      "prompt_blob": "03963331ba3e0ee64ffdd0fc4eb3ed5df57025a5",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/A03/reference/chunks.py",
+          "blob": "e0b33e80e725ac6c22e5fd228ef7b83b38078a64"
+        }
+      ],
+      "prompt_code_points": 665,
+      "prompt_utf8_bytes": 957,
+      "canonical_fenced_reference_code_points": 191,
+      "canonical_fenced_reference_utf8_bytes": 191,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "B01",
+      "prompt_language": "en",
+      "files": [
+        "windows.py"
+      ],
+      "prompt_blob": "7df40ae632fde1ba1d167e31bf4310078bab2c15",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/B01/reference/windows.py",
+          "blob": "338b823ef1c9757e4c3240bb8f60a6b0abbf3087"
+        }
+      ],
+      "prompt_code_points": 774,
+      "prompt_utf8_bytes": 774,
+      "canonical_fenced_reference_code_points": 199,
+      "canonical_fenced_reference_utf8_bytes": 199,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "B02",
+      "prompt_language": "en",
+      "files": [
+        "cache.py"
+      ],
+      "prompt_blob": "4c16e724b8cec4cb3443ff4b9031db6b82443dc4",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/B02/reference/cache.py",
+          "blob": "1d7ab2fc3a4271ddbc6bdb88c05a8f75ed456841"
+        }
+      ],
+      "prompt_code_points": 524,
+      "prompt_utf8_bytes": 524,
+      "canonical_fenced_reference_code_points": 112,
+      "canonical_fenced_reference_utf8_bytes": 112,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "B03",
+      "prompt_language": "en",
+      "files": [
+        "stats.py"
+      ],
+      "prompt_blob": "5e404c959e1d0833dc8c6fc8453e022731dd7810",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/B03/reference/stats.py",
+          "blob": "ec90cac07d98b52f89c7508028964222d50f4dd3"
+        }
+      ],
+      "prompt_code_points": 657,
+      "prompt_utf8_bytes": 657,
+      "canonical_fenced_reference_code_points": 264,
+      "canonical_fenced_reference_utf8_bytes": 264,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "E01",
+      "prompt_language": "en",
+      "files": [
+        "config.py"
+      ],
+      "prompt_blob": "6edc4af0209dd16b09d594902cdd89d071b58f3c",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/E01/reference/config.py",
+          "blob": "cf83d30cfcb16794f6fc5f7cf3625fe2b6602d65"
+        }
+      ],
+      "prompt_code_points": 742,
+      "prompt_utf8_bytes": 742,
+      "canonical_fenced_reference_code_points": 342,
+      "canonical_fenced_reference_utf8_bytes": 342,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "E02",
+      "prompt_language": "en",
+      "files": [
+        "bundle.py"
+      ],
+      "prompt_blob": "d91cd5a12f30d6d3cbdc946fa21abb1ace47ea7f",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/E02/reference/bundle.py",
+          "blob": "11c09c8b576b4e13db323477d5ee50b6b61e4498"
+        }
+      ],
+      "prompt_code_points": 1047,
+      "prompt_utf8_bytes": 1047,
+      "canonical_fenced_reference_code_points": 452,
+      "canonical_fenced_reference_utf8_bytes": 452,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "E03",
+      "prompt_language": "en",
+      "files": [
+        "invoice.py",
+        "summary.py"
+      ],
+      "prompt_blob": "efdc57546a546d58e73e8c39b9d8da970a3acf41",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/E03/reference/invoice.py",
+          "blob": "44c4159088a45457c583d2e9919d0c9cdbb48822"
+        },
+        {
+          "path": "research/coding-quality-v1/fixtures/E03/reference/summary.py",
+          "blob": "0476b8644ad9eaa8c3f677e1f41ec914a047e083"
+        }
+      ],
+      "prompt_code_points": 1129,
+      "prompt_utf8_bytes": 1129,
+      "canonical_fenced_reference_code_points": 469,
+      "canonical_fenced_reference_utf8_bytes": 469,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "F01",
+      "prompt_language": "en",
+      "files": [
+        "solution.py"
+      ],
+      "prompt_blob": "f4035fa7b5eb7135bfe5222a5b09b58ba837c903",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/F01/reference/solution.py",
+          "blob": "40e52a30399a8b527ba0d0237f4771c9332482d7"
+        }
+      ],
+      "prompt_code_points": 411,
+      "prompt_utf8_bytes": 411,
+      "canonical_fenced_reference_code_points": 207,
+      "canonical_fenced_reference_utf8_bytes": 207,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "F02",
+      "prompt_language": "en",
+      "files": [
+        "solution.py"
+      ],
+      "prompt_blob": "5ccee71fbdc4fc2cbb70f92a7085a7800b8f9e14",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/F02/reference/solution.py",
+          "blob": "d6a5e5fcfd333b889a47fd0b213375930bbe0b36"
+        }
+      ],
+      "prompt_code_points": 596,
+      "prompt_utf8_bytes": 596,
+      "canonical_fenced_reference_code_points": 272,
+      "canonical_fenced_reference_utf8_bytes": 272,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    },
+    {
+      "task_id": "F03",
+      "prompt_language": "en",
+      "files": [
+        "solution.py"
+      ],
+      "prompt_blob": "c15e96b5adbfa3857554bc77d62232701c96ab9e",
+      "reference_blobs": [
+        {
+          "path": "research/coding-quality-v1/fixtures/F03/reference/solution.py",
+          "blob": "1028e349e34fd5b1f7d22aa80ca454f292c30f2f"
+        }
+      ],
+      "prompt_code_points": 608,
+      "prompt_utf8_bytes": 608,
+      "canonical_fenced_reference_code_points": 450,
+      "canonical_fenced_reference_utf8_bytes": 450,
+      "input_tokens": null,
+      "reference_output_tokens": null,
+      "reference_fits_output_ceiling": null,
+      "request_fits_context": null
+    }
+  ],
+  "interpretation": {
+    "character_and_byte_counts_do_not_establish_token_fit": true,
+    "reference_fit_does_not_guarantee_generated_output_fit": true,
+    "token_counts_and_fit_fields_deliberately_null": true,
+    "no_runtime_performance_or_correctness_claim": true
+  }
+}

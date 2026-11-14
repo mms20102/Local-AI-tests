@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "reported_scratch_integration_start_with_historical_boundary",
+  "source_cochat_blob": "505a59828ecf3b5e62b43d68b84b03aefa191a30",
+  "source_commit": "7f704dab059a7d13bfa8ac609ead553733cdb558",
+  "reported_by": "Claude laptop session",
+  "test_status": "started per Claude notice; no result available",
+  "draft_status": "fixture being prepared/run by Claude; no published completion received",
+  "classification": "author-reported authorization/start, not independent process or test verification",
+  "coordinator_informed": true,
+  "root_repeating_authorization_assertions": false,
+  "root_bypassing_boundary": false,
+  "execution_boundary": {
+    "matching_packages_reported_only_in_laptop_gateway_venv": true,
+    "separate_readonly_package_scratch_process_proposed": true,
+    "cloud_install_approved": false,
+    "cloud_install_performed": false,
+    "live_services_notes_secrets_settings_required_excluded": true
+  },
+  "continued_work": [
+    "avoid competing fixture/uncoordinated laptop traffic",
+    "review published completion counts, source/package identities, payload assertions, boundaries and cleanup"
+  ],
+  "coordination_commit": "43ef77277165929f5e35e829c2e1e729ef7d03fc",
+  "actions": {
+    "pc_traffic_by_this_session": 0,
+    "model_requests_by_this_session": 0,
+    "runtime_changes_by_this_session": false,
+    "private_capture_artifact_forwarded": false,
+    "private_capture_artifact_published": false,
+    "claude_scratch_start_reported": true
+  },
+  "review_support_document": "research/context-preflight/scratch-asgi-review-criteria.md",
+  "transport_source_findings": {
+    "httpx_ref": "26d48e0634e6ee9cdc0533996db289ce4b430177",
+    "httpx_version": "0.28.1",
+    "asgi_transport_buffers_completed_response": true,
+    "client_stream_exit_does_not_demonstrate_between_pulls_disconnect": true,
+    "tests_executed": false
+  },
+  "status_history": [
+    {
+      "source_commit": "a4b64457f5b72d844e95b729de437bdf7762dbad",
+      "cochat_blob": "85d333a87709351bff5cbbe6da8310919a3efeb3",
+      "status": "not started",
+      "reported_blocker": "Claude reports its own-session rule requires Mohamed's direct confirmation; assistant-relayed authorization is not accepted there"
+    },
+    {
+      "source_commit": "7f704dab059a7d13bfa8ac609ead553733cdb558",
+      "cochat_blob": "505a59828ecf3b5e62b43d68b84b03aefa191a30",
+      "status": "Claude reports scratch test starting; results pending",
+      "direct_confirmation_reported": true
+    }
+  ],
+  "current_execution_blocker": "none reported after Claude's direct-confirmation notice",
+  "reported_approval": {
+    "speaker": "Claude reporting Mohamed's direct reply in Claude's session",
+    "words": "Both yes",
+    "synthetic_test": true,
+    "sandbox_owner_enablement_at_owner_time": true,
+    "independent_authorization_for_this_session_to_change_windows": false
+  },
+  "reported_test_boundaries": {
+    "shared_gateway_interpreter_readonly": true,
+    "bytecode_writes_disabled": true,
+    "separate_scratch_process_and_working_directory": true,
+    "explicit_synthetic_environment_config_keys_notes": true,
+    "live_ports_excluded": [
+      8000,
+      4001,
+      8080
+    ],
+    "actual_proxy_asgi_and_owned_nongenerating_loopback_upstream": true,
+    "tokenizer_json_readonly_exception": "reported same hash-pinned file; no hash or read verified by this session",
+    "no_package_install": true,
+    "preflight_memory_check_planned": true,
+    "source_copy_ref": "Claude branch head at start notice; exact test-source manifest awaited",
+    "completed_request_transport": "buffered HTTPX",
+    "disconnect_driver": "direct ASGI receive/send",
+    "cleanup": "only resources created by scratch test",
+    "actual_outcomes_verified": false
+  },
+  "windows_state": {
+    "enablement_verified": false,
+    "windows_changes_by_this_session": 0,
+    "owner_action_separate_from_scratch_test": true
+  }
+}

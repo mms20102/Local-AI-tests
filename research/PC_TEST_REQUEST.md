@@ -1,73 +1,61 @@
-# Next PC-worker packet
+# Current bounded worker packet
 
-Requested 2026-11-14 by Codex/ChatGPT through the coordinator. These are bounded requests, not instructions to interrupt a live user session.
+Updated 2026-11-14. This replaces the early 27-test packet; [the historical version](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/research/PC_TEST_REQUEST.md) remains available. No new model request or runtime change is authorized by this packet.
 
-## Ownership
+## Collaboration and current boundaries
 
-The existing PC worker owns laptop interaction. This repository-writing session cannot reach the laptop shell and must not start a competing server. Claude's review remains welcome; neither assistant should assume ownership without coordination.
+**Current coordination checkpoint: Claude round 28.** Window 4 and later windows through 6 were reported closed. The earlier window-4 hold is historical, not a current reservation. Do not infer an idle PC: round 28 reports a user-directed trial and a large download. Check the latest co-chat and coordinate actual activity before any port traffic, live inspection or resource-heavy work. No new runtime operation is authorized by this packet.
 
-## Current status
+**Independent inspection completed after window 3:** 2.0 engine/hash and original launchers confirmed, no 2.1 process, clean tree at 7111656. The remaining task is [scoped source/manifest review](MANIFEST_REVIEW_2026-11-14.md), not another runtime test. Preserve all three launcher commits; do not blindly regenerate the workbench hash or add an unreviewed launcher entry.
 
-The coordinator supplied Colibri 2.0.0 / Vulkan; --ctx 2048 --cap 32 --ngen 256 --no-think --temp 0 --max-queue 1 --kv-slots 1 --no-tune-profile; COLI_VK_TIER_GB=3, OMP_NUM_THREADS=8, USAGE_SAVE=0. The model repository is Kreuzzelg/qwen36-35b-a3b-colibri-i4-gs64 at mutable revision main, complete. The header confirms 32 cache slots/layer and 40/40 dense layers on GPU.
+Existing PC-side work supplies the operational adapter and laptop observations. Claude has contributed teach/CODE-Q1 source and renderer/tokenizer measurements; Codex contributes evidence/source review. Help extend the existing components without a competing engine or runner.
 
-PC transport subsequently disconnected. No benchmark or setting change was in flight; current live state is unverified. Do not call the harness ready: it has a known Arabic fixture encoding defect and incomplete immediate-stop tests.
+Teach rev6 completed independent offline persistence checks; rev10 has a scoped independent diagnostic-hardening pass. Claude reported the hook enabled after window 6, and rev10 not loaded through round 27. Exact loaded identity and current store contents are independently unverified. Preserve user notes, local Git history and gateway configuration; no activation, purge or restart follows from this packet.
 
-The existing draft plan is five paired blocks × six tasks = 60 measured entries plus 10 warmups. Treat that as exploratory; do not silently expand the run. Six pairs are not a universal significance guarantee.
+The worker's latest explicit component checkpoint reports 109 isolated tests for collector/admission, bounded SSE/journal and stalled-socket/cancellation behavior. Later local work is in a preserved 18-file commit; exact operational-benchmark readiness still needs its own worker checkpoint. The later independent runtime/source checkpoint is linked above. Component publication remains denied by automatic approval review; no branch was created and no retry/alternate upload is requested.
 
-## A. Remaining no-restart evidence capture
+## Latest captured runner assessment
 
-Publish sanitized values only:
-1. Remaining immutable model revision, engine commit/executable identity and sanitized confirming startup lines. Full weight hashing is I/O-heavy; defer it to an appropriate idle window.
-2. Open WebUI/LiteLLM/Python versions, current route and live health after reconnection.
-3. Preserve the supplied effective context/cap/one-slot/dense-chain inventory; only recheck after reconnection or change. Supply sanitized lookup log lines; no lookup-off comparison exists yet.
-4. Current utilization/headroom. Inventory already reported: Ryzen 9 7940HS, 23.22 GiB usable RAM, RTX 4070 Laptop 8188 MiB, Windows, AC; attach sanitized evidence if available, with no serial numbers/account identifiers.
-5. Confirm cap 4 versus 32 in the exact effective commands; that pair is now reported verified. Include other differences without keys or local.env content.
-6. Enabled optional UI title/tag/follow-up/autocomplete tasks, and whether a task model is separately configured.
+The coordinator relayed a read-only assessment of snapshot `1f067428`: **not ready for live runs**. Planner/SSE/journal/resource components exist and 124 tests previously passed, but the one-arm coordinator is fake-backend-only and the CLI refuses execution. Missing: real launch/identity/readiness, nested Windows Job compatibility, bounded monitoring/cleanup, trustworthy GPU/commit admission and independent provenance. This is captured-snapshot evidence, not proof of newer PC state; no delivery date is established. Scratch directories, Windows Jobs and fixed loopback endpoints do not themselves provide a security sandbox.
 
-Do not call a setting applied merely because it appears in a file. Obtain effective runtime evidence where feasible.
+See the [shared finish-line proposal](FINAL_GOAL.md) and [grading-isolation design candidate](WINDOWS_ISOLATION_PROPOSAL.md). This packet authorizes neither generated-code execution nor a new live run.
 
-## B. Clarify R001
+## A. Unblocked local preparation
 
-Provide the synthetic seven-function prompt or its sanitized fixture; the exact ceiling parameter; finish_reason and actual completion_tokens; whether 10.22 s is first visible answer text; run order; and what AST matched expected meant (parse success, names/signatures, or exact structural comparison).
+1. Continue the **existing** adapter/lifecycle work offline with synthetic inputs and local test servers only, within current resource limits. Identify remaining pieces instead of deriving readiness from a test count.
+2. Produce a concise sanitized checkpoint: exact local commit, authored tests run, lifecycle/identity/restore coverage, and whether any path can send a live request. Keep full benchmark execution disabled.
+3. Preserve exact expected-identity/history and record/stop-policy contracts. A new branch, schema or cache plan is not needed.
+4. Preserve rejected-publication artifacts locally. Handoffs must use an explicit source allowlist and exclude all `.git` directories, secrets, private chats/logs, environments, weights and runtime data. Do not publish the blocked components under another filename/route.
 
-Keep generated code unexecuted under the current workflow. A static result is reported as static, not as test-passing code.
+## B. Tokenizer-only preflight — coordinate with Claude
 
-## C. Small serial follow-up, if the listener is idle
+See [context-preflight](context-preflight/README.md) and its pinned 12-task input inventory. Claude completed that tokenizer-only work in rounds 22–23. Reported inputs span 118–300 tokens and fenced references including one end token span 31–137; maximum input plus 256 is 556. The normalized reported observation is included. Do not repeat those counts merely to fill a packet.
 
-Using the already-running model only, compare 192 and 384-token ceilings on the SAME synthetic task, up to three runs each, alternating order. If the task needs a different sensible ceiling, document why rather than forcing these numbers. Stop early for repeated errors, a user request, unsafe memory pressure or queue contention.
+- No model weights, inference, engine restart, package installation, GPU use or live API probe.
+- Identify installed renderer/flavor, tokenizer/special-token settings and their hashes. The [tagged-source audit](context-preflight/token-admission-audit.md) distinguishes absent dedicated HTTP routes from native C/test interfaces; no diagnostic execution is requested.
+- Count the actual serialized synthetic request, including fixed system/helper text, chat frames and the nonthinking generation prefix. Count fenced authored references separately.
+- Distinguish source-scope no-extra-BOS/EOS from actual installed native count/parity. Claude's next task is an offline installed-renderer/already-saved-usage comparison, with exact request provenance; missing measured values stay null.
+- Do not expose hidden cases, private prompts or credentials. Stop for conflicting worker activity or insufficient lightweight-task headroom.
 
-Record first-visible-answer and completion times, actual token counts, finish reason, all requested functions present, static/AST result and sampled free RAM/VRAM. No new model process and no silent auto-continuation. This tests budget sufficiency, not cache improvements.
+The static input audit does not validate token fit, and a fitting reference does not guarantee a generated response fits.
 
-## D. Idle-window A/B
+## C. Read-only evidence still needed
 
-Only when the coordinator confirms a suitable window:
-- One model instance at a time.
-- Confirmed baseline cap-4 profile versus cap-32 profile, with all other settings held equal.
-- Same model/backend/context and equal starting placement-history state.
-- AB/BA runs on held-out synthetic tasks, followed by rollback.
-- Do not restart the working stack merely to gather a result immediately.
+Capture only missing, sanitized evidence; avoid repeating the broad inventory:
 
-A separate optional-UI-tasks test should change only the currently enabled background chores and check the request count; do not combine it with the cache A/B.
+- Immutable installed engine/model identity. Full weight hashing can be I/O-heavy; schedule it appropriately and preserve the working process.
+- Fresh host commit/physical and GPU headroom, production-port process identities and relevant paging counters. Earlier ~0.94 GiB commit-headroom samples are not current clearance.
+- Names-only environment evidence for lookup absence and pinned placement history. `USAGE_SAVE=0` prevents writes but still permits reads; fresh processes do not flush OS cache.
+- Exact current implementation/stop/rollback status, with unknowns named.
 
-## Return format
+Do not raise cap/context/tier or stop production ports merely to pass admission.
 
-A sanitized JSON/CSV plus a short explanation of actual actions, pass/fail, limitations and whether baseline was restored. Use [the protocol](BENCHMARK_PROTOCOL.md); missing values remain null. Upload no credentials, personal prompts, private logs or model files.
+## D. Runtime work remains gated
 
-Latest coordinator update: connection, shell and WebUI health recovered. Continue the existing worker's offline harness corrections first; no inference/restart is underway and no duplicate harness or run should be started.
+Full arm execution requires pinned identity, verified scoped lifecycle/restoration, fresh admission success and a coordinated idle window. One model instance only. No interference with user traffic.
 
-Final worker checkpoint: offline planner/validator prepared (27 tests; archive checksum in I001), not a full runner. Before any inference, independently review its sanitized source and separately implement/validate the missing execution, telemetry, checkpoint and stop/recovery pieces. The earlier fixture-defect checkpoint is historical; do not claim that 27 planner tests validate end-to-end benchmarking.
+Keep the frozen schema-4 cap4/cap32 plan, lookup unset, 60 measured entries plus 10 warmups. Other comparisons need their own plan. Preserve all failures/truncations and planned/unobserved denominators; unknown token counts do not support comparable-length speed claims.
 
-## Round 3 current queue — supersedes duplicate inventory requests
+Round 24 reports an unstarted side-by-side 2.1 install and changes to workbench.py at local commit cf4d369; its old checksum is stale. Review/reconcile that additive selector and current checksum privately before relying on the earlier manifest; do not start 2.1 here. Claude has since reported a first start and restoration; the local diff/identity/test claims still need independent read-only inspection. A version comparison needs a separate frozen identity/plan.
 
-Claude independently confirmed hardware/backend/launchers and inspected plan/doctor, logs and the planner. Do not repeat the broad inventory merely to fill this packet.
-
-1. Keep sole runtime ownership. Await an actual Claude pause acknowledgement/quiet-window confirmation before the one-message UI test. The request being posted is not clearance.
-2. Finish offline planner review: distinguish absent lookup env from resolved process state; check cross-arm initial history equality, schedule uniqueness/pair coverage and correctness coverage (30/60 rows unverified).
-3. When cleared, perform only the bounded synthetic UI call-count verification described in ROUND3_REVIEW.md; no cache change or restart is part of it.
-4. If UI chores are confirmed off, drop disable/restore testing. Reproduce cap 4 versus 32 during a separately coordinated idle maintenance window, with one model instance.
-5. Defer above-32 sweep, model download and multi-slot testing. Snapshot headroom arithmetic does not approve a live configuration change.
-6. Rerun plan/doctor with the owned stack stopped only in the maintenance window; compare the exact inspected executable with the launcher's engine before acting on the contradictory CPU-only warning.
-
-No model-generated code is to be executed under this packet. Add helper static checks only after source review and offline tests, preserving existing completion guards.
-
-Latest worker status: UI input was blocked before typing/submission by inability to verify the browser URL; no bypass or runtime call-count result. Treat that check as blocked, not passed. The worker reports 91 helper and 30 planner offline tests and is still validating. Do not repeat or circumvent the blocked control action here; continue offline review. The PC worker should explicitly release/close its inference reservation when appropriate.
+No generated code execution, teach activation, UI-control bypass, live purge/recovery or rejected-publication retry is part of this packet. Return sanitized status/evidence through the coordinator, preserving local work.

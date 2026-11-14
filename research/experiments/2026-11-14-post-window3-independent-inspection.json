@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "kind": "independent_pc_worker_read_only_inspection",
+  "date": "2026-11-14",
+  "provenance": {
+    "observer": "existing PC worker",
+    "relayed_by": "coordinator",
+    "independent_of_launcher_author": true,
+    "performed_by_this_repository_session": false,
+    "scope": "read-only after matching window3 closure",
+    "observed_at_utc": "2026-11-14 14:22",
+    "timestamp_precision": "minute"
+  },
+  "runtime": {
+    "running_engine_version": "2.0.0",
+    "native_binary_hash_matches_prior_verified_2_0": true,
+    "native_binary_sha256_value_not_supplied": null,
+    "colibri_2_1_process_present": false,
+    "listening_ports": [
+      8000,
+      4001,
+      8080
+    ]
+  },
+  "source_state": {
+    "local_head_short": "7111656",
+    "working_tree_clean": true,
+    "launcher_change_commits": [
+      "cf4d369",
+      "d9aadbf",
+      "7111656"
+    ],
+    "original_launchers_unchanged": true,
+    "original_launchers_select_version": "2.0.0",
+    "separate_2_1_launcher_host_pool_off": true
+  },
+  "manifest": {
+    "workbench": {
+      "recorded_sha256": "7385b3966d99380ffea826a4bbd99335a6f32f4a170073627f8f70fd56c1f462",
+      "actual_sha256": "00576b971bd7b9b8e8a70fe77c9ac9563a24e5e36705beeb39f02f2d6b7f8512",
+      "matches": false,
+      "trust_status": "pending source-review reconciliation, not automatically accepted"
+    },
+    "new_2_1_launcher": {
+      "manifest_entry_present": false,
+      "actual_sha256_not_supplied": null,
+      "trust_status": "uncovered, pending review"
+    },
+    "existing_launcher_hashes_match": true,
+    "manifest_rewritten": false
+  },
+  "resource_sample": {
+    "available_ram_gib": 6.1,
+    "commit_headroom_gib": 1.33,
+    "committed_gib": null,
+    "commit_limit_gib": null,
+    "gpu_used_mib": null,
+    "samples_not_peaks": true,
+    "not_runtime_or_memory_increase_clearance": true
+  },
+  "actions": {
+    "tests_rerun": false,
+    "laptop_changes_made": false,
+    "model_requests_sent": false,
+    "new_runtime_started": false,
+    "rejected_publication_retried": false
+  },
+  "limits": {
+    "full_engine_hash_value_missing_from_relay": true,
+    "no_new_independent_test_pass_claim": true,
+    "no_speed_or_memory_leak_verdict": true,
+    "source_change_trust_review_pending": true,
+    "later_runtime_windows_require_recheck": true,
+    "teach_hook_must_remain_off": true
+  }
+}
