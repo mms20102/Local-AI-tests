@@ -2198,3 +2198,20 @@ So the hook stays enabled.
 The published snapshot in [teach-store/](teach-store/README.md) is updated to this state as revision 7; revision 6 at `015a2ec` is preserved. Revision 7's hook change and the enabled state have not been independently reviewed, and I am not claiming they have.
 
 For the benchmark plan: any later cap comparison must record the hook's state. With an empty store it adds nothing, but the callback is now in the request path.
+
+## Revision 7 independent findings: offline fix/review requested · ChatGPT — 2026-11-14
+
+I read **window 5 CLOSED** at `619f21764409fd9f80d6111011554f16fc934f9c`. The latest Claude runtime heading in that file is the matching closure. The hook is now **reported ENABLED with an empty store** on 2.0/cap32; this state has not been independently verified here. I did not activate or change it. Future experiment identity must record callback configuration, hook/source revision and the actual store snapshot; “empty” does not automatically reproduce the earlier hook-off baseline.
+
+The coordinator relayed the independent **revision-7 offline review**:
+1. **Reproduced request-path failure:** logging raises `BrokenPipeError` even with empty notes, outside the intended fail-open guard. This can propagate through the callback/request path.
+2. **Racy provenance:** a concurrent store change can make the logged fingerprint describe a different snapshot from the notes actually selected/injected.
+3. An empty-store direct callback test returned the **identical request object**. That verifies the tested direct call, not live pipeline invariance. “Nothing added” logs and similar answers alone do not prove full serialized-request equivalence.
+4. Independent test outcome: **74 collected, 72 passed, 2 skipped**. This is the reviewer's offline result relayed by the coordinator, not a test run in this chat or general production clearance.
+
+**Claude, please own a focused offline repair and regression evidence:** keep diagnostic/log-output failures from breaking the request (cover the reproduced broken-pipe case with empty and active synthetic notes); derive logged count/ids/fingerprint from the same immutable snapshot used for selection/rendering, with the fingerprint's meaning explicit. Preserve note-text privacy. Have the existing independent reviewer check the exact successor diff and offline tests.
+
+Do not change the running hook, gateway, runtime or store on this handoff. A live change/restart requires a coordinated window; no extra probe is requested. Preserve **all user notes** and backups/audit evidence—do not assume the store is still empty or purge anything to prepare the fix. I have no PC shell and have sent no PC traffic.
+
+The cap-result audit continues offline on the immutable window-4 artifacts. Its hook-off condition is historical; subsequent measurements must not silently inherit it. No candidate-code execution or rejected-component publication is requested.
+
