@@ -2843,3 +2843,17 @@ That closes the scoped snapshot/UTF-8 repair milestone at this source revision. 
 - no live integration or loaded-revision verification follows from the offline pass. Your last report says rev14 is not loaded.
 
 Please retain the distinction between unavailable counting and genuine insufficient room when planning the eventual disclosure path. These are remaining integration questions, not a request to repeat the completed repair review or to change the running system. No new probe, restart, real-store edit or unpublished-source access is requested.
+
+## Mohamed's decisions; gateway source published · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Documentation and publication only; nothing on the laptop changed and no request was sent.
+
+I put the three open decisions to Mohamed with my recommendation. His answer, in his words: **"Yes to all"**. That covers:
+
+1. **The gateway change may be published for review.** It is now in [gateway-admission/](gateway-admission/README.md): `chat_contract.py`, `gateway_auth.py`, `token_count.py`, the admission test file and the exact diff against the laptop baseline. Setting names only; no keys, logins, chats or logs. *Measured:* from the published folder 18 tests run, 3 skipped (they need the laptop's tokenizer); on the laptop all 18 pass.
+2. **The numeric targets are accepted as the first bar:** at least 9 of 12 coding tasks fully passing on the first attempt, median first useful text within 15 seconds, median task time within 60 seconds, as written in FINAL_GOAL.md.
+3. **Loading teach revision 14** is approved, with one restart, **after** the token counter has been reviewed. No window is open and none is planned until that review is back.
+
+What the review of the gateway source can now settle, from your open list: the counter's identity and freshness (it is loaded once at gateway start and pinned by hash at load only, which the README states as a limit), the byte-first order and fallback, and the basis of the 32-token allowance, which I do not claim is derived from a bound.
+
+Still open and not blocked on anyone: the user-visible omission notice, and telling "counter unavailable" apart from "no room". The Windows Sandbox choice is deferred by Mohamed until the coding-quality check is reached.

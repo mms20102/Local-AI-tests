@@ -1,0 +1,77 @@
+diff --git a/chat_contract.py b/chat_contract.py
+index 0c715ca..8c5721e 100644
+--- a/chat_contract.py
++++ b/chat_contract.py
+@@ -62,8 +62,24 @@ def validate_settings(s: dict[str, Any]) -> dict[str, Any]:
+     return s
+ 
+ 
+-def validate_chat(body: Any, s: dict[str, Any]) -> int:
+-    """Return admission units, NOT Qwen tokenizer tokens; never trim messages."""
++# Added to a real token count before comparing with the context. It covers request shapes
++# whose render is read from the engine source but not yet confirmed against engine usage.
++TOKEN_MARGIN = 32
++
++
++def validate_chat(body: Any, s: dict[str, Any], count_tokens: Any = None) -> int:
++    """Admit or refuse a chat request; never trim messages. Returns what was compared with
++    the context size.
++
++    Without count_tokens this is the original conservative rule: UTF-8 bytes plus fixed
++    overheads ("admission units", not tokens). With count_tokens(messages) -> prompt tokens,
++    the request is admitted when prompt tokens + requested output + TOKEN_MARGIN fit the
++    context. The full output allowance is reserved here because the engine would otherwise
++    shorten the answer silently. If counting fails for any reason the byte rule decides, so a
++    counting fault can only make admission stricter. A text of n bytes is never more than n
++    tokens, and the byte rule's overheads exceed the chat frames, so every request the byte
++    rule admits is also within the token rule.
++    """
+     if not isinstance(body, dict):
+         raise ContractError("Expected a JSON object.", 400)
+     tool_fields = {"tools", "tool_choice", "parallel_tool_calls", "functions", "function_call"}
+@@ -99,6 +115,18 @@ def validate_chat(body: Any, s: dict[str, Any]) -> int:
+         units += size + s["per_message_overhead_units"]
+     if messages[-1]["role"] != "user":
+         raise ContractError("Send a new user message to continue the conversation.")
++    if count_tokens is not None and units > s["context_tokens"]:
++        try:
++            prompt = count_tokens(messages)
++        except Exception:
++            prompt = None
++        if type(prompt) is int and prompt > 0:
++            needed = prompt + output + TOKEN_MARGIN
++            if needed > s["context_tokens"]:
++                raise ContractError(
++                    "Conversation is too long for this model's context. Start a new chat "
++                    "or shorten the text; history was NOT silently truncated.", 413)
++            return needed
+     if units > s["context_tokens"]:
+         raise ContractError(
+             "Conversation exceeds the conservative input budget. Start a new chat "
+diff --git a/gateway_auth.py b/gateway_auth.py
+index 4040d5c..0739bc4 100644
+--- a/gateway_auth.py
++++ b/gateway_auth.py
+@@ -9,8 +9,13 @@ from fastapi import Request
+ from litellm.proxy._types import ProxyException, UserAPIKeyAuth
+ 
+ from chat_contract import ContractError, unique_object, validate_chat, validate_settings
++from token_count import load_counter
+ 
+ LIMITS = validate_settings(json.loads(os.environ["TRYOUT_LIMITS_JSON"]))
++# Real token counting when the pinned tokenizer file and library are present; otherwise None
++# and the conservative byte rule applies unchanged.
++COUNT_TOKENS = load_counter()
++print("[admission] " + ("real token counting" if COUNT_TOKENS else "byte rule only"), flush=True)
+ KEY = os.environ["WEBUI_GATEWAY_KEY"]
+ APPROVAL = os.environ["ALLOW_CHAT_REQUESTS"]
+ if not KEY or KEY.startswith("__") or not KEY.isascii() or len(KEY) < 43:
+@@ -42,7 +47,7 @@ async def authenticate(request: Request, api_key: str) -> UserAPIKeyAuth:
+             reject("Request exceeds the configured byte limit.", 413)
+         try:
+             body = json.loads(raw, object_pairs_hook=unique_object)
+-            validate_chat(body, LIMITS)
++            validate_chat(body, LIMITS, COUNT_TOKENS)
+         except ContractError as error:
+             reject(str(error), error.status)
+         except (ValueError, UnicodeDecodeError):
