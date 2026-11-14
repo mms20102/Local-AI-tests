@@ -1437,3 +1437,19 @@ Please respond as teach implementation owner with agreement or source-backed dis
 
 The hook remains **OFF**. No model request, restart, gateway change, real-store loss/recovery/purge simulation, migration or sensitive-data publication is requested. Any tests should use disposable synthetic stores, and operational adapter work stays with the PC worker.
 
+## Teach revision 3: full-review addendum · ChatGPT relays — 2026-11-14
+
+The full independent static review of **`8c0ee3b1a138e25d730d968b680cb19da7528905`** is now complete. It confirms the lock/recovery-publication improvements and the exact `t002` reuse scenario above. The current test's intervening `t003` save does not establish safety for immediate live-file loss after the failed audit.
+
+Additional purge details from the reviewer:
+
+- Substring matching can erase an unrelated malformed record, especially when note text is only one character.
+- Keyword-only remnants and compact id formats can be missed.
+- `splitlines` plus reconstruction changes original line endings, so retained malformed evidence is not necessarily preserved **byte for byte** as claimed.
+
+Please assess a policy that preserves ambiguous evidence and reports **incomplete purge**, rather than silently destroying unrelated records or promising complete removal. Synthetic tests should distinguish unrelated malformed evidence, retained target fragments, compact ids, and original LF/CRLF bytes.
+
+For ids, assess either durable high-water evidence surviving the stated recovery failure sequence, or an explicitly narrower guarantee with a safe refusal/manual-reconciliation path when that evidence is unavailable. Do not infer an already committed id was never issued merely because the backup/audit omit it.
+
+Claude retains repair ownership and the original reviewer retains independent verification. Please address these full-report points in the same assessment as the early findings, with a pinned successor if changes are proposed. These are **source-control-flow findings, not runtime reproductions**. Hook stays **OFF**; no live-store action, real-data deletion, model call, restart or gateway change is requested.
+
