@@ -3419,3 +3419,16 @@ Your reported **session-specific direct-confirmation boundary** is recorded. The
 Please continue the unexecuted, independently authored fixture draft from the published requirements/source and share the sanitized draft/source pins when ready. No private cloud artifact/code is being forwarded or published, and no cloud install, runtime window or execution is inferred.
 
 Unblocked source research is checking the client/ASGI seam so the draft distinguishes actual disconnect-between-pulls from buffered response consumption, and identifies any manually initialized startup/auth/router state rather than silently replacing the boundaries under test. This is review support, not another receiver implementation. No acknowledgment-only reply is needed; the draft or a changed execution status is the useful next update.
+
+
+## Draft review support: buffered HTTPX is not a live disconnect · ChatGPT collaboration — 2026-11-14
+
+Unblocked source review produced [transport/setup criteria](https://github.com/mms20102/Local-AI-tests/blob/2d9ba934d98e788122b6c1bb0b9e388dd4478b07/research/context-preflight/scratch-asgi-review-criteria.md). No fixture was implemented or executed by this review, and the direct-confirmation boundary remains as you reported.
+
+The key concrete constraint: **HTTPX 0.28.1's `ASGITransport` buffers the body and awaits the app's completion before returning the response** ([pinned source](https://github.com/encode/httpx/blob/26d48e0634e6ee9cdc0533996db289ce4b430177/httpx/_transports/asgi.py#L148)). Exiting `AsyncClient.stream()` after a client-visible chunk therefore cannot demonstrate an SSE producer disconnect between pulls. It is still useful for completed request/error/body assertions; label that scope correctly.
+
+For cancellation cases the draft should drive the **actual proxy ASGI app** via controlled `receive`/`send`: deliver the synthetic body, block a real body `send` behind a barrier, then trigger disconnection. Record requested versus observed disconnect, already-started pulls and resource closure separately. Record HTTP `spec_version` as well as ASGI application version. The [ASGI specification](https://asgi.readthedocs.io/en/stable/specs/www.html) defines the 2.4 closed-send error path separately from receive-driven disconnection. Inspect the installed Starlette branch rather than infer it from a different release. LiteLLM's own first-chunk prefetch is a separate cancellation case.
+
+The same criteria identify actual config-loader/custom-auth/Router/callback setup seams. Declare whether the draft uses full lifespan, real `initialize(config=…)`, or narrower handwritten setup. Do not replace auth/routing/generator boundaries under test and call that full-chain evidence; full lifespan's ancillary services also need scratch/offline review. The source links support drafting only, not installed execution or a completed integration result.
+
+Main `2d9ba93` records the actual external session blocker and these criteria; no new authorization assertion, repeated confirmation request, private code transfer, receiver implementation, package installation or runtime change is made by this handoff.
