@@ -1334,3 +1334,31 @@ The separate static review is complete. **Review target:** [teach-store source a
 
 The hook must remain **OFF**. This relay authorizes no activation, gateway change, stack restart, model request, real-store migration/deletion, or publication of sensitive data. Existing approval to publish the sanitized source is not approval to enable it. The PC worker continues the operational adapter/collector independently.
 
+
+## Research round 16 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the persistence relay at `9589b0f` and the full independent review at `720b7de`. Offline only: no model traffic, no stack start, no gateway change. The hook is still off, and no real store exists to migrate or purge.
+
+### Teach store: response to the independent review · Claude
+
+**I accept all eight findings; I have no source-backed disagreement.** The reviewer read the code correctly in each case. Two were worse than my own round 12 description admitted: the save renamed the live file away before writing the new one, and a failed save could restart ids at 1.
+
+You asked for a proposal. I implemented the repairs offline in my own files so the reviewer can check a diff instead of a description. **Revision 2 is not reviewed and I am not treating it as cleared.**
+
+- Reviewed snapshot (revision 1): this repository at `a72c796`, preserved.
+- Proposed repairs (revision 2): [teach-store/](teach-store/README.md) in this push; laptop local commit `e4fff00`; file hashes and a finding-by-finding table are in that README.
+
+| Finding | Accepted | Repair in revision 2 | Offline evidence (*measured* on the laptop) |
+|---|---|---|---|
+| Persistence/recovery | Yes | Write to a unique temporary file, copy the previous version to the backup, then swap. Live file never absent. A missing or damaged live file is refused when a backup or log exists; `recover` restores on request without reusing ids | Tests: live file present at every replace step; simulated failure at the commit point and at the temporary write leave the last version and no litter; missing-with-backup and missing-with-log-only are refused; recover; damaged file set aside |
+| Concurrent edits | Yes | Exclusive lock file; reload inside the lock; unique temporary names | Tests: two editors holding stale copies get ids t001 and t002 and both entries survive; four writer threads and two reader threads give 21 unique ids, 21 audit lines, no reader error; a fresh lock blocks, a stale one is taken over. Run three times, stable |
+| Authority | Yes | Notes are a `<saved_notes>` data block in front of the latest **user** message. The system message gets only a fixed sentence defined in code. Stored text cannot contain the marker | Tests: stored text never appears in the system role; the system addition equals the code constant even when an entry says "ignore all previous instructions"; marker rejected |
+| Retention/deletion | Yes | `delete` documented as logical; new `purge` overwrites text and keywords in the store, backup and audit log | Tests: after delete the text is still in the files; after purge it is in none; id not reusable |
+| Secret screening | Yes | Keywords go through the same check; documented as a heuristic that cannot recognise every secret | Test with a synthetic key-shaped keyword |
+| Repeated hook invocation | Yes | The transformation is a no-op when the block or the policy is already present | Tests at both levels: second call returns the same request and the same admission units; also confirmed against the installed gateway library's callback class |
+| Preview/budget | Yes | Preview is labelled an illustration that does not predict remaining room or token fit | Test on the output text |
+| Test reproducibility | Yes | Tests run standalone from the published folder; the one test that reads the gateway configuration skips when the file is absent. Nothing from the live configuration was published | 43 pass on the laptop against the real gateway rules; 43 with 1 skipped from the published folder |
+
+**Limits I am not claiming to have closed:** the policy sentence asks the model to treat the block as data, it does not enforce it, and model behaviour is untested. The lock is a lock file with a stale timeout, not an operating-system lock. Recovery restores a backup one change behind. Purge cannot reach copies outside the store folder. The budget is admission units, not tokens. None of this has run in the gateway.
+
+Please have the reviewer check the diff between `a72c796` and this commit under `research/teach-store/`. I will not enable anything on the strength of either review.

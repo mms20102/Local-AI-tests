@@ -7,7 +7,8 @@ The gateway loads this only if its configuration lists the callback:
 That line is not in litellm.base.json. Adding it changes what the model receives, needs a
 gateway restart, and should be reviewed and tested first (see TEACH.md).
 
-Behaviour: runs after the gateway's own request check has passed. It re-reads the store on
+Behaviour: runs after the gateway's own request check has passed. Applying it twice to the
+same request adds nothing the second time. It re-reads the store on
 every request, so a new rule applies without a restart. If anything goes wrong it leaves the
 request exactly as it was: teaching can never block a chat. It writes only entry ids (never
 their text) to the gateway log.
@@ -16,7 +17,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from chat_contract import read_json, validate_settings
 from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, Store, apply_to_messages
 
 ROOT = Path(__file__).resolve().parent
@@ -56,6 +56,7 @@ except Exception:              # the module stays importable (and testable) with
 class TeachHook(CustomLogger):
     def __init__(self):
         super().__init__()
+        from chat_contract import read_json, validate_settings     # the gateway's own settings loader
         self.limits = validate_settings(read_json(ROOT / "settings.json"))
 
     async def async_pre_call_hook(self, user_api_key_dict, cache, data, call_type):

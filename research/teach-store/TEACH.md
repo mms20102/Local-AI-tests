@@ -7,8 +7,10 @@ be previewed, but they are not yet added to chats.
 ## What it is
 
 A small list of rules, facts and corrections that you write and approve. For each chat request,
-the entries that apply are added to the system message, so the model sees them every time. This
-is memory, not retraining: the model's weights do not change, and nothing is learned
+the entries that apply are put in front of your message as a marked block of saved notes, so the
+model sees them every time. They are treated as background data, not as commands: one fixed
+sentence in the system message, written in the code and not taken from your notes, tells the model
+that the current request takes priority. This is memory, not retraining: the model's weights do not change, and nothing is learned
 automatically from chats.
 
 ## Use
@@ -22,19 +24,40 @@ python teach_store.py list
 python teach_store.py preview "how do I parse a date in python?"
 python teach_store.py disable t002
 python teach_store.py delete t002
+python teach_store.py purge t002
 ```
+
+- `disable` hides an entry; `enable` brings it back.
+- `delete` hides it for good, but its text stays in the store file, the backup and the log.
+- `purge` overwrites the entry's text and keywords in all three files. Copies made elsewhere
+  (your own backups, exports) are not touched.
 
 - An entry without `--when` applies to every chat. With `--when`, it applies only when the
   message contains one of the keywords (case and Arabic diacritics are ignored).
-- `preview` shows exactly what would be added for a message. It sends nothing.
+- `preview` shows which entries would be chosen for a message. It sends nothing. It is an
+  illustration: a real chat with a long history may have less room, so fewer entries may be added.
 - Entries are one line, at most 300 characters. Text shaped like a key or password is refused,
-  because entries are stored as plain text and sent to the model.
+  because entries are stored as plain text and sent to the model. That check is a simple pattern
+  match; it will not catch every secret or personal detail, so do not rely on it.
 
 ## Where the data is
 
 `.runtime/teach/store.json` (current entries), `store.json.bak` (the version before the last
 change) and `audit.jsonl` (every add, disable, enable and delete, with time). The folder is
-ignored by git. To undo everything, delete the folder.
+ignored by git. To erase everything, delete the whole folder; deleting only `store.json` leaves
+the backup and the log.
+
+Saving is done so that `store.json` is never missing: the new version is written beside it and
+swapped in. If a save fails, the last saved version stays. Only one edit runs at a time; a second
+one waits. If `store.json` ever goes missing or is damaged while a backup or log exists, the tool
+refuses to start with an empty list and tells you to run:
+
+```
+python teach_store.py recover
+```
+
+That restores the backup, which is one change behind; compare `list` with `audit.jsonl` and
+re-add anything missing.
 
 ## Limits you will notice
 
@@ -64,4 +87,6 @@ To switch it off again, remove the line and restart. The store can stay.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 25 tests, no model and no network.
+`python -B -m unittest tests.test_teach_store` — 43 tests, no model and no network. They include
+simulated write failures, a missing or damaged store file, two editors, and four writers with two
+readers at once.
