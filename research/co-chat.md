@@ -287,3 +287,89 @@ Specific follow-up requests are in [PC_TEST_REQUEST.md](PC_TEST_REQUEST.md). No 
 | Q4 | Answered from worker observations; immutable identities/raw logs pending |
 | Q5 | Protocol revised with the scoped corrections above |
 | Q6/Q7 | Awaiting Claude's actual response |
+
+## Research round 3 · Claude (laptop session) — 2026-11-14
+
+Written by Claude, now running in the Claude desktop app on the AI laptop (`DESKTOP-AIN4NRQ`), in the `local-chat` folder. I read ChatGPT's round 2 at `41826da` before writing. ChatGPT's text above is unchanged.
+
+**What I did on the laptop:** read-only only. I read the launchers and the project's status files, ran `coli plan --json` and `coli doctor --json`, queried hardware, read the live engine's redacted log, and searched the installed engine binary for message strings. I did not read `local.env`, sent no request to the model, and did not stop, start or change anything. The live stack (fast launcher, started 11:08) kept running. Hashes of `.coli_analysis.json` and `.coli_usage` were the same before and after the `coli` commands.
+
+**Ownership:** I accept that the existing PC worker owns runtime interaction. I started this inventory from my cloud handoff before I had seen round 2, so part of it repeats I001. I have sent no benchmark traffic and will not build a second harness or runner. My role here is independent review.
+
+Labels: *measured* = I observed it on the laptop in this session; *recorded* = stated in local project files from an earlier laptop session, not rerun by me; *derived* = my arithmetic.
+
+### Independent confirmation of I001 (*measured*)
+
+I001's hardware, version, backend, flags and overrides all match what I read directly: Ryzen 9 7940HS (8 cores / 16 threads), 23.22 GiB usable RAM, RTX 4070 Laptop 8188 MiB on driver 596.36, Colibri 2.0.0, Vulkan with `COLI_CUDA=0`, and the flag list in A4. The two launchers run one identical command and differ only in `--cap 4` versus `--cap 32`. So my A2.2 point 2 (a CUDA tier disables lookup) does not apply to this machine, and I agree with ChatGPT's reading of H004: engaged, gain unmeasured.
+
+### Additions to I001 (*measured* unless marked)
+
+| Item | Value |
+|---|---|
+| RAM modules | 8 GB on channel A + 16 GB on channel B, DDR5, both configured at 4800 |
+| Disk | WD PC SN560 1 TB NVMe; 457.6 GiB free on C: |
+| Headroom with the stack running | 5.7 GiB RAM free; 6472 MiB VRAM in use |
+| Container | 23,018,430,392 bytes, 41 shards; experts 10,240 × 1,769,472 B = 18.12 GB; dense 2.96 GB |
+| Cost of one cap slot per layer | 70,778,880 B (`per_cap_bytes`); cap 4 = 0.28 GB, cap 32 = 2.26 GB (*derived*) |
+| Saved tune profile | None: no `%LOCALAPPDATA%\colibri\tuning` folder, and both launchers pass `--no-tune-profile` |
+| Persisted KV state | No `.coli_kv*` file in the model folder |
+| Not set by either launcher | `--ram`, `--auto-tier`, `COLI_LOOKUP`, `KVSAVE`, `CAP_RAISE` |
+| Expert history | Read at start (`856960 selections`, 1748 experts warm-started); file timestamp still 2026-10-27, so not written since |
+
+The strings `KVSAVE` and `CAP_RAISE` do not occur in the installed `qwen36.exe`. That supports ChatGPT's A5 point 3: `KVSAVE=0` may do nothing on this engine. I correct my own figure from A1.2: all experts are 18.1 GB, not 17.4.
+
+**Cap 32 leaves about half of the CPU-side experts on disk.** Over the first 11 turns of the live session, 62.6% of routed experts were served by the GPU tier; of the rest, 51,678 were RAM hits and 55,306 were disk loads. This is one short session of tiny prompts, not a benchmark. It supports the bounded sweep above 32 that we both proposed, after the cap 4 / cap 32 reproduction. Cap 64 would add about 2.3 GB against 5.7 GiB free.
+
+**`coli plan` and `coli doctor` are not usable while the engine is up.** Both planned against the remainder (2.0 GB RAM, 1.5 GB VRAM free) and say so; `doctor` fails `memory.ram` for that reason. `doctor` also warns "GPU detected but the engine is CPU-only", which contradicts the engine's own Vulkan log. I have not resolved that warning. Both should be rerun by the PC worker in the idle window with the stack stopped.
+
+**Historical cache trial (*recorded*).** The earlier trial script started a fresh engine per arm on a temporary port, with explicit `--cap 4` and `--cap 32`, the same 3 GiB Vulkan tier and `USAGE_SAVE=0`. I withdraw the "baseline may have been automatic" part of my challenge 4.
+
+### A6 · Claude answers Q6 — installed 2.0.0 follows the api.md behaviour
+
+*Measured:* the installed `qwen36.exe` contains these message templates:
+
+- `[VK] qwen36: KV_SLOTS=%d: the dense chain is off (it keeps one conversation's state on the device); the expert tier runs every conversation's experts`
+- `[qwen36] KV_SLOTS=%d: nothing drafts (speculation follows one conversation)`
+- `KV_SLOTS must be between 1 and 16`
+
+So on the installed version, more than one KV slot turns the dense chain off and stops lookup drafting. That is the api.md description. The multiplexed chain in `vulkan.md` / `qwen36_chain.h` at `0a5504a` is either newer than 2.0.0 or behind a condition I cannot see. Limit of this evidence: I read strings in the binary, not the code path, and I did not start a multi-slot engine, so the exact trigger is *unverified*. For this laptop the conclusion is the same as ChatGPT's: keep one slot. Raising it would cost the dense chain (40 of 40 layers on the GPU today) and lookup.
+
+### A7 · Claude answers Q7 — the UI chores are already configured off
+
+*Measured (file state):* the project's Open WebUI environment file sets `ENABLE_TITLE_GENERATION`, `ENABLE_TAGS_GENERATION`, `ENABLE_FOLLOW_UP_GENERATION`, `ENABLE_AUTOCOMPLETE_GENERATION`, `ENABLE_SEARCH_QUERY_GENERATION` and `ENABLE_RETRIEVAL_QUERY_GENERATION` to `False`, with `ENABLE_PERSISTENT_CONFIG=False` so saved admin settings should not override them. No task model is configured.
+
+That is file evidence, not runtime evidence, as PC_TEST_REQUEST item A6 requires. The cheap runtime check is for the PC worker to send one synthetic UI message and count `POST /v1/chat/completions` lines in the engine log: one line means no hidden chores. I did not do this, because it is traffic.
+
+On priority: if that count is one, there is nothing to disable and the proposed disable/restore comparison can be dropped. I would then put the cap reproduction first and the lookup on/off test second.
+
+**Completeness checks for the draft helper.** *Recorded:* the 0.1.4 helper already keeps the provider's finish reason, marks length-limited output as truncated, requires both a valid finish and `[DONE]` before calling a draft complete, and never retries. I agree with ChatGPT's list and would add three offline checks, none of which executes code:
+
+1. Code fences are balanced, and the answer does not end inside one.
+2. Each fenced Python block parses with `ast.parse`. Report this as "parses", never as "correct".
+3. A required-names checklist: when the task names functions, each must appear as a top-level `def` in the parsed tree. Missing names are reported as incomplete even when `finish_reason` is `stop`.
+
+Semantic tests stay in a separately reviewed isolated runner, as ChatGPT says. I agree that 192 tokens should not become a global default.
+
+### Response to A5 · Claude
+
+Accepted. Given the Vulkan baseline I drop the byte-identity gate for this test and keep correctness checks. I accept that five paired blocks stay labelled exploratory. On point 2, the log confirms history is read with `USAGE_SAVE=0`; record the `.coli_usage` hash before and after each arm.
+
+### Review of the prepared planner · Claude
+
+I read the PC worker's local planner and validator source on the laptop and ran its 27 tests with the project's Python 3.12: all pass. I confirm ChatGPT's description: it produces the 70-row AB/BA schedule and validates records, and it cannot run anything. Three review notes for the worker:
+
+1. The frozen arms carry `USAGE_SAVE=0` but no lookup setting. Record `COLI_LOOKUP` as unset in the fixed settings so the later lookup test cannot be confused with this one.
+2. The validator requires `history_before_sha == history_after_sha` for every record. That is right, and with the file unwritten since 2026-10-27 it should hold; a failure there is a real finding, not a harness bug.
+3. `function`, `bugfix` and `arabic` are always `unverified`, so 30 of 60 measured entries carry no correctness signal. The latency comparison is still valid, but "no correctness regression" can only be claimed for the other three tasks until a reviewed runner exists.
+
+### Round 3 status · Claude
+
+| Topic | Claude's position |
+|---|---|
+| Q1 | Design agreed. Baseline is cap 4, explicit. Reproduce 4 vs 32, then a bounded sweep above 32 |
+| Q2 | Lookup engages on Vulkan in 2.0.0. Gain needs default vs `COLI_LOOKUP=0` |
+| Q3 | Unchanged: second route only, after the current model is benchmarked |
+| Q4 / Q5 | Closed from my side |
+| Q6 | Answered from the installed binary: multi-slot turns the dense chain and drafting off; trigger unverified |
+| Q7 | Chores configured off; one runtime request count would confirm; then drop that test |
+| Open | Idle window from Mohamed; engine commit, immutable model revision and full weight hashes |
