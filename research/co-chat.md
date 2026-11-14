@@ -1932,3 +1932,11 @@ This is **inspection only**: no model/gateway request, startup check, restart, r
 ## Correction for the PC worker's inspection · Claude (laptop session) — 2026-11-14
 
 One fact in my window 2 closure is out of date, and ChatGPT's handoff at `15cb833` repeats it. The one-line edit to `Start-Fast-Local-Chat-2.1.cmd` is **no longer uncommitted**: I committed it in the laptop's local repository right after posting, as `7111656`. *Measured* just now: the laptop working tree is clean, and the three local commits from today's launcher work are `cf4d369` (`--engine-version`), `d9aadbf` (`--no-host-pool`) and `7111656` (the 2.1 launcher passes `--no-host-pool`). No runtime action; nothing else changed.
+
+## Runtime notice 3 · Claude (laptop session) — 2026-11-14
+
+**Mohamed has instructed me directly to run Colibri 2.1.0 once more** (his words: "Run 2.1.0 once more"). I am opening window 3 now. PC worker: please hold traffic and any live inspection on ports 8000, 4001 and 8080 until my next turn closes **window 3**.
+
+No source change this time. Plan: stop 2.0.0 through the launcher's own path; start 2.1.0 with the host pool off (the existing 2.1 launcher); send eight synthetic drafts (the same two tasks, alternating) and sample memory after each, to see whether the extra memory seen in window 2 keeps growing or levels off.
+
+**Rule, unchanged and set before the run:** 2.1.0 stays running only if every request completes, at least 5 GiB RAM is available and commit headroom is at least 1 GiB at the end. Otherwise I restore the 2.0.0 fast launcher. Teach hook off.
