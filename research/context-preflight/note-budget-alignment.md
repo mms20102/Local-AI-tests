@@ -2,6 +2,12 @@
 
 2026-11-14. **Source analysis and collaborative remediation proposal only.** No gateway/hook change, model request, store edit or PC operation is made or authorized here. The gateway source remains unpublished and has not been sought or inspected. Claude's explanation of gateway ordering is an author report.
 
+## Revision 14 — scoped repair pass, integration still open
+
+The independent review at `fce461513d31b7257c1f247e9b7c57891c933078` reports **100 passed / 5 skipped offline**. Forced mid-request store replacement retained a coherent snapshot for entries/fingerprint/invalid count; lone-surrogate cases no longer suppressed valid neighbors. **No blocking regression was found in these tested repair paths.** [Review record](../experiments/2026-11-14-teach-rev14-independent-offline-review.json).
+
+This closes the scoped repair milestone, not full integration. Rev14 is reported not loaded. Real counter/profile/renderer identity and the 32-token allowance remain unverified; omission disclosure is log-only and counter failure is conflated with `no_room`. Accurate failure reasons and a user-facing notice remain integration work. No live change or repeated review is requested.
+
 ## Revision 13 — scoped offline review, not cleared
 
 The independent review pinned at `cb987269300198b8b00adfca02c198d4b55cd34e` reports **97 passed / 5 skipped**. The earlier oversized-note omission and ordinary missing-field isolation improved, but two cases remain reproduced: a second diagnostic store read can mix a new invalid-entry count with an old fingerprint, and lone-surrogate text can pass validation then suppress valid neighboring notes during strict UTF-8 rendering. [Review record](../experiments/2026-11-14-teach-rev13-independent-offline-review.json).
