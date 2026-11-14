@@ -148,11 +148,62 @@ class RetentionTests(Base):
             handle.write('{"broken json about Remove this sentence.\n')
         report = self.store.purge(gone["id"])
         raw = (self.folder / "audit.jsonl").read_text(encoding="utf-8")
-        self.assertIn("### unrelated damaged line ###", raw)                    # evidence kept byte for byte
-        self.assertNotIn("Remove this sentence.", raw)
-        self.assertEqual((report["unreadable_audit_lines_kept"], report["unreadable_audit_lines_replaced"]), (1, 1))
+        self.assertIn("### unrelated damaged line ###", raw)
+        self.assertIn('{"broken json about Remove this sentence.', raw)          # ambiguous: kept, not guessed at
+        self.assertEqual((report["unreadable_audit_lines_kept"], report["unreadable_audit_lines_possibly_related"]), (2, 1))
+        self.assertIs(report["complete"], False)                                 # and the purge says so
         self.assertIn("Keep me.", raw)
         self.assertEqual(keep["id"], "t001")
+        full = self.store.purge(gone["id"], delete_unreadable=True)              # explicit owner decision
+        self.assertEqual(full["unreadable_audit_lines_deleted"], 2)
+        self.assertIs(full["complete"], True)
+        self.assertNotIn("Remove this sentence.", self.all_text())
+
+    def test_one_character_note_does_not_destroy_unrelated_evidence(self):
+        entry = self.store.add("a")
+        self.store.add("Keep me.")
+        with (self.folder / "audit.jsonl").open("ab") as handle:
+            handle.write(b"### damaged line that happens to contain the letter a ###\n")
+        before = (self.folder / "audit.jsonl").read_bytes()
+        report = self.store.purge(entry["id"])
+        after = (self.folder / "audit.jsonl").read_bytes()
+        self.assertIn(b"### damaged line that happens to contain the letter a ###\n", after)
+        self.assertEqual(report["unreadable_audit_lines_kept"], 1)
+        self.assertIs(report["complete"], False)
+        self.assertIn(b'"Keep me."', after)
+        self.assertNotEqual(before, after)                                       # only this entry's own records changed
+
+    def test_keyword_only_remnant_and_compact_id_are_flagged_not_missed(self):
+        entry = self.store.add("Remove this sentence.", "fact", "zebra")
+        with (self.folder / "audit.jsonl").open("ab") as handle:
+            handle.write(b'{"when":["zebra"], truncated\n')                      # keyword only
+            handle.write(b'{"id":"t001","text": cut off\n')                      # compact id form, no space
+            handle.write(b"unrelated garbage\n")
+        report = self.store.purge(entry["id"])
+        self.assertEqual(report["unreadable_audit_lines_kept"], 3)
+        self.assertEqual(report["unreadable_audit_lines_possibly_related"], 2)
+        self.assertIs(report["complete"], False)
+        raw = (self.folder / "audit.jsonl").read_bytes()
+        self.assertIn(b'{"when":["zebra"], truncated\n', raw)                    # reported as remaining, honestly
+        self.assertIn("zebra", self.all_text())
+
+    def test_untouched_audit_lines_keep_their_original_bytes_and_line_endings(self):
+        self.store.add("Keep me.")
+        entry = self.store.add("Remove this sentence.")
+        audit = self.folder / "audit.jsonl"
+        original = audit.read_bytes().splitlines(keepends=True)
+        crlf_valid = b'{"time": "x", "action": "add", "id": "t777", "kind": "rule", "text": "other", "when": []}\r\n'
+        crlf_bad = b"### damaged, CRLF ending ###\r\n"
+        no_ending = b"### damaged, no line ending at all ###"
+        audit.write_bytes(b"".join(original) + crlf_valid + crlf_bad + no_ending)
+        self.store.purge(entry["id"])
+        after = audit.read_bytes()
+        self.assertIn(original[0], after)                                        # another entry's record, byte for byte
+        self.assertIn(crlf_valid, after)                                         # valid but not ours: CRLF preserved
+        self.assertIn(crlf_bad, after)
+        self.assertIn(no_ending + b"\n", after)                                  # not joined onto the next record
+        self.assertNotIn(b"Remove this sentence.", after)
+        self.assertEqual(json.loads(after.splitlines()[-1])["action"], "purge")
 
     def test_purge_reports_damaged_copies_and_deletes_them_only_on_request(self):
         entry = self.store.add("Remove this sentence.")
@@ -237,7 +288,7 @@ class DurabilityTests(Base):
         self.assertEqual([e["text"] for e in self.live()["entries"]], ["One."])
         self.assertEqual([e["text"] for e in self.store.entries()], ["One."])       # memory matches disk
         self.assertEqual(sorted(p.name for p in self.folder.iterdir() if p.suffix == ".tmp"), [])
-        self.assertEqual(self.store.add("Two.")["id"], "t002")                       # lock was released; id not burned
+        self.assertEqual(self.store.add("Two.")["id"], "t003")       # lock was released; t002 was reserved, so skipped
 
     def test_failed_temp_write_leaves_the_last_version(self):
         self.store.add("One.")
@@ -432,6 +483,65 @@ class DurabilityTests(Base):
         with self.assertRaises(ts.TeachError):
             ts.recover(self.folder)
         self.assertFalse((self.folder / "store.json").exists())
+
+    def fail_audit_appends(self):
+        real_open = Path.open
+
+        def failing(path, *args, **kwargs):
+            if path.name == "audit.jsonl" and args and "a" in args[0]:
+                raise OSError("simulated: log not writable")
+            return real_open(path, *args, **kwargs)
+        Path.open = failing
+        self.addCleanup(setattr, Path, "open", real_open)
+        return real_open
+
+    def test_id_is_not_reused_when_the_live_store_is_lost_right_after_an_unlogged_add(self):
+        # The reviewer's exact sequence: t001 has backup and audit evidence; t002 commits but its
+        # audit line fails; the live store is lost before any further save; then recovery.
+        self.store.add("One.")
+        self.store.set_status("t001", "disabled")      # a second save, so a backup of the t001 store exists
+        real_open = self.fail_audit_appends()
+        with self.assertRaises(ts.AuditWriteError):
+            self.store.add("Two.")                     # committed as t002, not logged
+        Path.open = real_open
+        backup = json.loads((self.folder / "store.json.bak").read_text(encoding="utf-8"))
+        self.assertEqual(backup["next_id"], 2)                                   # the backup knows nothing of t002
+        self.assertNotIn("t002", (self.folder / "audit.jsonl").read_text(encoding="utf-8"))
+        (self.folder / "store.json").unlink()          # lost immediately, with no intervening save
+        ts.recover(self.folder)
+        self.assertEqual(ts.Store(self.folder).add("Again.")["id"], "t003")      # t002 is never issued twice
+
+    def test_recover_says_so_when_it_cannot_establish_the_id_high_water_mark(self):
+        self.store.add("One.")
+        self.store.add("Two.")
+        (self.folder / "store.json").unlink()
+        (self.folder / "store.idmark").unlink()        # the evidence itself is gone
+        with self.assertRaises(ts.TeachError) as caught:
+            ts.recover(self.folder)                    # refuses: no silent claim of id safety
+        self.assertIn("cannot be confirmed", str(caught.exception))
+        self.assertFalse((self.folder / "store.json").exists())                  # nothing changed
+        message = ts.recover(self.folder, allow_unconfirmed_ids=True)            # the owner's explicit choice
+        self.assertIn("WARNING", message)
+        self.assertIn("could not be confirmed", message)
+        self.assertEqual(len(ts.Store(self.folder).entries()), 1)
+
+    def test_id_mark_survives_a_failed_commit_without_reusing_or_skipping_wrongly(self):
+        self.store.add("One.")
+        real = ts._replace
+
+        def failing(source, target):
+            if Path(target).name == "store.json":
+                raise OSError("simulated failure at the commit point")
+            real(source, target)
+        ts._replace = failing
+        try:
+            with self.assertRaises(OSError):
+                self.store.add("Never committed.")
+        finally:
+            ts._replace = real
+        entry = self.store.add("Two.")
+        self.assertEqual(entry["id"], "t003")          # t002 was reserved and is skipped, never shared
+        self.assertEqual(len({e["id"] for e in self.live()["entries"]}), 2)
 
     def test_audit_failure_after_commit_is_reported_as_saved(self):
         self.store.add("One.")

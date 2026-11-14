@@ -1453,3 +1453,33 @@ For ids, assess either durable high-water evidence surviving the stated recovery
 
 Claude retains repair ownership and the original reviewer retains independent verification. Please address these full-report points in the same assessment as the early findings, with a pinned successor if changes are proposed. These are **source-control-flow findings, not runtime reproductions**. Hook stays **OFF**; no live-store action, real-data deletion, model call, restart or gateway change is requested.
 
+
+## Research round 18 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the early findings at `39e2ea8` and the full-review addendum at `51f3015` on teach revision 3 (`8c0ee3b`). Offline only, on throwaway synthetic stores: no model traffic, no stack start, no gateway change, no real store (none exists). The hook is still off.
+
+### Teach revision 3 review: assessment · Claude
+
+**I accept every finding; no disagreement.**
+
+**The `t002` reuse is reproduced, not only read.** Before changing anything I wrote the reviewer's exact sequence as a test, without the intervening save that masked it in my earlier test: evidence for `t001`; `t002` committed with a failed audit line; live file deleted immediately; recovery. *Measured:* on revision 3 that test **failed**, with recovery handing out `t002` a second time. The reviewer's criticism of my earlier test was correct.
+
+Proposed repairs are implemented offline as **revision 4** in [teach-store/](teach-store/README.md), laptop local commit `dd40a6b`. Revisions 1 to 3 are preserved in this repository at `a72c796`, `1f8577d` and `8c0ee3b`. Revision 4 is **not reviewed and not cleared**.
+
+| Finding | Repair in revision 4 | Offline evidence (*measured*, Windows) |
+|---|---|---|
+| Committed id reused after an unlogged add and immediate loss of the live file | Durable high-water evidence that survives that sequence: `store.idmark` records the highest id reserved, written before the entry is saved, independent of backup and log. Ids may be skipped, never repeated | The reproducing test now passes: the next id is `t003`. A simulated failure at the commit point burns `t002` and the next add is `t003` |
+| No silent claim of id safety | With the mark missing, recovery refuses and changes nothing; an explicit flag restores with a warning | Test: refusal leaves no live file; the flagged path restores and prints the warning |
+| Short note text erases unrelated damaged evidence | No audit line that is not valid JSON is rewritten or removed by matching | Test with a one-character note "a" and a damaged line containing that letter: the line is still there, byte for byte |
+| Keyword-only remnant and compact id missed | Not removed, because they cannot be attributed; counted as possibly related, and the purge is reported incomplete | Test with a keyword-only fragment and `"id":"t001"` without a space: both counted, both still present, `complete` is false |
+| Line endings changed | Log processed as raw bytes; only the entry's own valid records are rewritten | Test: another entry's record, a valid CRLF record, a damaged CRLF line and a final line with no ending are all found unchanged afterwards |
+| Promise of complete removal | `complete` flag and a plain "Purge is NOT complete" message; two explicit owner options to remove all unreadable lines or set-aside copies | Tests on the report and on the explicit options |
+
+**Narrower guarantees, stated as such:**
+
+- Ids: never repeated **while `store.idmark` is intact**. If it is lost, recovery refuses by default; that is a manual-reconciliation path, not a guarantee.
+- Purge: it rewrites the entry's own valid records in three files and nothing else. It does not prove the text is gone from the folder; it reports what it left. It is retryable, not atomic, and not secure erasure. A valid record of another entry that happens to quote the text is not touched.
+
+**Evidence totals** (*measured* on the laptop): 61 teach tests pass, 161 in the project suite, run three times; from the published folder 61 pass with 1 skipped.
+
+Please have the reviewer compare `8c0ee3b` with this commit under `research/teach-store/`. Nothing will be enabled on the strength of any review.

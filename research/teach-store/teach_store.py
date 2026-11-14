@@ -196,6 +196,25 @@ def _read_json(path: Path):
             time.sleep(0.05)
 
 
+def read_id_mark(folder: Path):
+    """The highest id number ever reserved, or None when that evidence is missing or unreadable."""
+    try:
+        value = json.loads((folder / "store.idmark").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return value if type(value) is int and value >= 0 else None
+
+
+def write_id_mark(folder: Path, number: int) -> None:
+    temp = folder / f"store.idmark.{os.getpid()}.{secrets.token_hex(4)}.tmp"
+    try:
+        temp.write_text(json.dumps(number) + "\n", encoding="utf-8")
+        _replace(temp, folder / "store.idmark")
+    finally:
+        with contextlib.suppress(FileNotFoundError):
+            temp.unlink()
+
+
 class Store:
     """All entries, in one JSON file.
 
@@ -207,6 +226,10 @@ class Store:
       empty; `recover` restores the backup on request. Ids are never silently restarted.
     - Writers take an exclusive lock and re-read the file under it, so two editors cannot lose
       each other's change or reuse an id.
+    - An id is reserved in store.idmark BEFORE the entry is saved. The mark does not depend on
+      the backup or the audit log, so an id that was committed is never issued again even if its
+      log line failed and the live file was then lost. Ids can therefore be skipped (a failed
+      save burns one) but not repeated. If the mark itself is missing, recovery says so.
     Not covered: power loss in the middle of the operating system's own rename.
     """
 
@@ -292,9 +315,11 @@ class Store:
                 raise TeachError(f"The store is full ({MAX_ENTRIES} entries). Delete some first.")
             if any(e["text"].casefold() == text.casefold() for e in live):
                 raise TeachError("The same text is already stored.")
-            entry = {"id": f"t{self.data['next_id']:03d}", "kind": kind, "text": text, "when": keywords,
+            number = max(self.data["next_id"], (read_id_mark(self.folder) or 0) + 1)
+            write_id_mark(self.folder, number)           # reserve first: durable before the entry exists
+            entry = {"id": f"t{number:03d}", "kind": kind, "text": text, "when": keywords,
                      "status": "active", "created": now(), "source": "owner"}
-            self.data["next_id"] += 1
+            self.data["next_id"] = number + 1
             self.data["entries"].append(entry)
             try:
                 self._save("add", entry)
@@ -318,15 +343,21 @@ class Store:
                 raise
             return entry
 
-    def purge(self, entry_id: str, delete_damaged: bool = False) -> dict:
+    def purge(self, entry_id: str, delete_damaged: bool = False, delete_unreadable: bool = False) -> dict:
         """Overwrite one entry's text and keywords in the files this tool manages.
 
-        Covered: store.json, store.json.bak and audit.jsonl. `delete` only hides an entry; purge
-        rewrites those three. Audit lines that are not valid JSON are kept exactly as they are,
-        unless they contain the entry's id or text, in which case that one line is replaced by a
-        marker. Set-aside copies (store.json.damaged.*) are NOT rewritten: they are listed in
-        the report, and removed only with delete_damaged=True. This is not secure erasure: the
-        disk may keep old blocks, and copies outside the folder are untouched.
+        Covered: the entry's own records in audit.jsonl, plus store.json.bak and store.json.
+        `delete` only hides an entry; purge rewrites those.
+
+        NOT decided by guesswork: audit lines that are not valid JSON. Whether such a line
+        belongs to this entry cannot be established (a short note can match an unrelated line,
+        and a damaged line may hold only a keyword), so they are all left exactly as they are
+        and counted, with a second count of those that contain the entry's id, text or a
+        keyword. The purge is then reported as not complete. delete_unreadable=True removes
+        every unreadable line, related or not, as an explicit owner decision. Set-aside copies
+        (store.json.damaged.*) are likewise only listed, and removed with delete_damaged=True.
+        This is not secure erasure: the disk may keep old blocks, and copies outside the folder
+        are untouched.
 
         If a purge is interrupted, run the same command again. The text is removed from the live
         store last, so a repeat always still knows what to remove; a purge that returned
@@ -338,11 +369,12 @@ class Store:
                     break
             else:
                 raise TeachError(f"No entry {entry_id}.")
-            needles = [n for n in {entry["text"], json.dumps(entry["text"], ensure_ascii=True)[1:-1],
-                                   f'"id": "{entry_id}"'} if n and n != "[purged]"]
+            needles = [n.casefold() for n in {entry["text"], json.dumps(entry["text"], ensure_ascii=True)[1:-1],
+                                              entry_id, *entry["when"]} if n and n != "[purged]"]
             report = {"id": entry_id, "covered": ["audit.jsonl", "store.json.bak", "store.json"],
-                      "unreadable_audit_lines_kept": 0, "unreadable_audit_lines_replaced": 0,
-                      "damaged_copies_deleted": [], "not_covered": []}
+                      "unreadable_audit_lines_kept": 0, "unreadable_audit_lines_possibly_related": 0,
+                      "unreadable_audit_lines_deleted": 0,
+                      "damaged_copies_deleted": [], "not_covered": [], "complete": False}
             token = secrets.token_hex(4)
             purged = json.loads(json.dumps(self.data))            # the store as it will be afterwards
             for item in purged["entries"]:
@@ -352,33 +384,40 @@ class Store:
                 # Order matters. The live store is changed LAST: until then the entry still holds
                 # its text, so if any step fails the same command can be run again and will redo
                 # every step with the text still known. Each step replaces one file in one move.
-                # 1. audit log
-                lines = []
-                existing = self.audit_path.read_text(encoding="utf-8").splitlines() if self.audit_path.exists() else []
-                for line in existing:
+                # 1. audit log. Worked on as raw bytes: only this entry's own valid records are
+                #    rewritten. Every other line, readable or not, is copied exactly as it was,
+                #    including its original line ending.
+                pieces = []
+                raw = self.audit_path.read_bytes() if self.audit_path.exists() else b""
+                for chunk in raw.splitlines(keepends=True):
                     try:
-                        record = json.loads(line)
+                        record = json.loads(chunk.decode("utf-8"))
                         if not isinstance(record, dict):
                             raise ValueError
-                    except ValueError:
-                        if any(needle in line for needle in needles):
-                            lines.append(json.dumps({"time": now(), "action": "unreadable_line_replaced_by_purge",
-                                                     "id": entry_id}))
-                            report["unreadable_audit_lines_replaced"] += 1
+                    except ValueError:                        # includes undecodable bytes
+                        if delete_unreadable:
+                            report["unreadable_audit_lines_deleted"] += 1
                         else:
-                            lines.append(line)                # unrelated evidence: kept byte for byte
+                            pieces.append(chunk)              # ownership is unknowable: untouched
                             report["unreadable_audit_lines_kept"] += 1
+                            text_of_line = chunk.decode("utf-8", errors="replace").casefold()
+                            if any(needle in text_of_line for needle in needles):
+                                report["unreadable_audit_lines_possibly_related"] += 1
                         continue
-                    if record.get("id") == entry_id:
-                        if record.get("action") == "purge":
-                            continue                          # from an earlier, interrupted attempt
-                        record.update(text="[purged]", when=[])
-                    lines.append(json.dumps(record, ensure_ascii=False))
-                lines.append(json.dumps({"time": now(), "action": "purge", "id": entry_id, "kind": entry["kind"],
-                                         "text": "[purged]", "when": []}))
+                    if record.get("id") != entry_id:
+                        pieces.append(chunk)                  # someone else's record: untouched
+                        continue
+                    if record.get("action") == "purge":
+                        continue                              # from an earlier, interrupted attempt
+                    record.update(text="[purged]", when=[])
+                    pieces.append((json.dumps(record, ensure_ascii=False) + "\n").encode("utf-8"))
+                if pieces and not pieces[-1].endswith((b"\n", b"\r")):
+                    pieces.append(b"\n")                      # the last line had no ending; do not join onto it
+                pieces.append((json.dumps({"time": now(), "action": "purge", "id": entry_id, "kind": entry["kind"],
+                                           "text": "[purged]", "when": []}) + "\n").encode("utf-8"))
                 temp = self.folder / f"audit.jsonl.{token}.purge.tmp"
                 try:
-                    temp.write_text("".join(line + "\n" for line in lines), encoding="utf-8")
+                    temp.write_bytes(b"".join(pieces))
                     _replace(temp, self.audit_path)
                 finally:
                     with contextlib.suppress(FileNotFoundError):
@@ -395,7 +434,7 @@ class Store:
                 self.data = purged
                 # 4. everything else in the folder is reported, never silently skipped
                 for other in sorted(self.folder.iterdir()):
-                    if other.name in ("store.json", "store.json.bak", "audit.jsonl", "store.lock"):
+                    if other.name in ("store.json", "store.json.bak", "audit.jsonl", "store.lock", "store.idmark"):
                         continue
                     if delete_damaged and other.name.startswith("store.json.damaged."):
                         other.unlink()
@@ -405,6 +444,7 @@ class Store:
             except BaseException:
                 self.data = self._load_or_keep()
                 raise
+            report["complete"] = not report["unreadable_audit_lines_kept"] and not report["not_covered"]
             return report
 
     def _load_or_keep(self) -> dict:
@@ -415,7 +455,7 @@ class Store:
             return self.data
 
 
-def recover(folder: Path = DEFAULT_DIR) -> str:
+def recover(folder: Path = DEFAULT_DIR, allow_unconfirmed_ids: bool = False) -> str:
     """Restore store.json from the backup. Only when the live file is missing or unreadable.
 
     The whole operation holds the folder lock. The restored version, with its id counter already
@@ -450,6 +490,15 @@ def recover(folder: Path = DEFAULT_DIR) -> str:
             for line in audit.read_text(encoding="utf-8").splitlines():
                 with contextlib.suppress(ValueError, KeyError, TypeError):
                     used.append(int(json.loads(line)["id"][1:]))
+        mark = read_id_mark(folder)
+        if mark is None and not allow_unconfirmed_ids:
+            raise TeachError(
+                "store.idmark is missing or unreadable, so the highest id ever used cannot be confirmed. "
+                "Nothing was changed. The backup and audit log may not know about the newest entry, and "
+                "restoring from them could give a new entry an id that was already used. Compare "
+                "store.json.bak with audit.jsonl first; then `recover --accept-unconfirmed-ids` restores anyway.")
+        if mark is not None:
+            used.append(mark)
         if used and data["next_id"] <= max(used):
             data["next_id"] = max(used) + 1
         token = secrets.token_hex(4)
@@ -463,6 +512,12 @@ def recover(folder: Path = DEFAULT_DIR) -> str:
             with contextlib.suppress(FileNotFoundError):
                 temp.unlink()
     note = " The unreadable file was kept as store.json.damaged.*; it may contain note text." if damaged else ""
+    if mark is None:
+        note += (" WARNING: the id high-water mark (store.idmark) was missing, so the highest id ever "
+                 "used could not be confirmed. New ids continue from the backup and the audit log and "
+                 "might repeat an id that was used after them.")
+    else:
+        write_id_mark(folder, max(used))
     return (f"Restored {len(data['entries'])} entries from the backup. The backup is one change "
             "behind; check `list` against audit.jsonl and re-add anything missing." + note)
 
@@ -572,7 +627,11 @@ def main(argv=None) -> int:
     purge.add_argument("id")
     purge.add_argument("--delete-damaged-copies", action="store_true",
                        help="also delete set-aside store.json.damaged.* files, which may contain the text")
-    sub.add_parser("recover", help="restore the last backup when store.json is missing or damaged")
+    purge.add_argument("--delete-unreadable-audit-lines", action="store_true",
+                       help="also delete EVERY audit line that is not valid JSON, related or not")
+    recovering = sub.add_parser("recover", help="restore the last backup when store.json is missing or damaged")
+    recovering.add_argument("--accept-unconfirmed-ids", action="store_true",
+                            help="restore even though store.idmark is missing; a new id might repeat an old one")
     preview = sub.add_parser("preview", help="show what would be added for a message; sends nothing")
     preview.add_argument("message")
     preview.add_argument("--budget", type=int, default=DEFAULT_BUDGET_UNITS)
@@ -582,7 +641,7 @@ def main(argv=None) -> int:
             stream.reconfigure(encoding="utf-8", errors="replace")
     try:
         if args.command == "recover":
-            print(recover(args.dir))
+            print(recover(args.dir, args.accept_unconfirmed_ids))
             return 0
         store = Store(args.dir)
         if args.command == "add":
@@ -603,17 +662,22 @@ def main(argv=None) -> int:
             entry = store.set_status(args.id, status)
             print(f"{entry['id']} is now {status}.")
         elif args.command == "purge":
-            report = store.purge(args.id, args.delete_damaged_copies)
-            print(f"{report['id']}: text and keywords overwritten in " + ", ".join(report["covered"]) + ".")
-            if report["unreadable_audit_lines_replaced"]:
-                print(f"{report['unreadable_audit_lines_replaced']} unreadable audit line(s) mentioned it and were replaced.")
-            if report["unreadable_audit_lines_kept"]:
-                print(f"{report['unreadable_audit_lines_kept']} unrelated unreadable audit line(s) were kept as they are.")
+            report = store.purge(args.id, args.delete_damaged_copies, args.delete_unreadable_audit_lines)
+            print(f"{report['id']}: its records were overwritten in " + ", ".join(report["covered"]) + ".")
+            if report["unreadable_audit_lines_deleted"]:
+                print(f"Deleted {report['unreadable_audit_lines_deleted']} unreadable audit line(s), related or not.")
             if report["damaged_copies_deleted"]:
                 print("Deleted: " + ", ".join(report["damaged_copies_deleted"]))
+            if report["unreadable_audit_lines_kept"]:
+                print(f"NOT covered: {report['unreadable_audit_lines_kept']} unreadable audit line(s) were left as they "
+                      f"are; {report['unreadable_audit_lines_possibly_related']} of them contain this entry's id, text "
+                      "or a keyword. Whether they belong to it cannot be determined. "
+                      "--delete-unreadable-audit-lines removes all unreadable lines.")
             if report["not_covered"]:
                 print("NOT covered, may still contain the text: " + ", ".join(report["not_covered"]))
-                print("Use --delete-damaged-copies to remove set-aside copies.")
+                print("--delete-damaged-copies removes set-aside copies.")
+            print("Purge complete for the files this tool manages." if report["complete"]
+                  else "Purge is NOT complete: see the items above.")
             print("This is not secure erasure: the disk may keep old data, and copies outside this folder are untouched.")
         elif args.command == "preview":
             chosen = select(store.entries(), args.message, args.budget)

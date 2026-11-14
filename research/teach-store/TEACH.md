@@ -29,11 +29,13 @@ python teach_store.py purge t002
 
 - `disable` hides an entry; `enable` brings it back.
 - `delete` hides it for good, but its text stays in the store file, the backup and the log.
-- `purge` overwrites the entry's text and keywords in those three files, and then lists any other
-  file in the folder it did not touch (for example a damaged copy set aside by `recover`).
-  `purge t002 --delete-damaged-copies` removes those set-aside copies too. If a purge is
-  interrupted, run it again. It is not secure erasure: the disk may keep old data, and copies made
-  elsewhere (your own backups, exports) are not touched.
+- `purge` overwrites the entry's own records in those three files and then tells you whether it
+  is complete. It is **not complete** when the log contains damaged lines (it cannot tell whose
+  they are, so it leaves them exactly as they are and counts them) or when the folder holds other
+  files such as a damaged copy set aside by `recover`. Two explicit options finish the job:
+  `--delete-unreadable-audit-lines` removes every damaged log line, related or not, and
+  `--delete-damaged-copies` removes the set-aside copies. If a purge is interrupted, run it again.
+  It is not secure erasure: the disk may keep old data, and copies made elsewhere are not touched.
 - If a command says "Saved, with a problem", the change was saved but its log line was not. Do not
   repeat the command.
 
@@ -64,6 +66,12 @@ python teach_store.py recover
 That restores the backup, which is one change behind; compare `list` with `audit.jsonl` and
 re-add anything missing.
 
+Entry numbers (t001, t002, ...) are never given out twice. Each number is reserved in a small
+file, `store.idmark`, before the entry is saved, so a number can be skipped after a failed save but
+not repeated. If that file is missing, `recover` refuses, because it could not be sure which
+numbers were already used; `recover --accept-unconfirmed-ids` restores anyway after you have
+checked.
+
 ## Limits you will notice
 
 - The current request budget is small (2,048 units for the whole conversation). Taught entries
@@ -92,6 +100,6 @@ To switch it off again, remove the line and restart. The store can stay.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 55 tests, no model and no network. They include
+`python -B -m unittest tests.test_teach_store` — 61 tests, no model and no network. They include
 simulated write failures, a missing or damaged store file, two editors, and four writers with two
 readers at once.
