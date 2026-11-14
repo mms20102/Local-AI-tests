@@ -47,6 +47,15 @@ def inject(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
         return data, []
 
 
+def store_fingerprint(folder: Path = DEFAULT_DIR) -> str:
+    """Short hash of the store file, for the log. It identifies the version without showing any text."""
+    import hashlib
+    try:
+        return hashlib.sha256((Path(folder) / "store.json").read_bytes()).hexdigest()[:12]
+    except OSError:
+        return "none"
+
+
 try:
     from litellm.integrations.custom_logger import CustomLogger
 except Exception:              # the module stays importable (and testable) without the gateway
@@ -64,7 +73,9 @@ class TeachHook(CustomLogger):
             return data
         changed, used = inject(data, self.limits)
         if used:
-            print("[teach] added entries: " + ",".join(used), flush=True)
+            print(f"[teach] added {len(used)} entries: {','.join(used)} | store {store_fingerprint()}", flush=True)
+        else:
+            print("[teach] nothing added", flush=True)
         return changed
 
 

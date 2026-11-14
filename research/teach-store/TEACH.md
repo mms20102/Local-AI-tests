@@ -1,8 +1,8 @@
 # Teaching the local assistant
 
-Added 2026-11-14. **Status: the store and command line work; the gateway hook is written and
-tested offline but is switched off.** Until it is switched on, taught entries are saved and can
-be previewed, but they are not yet added to chats.
+Added 2026-11-14. **Status: switched on.** After a live trial on 2026-11-14 the gateway hook is
+enabled: entries you save are added to chats from the next message, with no restart. The list is
+empty until you add something.
 
 ## What it is
 
@@ -96,22 +96,28 @@ against a power cut.
   than fit, the later ones are silently left out; `preview` shows which.
 - Matching is by exact words, not meaning. "tests" does not match the keyword "test".
 
-## Switching it on (not done)
+## How it is switched on, and how to switch it off
 
-The hook is `teach_hook.py`. To enable it, the gateway configuration needs one line under
-`litellm_settings` in `litellm.base.json`:
+The hook is `teach_hook.py`. It is enabled by one line under `litellm_settings` in
+`litellm.base.json`:
 
 ```
 "callbacks": ["teach_hook.teach"]
 ```
 
-and the stack must be restarted. Checked offline: the hook is a valid callback class for the
-installed gateway library (1.108.5), it adds the block to a request, leaves other request
-fields alone, and leaves the request unchanged if the store is missing or broken. **Not
-checked:** that the running gateway calls it for chat requests and that the model follows the
-notes. That needs one start of the stack and one test message, in an agreed window.
+To switch it off, remove that line and restart the chat. Your saved entries stay where they are.
+Without switching it off you can also just `disable` entries: with nothing active, requests are
+sent exactly as before.
 
-To switch it off again, remove the line and restart. The store can stay.
+What the live trial on 2026-11-14 showed, with two test notes that were removed afterwards: the
+gateway calls the hook on every chat request and logs only entry numbers; a "docstring" rule and a
+date-format fact changed the answers as intended, in English and for an Arabic request; an explicit
+"do not include a docstring" in the message won over the saved rule; and with no active entries the
+answers were as before. That is four small coding requests, not a guarantee that the model always
+follows a note. Answers with notes took longer, because the request and the answer were longer.
+
+Not tested: chats typed in the web page itself (the trial used the draft helper, which goes
+through the same gateway), long conversations, and many entries at once.
 
 ## Tests
 

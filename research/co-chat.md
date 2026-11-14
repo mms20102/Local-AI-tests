@@ -2139,3 +2139,62 @@ I am auditing the already published cap4/cap32 JSON and driver through GitHub on
 
 Please preserve the original experiment artifacts, including the aborted pair-1 metadata and recovery history. The audit will distinguish the exploratory split invocations from schema 4, completeness/static checks from semantic quality, and reported outcomes from independently recomputed statistics. No duplicate run, extra probe or acknowledgement-only turn is requested.
 
+
+## Runtime window 5 CLOSED · Claude (laptop session) — 2026-11-14, about 18:20 local
+
+Written by Claude on the AI laptop. **This closes window 5, opened by "Runtime notice 5" (teach hook trial).** The Colibri 2.0.0 fast-profile stack (cap 32) is running and healthy. **The teach hook is now ENABLED**, on Mohamed's instruction and under the rule set in notice 5. The teach store is empty. PC worker: ports 8000, 4001 and 8080 are yours.
+
+All values *measured* in this session. The probes are four small synthetic coding requests through the gateway with the project's draft helper.
+
+### What I did
+
+1. **Control, hook off:** three probes on the running stack.
+2. **Enabled the hook:** added `"callbacks": ["teach_hook.teach"]` under `litellm_settings` in `litellm.base.json`; stopped the stack through the launcher's own path; started the fast launcher. The rendered gateway configuration contains the line; the gateway started and the web UI was healthy in about 32 s.
+3. **Saved two synthetic notes** with the command-line tool: an always-on rule ("Every Python function must start with a one-line docstring.") and a fact triggered by the keyword "date" ("In this project dates are written as DD.MM.YYYY.").
+4. **Repeated the probes**, plus a conflict probe.
+5. **Disabled both notes** and repeated two probes.
+6. **Purged both notes.**
+
+### Results
+
+| Probe | Hook off | Hook on, notes active | Hook on, notes disabled |
+|---|---|---|---|
+| P1: write an add(a,b) function | no docstring | **docstring** | no docstring |
+| P2: write format_day(d) returning the date as a string | year-month-day format, no docstring | **day.month.year format, docstring** | no docstring, not dotted |
+| P3: the add task asked in Arabic | no docstring | **docstring** | — |
+| P4: the add task with "Do not include a docstring." | — | **no docstring** | — |
+
+All nine requests completed with `finish_reason: stop`.
+
+Gateway log lines from the hook, one per request, entry numbers only: `[teach] added 1 entries: t001 | store 52b25a648bf1` for P1, P3 and P4; `[teach] added 2 entries: t001,t002 | store 52b25a648bf1` for P2, the only message containing the keyword; and `[teach] nothing added` for the two requests with the notes disabled. A no-key request to the gateway still returns 401.
+
+After the purge: `list --all` shows nothing; the note words occur in none of `store.json`, `store.json.bak`, `audit.jsonl`; the audit log holds six lines (two adds, two disables, two purges) with the text replaced; both purges reported complete. The next entry number will be t003.
+
+### Rule from notice 5
+
+| Condition | Result |
+|---|---|
+| (a) gateway starts and every probe completes | Met |
+| (b) gateway log shows the hook invoked | Met, on every request |
+| (c) with no active notes a request is unchanged | Met: "nothing added", and answers as in the control |
+
+So the hook stays enabled.
+
+### What this establishes, and what it does not
+
+- **Established for this configuration:** the running gateway invokes the hook for chat requests; the injected request is accepted by the gateway and the engine; selection by keyword works on a live request; the log carries no note text.
+- **Observed, not established:** the model followed both notes in three of three requests where they applied, including the Arabic one, and the current request won in the one conflict probe. Four requests are not a measure of adherence. The reviewer's point stands: the policy sentence is not enforcement.
+- **Cost seen:** with notes active, P1 took 14.2 s against 8.6 s in the control, and P2 14.6 s against 6.0 s. The requests and the answers were both longer. Single samples.
+- **Not tested:** messages typed in the web UI page (same gateway, but I did not log in), multi-turn conversations, many notes at once, and tokenizer fit of a notes-bearing request beyond the gateway's own admission check.
+
+### Source changes in this window (laptop local commit `0783706`)
+
+- `litellm.base.json`: the callbacks line. A worker-owned file, changed on the owner's instruction. Removing the line and restarting switches the hook off.
+- `teach_hook.py`: the log line now carries the entry count and a 12-character hash of the store file, and prints "nothing added" when it adds nothing. No change to what is injected.
+- `tests/test_teach_store.py`: the guard that asserted the hook was off is replaced by one that accepts either no callback or exactly this one; a new test checks that the log line never contains note text. Project suite: 174 pass.
+- `TEACH.md`: status and trial result.
+- `teach_store.py` is unchanged from the independently reviewed revision 6 (same hash).
+
+The published snapshot in [teach-store/](teach-store/README.md) is updated to this state as revision 7; revision 6 at `015a2ec` is preserved. Revision 7's hook change and the enabled state have not been independently reviewed, and I am not claiming they have.
+
+For the benchmark plan: any later cap comparison must record the hook's state. With an empty store it adds nothing, but the callback is now in the request path.

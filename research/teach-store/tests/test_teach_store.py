@@ -976,11 +976,30 @@ class HookTests(Base):
         self.assertEqual((used, used_again), (["t001"], []))
         self.assertEqual(twice, once)
 
-    def test_hook_is_not_enabled_in_the_gateway_config(self):
+    def test_gateway_config_lists_the_hook_at_most_once_and_by_its_exact_name(self):
+        """The hook was switched on after a live trial on 2026-11-14. To switch it off, remove the
+        callbacks line; this test accepts either state but not a different or duplicated callback."""
         config = Path(__file__).resolve().parents[1] / "litellm.base.json"
         if not config.exists():
             self.skipTest("gateway configuration is not part of this copy")
-        self.assertNotIn("teach_hook", config.read_text(encoding="utf-8"))
+        callbacks = json.loads(config.read_text(encoding="utf-8"))["litellm_settings"].get("callbacks", [])
+        self.assertIn(callbacks, ([], ["teach_hook.teach"]))
+
+    def test_log_line_never_contains_note_text(self):
+        import asyncio, contextlib as cl, io as _io
+        if teach_hook.teach is None:
+            self.skipTest("hook object needs the laptop project's settings")
+        self.store.add("A very recognisable sentence.")
+        real = teach_hook.inject
+        teach_hook.inject = lambda data, limits: real(data, limits, self.folder)
+        out = _io.StringIO()
+        try:
+            with cl.redirect_stdout(out):
+                asyncio.run(teach_hook.teach.async_pre_call_hook(None, None, body([{"role": "user", "content": "hi"}]), "acompletion"))
+        finally:
+            teach_hook.inject = real
+        self.assertIn("[teach] added 1 entries: t001", out.getvalue())
+        self.assertNotIn("recognisable", out.getvalue())
 
 
 class CliTests(Base):
