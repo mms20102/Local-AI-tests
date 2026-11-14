@@ -222,18 +222,25 @@ class StreamTests(unittest.TestCase):
         self.assertEqual(len(got), 2)
         self.assertEqual((source.served, source.closed), (1, 1))
 
-    def test_task_cancellation_closes_the_source(self):
+    def test_task_cancellation_then_close_by_the_caller(self):
+        # Revision 3: this test used to assert that cancelling the consuming task closes the source
+        # by itself. That held only when the cancellation happened to land inside a pull, and the
+        # independent review showed it failing. The contract is that the caller closes; see
+        # ResponsibilityTests for the deterministic cases.
         source = FakeStream([f"c{i}" for i in range(10**6)])
 
         async def go():
+            stream = adapter.stream_with_status(source, self.request(no_room=1))
+
             async def consume():
-                async for _ in adapter.stream_with_status(source, self.request(no_room=1)):
+                async for _ in stream:
                     await asyncio.sleep(0)
             task = asyncio.create_task(consume())
             await asyncio.sleep(0.01)
             task.cancel()
             with self.assertRaises(asyncio.CancelledError):
                 await task
+            await stream.aclose()
         run(go())
         self.assertEqual(source.closed, 1)
 
@@ -504,6 +511,203 @@ class ForgedCarrierTests(unittest.TestCase):
         data = omitted_request()
         event = adapter.notice_for(data).take()
         self.assertNotIn(data[adapter.CARRIER_KEY]["token"], event)
+
+
+class ResponsibilityTests(unittest.TestCase):
+    """Revision 3. Who closes the source when the consumer stops: the caller, by calling aclose()."""
+
+    def consumer_cancelled(self, between_pulls, close_after):
+        source = Closable([f"c{i}" for i in range(1000)])
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            handling = asyncio.Event()
+            release = asyncio.Event()
+
+            async def consume():
+                async for _ in stream:
+                    if between_pulls:
+                        handling.set()
+                        await release.wait()            # parked OUTSIDE __anext__, handling an item
+            if not between_pulls:
+                async def slow_next():
+                    handling.set()
+                    await release.wait()                # parked INSIDE the source's __anext__
+                    return "x"
+                source.__anext__ = slow_next
+                type(source).__anext__ = lambda self: slow_next()
+            task = asyncio.create_task(consume())
+            await handling.wait()
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+            if close_after:
+                await stream.aclose()
+            return stream
+        try:
+            return source, run(go())
+        finally:
+            if not between_pulls:
+                del type(source).__anext__
+
+    def test_cancelled_between_pulls_without_close_leaves_the_source_open(self):
+        # The reviewer's failing case for revision 2, made deterministic. This is the honest behaviour
+        # of an object iterator: it is not told, so it cannot close. The caller must call aclose().
+        source, stream = self.consumer_cancelled(between_pulls=True, close_after=False)
+        self.assertEqual((source.close_started, stream.cleanup), (0, "open"))
+
+    def test_cancelled_between_pulls_then_closed_by_the_caller(self):
+        source, stream = self.consumer_cancelled(between_pulls=True, close_after=True)
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+    def test_framework_pattern_closes_on_cancellation_between_pulls(self):
+        # What LiteLLM's proxy does around a hook's stream: iterate inside try, aclose() in finally.
+        source = Closable([f"c{i}" for i in range(1000)])
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            handling = asyncio.Event()
+
+            async def framework_loop():
+                try:
+                    async for _ in stream:
+                        handling.set()
+                        await asyncio.Event().wait()    # stuck handling an item, outside __anext__
+                finally:
+                    await stream.aclose()
+            task = asyncio.create_task(framework_loop())
+            await handling.wait()
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+            await stream.aclose()                       # waits for the cleanup the finally started
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+
+class CleanupRaisedCancellationTests(unittest.TestCase):
+    """Revision 3. A CancelledError raised BY a close() is a failed close, not anyone's cancellation."""
+
+    def test_close_raising_cancelled_error_does_not_mask_the_upstream_error(self):
+        iterator = Closable(fail=RuntimeError("upstream PRIMARY"), close_error=asyncio.CancelledError())
+        source = Iterable(iterator)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            await stream.__anext__()
+            with self.assertRaises(RuntimeError) as caught:
+                await stream.__anext__()
+            first_state = (stream.cleanup, list(stream.close_errors))
+            await stream.aclose()                       # a later close: nothing more to do, nothing raised
+            return stream, caught.exception, first_state
+        stream, error, first_state = run(go())
+        self.assertEqual(str(error), "upstream PRIMARY")                    # the primary outcome, unchanged
+        self.assertEqual(first_state, ("failed", ["CancelledError"]))       # terminal state, reason by name
+        self.assertEqual((stream.cleanup, stream.close_errors), ("failed", ["CancelledError"]))
+        self.assertEqual((iterator.close_started, source.close_started, source.close_finished), (1, 1, 1))
+        # ^ the remaining distinct resource was still closed after the first close failed
+
+    def test_close_raising_cancelled_error_on_normal_end(self):
+        source = Closable(["a"], close_error=asyncio.CancelledError())
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            items = [item async for item in stream]     # must end normally, not with CancelledError
+            return stream, items
+        stream, items = run(go())
+        self.assertEqual((len(items), stream.cleanup, stream.close_errors), (2, "failed", ["CancelledError"]))
+
+    def test_cancellation_of_the_waiting_consumer_is_still_a_cancellation(self):
+        source = Closable(["a"], delay=0.05)
+
+        async def go():
+            stream = adapter.status_stream(source, omitted_request())
+            task = asyncio.create_task(stream.aclose())
+            while source.close_started == 0:
+                await asyncio.sleep(0)
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+            await stream.aclose()
+            return stream
+        stream = run(go())
+        self.assertEqual((source.close_started, source.close_finished, stream.cleanup), (1, 1, "done"))
+
+
+class DeadlineTests(unittest.TestCase):
+    """Revision 3. The adapter's own wait ends at the deadline even when close code resists cancellation."""
+
+    def test_close_that_swallows_cancellation_does_not_extend_the_wait(self):
+        events = []
+
+        class Stubborn:
+            def __aiter__(self):
+                return self
+
+            async def __anext__(self):
+                raise StopAsyncIteration
+
+            async def aclose(self):
+                events.append("close started")
+                try:
+                    await asyncio.sleep(3600)
+                except asyncio.CancelledError:
+                    events.append("cancellation swallowed")
+                    await asyncio.sleep(0.6)            # keeps going long after being asked to stop
+                    events.append("close finished late")
+
+        saved = adapter.CLOSE_TIMEOUT_SECONDS
+        adapter.CLOSE_TIMEOUT_SECONDS = 0.05
+        try:
+            async def go():
+                stream = adapter.status_stream(Stubborn(), omitted_request())
+                loop = asyncio.get_running_loop()
+                started = loop.time()
+                await stream.aclose()
+                waited = loop.time() - started
+                state = (stream.cleanup, list(events))
+                await asyncio.sleep(0.8)                # let the abandoned close run out, to end the loop cleanly
+                return waited, state
+            waited, state = run(go())
+        finally:
+            adapter.CLOSE_TIMEOUT_SECONDS = saved
+        self.assertLess(waited, 0.4)                    # did NOT wait the extra 0.6 s the close took
+        self.assertEqual(state[0], "uncertain")                             # honest: it had not finished
+        self.assertNotIn("close finished late", state[1])
+        self.assertEqual(events, ["close started", "cancellation swallowed", "close finished late"])
+
+    def test_uncertain_is_terminal_and_a_second_close_does_not_retry(self):
+        source = Closable(["a"], hang=True)
+        saved = adapter.CLOSE_TIMEOUT_SECONDS
+        adapter.CLOSE_TIMEOUT_SECONDS = 0.05
+        try:
+            async def go():
+                stream = adapter.status_stream(source, omitted_request())
+                await stream.aclose()
+                await stream.aclose()
+                return stream
+            stream = run(go())
+        finally:
+            adapter.CLOSE_TIMEOUT_SECONDS = saved
+        self.assertEqual((stream.cleanup, source.close_started), ("uncertain", 1))
+
+    def test_one_slow_resource_does_not_stop_the_next_being_closed(self):
+        iterator = Closable(["a"], hang=True)
+        source = Iterable(iterator)
+        saved = adapter.CLOSE_TIMEOUT_SECONDS
+        adapter.CLOSE_TIMEOUT_SECONDS = 0.05
+        try:
+            async def go():
+                stream = adapter.status_stream(source, omitted_request())
+                await stream.__anext__()
+                await stream.__anext__()
+                await stream.aclose()
+                return stream
+            stream = run(go())
+        finally:
+            adapter.CLOSE_TIMEOUT_SECONDS = saved
+        self.assertEqual((stream.cleanup, iterator.close_started, source.close_finished), ("uncertain", 1, 1))
 
 
 @unittest.skipUnless(HAVE_LITELLM, "LiteLLM is not installed in this Python")

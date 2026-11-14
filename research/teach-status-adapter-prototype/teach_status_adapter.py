@@ -147,7 +147,9 @@ class StatusStream:
       "closing"    close has started and has not finished;
       "done"       every close() this adapter owed was awaited to the end without error;
       "failed"     a close() raised; the error is kept in close_errors (type names only);
-      "uncertain"  a close() did not finish within CLOSE_TIMEOUT_SECONDS. It may still be running.
+      "uncertain"  a close() did not finish within CLOSE_TIMEOUT_SECONDS and was left behind after
+                   being asked to cancel, or the cleanup task itself was cancelled from outside.
+                   The resource may still be open.
 
     Failure and cancellation:
       - an error from the source is re-raised unchanged after cleanup has been attempted;
@@ -156,8 +158,13 @@ class StatusStream:
         it, the cancellation is raised (it is never swallowed), the source error, if any, stays
         attached as its context, and the cleanup task carries on. A later aclose() waits for that
         same task, so cleanup is not started twice and is not abandoned half way.
-    No hard time bound is promised for arbitrary close code: after the timeout the state says
-    "uncertain" and the close is cancelled cooperatively.
+      - a CancelledError raised BY a close() is a failed close ("failed", recorded by name). It
+        is not treated as cancellation of anyone and does not replace the source error.
+    Time: this adapter's own wait for each close() ends at the deadline even if the close code
+    resists cancellation; that close is then left behind unfinished and the state is "uncertain".
+    Nothing here can force arbitrary close code to stop.
+
+    Who must close: see aclose(). This object cannot notice a consumer that stops between pulls.
     """
 
     def __init__(self, source: Any, notice: Optional[AttemptNotice]):
@@ -168,6 +175,7 @@ class StatusStream:
         self._close_task: Optional[asyncio.Future] = None
         self.cleanup = "open"
         self.close_errors: list[str] = []
+        self._timed_out = False
 
     def __aiter__(self) -> "StatusStream":
         return self
@@ -194,30 +202,65 @@ class StatusStream:
         if close is None:
             return
         try:
-            await asyncio.wait_for(close(), CLOSE_TIMEOUT_SECONDS)
-        except asyncio.TimeoutError:
-            self.cleanup = "uncertain"
-        except asyncio.CancelledError:
-            raise
-        except Exception as error:          # a close error must not replace the primary outcome
+            inner = asyncio.ensure_future(close())
+        except Exception as error:          # close() itself raised before returning an awaitable
             self.close_errors.append(type(error).__name__)
+            return
+        # asyncio.wait, not wait_for: wait_for keeps waiting while a close handles its cancellation,
+        # so close code that resists cancellation could hold this up indefinitely. Here the wait
+        # really ends at the deadline; the unfinished close is asked to cancel and is left behind.
+        done, _ = await asyncio.wait({inner}, timeout=CLOSE_TIMEOUT_SECONDS)
+        if not done:
+            self._timed_out = True
+            inner.add_done_callback(_discard_result)
+            inner.cancel()
+            return
+        if inner.cancelled():
+            # The close raised CancelledError ITSELF. Nobody cancelled this cleanup, so it is a
+            # failed close, not a cancellation to propagate: record it and go on to the next resource.
+            self.close_errors.append("CancelledError")
+        elif inner.exception() is not None: # a close error must not replace the primary outcome
+            self.close_errors.append(type(inner.exception()).__name__)
 
     async def _close_all(self) -> None:
         targets = [self._iterator] if self._iterator is not None else []
         if self._source is not self._iterator:
             targets.append(self._source)
-        for target in targets:
-            await self._close_one(target)
-        if self.cleanup == "closing":
-            self.cleanup = "failed" if self.close_errors else "done"
+        try:
+            for target in targets:
+                await self._close_one(target)
+        except asyncio.CancelledError:      # this cleanup task was cancelled from outside
+            self.cleanup = "uncertain"
+            raise
+        self.cleanup = "uncertain" if self._timed_out else ("failed" if self.close_errors else "done")
 
     async def aclose(self) -> None:
+        """Close what this stream was given. Safe to call more than once and from several tasks.
+
+        THE CALLER MUST CALL THIS. An object iterator is not told when its consumer stops between
+        two pulls, for example when the consuming task is cancelled while handling an item. LiteLLM's
+        proxy does call it, in a `finally` around its loop over the hook's stream. Any other
+        consumer has to do the same; nothing here closes the source behind the consumer's back.
+        """
         self._finished = True
         if self._close_task is None:
             self.cleanup = "closing"
             self._close_task = asyncio.ensure_future(self._close_all())
-        if not self._close_task.done():
+        if self._close_task.done():
+            return
+        try:
             await asyncio.shield(self._close_task)      # cancellation of the caller does not stop cleanup
+        except asyncio.CancelledError:
+            if self._close_task.cancelled():            # the cleanup task was cancelled, not this caller
+                self.cleanup = "uncertain"
+                return
+            raise
+
+
+def _discard_result(task: "asyncio.Future") -> None:
+    """Read an abandoned close's outcome so the event loop does not report it as unretrieved."""
+    if not task.cancelled():
+        task.exception()
 
 
 def status_stream(response: Any, request_data: Any) -> StatusStream:

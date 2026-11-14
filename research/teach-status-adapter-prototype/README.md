@@ -8,7 +8,7 @@ for it. It follows the handoff in co-chat at `07db9cc`.
 |---|---|
 | `teach_status_core.py` | The tested core from branch `codex/teach-status-core-20261114`, byte-identical (git blob `c07df5220f2064163ed5d11d035f6382fc4a9191`). Not modified. |
 | `teach_status_adapter.py` | The adapter: maps teach revision 18's final result to a decision, carries it in request data, and wraps the response stream. |
-| `test_teach_status_adapter.py` | 37 tests on handwritten fake streams. Five need the LiteLLM library and are skipped without it. |
+| `test_teach_status_adapter.py` | 46 tests on handwritten fake streams. Five need the LiteLLM library and are skipped without it. |
 | `real_generator_check.py` | A script that pushes a fake model stream through the installed LiteLLM proxy generator with the adapter registered, and prints the frames. |
 
 ## What it does
@@ -25,15 +25,16 @@ for it. It follows the handoff in co-chat at `07db9cc`.
    `async_post_call_streaming_iterator_hook` override on the registered leaf class returns. It is an
    object, not an async generator, so closing it before the first pull still closes the source. It yields one
    JSON status event as text with no `data:` prefix, then every model chunk, the same objects in
-   the same order. It closes the model stream once on completion, failure, client disconnect or
-   task cancellation.
+   the same order. It closes the model stream when it ends or fails, and when the caller calls
+   `aclose()`. **The caller must call `aclose()`**: an object iterator is not told when its consumer
+   stops between two pulls. LiteLLM's proxy does this in a `finally`.
 
 The locale is an explicit argument, `en` or `ar`. Nothing here chooses it.
 
 ## Evidence (measured on the laptop, offline)
 
-- 37 tests pass with the gateway's own Python and LiteLLM 1.108.5; 32 pass and 5 are skipped with
-  a Python that has no LiteLLM.
+- 46 tests pass with the gateway's own Python and LiteLLM 1.108.5; 41 pass and 5 are skipped with
+  a Python that has no LiteLLM. Each was run several times in a row.
 - With the installed library's own functions: the carrier key is classified as library-owned and
   removed by `filter_out_litellm_params`; the event is framed as one `data:` line that parses; the
   override is found on the leaf class and not on a subclass that only inherits it.
@@ -56,6 +57,17 @@ The locale is an explicit argument, `en` or `ar`. Nothing here chooses it.
 - **Registration.** Tested through the installed proxy's `callback_capabilities()` and
   `async_data_generator` with the callback in `litellm.callbacks`: one extra frame, and every
   answer frame byte-identical to the run without a notice.
+
+## Revision 3, after the review relayed in co-chat at `53a00e7`
+
+- **Who closes.** A consumer cancelled between pulls, with nobody calling `aclose()`, leaves the
+  source open. That is now stated and tested as the contract, with the framework's own
+  try/finally pattern tested alongside. An earlier test that claimed otherwise passed only by
+  timing and has been replaced.
+- **Cancellation raised by a close.** Treated as a failed close: recorded by name, not propagated,
+  the upstream error is raised unchanged and the remaining resource is still closed.
+- **Deadline.** The adapter's own wait for a close ends at five seconds even when the close code
+  resists cancellation; that close is left behind and the state is `uncertain`, which is terminal.
 
 ## Not established
 
