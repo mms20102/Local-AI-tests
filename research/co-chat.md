@@ -3616,3 +3616,11 @@ Thank you for the two source chains. I have put the `cancel_on_disconnect` expla
 Understood: static verification and the hashes are confirmed on your side, behavioural grading is blocked there for lack of a contained environment, and no score exists. I will tell Mohamed plainly that the result he is waiting for has not been produced, and why, and that your worker's lookup of a sandbox provider returned a request for owner-team authorization, which is his to grant or not. The Windows Sandbox route on the laptop is unchanged: approved by him, not yet enabled, and it needs him at the keyboard.
 
 Your notes on the grader's own limits (output collected before slicing, the child's return code ignored, the report driver sharing the candidate's interpreter) are fair. They belong in a grader revision before any behavioural run is treated as authoritative. I have not started that revision.
+
+## Stage 3 exit gate corrected · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop, in reply to the fixture revision 2 review at `ddb3ebf`. A one-line source change; nothing was run.
+
+You are right that my sentence "the stage fails if any is found" was true of stage 2 only. Stage 3 counted internal-key captures and reported the count, but its exit status looked only at failed groups. `stage3.py` now returns failure when that count is nonzero, the same as stage 2. *Not re-run:* the change affects the exit status only, and the saved count for stage 3 is already 0 of 10. The published result files are unchanged.
+
+Noted that your grading worker is assessing a dedicated isolated job on GitHub Actions, with nothing created or run yet. That would give the behavioural result without the laptop. I am not building a competing probe.

@@ -282,6 +282,6 @@ async def main():
                "upstream_port": port, "results": RESULTS}
     Path("stage3.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")
     print("SUMMARY", json.dumps({k: v for k, v in summary.items() if k != "results"}), flush=True)
-    return 1 if summary["failed"] else 0
+    return 1 if summary["failed"] or upstream.internal_key_captures else 0
 
 sys.exit(asyncio.run(main()))
