@@ -1354,6 +1354,76 @@ class TokenBudgetTests(Base):
         self.assertEqual(line, f"[teach] added 1 entries: t001 | skipped-invalid:9 | store {fingerprint}")
         self.assertNotIn("CANARY", line)
 
+    def test_all_reported_evidence_comes_from_one_snapshot(self):
+        # Reviewer's case for revision 13: entries, fingerprint and the invalid count must describe
+        # the same bytes even when the store is replaced while the request is being built.
+        import hashlib
+        self.folder.mkdir(parents=True)
+        good = {"id": "t001", "kind": "rule", "text": "Be brief.", "when": [], "status": "active", "created": "x"}
+        first = json.dumps({"version": 1, "next_id": 4, "entries": [
+            good, dict(good, id="t002", when="broken"), dict(good, id="t003", kind="broken")]})
+        second = json.dumps({"version": 1, "next_id": 4, "entries": [dict(good, text="Replaced.")]})
+        path = self.folder / "store.json"
+        path.write_text(first, encoding="utf-8")
+        before = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+        real_apply = teach_hook.apply_with_status
+
+        def replace_during_request(*args, **kwargs):
+            path.write_text(second, encoding="utf-8")
+            return real_apply(*args, **kwargs)
+        teach_hook.apply_with_status = replace_during_request
+        try:
+            changed, used, fingerprint, status = teach_hook.inject_with_status(
+                body([{"role": "user", "content": "hi"}]), LIMITS, self.folder)
+        finally:
+            teach_hook.apply_with_status = real_apply
+        self.assertNotEqual(hashlib.sha256(path.read_bytes()).hexdigest()[:12], before)   # it really changed
+        self.assertEqual(fingerprint, before)
+        self.assertEqual(status, {"note_cap": 0, "no_room": 0, "invalid": 2})              # counts of the FIRST version
+        self.assertEqual(used, ["t001"])
+        self.assertIn("Be brief.", changed["messages"][-1]["content"])
+        self.assertNotIn("Replaced.", changed["messages"][-1]["content"])
+
+    def test_store_file_is_read_exactly_once_per_request(self):
+        self.store.add("Be brief.")
+        reads = []
+        real_read = Path.read_bytes
+
+        def counting(path):
+            if path.name == "store.json":
+                reads.append(1)
+            return real_read(path)
+        Path.read_bytes = counting
+        try:
+            teach_hook.inject_with_status(body([{"role": "user", "content": "hi"}]), LIMITS, self.folder)
+        finally:
+            Path.read_bytes = real_read
+        self.assertEqual(len(reads), 1)
+
+    def test_lone_surrogate_text_is_skipped_alone_and_never_printed(self):
+        # Reviewer's case for revision 13: such text passes type checks but cannot be encoded.
+        self.folder.mkdir(parents=True)
+        good = {"id": "t001", "kind": "rule", "text": "Be brief.", "when": [], "status": "active", "created": "x"}
+        raw = json.dumps({"version": 1, "next_id": 5, "entries": [
+            dict(good, id="t002", text="CANARY \ud800 text"), good,
+            dict(good, id="t003", when=["key\udfff"]), dict(good, id="t004", created="\ud83d")]})
+        self.assertIn("\\ud800", raw)                                   # stored as an escape, as json writes it
+        path = self.folder / "store.json"
+        path.write_text(raw, encoding="utf-8")
+        stored = path.read_bytes()
+        active, fingerprint, invalid = ts.snapshot_full(self.folder)
+        self.assertEqual(([e["id"] for e in active], invalid), (["t001"], 3))
+        request = body([{"role": "user", "content": "hi"}])
+        changed, used, fingerprint, status = teach_hook.inject_with_status(request, LIMITS, self.folder)
+        self.assertEqual((used, status), (["t001"], {"note_cap": 0, "no_room": 0, "invalid": 3}))
+        self.assertNotEqual(fingerprint, "unknown")
+        json.dumps(changed).encode("utf-8")                              # the request can be sent
+        self.assertIn("Be brief.", changed["messages"][-1]["content"])
+        self.assertNotIn("CANARY", json.dumps(changed))
+        line = teach_hook.log_line(used, fingerprint, status)
+        self.assertEqual(line, f"[teach] added 1 entries: t001 | skipped-invalid:3 | store {fingerprint}")
+        self.assertEqual(path.read_bytes(), stored)                      # the stored notes were not rewritten
+
     def test_disabled_malformed_entries_are_not_reported(self):
         self.folder.mkdir(parents=True)
         (self.folder / "store.json").write_text(json.dumps({"version": 1, "next_id": 2, "entries": [

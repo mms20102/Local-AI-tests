@@ -17,18 +17,19 @@ The laptop copy is the working one; this folder is for reading and review.
 | 10 | `b329e51` | commit `fd962cc` | Follow-up: the log line writes only ids and fingerprints in their canonical form and counts anything else without echoing it; this README's status wording corrected. **Independent offline pass relayed in co-chat at `30175f5`: 78 passed, 5 skipped; no blocking regression in the reviewed scope. Not loaded: the running gateway was last restarted before this revision existed.** |
 | 11 | `d5b6c16` | commit `829d322` | Two findings from the integration queue at `31dd8db`: an active entry whose id the store could not have issued is now left out of selection, so the logged count and the injected entries cannot disagree; a locked store file is retried for at most about 0.1 s inside a chat request instead of 0.95 s; the wording about blocking and about unchanged requests is narrowed. Independent offline pass relayed in co-chat at `8e2c028`: 80 passed, 5 skipped. Loaded on the laptop by inference only (window 7). |
 | 12 | `f939b54` | commit `eaf6016` | Notes for a long request are budgeted on the whole candidate request in real tokens (`apply_with_status`), following the contract in `context-preflight/note-budget-alignment.md` on main. The byte rule still decides every request it already served. Relevant notes left out for lack of room are counted and logged as `omitted-no-room:N`. Mohamed's policy: answer anyway and say the notes were left out. Preliminary independent result relayed in co-chat at `3998f8d`: 92 passed, 5 skipped, **not cleared**: a note over the size cap was reported as omitted 0, and one malformed entry hid the valid notes beside it. Not loaded. |
-| 13 | `25b519f` | this commit | Fixes for both findings: omissions are counted against every applicable note, by reason (`omitted-note-cap`, `omitted-no-room`); a malformed active entry is skipped on its own and counted (`skipped-invalid`), and the valid notes are still applied. **Not independently reviewed, and not loaded.** The omission is still reported in the gateway log only. |
+| 13 | `25b519f` | commit `cb98726` | Fixes for both findings: omissions are counted against every applicable note, by reason (`omitted-note-cap`, `omitted-no-room`); a malformed active entry is skipped on its own and counted (`skipped-invalid`), and the valid notes are still applied. Independent result relayed in co-chat at `f5d7aec`: 97 passed, 5 skipped; two defects remained (diagnostics from a second read could describe a different store version; lone-surrogate text suppressed valid neighbours). Not loaded. The omission is still reported in the gateway log only. |
+| 14 | `8228816` | this commit | Fixes for both: entries, fingerprint and the invalid count come from the same single read, with no second read; an entry whose text, keywords or date cannot be encoded as strict UTF-8 is skipped on its own and counted, its stored text untouched. **Not independently reviewed, and not loaded.** The omission is still reported in the gateway log only. |
 
 Revisions 1 to 4 each had real defects found by the independent reviewer. The review of revision 5
 is a scoped source review, not a proof of all persistence properties and not integration clearance.
 
-Revision 13 files, byte-identical to the laptop's:
+Revision 14 files, byte-identical to the laptop's:
 
 | File | SHA-256 |
 |---|---|
-| `teach_store.py` | `aba454d17c9e7f1029077f144a48b0688c2a515832dda0734427e05a4cbca597` |
-| `teach_hook.py` | `a5f9384e4970212ca95714924d26e305ef31c47cd60e203c8d4b7cf02f1c0d9e` |
-| `tests/test_teach_store.py` | `e95b0b9efd677a96362959fc8f1424f101f76e0b8d38f44c3a025c4896fa1841` |
+| `teach_store.py` | `3e2e2a4fcfe80b10bc58be9b39a2cde255e49c23ee7c32a16e0d09bd720dc46a` |
+| `teach_hook.py` | `a5a173f3fa7b198a580626c094513096a8b2f47f90fbbdfdad2198fb405b44e3` |
+| `tests/test_teach_store.py` | `eccb3236cc2275713a3be34dd8d90ef8e2b995f8fa9160d3ddaeb733d839634f` |
 | `Teach.cmd` | `c8a401f3ca6a2b69cff1291c161643f13c5e5859e0b88828173f889f2379b3c7` (unchanged since revision 1) |
 | `TEACH.md` | `5b6546b9a453ff97f1dfe0545fa1634afda3cf1df30a4ea29d106451dbbda610` (unchanged since revision 11) |
 
@@ -46,7 +47,8 @@ The token counter itself (`token_count.py`) belongs to the gateway and is not in
 | Hook, revision 10 (commit `fd962cc`) | Offline pass: 78 passed, 5 skipped; canary, malformed-id, malformed-fingerprint and logging checks passed. The id check restricts what can be written; it does not prove an id was really issued by the store. |
 | Hook and store read path, revision 11 (commit `829d322`) | Offline pass: 80 passed, 5 skipped. Limits noted by the reviewer: 100 ms is programmed sleep, not a wall-time bound; id shape is not provenance. |
 | Token-budgeted notes, revision 12 (commit `eaf6016`) | Preliminary: 92 passed, 5 skipped; **not cleared**, two defects found. |
-| Revision 13 (this folder) | **Not reviewed.** |
+| Revision 13 (commit `cb98726`) | 97 passed, 5 skipped; two defects found, addressed in revision 14. |
+| Revision 14 (this folder) | **Not reviewed.** |
 
 These are results on the published source. None of them is a test of the running gateway.
 
@@ -107,9 +109,9 @@ combined total. It is not activation approval.
 python -B -m unittest tests.test_teach_store
 ```
 
-102 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
+105 tests, 5 skipped when run from this folder (the check that the laptop's gateway configuration
 does not list the hook needs that file, which is not published). On the laptop they run against
-the real gateway rules: 102 pass, and the project suite is 220 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
+the real gateway rules: 105 pass, and the project suite is 223 (it now includes 18 gateway admission tests that are not part of this folder). Three tests start a second Python
 process. Claude ran only the Windows lock path.
 
 ## Revision 6 follow-up to the review of revision 5

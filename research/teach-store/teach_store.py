@@ -586,26 +586,34 @@ def usable(entry: dict) -> bool:
     """True when an entry has every field selection and rendering read, in the form the store
     writes them. Anything else comes from a damaged or hand-edited file. Such an entry is left
     out on its own, so it cannot take the valid notes beside it down with it."""
-    return (type(entry.get("id")) is str and ISSUED_ID.fullmatch(entry["id"]) is not None
+    if not (type(entry.get("id")) is str and ISSUED_ID.fullmatch(entry["id"]) is not None
             and entry.get("kind") in ("rule", "fact", "correction")
             and type(entry.get("text")) is str and bool(entry["text"].strip())
             and type(entry.get("created")) is str
-            and type(entry.get("when")) is list and all(type(k) is str for k in entry["when"]))
-
-
-def skipped_invalid(folder: Path = DEFAULT_DIR, attempts: int = 20) -> int:
-    """How many entries marked active in store.json are not usable. Separate read; diagnostic only."""
-    path = Path(folder) / "store.json"
+            and type(entry.get("when")) is list and all(type(k) is str for k in entry["when"])):
+        return False
     try:
-        data = json.loads(path.read_bytes().decode("utf-8"))
-        return sum(1 for e in data["entries"]
-                   if not isinstance(e, dict) or (e.get("status") == "active" and not usable(e)))
-    except Exception:
-        return 0
+        # The same strict encoding that rendering the notes block and the gateway apply. Text
+        # holding a lone surrogate cannot be sent; the entry is left out, its stored text untouched.
+        for value in (entry["text"], entry["created"], *entry["when"]):
+            value.encode("utf-8")
+    except UnicodeError:
+        return False
+    return True
 
 
 def snapshot(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict], str]:
-    """Active entries and a fingerprint, both taken from ONE read of store.json.
+    """Active usable entries and a fingerprint from ONE read of store.json. See snapshot_full."""
+    active, fingerprint, _ = snapshot_full(folder, attempts)
+    return active, fingerprint
+
+
+def snapshot_full(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict], str, int]:
+    """Active usable entries, a fingerprint and the number of unusable entries, all three taken
+    from ONE read of store.json, so they always describe the same version of the file.
+
+    The third value counts entries marked active that are not usable, plus entries that are not
+    objects at all. Disabled entries are never counted.
 
     Only entries whose id has the form this store issues ("t" and three to nine digits) are
     returned. An active entry with any other id can only come from a damaged or hand-edited
@@ -632,13 +640,16 @@ def snapshot(folder: Path = DEFAULT_DIR, attempts: int = 20) -> tuple[list[dict]
                     raise
                 time.sleep(0.05)
     except FileNotFoundError:
-        return [], "none"
+        return [], "none", 0
     data = json.loads(raw.decode("utf-8"))
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list):
         raise TeachError("store.json has an unknown format.")
     active = [e for e in data["entries"] if isinstance(e, dict) and e.get("status") == "active"
               and usable(e)]
-    return active, hashlib.sha256(raw).hexdigest()[:12]
+    invalid = sum(1 for e in data["entries"]
+                  if not isinstance(e, dict) or (e.get("status") == "active" and not usable(e)))
+    return active, hashlib.sha256(raw).hexdigest()[:12], invalid
+
 
 
 def line_for(entry: dict) -> str:

@@ -25,7 +25,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_with_status, skipped_invalid, snapshot
+from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_with_status, snapshot_full
 
 ROOT = Path(__file__).resolve().parent
 STORE_READ_ATTEMPTS = 3        # reads of a locked store file inside one request, 50 ms apart
@@ -55,10 +55,8 @@ def inject_with_status(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
         output = data.get("max_tokens", limits["default_output_tokens"])
         if type(output) is not int:
             return data, [], "not-read", none
-        entries, fingerprint = snapshot(folder, STORE_READ_ATTEMPTS)
-        if fingerprint == "none":
-            return data, [], fingerprint, none
-        invalid = skipped_invalid(folder)
+        # One read: the entries, the fingerprint and the invalid count describe the same bytes.
+        entries, fingerprint, invalid = snapshot_full(folder, STORE_READ_ATTEMPTS)
         if not entries:
             return data, [], fingerprint, dict(none, invalid=invalid)
         new_messages, used, left_out = apply_with_status(messages, entries, limits, output, budget_units,
@@ -90,7 +88,7 @@ def inject_with_evidence(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
         output = data.get("max_tokens", limits["default_output_tokens"])
         if type(output) is not int:
             return data, [], "not-read"
-        entries, fingerprint = snapshot(folder, STORE_READ_ATTEMPTS)
+        entries, fingerprint, _ = snapshot_full(folder, STORE_READ_ATTEMPTS)
         if not entries:
             return data, [], fingerprint
         new_messages, used, _ = apply_with_status(messages, entries, limits, output, budget_units)
