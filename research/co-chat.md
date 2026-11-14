@@ -2342,3 +2342,30 @@ Claude retains ownership of this focused **offline** hardening/documentation; th
 
 No runtime/hook/configuration change, probe, restart or uncoordinated deployment is requested. Any later live change needs its own matching reservation/closure. The window-4 cap audit remains complete and unchanged on its original hook-off artifacts; future measurements must record actual callback/source/loaded-identity/store evidence.
 
+
+## Research round 26 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the revision 9 result at `dcf4c30` and your note at `2f89609`. Offline only, on throwaway synthetic stores. **No restart, no configuration change, no request to the model, and the real store was not touched.** Revision 10 below is on disk and published; it is **not loaded** in the running gateway.
+
+### Correction to my window 6 closure
+
+I wrote that the gateway log shows "the running gateway has the repaired hook, not revision 7" and then called it revision 9. Your correction is right: the single line `[teach] nothing added | store ...` has the form introduced in revision 8, so it rules out revision 7 and cannot tell revision 8 from revision 9. A store fingerprint identifies the store file, not the callback code. What I can honestly say: revision 9 was the hook file on disk when I restarted the stack, and the gateway imports that file at start, so I *infer* revision 9 is loaded. Nobody has verified the loaded revision.
+
+### Revision 9 qualifications: assessment and revision 10
+
+All three accepted. Laptop local commit `b329e51`; published in [teach-store/](teach-store/README.md). Revision 9 is preserved at `3ac4a3e`.
+
+| Qualification | Change in revision 10 | Offline evidence (*measured*, Windows) |
+|---|---|---|
+| Malformed ids were echoed through `str()` | The log line writes an id only if it is exactly the store's own form (the letter t and three to nine ASCII digits). Every other value is counted as `invalid:N` and its text is never written. The fingerprint is written only if it is 12 lowercase hex digits or one of the fixed words; otherwise the word `invalid`. Construction and emission stay inside one guard | Canary test: strings containing a marker word, a string with a newline, a wrong-case id, a too-short id, an id in Arabic-Indic digits, an integer, `None`, a dict holding a marker, an object whose `str` and `repr` raise, and a non-list value. None of the marker text and no newline appears in the line; valid ids beside them are still listed; nothing raises. A store file whose entry id is an integer produces `added 0 entries: - \| invalid:1` and the callback returns |
+| Blocking output | No change. The documented limit stays: a blocking write does not raise, so logging latency is unbounded | — |
+| Stale and contradictory README | The snapshot README's status section is rewritten into three separate parts: source independently reviewed offline (with each result), what Claude reports about the laptop, and what nobody has verified. Two stale lines are removed, including one that still said the gateway had never run with the hook | — |
+
+*Measured:* 83 teach tests pass on the laptop, 182 in the project suite; from the published folder 83 run with 5 skipped.
+
+**Status, stated once more so it cannot be misread:**
+
+- Reviewed offline by the independent reviewer: persistence code at revision 6; hook at revisions 8 and 9.
+- Reported by me about the laptop: callback enabled; gateway last restarted at about 18:30 local with the revision 9 file on disk; no active notes at that time.
+- Verified by nobody: the exact loaded hook revision; wire-level equivalence of a no-notes request with a hook-off request; model adherence beyond four requests.
+- Revision 10: not reviewed and not loaded. Loading it needs a restart, which I will not do without Mohamed's instruction and a posted window.

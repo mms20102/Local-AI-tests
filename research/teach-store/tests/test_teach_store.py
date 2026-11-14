@@ -1075,18 +1075,37 @@ class HookTests(Base):
         self.assertEqual(used, [])
         self.assertEqual(len(fingerprint), 12)
 
-    def test_malformed_ids_cannot_raise_from_logging(self):
+    def test_malformed_ids_are_counted_and_never_echoed(self):
         import contextlib as cl, io as _io
-        out = _io.StringIO()
-        with cl.redirect_stdout(out):
-            teach_hook.safe_log([7, None, {"x": 1}], 12345)                  # not strings: still no exception
-            teach_hook.safe_log(object(), "abc")                             # not even a list
-        self.assertIn("[teach] added 3 entries: 7,None,", out.getvalue())
 
         class Odd:
             def __str__(self):
                 raise RuntimeError("cannot be shown")
-        teach_hook.safe_log([Odd()], "abc")                                  # str() itself fails: swallowed
+
+            __repr__ = __str__
+
+        canaries = ["CANARY-SECRET-TEXT", "t001; rm -rf", "t1", "T001", 7, None, {"x": "CANARY-IN-DICT"}, Odd(),
+                    "t001\ninjected line", "t٠٠١"]
+        line = teach_hook.log_line(["t001"] + canaries + ["t123456"], "abc123abc123")
+        self.assertEqual(line, "[teach] added 2 entries: t001,t123456 | invalid:10 | store abc123abc123")
+        self.assertNotIn("CANARY", line)
+        self.assertNotIn("\n", line)
+        self.assertEqual(teach_hook.log_line(canaries, "abc123abc123"),
+                         "[teach] added 0 entries: - | invalid:10 | store abc123abc123")
+        self.assertEqual(teach_hook.log_line("CANARY-NOT-A-LIST", "abc123abc123"),
+                         "[teach] added 0 entries: - | invalid:1 | store abc123abc123")
+        out = _io.StringIO()
+        with cl.redirect_stdout(out):
+            teach_hook.safe_log(canaries, "abc123abc123")                    # and nothing raises
+            teach_hook.safe_log(Odd(), Odd())
+        self.assertNotIn("CANARY", out.getvalue())
+
+    def test_malformed_fingerprint_is_never_echoed(self):
+        for bad in ("CANARY-FINGERPRINT", "abc123", "ABC123ABC123", 12345, None, "none\nextra", "abc123abc123 extra"):
+            line = teach_hook.log_line([], bad)
+            self.assertEqual(line, "[teach] nothing added | store invalid")
+        for good in ("abc123abc123", "none", "unknown", "not-read"):
+            self.assertEqual(teach_hook.log_line([], good), f"[teach] nothing added | store {good}")
 
     def test_malformed_store_ids_do_not_break_the_callback(self):
         self.folder.mkdir(parents=True)
@@ -1096,7 +1115,7 @@ class HookTests(Base):
         request = body([{"role": "user", "content": "hi"}])
         result, out = self.call_hook(request)
         self.assertEqual(len(request["messages"]), 1)
-        self.assertIn("[teach]", out.getvalue())
+        self.assertIn("[teach] added 0 entries: - | invalid:1 | store ", out.getvalue())
         self.assertIn(result["messages"][-1]["content"].count("Be brief."), (0, 1))
 
     def test_evidence_on_a_broken_store_is_marked_unknown(self):

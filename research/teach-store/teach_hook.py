@@ -16,6 +16,7 @@ ignored. The ids and the fingerprint come from the same single read of the store
 """
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from teach_store import DEFAULT_BUDGET_UNITS, DEFAULT_DIR, apply_to_messages, snapshot
@@ -60,23 +61,41 @@ def inject(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
     return changed, used
 
 
-def log_line(used: list[str], fingerprint: str) -> str:
-    """What the hook writes to the gateway log: entry numbers and the store fingerprint, never text."""
-    if used:
-        return f"[teach] added {len(used)} entries: {','.join(used)} | store {fingerprint}"
-    return f"[teach] nothing added | store {fingerprint}"
+ID_FORM = re.compile(r"t[0-9]{3,9}")
+FINGERPRINT_FORM = re.compile(r"[0-9a-f]{12}|none|unknown|not-read")
+
+
+def log_line(used, fingerprint) -> str:
+    """What the hook writes to the gateway log.
+
+    Only values in a known, harmless form are written: entry ids exactly as the store issues
+    them ("t" and digits) and a fingerprint that is 12 hex digits or one of the fixed words.
+    Anything else is never echoed: a malformed id is counted ("invalid:N") and a malformed
+    fingerprint is written as "invalid". So the line cannot carry note text or other content
+    that reached it through a damaged store, and it never shows the value's own text.
+    """
+    items = used if isinstance(used, (list, tuple)) else []
+    good = [item for item in items if type(item) is str and ID_FORM.fullmatch(item)]
+    bad = len(items) - len(good) + (0 if isinstance(used, (list, tuple)) else 1)
+    mark = fingerprint if type(fingerprint) is str and FINGERPRINT_FORM.fullmatch(fingerprint) else "invalid"
+    if not good and not bad:
+        return f"[teach] nothing added | store {mark}"
+    line = f"[teach] added {len(good)} entries: {','.join(good) or '-'}"
+    if bad:
+        line += f" | invalid:{bad}"
+    return line + f" | store {mark}"
 
 
 def safe_log(used, fingerprint) -> None:
     """Diagnostics must never break a chat.
 
-    Building the line and writing it are both inside the guard, so neither odd values (an id that
-    is not a string) nor a closed or broken log pipe can raise into the request. Limit: a write
-    that BLOCKS does not raise, so this does not bound how long logging can take; the gateway's
-    log pipe is drained continuously by the launcher, and nothing here adds a timeout.
+    Building the line and writing it are both inside the guard, so neither odd values nor a
+    closed or broken log pipe can raise into the request. Limit: a write that BLOCKS does not
+    raise, so this does not bound how long logging can take; the gateway's log pipe is drained
+    continuously by the launcher, and nothing here adds a timeout.
     """
     try:
-        print(log_line([str(item) for item in used], str(fingerprint)), flush=True)
+        print(log_line(used, fingerprint), flush=True)
     except Exception:
         pass
 
