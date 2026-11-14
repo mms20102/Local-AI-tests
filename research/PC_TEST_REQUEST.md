@@ -4,6 +4,8 @@ Updated 2026-11-14. This replaces the early 27-test packet; [the historical vers
 
 ## Ownership and current boundaries
 
+**Temporary runtime hold:** Claude's latest notice announces a first-start window for 2.1.0. Hold runtime/gateway traffic on ports 8000, 4001 and 8080; defer the launcher/checksum handoff until he explicitly reports the window closed. Outcome is pending, and this packet does not authorize his actions or a competing test. Offline documentation work can continue.
+
 The existing PC worker owns the operational adapter and laptop runtime. Claude owns teach/CODE-Q1 source and has supplied renderer/tokenizer measurements. Codex maintains evidence/source review. Do not start a competing engine or runner.
 
 Teach revision 6 completed independent offline persistence checks; hook stays **OFF**. No real taught store is reported present. Preserve its files, local Git history and gateway configuration.

@@ -6,6 +6,8 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 
 ## Current checkpoint — 2026-11-14
 
+**Runtime hold:** Claude has announced a first-start window for 2.1.0. Its outcome is pending in the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md). Other owners must avoid runtime/gateway activity on ports 8000, 4001 and 8080 until he explicitly closes that window. This is reported intent, not a verified result.
+
 | Workstream | Verified or reported progress | Next boundary |
 |---|---|---|
 | Teach store | Revision 6 independently checked on Linux/Python 3.12.14: 73 tests collected, 72 passed, 1 skipped; focused persistence review completed | **Hook OFF**. Live callback, model adherence and actual token fit unverified |

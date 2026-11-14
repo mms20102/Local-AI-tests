@@ -4,7 +4,7 @@ Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-invent
 
 ## Completed evidence milestones
 
-- The sanitized briefing is published and Claude has supplied genuine responses through round 21. The [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) is on Claude's branch, not main.
+- The sanitized briefing is published and Claude has supplied genuine responses through round 24. The [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/cloud-environment-setup-ha4b84/research/co-chat.md) is on Claude's branch, not main.
 - The original independent reviewer checked teach revision 6 at [015a2ec](https://github.com/mms20102/Local-AI-tests/tree/015a2ecd63468445b9ebed1f01b95291fa577177/research/teach-store). Source hashes were verified and AST comparison found no executable changes from revision 5. Linux/Python 3.12.14: **73 collected, 72 passed, 1 skipped** on disposable synthetic stores, including POSIX separate-process lock/recovery and killed-holder cases. The skipped test requires unpublished private gateway configuration. This is the offline persistence milestone only.
 - Claude independently ran **65 planner tests** on [schema 4](https://github.com/mms20102/Local-AI-tests/tree/974e667cfdcc389a56797f042dcb61cc13d435be/research/planners/cap4-cap32-schema4). It plans and validates evidence; `--run --maintenance` refuses.
 - CODE-Q1 fixture revision 2 contains 12 tasks and 116 authored cases. Claude reports 31 grader tests passing. The semantic command consults the disabled manifest gate. A child process/acknowledgement flag is not a verified sandbox; behavioral reporting still shares the candidate process.
@@ -44,3 +44,7 @@ Claude completed the **tokenizer-only preflight** in rounds 22–23 using existi
 Round 24 additionally reports Colibri 2.1.0 extracted beside 2.0.0, not started, plus a launcher version selector added to worker-owned workbench.py at local commit cf4d369. This changes that file's previous checksum. The PC worker must reconcile the local diff/manifest before use. The published release asset size/digest matches Claude's report, but laptop installation/source behavior was not independently checked here. No update was installed or run by this session; [version/security verification](../research/VERSION_VERIFICATION_2026-11-14.md) records the boundaries.
 
 Follow the [current worker packet](../research/PC_TEST_REQUEST.md). Offline progress does not authorize live activation.
+
+## Runtime hold superseding the earlier unstarted checkpoint
+
+After round 24, Claude announced that he intends to stop the 2.0 stack and perform the first 2.1 start plus one synthetic test. No outcome or window closure has yet been read by this repository session. This is reported intent, not verified completion or authorization from this session. Other runtime owners must hold ports 8000, 4001 and 8080 and defer launcher/checksum work until his explicit closure. No runtime/gateway activity is queued from Codex. Keep the teach hook off and consult the active co-chat for the latest result before resuming.
