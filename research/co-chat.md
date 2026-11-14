@@ -1392,3 +1392,28 @@ Claude: include these exact paths in your assessment/repair proposal, together w
 
 **Hook OFF remains the requirement.** No live integration, model call, gateway change, restart, real-store purge/migration or publication of sensitive data is requested by this handoff.
 
+
+## Research round 17 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. I read the early findings at `2b9cc8c` and the full-review addendum at `cff345b` on teach revision 2 (`1f8577d`). Offline only, on throwaway test folders: no model traffic, no stack start, no gateway change, no real store touched (none exists). The hook is still off.
+
+### Teach revision 2 review: assessment · Claude
+
+**I accept every finding; I have no source-backed disagreement.** Each path exists as described. The lock finding in particular was a design error, not an oversight: a marker file with takeover by age cannot tell a slow writer from a dead one, and my release removed whatever file was there.
+
+Proposed repairs are implemented offline as **revision 3** in [teach-store/](teach-store/README.md), laptop local commit `fc3dc8a`. Revisions 1 (`a72c796`) and 2 (`1f8577d`) are preserved in this repository's history. Revision 3 is **not reviewed and not cleared**. File hashes and a finding-by-finding table are in that README.
+
+| Finding | Repair in revision 3 | Offline evidence (*measured*, Windows, three runs stable) |
+|---|---|---|
+| Recovery bypassed the lock and published a lower `next_id` first | The whole of `recover` holds the lock. The id-corrected version is built in a temporary file and published in a single replace. A damaged live file is copied aside first; failure before the replace changes nothing | The live file is observed to be published exactly once, already carrying the corrected counter; a simulated failure leaves the damaged file, the backup and no temporary files, and recovery then succeeds on repeat; recovery is refused while the lock is held; an unusable backup is refused |
+| Lock ownership could be lost; possible spin on denied access | Operating-system lock on an open handle. Release is closing one's own handle; a dead holder's lock is released by the system; no takeover by age; the lock file is never deleted; acquisition is bounded and fails with a message | A held lock blocks other writers and recovery for a bounded time even when the file's timestamp is an hour old; two failed attempts by a waiter leave the holder's lock intact; a leftover lock file that nobody holds does not block; the lock is released after an exception |
+| Purge: unrelated lines dropped, damaged copies missed, partial application | Named coverage and a fixed order with the live store last, so a repeat always still knows the text. Unreadable audit lines are kept verbatim unless they mention the entry. Other files in the folder are reported, and set-aside copies are deleted only on request | Unrelated unreadable line survives byte for byte, the one mentioning the text is replaced, both counted; a damaged copy is reported as not covered and the text is confirmed still present until the delete flag is used; a simulated failure between steps leaves the live entry intact and the repeated command completes with one purge record |
+| Audit failure after commit | Distinct error and exit code saying the change is saved; no rollback of memory; ids come from the store file, not the log | With the log made unwritable: the entry is in the store, the error says saved, the next id is not reused, and recovery afterwards still does not reuse an id |
+| Idempotence scanned every message | Only the block at the very start of the latest user message counts as already applied; the policy sentence is not duplicated | A message quoting the marker still gets notes; a block in an older turn does not suppress the current one and older turns are unchanged; the second application is still a no-op |
+| Authority | No code change | Request shape only. Model treatment of the block is unverified, as the reviewer says |
+
+**Stated limits, not claims:** purge is retryable but not atomic across three files; it is not secure erasure. Recovery restores a backup one change behind. A user message that itself begins with the exact marker is treated as already injected. Only the Windows lock path has been run; the POSIX path is written but untested. Nothing has run in the gateway and the model's handling of the data block is unknown.
+
+**Evidence totals** (*measured* on the laptop): 55 teach tests pass, 155 in the project suite; from the published folder 55 pass with 1 skipped.
+
+Please have the reviewer compare `1f8577d` with this commit under `research/teach-store/`. I will not enable anything on the strength of any review; activation is Mohamed's decision and would be its own scoped trial.

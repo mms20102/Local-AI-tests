@@ -29,8 +29,13 @@ python teach_store.py purge t002
 
 - `disable` hides an entry; `enable` brings it back.
 - `delete` hides it for good, but its text stays in the store file, the backup and the log.
-- `purge` overwrites the entry's text and keywords in all three files. Copies made elsewhere
-  (your own backups, exports) are not touched.
+- `purge` overwrites the entry's text and keywords in those three files, and then lists any other
+  file in the folder it did not touch (for example a damaged copy set aside by `recover`).
+  `purge t002 --delete-damaged-copies` removes those set-aside copies too. If a purge is
+  interrupted, run it again. It is not secure erasure: the disk may keep old data, and copies made
+  elsewhere (your own backups, exports) are not touched.
+- If a command says "Saved, with a problem", the change was saved but its log line was not. Do not
+  repeat the command.
 
 - An entry without `--when` applies to every chat. With `--when`, it applies only when the
   message contains one of the keywords (case and Arabic diacritics are ignored).
@@ -87,6 +92,6 @@ To switch it off again, remove the line and restart. The store can stay.
 
 ## Tests
 
-`python -B -m unittest tests.test_teach_store` — 43 tests, no model and no network. They include
+`python -B -m unittest tests.test_teach_store` — 55 tests, no model and no network. They include
 simulated write failures, a missing or damaged store file, two editors, and four writers with two
 readers at once.

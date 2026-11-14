@@ -22,7 +22,8 @@ model, so do not store passwords or keys. Key-shaped text is refused, but that c
 heuristic and cannot recognise every secret or personal detail.
 
 disable hides an entry and enable brings it back. delete hides it for good but its text stays in
-store.json, the backup and the audit log. purge overwrites the text in all three.
+store.json, the backup and the audit log. purge overwrites the text in those three and reports
+any other file in the folder that it did not touch. It is not secure erasure.
 
 Standard library only. This module never opens a network connection.
 """
@@ -67,6 +68,10 @@ WORD = re.compile(r"\w+", re.UNICODE)
 
 class TeachError(ValueError):
     """A request the store refuses; the message is safe to show."""
+
+
+class AuditWriteError(TeachError):
+    """The change WAS saved to store.json, but the audit log line could not be written."""
 
 
 def now() -> str:
@@ -114,8 +119,59 @@ def clean_keywords(raw) -> list[str]:
     return cleaned
 
 
-LOCK_STALE_SECONDS = 30
 LOCK_WAIT_SECONDS = 10
+
+
+@contextlib.contextmanager
+def folder_lock(folder: Path):
+    """Exclusive lock for every operation that changes the store folder.
+
+    It is an operating-system lock on an open handle to store.lock, not a marker file:
+    - only the holder can release it, because releasing means closing its own handle;
+    - if the holder's process dies, the system releases it, so there is no takeover by age and
+      no way to remove a lock that a slow writer still holds;
+    - the file itself is never deleted, so two waiters cannot end up locking different files.
+    """
+    folder.mkdir(parents=True, exist_ok=True)
+    handle = open(folder / "store.lock", "a+b")
+    try:
+        deadline = time.monotonic() + LOCK_WAIT_SECONDS
+        while True:
+            try:
+                _os_lock(handle)
+                break
+            except OSError:
+                if time.monotonic() > deadline:
+                    raise TeachError("Another edit is in progress; try again in a moment.") from None
+                time.sleep(0.05)
+        try:
+            yield
+        finally:
+            _os_unlock(handle)
+    finally:
+        handle.close()
+
+
+if os.name == "nt":
+    import msvcrt
+
+    def _os_lock(handle) -> None:
+        handle.seek(0)
+        msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+
+    def _os_unlock(handle) -> None:
+        handle.seek(0)
+        with contextlib.suppress(OSError):
+            msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+else:
+    import fcntl
+
+    def _os_lock(handle) -> None:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    def _os_unlock(handle) -> None:
+        with contextlib.suppress(OSError):
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def _replace(source: Path, target: Path) -> None:
@@ -151,8 +207,7 @@ class Store:
       empty; `recover` restores the backup on request. Ids are never silently restarted.
     - Writers take an exclusive lock and re-read the file under it, so two editors cannot lose
       each other's change or reuse an id.
-    Not covered: power loss in the middle of the operating system's own rename, and a writer
-    that holds the lock for longer than LOCK_STALE_SECONDS.
+    Not covered: power loss in the middle of the operating system's own rename.
     """
 
     def __init__(self, folder: Path = DEFAULT_DIR):
@@ -160,7 +215,6 @@ class Store:
         self.path = self.folder / "store.json"
         self.backup_path = self.folder / "store.json.bak"
         self.audit_path = self.folder / "audit.jsonl"
-        self.lock_path = self.folder / "store.lock"
         self.data = self._load()
 
     # -- reading ---------------------------------------------------------------------------
@@ -193,31 +247,10 @@ class Store:
     # -- writing ---------------------------------------------------------------------------
     @contextlib.contextmanager
     def _locked(self):
-        """Exclusive writer lock. The data is re-read inside it, so edits are never based on a stale copy."""
-        self.folder.mkdir(parents=True, exist_ok=True)
-        deadline = time.monotonic() + LOCK_WAIT_SECONDS
-        while True:
-            try:
-                handle = os.open(self.lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-                os.write(handle, str(os.getpid()).encode("ascii"))
-                os.close(handle)
-                break
-            except (FileExistsError, PermissionError):
-                try:
-                    if time.time() - self.lock_path.stat().st_mtime > LOCK_STALE_SECONDS:
-                        self.lock_path.unlink()          # left behind by a writer that died
-                        continue
-                except (FileNotFoundError, PermissionError):
-                    continue
-                if time.monotonic() > deadline:
-                    raise TeachError("Another edit is in progress; try again in a moment.") from None
-                time.sleep(0.05)
-        try:
+        """Hold the folder lock and re-read the data, so edits are never based on a stale copy."""
+        with folder_lock(self.folder):
             self.data = self._load()
             yield
-        finally:
-            with contextlib.suppress(FileNotFoundError, PermissionError):
-                self.lock_path.unlink()
 
     def _save(self, action: str, entry: dict) -> None:
         """Commit self.data. Call only inside _locked()."""
@@ -237,10 +270,16 @@ class Store:
         finally:
             with contextlib.suppress(FileNotFoundError):
                 temp.unlink()
+        # From here the change is committed. A log failure must not look like "nothing changed".
         record = {"time": now(), "action": action, "id": entry["id"], "kind": entry["kind"],
                   "text": entry["text"], "when": entry["when"]}
-        with self.audit_path.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+        try:
+            with self.audit_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+        except OSError as error:
+            raise AuditWriteError(
+                f"{entry['id']}: the change is saved, but the audit log could not be written "
+                f"({type(error).__name__}). Do not repeat the command; check the log file.") from None
 
     def add(self, text: str, kind: str = "rule", when=None) -> dict:
         if kind not in KINDS:
@@ -259,6 +298,8 @@ class Store:
             self.data["entries"].append(entry)
             try:
                 self._save("add", entry)
+            except AuditWriteError:
+                raise                                    # committed: memory already matches disk
             except BaseException:
                 self.data = self._load_or_keep()
                 raise
@@ -270,16 +311,26 @@ class Store:
             entry["status"] = status
             try:
                 self._save(status, entry)
+            except AuditWriteError:
+                raise
             except BaseException:
                 self.data = self._load_or_keep()
                 raise
             return entry
 
-    def purge(self, entry_id: str) -> dict:
-        """Remove an entry's text and keywords from the store, the backup and the audit log.
+    def purge(self, entry_id: str, delete_damaged: bool = False) -> dict:
+        """Overwrite one entry's text and keywords in the files this tool manages.
 
-        `delete` only hides an entry; its text stays in all three files. `purge` overwrites it.
-        The id and the times of past changes remain. Copies made outside this folder are not touched.
+        Covered: store.json, store.json.bak and audit.jsonl. `delete` only hides an entry; purge
+        rewrites those three. Audit lines that are not valid JSON are kept exactly as they are,
+        unless they contain the entry's id or text, in which case that one line is replaced by a
+        marker. Set-aside copies (store.json.damaged.*) are NOT rewritten: they are listed in
+        the report, and removed only with delete_damaged=True. This is not secure erasure: the
+        disk may keep old blocks, and copies outside the folder are untouched.
+
+        If a purge is interrupted, run the same command again. The text is removed from the live
+        store last, so a repeat always still knows what to remove; a purge that returned
+        normally has rewritten all three files.
         """
         with self._locked():
             for entry in self.data["entries"]:
@@ -287,27 +338,74 @@ class Store:
                     break
             else:
                 raise TeachError(f"No entry {entry_id}.")
-            entry.update(text="[purged]", when=[], status="purged")
+            needles = [n for n in {entry["text"], json.dumps(entry["text"], ensure_ascii=True)[1:-1],
+                                   f'"id": "{entry_id}"'} if n and n != "[purged]"]
+            report = {"id": entry_id, "covered": ["audit.jsonl", "store.json.bak", "store.json"],
+                      "unreadable_audit_lines_kept": 0, "unreadable_audit_lines_replaced": 0,
+                      "damaged_copies_deleted": [], "not_covered": []}
+            token = secrets.token_hex(4)
+            purged = json.loads(json.dumps(self.data))            # the store as it will be afterwards
+            for item in purged["entries"]:
+                if item["id"] == entry_id:
+                    item.update(text="[purged]", when=[], status="purged")
             try:
-                self._save("purge", entry)
-                shutil.copyfile(self.path, self.folder / "store.json.purge.tmp")
-                _replace(self.folder / "store.json.purge.tmp", self.backup_path)
+                # Order matters. The live store is changed LAST: until then the entry still holds
+                # its text, so if any step fails the same command can be run again and will redo
+                # every step with the text still known. Each step replaces one file in one move.
+                # 1. audit log
                 lines = []
-                for line in self.audit_path.read_text(encoding="utf-8").splitlines():
+                existing = self.audit_path.read_text(encoding="utf-8").splitlines() if self.audit_path.exists() else []
+                for line in existing:
                     try:
                         record = json.loads(line)
+                        if not isinstance(record, dict):
+                            raise ValueError
                     except ValueError:
-                        continue                          # an unreadable line cannot be vouched for: dropped
+                        if any(needle in line for needle in needles):
+                            lines.append(json.dumps({"time": now(), "action": "unreadable_line_replaced_by_purge",
+                                                     "id": entry_id}))
+                            report["unreadable_audit_lines_replaced"] += 1
+                        else:
+                            lines.append(line)                # unrelated evidence: kept byte for byte
+                            report["unreadable_audit_lines_kept"] += 1
+                        continue
                     if record.get("id") == entry_id:
+                        if record.get("action") == "purge":
+                            continue                          # from an earlier, interrupted attempt
                         record.update(text="[purged]", when=[])
                     lines.append(json.dumps(record, ensure_ascii=False))
-                temp = self.folder / "audit.jsonl.purge.tmp"
-                temp.write_text("".join(line + "\n" for line in lines), encoding="utf-8")
-                _replace(temp, self.audit_path)
+                lines.append(json.dumps({"time": now(), "action": "purge", "id": entry_id, "kind": entry["kind"],
+                                         "text": "[purged]", "when": []}))
+                temp = self.folder / f"audit.jsonl.{token}.purge.tmp"
+                try:
+                    temp.write_text("".join(line + "\n" for line in lines), encoding="utf-8")
+                    _replace(temp, self.audit_path)
+                finally:
+                    with contextlib.suppress(FileNotFoundError):
+                        temp.unlink()
+                # 2. backup, 3. live store
+                for target in (self.backup_path, self.path):
+                    temp = self.folder / f"store.json.{token}.purge.tmp"
+                    try:
+                        temp.write_text(json.dumps(purged, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+                        _replace(temp, target)
+                    finally:
+                        with contextlib.suppress(FileNotFoundError):
+                            temp.unlink()
+                self.data = purged
+                # 4. everything else in the folder is reported, never silently skipped
+                for other in sorted(self.folder.iterdir()):
+                    if other.name in ("store.json", "store.json.bak", "audit.jsonl", "store.lock"):
+                        continue
+                    if delete_damaged and other.name.startswith("store.json.damaged."):
+                        other.unlink()
+                        report["damaged_copies_deleted"].append(other.name)
+                    else:
+                        report["not_covered"].append(other.name)
             except BaseException:
                 self.data = self._load_or_keep()
                 raise
-            return entry
+            return report
 
     def _load_or_keep(self) -> dict:
         """After a failed save, go back to what is on disk (the last committed version)."""
@@ -318,32 +416,55 @@ class Store:
 
 
 def recover(folder: Path = DEFAULT_DIR) -> str:
-    """Restore store.json from the backup. Only when the live file is missing or unreadable."""
+    """Restore store.json from the backup. Only when the live file is missing or unreadable.
+
+    The whole operation holds the folder lock. The restored version, with its id counter already
+    corrected, is built in a temporary file and published in one step, so no reader or editor
+    can see a half-recovered store. A damaged live file is set aside only after the replacement
+    is ready; if anything fails before that, nothing has changed.
+    """
     folder = Path(folder)
-    live, backup = folder / "store.json", folder / "store.json.bak"
-    if live.exists():
+    live, backup, audit = folder / "store.json", folder / "store.json.bak", folder / "audit.jsonl"
+    with folder_lock(folder):
+        damaged = False
+        if live.exists():
+            try:
+                Store(folder)
+                return "store.json is present and readable; nothing to recover."
+            except TeachError:
+                damaged = True
+        if not backup.exists():
+            raise TeachError("No backup to restore. The audit log (audit.jsonl) lists every past change.")
         try:
-            Store(folder)
-            return "store.json is present and readable; nothing to recover."
-        except TeachError:
-            _replace(live, folder / f"store.json.damaged.{secrets.token_hex(4)}")
-    if not backup.exists():
-        raise TeachError("No backup to restore. The audit log (audit.jsonl) lists every past change.")
-    shutil.copyfile(backup, folder / "store.json.recover.tmp")
-    _replace(folder / "store.json.recover.tmp", live)
-    store = Store(folder)                                # validates what was restored
-    used = [int(e["id"][1:]) for e in store.data["entries"]]
-    with contextlib.suppress(OSError, ValueError):       # never hand out an id the audit log has seen
-        for line in (folder / "audit.jsonl").read_text(encoding="utf-8").splitlines():
+            data = _read_json(backup)
+        except ValueError:
+            raise TeachError("The backup is not valid JSON either; nothing was changed.") from None
+        if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("entries"), list) \
+                or type(data.get("next_id")) is not int:
+            raise TeachError("The backup has an unknown format; nothing was changed.")
+        used = []
+        for entry in data["entries"]:
             with contextlib.suppress(ValueError, KeyError, TypeError):
-                used.append(int(json.loads(line)["id"][1:]))
-    if used and store.data["next_id"] <= max(used):
-        store.data["next_id"] = max(used) + 1
-        temp = folder / "store.json.recover.tmp"
-        temp.write_text(json.dumps(store.data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-        _replace(temp, live)
-    return (f"Restored {len(store.data['entries'])} entries from the backup. The backup is one change "
-            "behind; check `list` against audit.jsonl and re-add anything missing.")
+                used.append(int(entry["id"][1:]))
+        if audit.exists():                                   # never hand out an id the log has seen
+            for line in audit.read_text(encoding="utf-8").splitlines():
+                with contextlib.suppress(ValueError, KeyError, TypeError):
+                    used.append(int(json.loads(line)["id"][1:]))
+        if used and data["next_id"] <= max(used):
+            data["next_id"] = max(used) + 1
+        token = secrets.token_hex(4)
+        temp = folder / f"store.json.{token}.recover.tmp"
+        try:
+            temp.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            if damaged:
+                shutil.copyfile(live, folder / f"store.json.damaged.{token}")   # evidence kept, live untouched
+            _replace(temp, live)                             # the only step that changes the live file
+        finally:
+            with contextlib.suppress(FileNotFoundError):
+                temp.unlink()
+    note = " The unreadable file was kept as store.json.damaged.*; it may contain note text." if damaged else ""
+    return (f"Restored {len(data['entries'])} entries from the backup. The backup is one change "
+            "behind; check `list` against audit.jsonl and re-add anything missing." + note)
 
 
 def line_for(entry: dict) -> str:
@@ -392,7 +513,9 @@ def request_units(messages: list[dict], limits: dict, output_tokens: int) -> int
 
 
 def already_applied(messages: list[dict]) -> bool:
-    return any(OPEN in m["content"] or POLICY in m["content"] for m in messages)
+    """True only for this transform's own injection: the block at the very start of the latest
+    user message. A marker quoted inside a message, or a block in an older turn, does not count."""
+    return messages[-1]["content"].startswith(OPEN + "\n")
 
 
 def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,
@@ -403,8 +526,9 @@ def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, o
     - the notes, as a delimited data block in front of the latest USER message;
     - POLICY, the fixed sentence saying the block is data, at the end of the system message
       (or in a new one).
-    Applying it to a request that already carries the block or the policy changes nothing, so a
-    repeated call cannot add the notes twice. If the request has no room, fewer entries (or none)
+    Applying it to a request whose latest user message already starts with the block changes
+    nothing, so a repeated call cannot add the notes twice. Marker text elsewhere in the
+    conversation does not suppress injection. If the request has no room, fewer entries (or none)
     are added: a request that passed the gateway's check is never pushed over it.
     """
     if not messages or messages[-1].get("role") != "user" or already_applied(messages):
@@ -412,13 +536,17 @@ def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, o
     has_system = messages[0].get("role") == "system"
     if not has_system and len(messages) >= limits["max_messages"]:
         return list(messages), []
-    policy_units = len(POLICY.encode("utf-8")) + (2 if has_system else limits["per_message_overhead_units"])
+    has_policy = has_system and messages[0]["content"].endswith(POLICY)
+    policy_units = 0 if has_policy else (
+        len(POLICY.encode("utf-8")) + (2 if has_system else limits["per_message_overhead_units"]))
     room = limits["context_tokens"] - request_units(messages, limits, output_tokens) - policy_units
     chosen = select(entries, messages[-1]["content"], min(budget_units, room))
     if not chosen:
         return list(messages), []
     result = [dict(m) for m in messages]
-    if has_system:
+    if has_policy:
+        pass
+    elif has_system:
         result[0]["content"] = result[0]["content"] + "\n\n" + POLICY
     else:
         result.insert(0, {"role": "system", "content": POLICY})
@@ -438,8 +566,12 @@ def main(argv=None) -> int:
     add.add_argument("--when", default="", help="comma-separated keywords; without them the entry always applies")
     listing = sub.add_parser("list", help="show stored entries")
     listing.add_argument("--all", action="store_true", help="include disabled entries")
-    for name in ("disable", "enable", "delete", "purge"):
+    for name in ("disable", "enable", "delete"):
         sub.add_parser(name).add_argument("id")
+    purge = sub.add_parser("purge", help="overwrite an entry's text in the store, backup and audit log")
+    purge.add_argument("id")
+    purge.add_argument("--delete-damaged-copies", action="store_true",
+                       help="also delete set-aside store.json.damaged.* files, which may contain the text")
     sub.add_parser("recover", help="restore the last backup when store.json is missing or damaged")
     preview = sub.add_parser("preview", help="show what would be added for a message; sends nothing")
     preview.add_argument("message")
@@ -471,9 +603,18 @@ def main(argv=None) -> int:
             entry = store.set_status(args.id, status)
             print(f"{entry['id']} is now {status}.")
         elif args.command == "purge":
-            entry = store.purge(args.id)
-            print(f"{entry['id']}: text and keywords overwritten in the store, the backup and the audit log.")
-            print("Copies made outside this folder (other backups, exports) are not affected.")
+            report = store.purge(args.id, args.delete_damaged_copies)
+            print(f"{report['id']}: text and keywords overwritten in " + ", ".join(report["covered"]) + ".")
+            if report["unreadable_audit_lines_replaced"]:
+                print(f"{report['unreadable_audit_lines_replaced']} unreadable audit line(s) mentioned it and were replaced.")
+            if report["unreadable_audit_lines_kept"]:
+                print(f"{report['unreadable_audit_lines_kept']} unrelated unreadable audit line(s) were kept as they are.")
+            if report["damaged_copies_deleted"]:
+                print("Deleted: " + ", ".join(report["damaged_copies_deleted"]))
+            if report["not_covered"]:
+                print("NOT covered, may still contain the text: " + ", ".join(report["not_covered"]))
+                print("Use --delete-damaged-copies to remove set-aside copies.")
+            print("This is not secure erasure: the disk may keep old data, and copies outside this folder are untouched.")
         elif args.command == "preview":
             chosen = select(store.entries(), args.message, args.budget)
             print(block_for(chosen).rstrip("\n") or "(nothing would be added)")
@@ -481,6 +622,9 @@ def main(argv=None) -> int:
                   f"{len(block_for(chosen).encode('utf-8'))} of {args.budget} budget units.")
             print("Illustration only: it looks at this one message with a full budget. A real request "
                   "may have less room left, so fewer entries may be added. It does not measure model tokens.")
+    except AuditWriteError as error:
+        print("Saved, with a problem: " + str(error), file=sys.stderr)
+        return 3
     except TeachError as error:
         print("Not done: " + str(error), file=sys.stderr)
         return 1
