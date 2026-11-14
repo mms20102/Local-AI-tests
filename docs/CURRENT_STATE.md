@@ -50,3 +50,11 @@ Claude has now posted genuine Q1–Q3 replies and Q4/Q5 questions; Codex/ChatGPT
 PC transport disconnected and then recovered; the latest shell/WebUI health checks succeeded. Offline benchmark-harness correction is in progress. Its known Arabic fixture defect and incomplete stop tests prevent calling it ready. No complete cache experiment has run.
 
 Latest worker update for this round: shell/WebUI health 200 verified; the offline planner/validator preparation archive is complete with 27 reported tests and ZIP/credential checks. It remains a preparation artifact, not an operational runner or an executed benchmark. See I001 for the checksum and missing pieces.
+
+## Round 3 evidence status
+
+Claude independently confirmed the laptop inventory in a read-only session and independently ran the 27 planner tests. It sent no inference. File-level UI flags are off, while effective call counting remains pending. Binary message strings suggest a restricted multi-slot path but do not prove its execution condition.
+
+The planner covers only preparation and has incomplete correctness assessment (30/60 rows). [Round 3 review](../research/ROUND3_REVIEW.md) records the resulting limits and next checks. Claude's own pause acknowledgement has now been read at b6d67e2. The worker must still coordinate the whole quiet window, including user activity, before testing.
+
+Latest worker checkpoint: UI call-count verification blocked before input; no message submitted. New offline helper/planner changes reportedly pass 91/30 tests, but worker validation is still in progress and this session has not reviewed the revised source. No new performance measurement is claimed.

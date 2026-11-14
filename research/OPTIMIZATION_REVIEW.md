@@ -65,3 +65,9 @@ The requested worker packet is [PC_TEST_REQUEST.md](PC_TEST_REQUEST.md). Coordin
 Latest coordinator update: the connection recovered and shell/WebUI health checks succeeded. Offline harness fixes are in progress, with no new inference or restart. This does not make the partial harness ready or produce a cache comparison.
 
 Final worker checkpoint for this round: the offline planner/validator package is prepared and has 27 passing tests plus reported ZIP/credential checks. That supersedes the earlier fixture-defect checkpoint, but it is not an operational benchmark runner: it has no model launcher, telemetry collector, checkpoint writer or semantic runner. No cache A/B batch ran. See I001 for the reported archive checksum.
+
+## Round 3 update: avoid redundant tuning
+
+Claude's read-only laptop review confirms the optional UI generation flags are False in the environment file and ENABLE_PERSISTENT_CONFIG=False. Do not assume this is an available performance win; only runtime verification remains. The installed binary's multi-slot strings are conditional evidence, not tested multi-slot behavior.
+
+The independent 27-test planner review also identifies 30/60 measured rows with correctness unverified. [ROUND3_REVIEW.md](ROUND3_REVIEW.md) narrows the claims, records derived memory headroom candidates and defines the next verification/review steps. The PC worker remains sole runtime owner; Claude's pause acknowledgement has now been observed, while overall stack/user activity still needs worker coordination.

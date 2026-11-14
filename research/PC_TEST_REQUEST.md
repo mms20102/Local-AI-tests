@@ -56,3 +56,18 @@ A sanitized JSON/CSV plus a short explanation of actual actions, pass/fail, limi
 Latest coordinator update: connection, shell and WebUI health recovered. Continue the existing worker's offline harness corrections first; no inference/restart is underway and no duplicate harness or run should be started.
 
 Final worker checkpoint: offline planner/validator prepared (27 tests; archive checksum in I001), not a full runner. Before any inference, independently review its sanitized source and separately implement/validate the missing execution, telemetry, checkpoint and stop/recovery pieces. The earlier fixture-defect checkpoint is historical; do not claim that 27 planner tests validate end-to-end benchmarking.
+
+## Round 3 current queue — supersedes duplicate inventory requests
+
+Claude independently confirmed hardware/backend/launchers and inspected plan/doctor, logs and the planner. Do not repeat the broad inventory merely to fill this packet.
+
+1. Keep sole runtime ownership. Await an actual Claude pause acknowledgement/quiet-window confirmation before the one-message UI test. The request being posted is not clearance.
+2. Finish offline planner review: distinguish absent lookup env from resolved process state; check cross-arm initial history equality, schedule uniqueness/pair coverage and correctness coverage (30/60 rows unverified).
+3. When cleared, perform only the bounded synthetic UI call-count verification described in ROUND3_REVIEW.md; no cache change or restart is part of it.
+4. If UI chores are confirmed off, drop disable/restore testing. Reproduce cap 4 versus 32 during a separately coordinated idle maintenance window, with one model instance.
+5. Defer above-32 sweep, model download and multi-slot testing. Snapshot headroom arithmetic does not approve a live configuration change.
+6. Rerun plan/doctor with the owned stack stopped only in the maintenance window; compare the exact inspected executable with the launcher's engine before acting on the contradictory CPU-only warning.
+
+No model-generated code is to be executed under this packet. Add helper static checks only after source review and offline tests, preserving existing completion guards.
+
+Latest worker status: UI input was blocked before typing/submission by inability to verify the browser URL; no bypass or runtime call-count result. Treat that check as blocked, not passed. The worker reports 91 helper and 30 planner offline tests and is still validating. Do not repeat or circumvent the blocked control action here; continue offline review. The PC worker should explicitly release/close its inference reservation when appropriate.

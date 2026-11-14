@@ -61,3 +61,13 @@ If no clear gain survives confirmation, retain baseline and publish the negative
 Current upstream API and Vulkan docs disagree in part about qwen36 multi-slot dense-chain support. Inspect installed implementation/runtime evidence; do not assume any KV setting enables or disables a path on every version.
 
 A cloud/Codespace test cannot reproduce this laptop's GPU, RAM or thermal behavior.
+
+## Round 3 review addendum
+
+The planner's 27 tests validate preparation logic, not an end-to-end runner. Claude reports function/bugfix/Arabic rows always carry correctness unverified (30/60 measured entries). Publish full coverage and failures; no experiment-wide "no correctness regression" claim is supported until the missing assessments are supplied.
+
+Validate run IDs, schedule coverage, arm pairing and warmup segregation at batch level. History before=after per row does not imply the intended history was equal between arms. Record the actual resolved lookup setting, including an explicit absent state where appropriate, rather than treating omission from a launcher as process state.
+
+Compare latency with completeness, finish reason and output length visible. Report every failed/truncated run; any complete-pair latency subset must show the full denominator and failure rates.
+
+UI call counting requires an actually confirmed quiet window and correlated observation across the relevant path, including bounded asynchronous tail time. One engine log line alone is not universal proof that all optional UI calls are disabled.

@@ -87,7 +87,28 @@
       "bytes": 10641,
       "sha256": "1fd87c75e0595484fe2153651b758c7dc7f9e0cebe60849a0792b8d3f74c96bc",
       "validation": "PC worker reports ZIP validation and credential scan passed",
-      "independently_downloaded_or_reviewed_here": false
+      "independently_downloaded_or_reviewed_here": false,
+      "note": "Earlier 27-test preparation archive; not asserted to contain subsequent 30-test planner or 91-test helper revisions."
+    },
+    "latest_offline_worker_report": {
+      "helper": {
+        "added_checks": [
+          "fence",
+          "Python syntax",
+          "required names"
+        ],
+        "reported_tests_passed": 91,
+        "source_independently_reviewed_here": false,
+        "live_end_to_end_test": false
+      },
+      "planner": {
+        "lookup_unset_recorded": true,
+        "correctness_coverage_recorded": true,
+        "reported_tests_passed": 30,
+        "worker_validation": "still in progress",
+        "operational_runner_established": false
+      },
+      "cache_ab_run": false
     }
   },
   "missing": [
@@ -96,5 +117,111 @@
     "Sanitized original logs, prompt/request metadata and raw run evidence",
     "Planner source/archive available for independent review; operational runner and full protocol implementation"
   ],
-  "history_control": "USAGE_SAVE=0 prevents writes; existing .coli_usage is still read for warm placement. In-memory adaptation is not established as frozen."
+  "history_control": "USAGE_SAVE=0 prevents writes; existing .coli_usage is still read for warm placement. In-memory adaptation is not established as frozen.",
+  "independent_claude_round3": {
+    "evidence_status": "Claude-authored report of read-only laptop observations; not rerun by this repository session",
+    "source": "research/co-chat.md, Research round 3; original commit 4dfdceedf4c3ebf2d52ec08b233f960979214d3e",
+    "runtime_changes_or_inference": "None reported; launchers/logs/status read; plan/doctor and binary string inspection only",
+    "confirms_prior_inventory": true,
+    "cpu_physical_cores": 8,
+    "cpu_logical_threads": 16,
+    "ram_modules": [
+      {
+        "channel": "A",
+        "capacity_gb": 8,
+        "configured_speed": 4800
+      },
+      {
+        "channel": "B",
+        "capacity_gb": 16,
+        "configured_speed": 4800
+      }
+    ],
+    "disk": {
+      "model": "WD PC SN560 1 TB NVMe",
+      "free_gib": 457.6
+    },
+    "sampled_live_headroom": {
+      "free_ram_gib": 5.7,
+      "used_vram_mib": 6472,
+      "not_a_peak_or_reservation": true
+    },
+    "container": {
+      "bytes": 23018430392,
+      "shards": 41,
+      "expert_count": 10240,
+      "bytes_per_expert": 1769472,
+      "total_expert_bytes": 18119393280,
+      "dense_gb_reported": 2.96,
+      "per_cap_bytes": 70778880
+    },
+    "state": {
+      "saved_tune_profile": "No tuning folder observed; launchers disable tune profiles",
+      "persisted_kv": "No .coli_kv* observed",
+      "launcher_omits": [
+        "--ram",
+        "--auto-tier",
+        "COLI_LOOKUP",
+        "KVSAVE",
+        "CAP_RAISE"
+      ],
+      "history_read": true,
+      "history_selections_reported": 856960,
+      "warm_started_experts_reported": 1748,
+      "history_timestamp": "2026-10-27",
+      "analysis_and_history_hashes": "Reported unchanged before/after plan and doctor; digest values not supplied"
+    },
+    "planning_caveat": "Plan/doctor ran alongside the live engine and budgeted remaining resources; results are not replacement-stack cold-start capacity. Doctor's CPU-only warning contradicts live Vulkan logs and remains unresolved.",
+    "binary_strings": {
+      "messages_indicate_multislot_chain_off_and_no_drafting": true,
+      "trigger_executed": false,
+      "conclusion": "Evidence of a conditional path, not proof that every multi-slot configuration takes it"
+    },
+    "ui_environment_file": {
+      "ENABLE_TITLE_GENERATION": false,
+      "ENABLE_TAGS_GENERATION": false,
+      "ENABLE_FOLLOW_UP_GENERATION": false,
+      "ENABLE_AUTOCOMPLETE_GENERATION": false,
+      "ENABLE_SEARCH_QUERY_GENERATION": false,
+      "ENABLE_RETRIEVAL_QUERY_GENERATION": false,
+      "ENABLE_PERSISTENT_CONFIG": false,
+      "task_model_configured": false,
+      "effective_runtime_verified": false
+    },
+    "helper_014": {
+      "evidence_status": "Recorded in local project files, not rerun by Claude",
+      "finish_reason_kept": true,
+      "length_marked_truncated": true,
+      "sse_done_required": true,
+      "retries": false
+    },
+    "planner_review": {
+      "reviewer": "Claude, laptop session",
+      "tests_passed": 27,
+      "inference_sent": false,
+      "capability": "Planner/validator only",
+      "unverified_correctness_tasks": [
+        "function",
+        "bugfix",
+        "arabic"
+      ],
+      "measured_rows_without_correctness_signal": 30,
+      "total_measured_rows": 60
+    }
+  },
+  "coordination": {
+    "pc_worker_owns_runtime": true,
+    "inference_pause_requested_in_cochat": true,
+    "claude_pause_acknowledged": true,
+    "acknowledgement_state": "Observed Claude's own acknowledgement at branch commit b6d67e200d397d3a5fef59dc77550d3613a7dd9c: no inference in flight and none until PC worker releases. Overall stack quiet window/user activity still requires worker coordination.",
+    "ui_call_count_test_run": false,
+    "ui_call_count_attempt": {
+      "status": "blocked-before-input",
+      "reason": "PC control could not confidently determine the Windows browser's current URL to enforce policy",
+      "message_typed": false,
+      "message_submitted": false,
+      "runtime_count_verified": false,
+      "bypass_attempted": false
+    }
+  }
 }
