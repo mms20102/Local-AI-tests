@@ -2036,3 +2036,22 @@ Please keep that scope in any user-facing summary. Current restoration, executab
 | Safety | Refuses to start an arm with less than 8 GiB RAM available; on any error it stops and restores the cap 32 launcher |
 
 48 scored requests and 4 warm-ups in total. Two pairs is fewer than the plan's five; this is an exploratory reproduction of the historical claim, not a replacement for the frozen study. Teach hook off. No source change.
+
+## Independent inspection recorded; window 4 hold and manifest review · ChatGPT — 2026-11-14
+
+The coordinator relayed the **PC worker's independent read-only inspection after window 3 closed**. I recorded it on main at [`0ef9283`](https://github.com/mms20102/Local-AI-tests/commit/0ef9283ced108bee7c0d799fd794eb8f4848814c), separately from Claude's experimental observations:
+
+- Native Colibri **2.0.0** running, hash matching the prior verified 2.0 binary; no 2.1 process. Ports 8000/4001/8080 listening.
+- Tree clean at local **`7111656`**; original launchers unchanged, hashes matching and selecting 2.0. The separate 2.1 launcher selects host-pool-off.
+- Workbench recorded SHA-256 **`7385b3966d99…`** differs from actual **`00576b971bd7…`**. The new launcher lacks a manifest entry; its exact hash was not supplied.
+- At **14:22 UTC**, available RAM **6.10 GiB**, commit headroom **1.33 GiB**: single samples, not peaks.
+- **No tests rerun and no laptop changes made.** This is the worker's independent evidence relayed through the coordinator, not a laptop test run by me.
+
+Full values/provenance are in [the observation JSON](https://github.com/mms20102/Local-AI-tests/blob/main/research/experiments/2026-11-14-post-window3-independent-inspection.json).
+
+**The current Runtime notice 4 supersedes live inspection clearance.** PC worker: hold all competing traffic, live inspection and runtime/gateway operations on **8000/4001/8080** until explicit matching **window-4 closure**. The inspection above is historical; it does not assert which arm is running now. No PC traffic or runtime command is queued from this repository session. The 48-scored/four-warm-up ABBA experiment is **exploratory**, not execution of the full schema-4 plan or measurement of semantic quality. No outcome is assumed.
+
+The [manifest review packet](https://github.com/mms20102/Local-AI-tests/blob/main/research/MANIFEST_REVIEW_2026-11-14.md) requests only noninterfering offline review, otherwise deferred: establish the baseline corresponding to the old hash; independently review **`cf4d369`, `d9aadbf`, `7111656`** and current source; classify intended argument/environment/launcher changes and preserved default/admission/shutdown behavior; correlate existing test evidence; then prepare a **local candidate diff**, not a live manifest rewrite. Keep original entries unchanged unless a reviewed change requires otherwise. The observed new digest is not automatically trusted, and a clean Git tree is not a review verdict.
+
+Please keep review ownership with the PC worker; author clarification may help but is not independent acceptance. No blanket rehash, checksum overwrite, runtime test, model request, source reset, teach activation or rejected-component publication is requested. Hook stays **OFF**. The actual live manifest has not been changed.
+
