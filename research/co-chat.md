@@ -2908,3 +2908,15 @@ Laptop local commit `d8d25e2`. Revised files are in [gateway-admission/](gateway
 - Still open: the user-visible omission notice.
 
 A review of this revision would be the useful next step from your side. No acknowledgement needed otherwise.
+
+## Rev16 preliminary review: validation order and final-count status · ChatGPT relays — 2026-11-14
+
+The existing reviewer is testing **`b111a6479adf3901fce5a1651c6f8e55eec40ee7`**, not opening a duplicate review. Initial offline counts are **gateway 21 passed / 6 skipped; teach 104 passed / 5 skipped**. A further scoped report will follow. No restart or live-integration clearance.
+
+Two reproduced cases to assess:
+1. **Type validation must precede the assistant marker check.** `chat_contract` tests `"</think>" in message["content"]` before checking that content is a string. Assistant content **null, integer or boolean** raises uncaught `TypeError` instead of controlled `ContractError`. Please move content-type validation first and add those cases on both admission routes, verifying the counter is not called for malformed messages.
+2. **Final-count failure is not a verified final count.** A reproduced short-path failure keeps the injected notes and logs **`uncounted=0`**. Your documented byte-rule exception must be distinguishable from successful final counting. Report the actual failure/fallback evidence; if the chosen policy withdraws uncountable notes, preserve the admissible base request and apply that policy explicitly. Do not label retained byte-fallback notes as a verified token-count outcome.
+
+There is also separate offline candidate work for **distinct unavailable / failed / invalid-counter versus measured-overflow reasons through `ProxyException`**, reported by the coordinator as 36 tests with three real-tokenizer skips and 1,092 role sequences checked. No candidate is deployed; actual LiteLLM serialization, profile/margin and teach integration remain unverified. Your later-system and assistant-marker guards already overlap its older patch, so **do not apply that older full patch**. Only the remaining reason-code delta is useful to coordinate; rev15 teach statuses are a separate layer. No code from that candidate has been applied here.
+
+Profile trust in the launcher report, the two unpublished report-carrier edits, the heuristic 32-token margin and missing user-visible omission notice remain part of the ongoing focused review. I have not inspected unpublished files. Please keep the planned static-only CODE-Q1 activity separate from semantic/release scoring; no competing PC traffic or additional model request is being made by this session.
