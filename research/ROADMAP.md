@@ -16,7 +16,7 @@ These checks establish preparation/persistence evidence, not runtime speed or mo
 
 ## In progress: highest-value unblocked work
 
-1. **Tokenizer/context preflight — reported measurements complete; engine overhead pending.** Claude reports 118–300 input and 31–137 reference tokens; Codex matched fixture bytes and arithmetic. Keep binary-added tokens null until a later otherwise-authorized engine observation; no special traffic or model loading now.
+1. **Native token admission — tagged-source audit integrated; installed parity pending.** [Audit](context-preflight/token-admission-audit.md): normal Qwen36 answers are clamped to remaining context, no separate BOS/EOS is appended in the audited text path, and external/native tokenizer parity remains unproved. Claude owns an offline installed-renderer/already-saved-usage comparison. Keep installed measured fields null without evidence; no new traffic is requested.
 2. **Operational components — PC worker.** Continue locally owned, reviewable offline implementation/validation. Return exact lifecycle/identity/stop-gate status. Preserve the 18-file commit; its rejected publication is not being retried.
 3. **Shared evidence — Codex.** Keep this roadmap, current state and worker packet aligned with actual artifacts and distinguish author-reported, independently tested and proposed results.
 
@@ -33,10 +33,10 @@ The full benchmark remains disabled. Publishing its components is separately blo
 
 ## Later studies, kept separate
 
-- Teach hook integration and English/Arabic behavior: only a separately authorized scoped trial; hook remains **off**.
-- CODE-Q1 model drafts: after preflight/runtime gates; generated code stays unexecuted.
+- Teach hook: enabled after window 6 is Claude-reported; exact loaded revision/live equivalence remain unverified. Rev10's independent offline pass does not deploy it. Address the [new source-scoped latency/count/docs findings](INTEGRATION_QUEUE.md) through Claude's ownership; no unsolicited restart.
+- Controlled CODE-Q1 drafts: after preflight/runtime gates. Exploratory drafts already exist in the separate cap study; a disabled fixture manifest does not mean no model request has ever occurred. Generated code stays unexecuted.
 - Semantic grading: reviewed containment, resource limits and trustworthy external observation/judging first.
-- Lookup off/on, cap32/48, tier/thread sweeps: separate frozen comparisons after memory clearance and baseline reproduction.
+- Smaller-cache cap24/32 and lookup proposals: separate frozen comparisons after owned-runner/identity/headroom clearance. Larger caps remain deferred; these are hypotheses, not local improvements.
 - Alternative coding models or engine 2.1: preserve the baseline. Claude reports a 2.1 first-start check with high memory pressure/effective cap 8, then 2.0 restoration. Independently inspect the worker-owned launcher diff, current identity and checksum first; no default change or speed improvement is established.
 
 Do not reopen completed persistence/planner work without a concrete new defect. A blocked live step does not stop offline source, fixture, contract or documentation work.
@@ -51,6 +51,8 @@ Use the [active co-chat](https://github.com/mms20102/Local-AI-tests/blob/claude/
 
 The independent runtime inspection is complete at the recorded checkpoint. Workbench's manifest hash is stale and the separate 2.1 launcher lacks coverage. The [review packet](MANIFEST_REVIEW_2026-11-14.md) calls for independent source/diff review and a local candidate, with no live manifest rewrite or blanket rehash. Keep 2.0 as the confirmed checkpoint; do not infer a speed or memory-leak verdict from the short 2.1 samples. Recheck current reservations before local work.
 
-## Active runtime reservation
+## Current activity checkpoint
 
-Claude's window 4 is reported open for a simpler exploratory cap4/cap32 run (48 scored drafts plus four warm-ups), separate from the frozen schema-4 plan. Hold competing traffic/live inspection until its explicit matching closure. Preserve prior observations as historical. No semantic correctness, speed result or completed outcome is inferred while it runs; noninterfering offline manifest review is the current repository task.
+Claude round 28 follows reported closures through window 6. The earlier window-4 reservation is historical. Its [exploratory cap result](audits/cap4-cap32-exploratory-audit-2026-11-14.md) is audited as split-run metadata with lifecycle limitations, not the full schema-4 or semantic study. Round 28 reports a private user-directed trial and an approximately 419 GB download underway, not model adoption. Absence of an open window notice does not imply an idle PC. Check the latest co-chat and coordinate before live work.
+
+The [integration queue](INTEGRATION_QUEUE.md) assigns the focused research handoffs and distinguishes source checks, coordinator summaries and proposals.

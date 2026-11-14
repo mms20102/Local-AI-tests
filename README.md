@@ -13,12 +13,12 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 | Workstream | Verified or reported progress | Next boundary |
 |---|---|---|
 | Teach store | Rev6 persistence and rev10 diagnostic hardening have scoped independent offline passes | Callback enabled is reported; exact loaded revision/live invariance are unverified; synchronous output can still block |
-| Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; 31 grader tests reported passing | No model pass rate. Generated-code execution is disabled; reviewed semantic isolation is absent |
+| Coding quality | Claude published 12 frozen tasks, 116 authored cases and a gated grader; exploratory drafts exist separately | No independently established CODE-Q1 semantic pass rate. Generated-code execution remains disabled; reviewed semantic isolation is absent |
 | Cache experiment | [Exploratory result audit](research/audits/cap4-cap32-exploratory-audit-2026-11-14.md): arithmetic reproduces 26.73% lower recorded completion time | Split invocations with lifecycle failure; no semantic assessment. Full schema-4 study still not run |
 | Operational components | PC worker reported bounded SSE/journal/collector checks, including 109 isolated tests at that checkpoint | Local-only components; publication blocked. No full-run readiness claim |
-| Context preflight | 25 prompt/reference blobs matched; Claude reports 118–300 rendered input and 31–137 reference tokens | Binary-added tokens remain null; no full-engine fit claim |
+| Context preflight | 25 blobs matched; reported external counts and a [tagged-source admission audit](research/context-preflight/token-admission-audit.md) | Source path adds no separate BOS/EOS; installed native/external parity and full fit remain unverified |
 
-Start with [current state](docs/CURRENT_STATE.md), [next worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
+Start with [current state](docs/CURRENT_STATE.md), the [owned research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
 
 ## Where active work lives
 
@@ -31,7 +31,7 @@ Main and Claude's branch have diverged; these links are intentional. No merge or
 
 ## Working rules
 
-The PC worker owns runtime operations; Claude owns the teach implementation and CODE-Q1 fixtures; Codex maintains shared evidence and coordinates review. Claude completed a reported renderer/tokenizer preflight. Binary-added tokens and independent installed-renderer parity remain unresolved.
+The PC worker owns runtime operations; Claude owns the teach implementation and CODE-Q1 fixtures; Codex maintains shared evidence and coordinates review. Claude completed a reported renderer/tokenizer preflight. The tagged Qwen36 text path adds no separate BOS/EOS; installed native count and independent renderer/tokenizer parity remain unresolved.
 
 Preserve the working launcher/model and all authors' turns. Keep credentials, private chats, raw personal logs, model weights and `.git` folders out of handoffs. Do not execute generated code or enable the teach hook under the current offline work.
 

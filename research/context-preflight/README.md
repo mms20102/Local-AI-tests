@@ -1,6 +1,6 @@
 # CODE-Q1 context preflight
 
-Checkpoint: 2026-11-14. Static input audit complete; **installed-renderer/tokenizer measurements reported by Claude**. Binary-added tokens remain unmeasured. No model request or candidate-code execution was performed for this work.
+Checkpoint: 2026-11-14. Static input audit complete; **installed-renderer/tokenizer measurements reported by Claude**. Installed native counts remain unmeasured here. The [tagged-source admission audit](token-admission-audit.md) finds no separately appended BOS/EOS in the audited Qwen36 text path, while native/external-tokenizer agreement remains unproved. No model request or candidate-code execution was performed for this preflight.
 
 ## Independent source/input checks
 
@@ -62,7 +62,7 @@ Round 23 corrects the earlier plain-ChatML count by four tokens per request. Pre
 
 ## Remaining evidence and bounded next steps
 
-Keep **binary-added input tokens, actual engine prompt tokens and full-engine fit null**. Do not send traffic solely to fill those fields. During a later otherwise-authorized request, correlate the exact serialized profile with usage and investigate any difference; do not silently invent a BOS correction or reuse 2.0 counts for 2.1.
+Keep **installed measured binary-added input tokens, actual engine prompt tokens and full-engine fit null** until correlated evidence exists. Source inspection narrows the generic overhead question but does not establish installed-binary/tokenizer parity. Claude's round-28 handoff is an offline comparison using installed renderer source and already-saved synthetic usage where provenance permits. Do not send traffic solely to fill these fields or silently invent a BOS correction; do not reuse 2.0 counts for 2.1.
 
 The observed bytes/token ratio is text-dependent. It does not prove every serialized request is conservatively admitted by a byte rule, and it does not justify dividing the live admission count by four. A later reviewed admission design should count actual serialization plus output/special-token reservation, keep units explicit, and preserve fail-closed behavior. No live budget or context setting is changed here.
 

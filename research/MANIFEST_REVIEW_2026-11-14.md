@@ -2,7 +2,7 @@
 
 **Live manifest changes are not part of this handoff.** This is a review packet, not a replacement checksum file or an updater.
 
-**Runtime reservation:** Claude's window 4 is open as reported in the latest checked co-chat. Hold runtime/gateway traffic and live inspection on ports 8000/4001/8080 until explicit closure. The review below may proceed only from noninterfering offline source/evidence; it does not release that reservation or authorize a test.
+**Current coordination note (round 28):** window 4 and subsequent windows through 6 were reported closed. References below to window 4 identify the historical review boundary, not a current hold. Later runtime/user-directed activity has occurred; the captured snapshot is not the current tree. Check the latest co-chat and coordinate resource use before any inspection. This packet authorizes no runtime or manifest change.
 
 ## Independent evidence
 
@@ -38,7 +38,7 @@ A separate independent offline review of the previously captured `7111656` diffs
 
 File-existence checks do not verify binary identity. There is still no independently recorded test pass tied to this exact source commit. This is a limited static-diff result, not comprehensive behavioral clearance.
 
-**After the matching window-4 closure**, recheck the actual current tree, full commit identities and file hashes against the captured snapshot before preparing any accepted change. If source or hashes differ, review that drift first. Keep the old manifest and unchanged entries intact. No live checksum file has been written; no runtime test or automatic trust renewal follows from this review.
+**Before any future accepted change**, recheck the actual current tree, full commit identities and file hashes against the captured snapshot. Window 4 is now historical; its closure does not clear later changes or current activity. If source or hashes differ, review that drift first. Keep the old manifest and unchanged entries intact. No live checksum file has been written; no runtime test or automatic trust renewal follows from this review.
 
 ## A. Establish the reviewed baseline
 

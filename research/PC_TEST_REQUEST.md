@@ -4,13 +4,13 @@ Updated 2026-11-14. This replaces the early 27-test packet; [the historical vers
 
 ## Ownership and current boundaries
 
-**Active hold:** window 4's exploratory cap4/cap32 run supersedes earlier live inspection clearance. Hold port 8000/4001/8080 traffic and live inspection until the matching closure. Only noninterfering offline review may continue; no source/manifest rewrite or runtime command. This is not the full schema-4 or semantic-quality benchmark.
+**Current coordination checkpoint: Claude round 28.** Window 4 and later windows through 6 were reported closed. The earlier window-4 hold is historical, not a current reservation. Do not infer an idle PC: round 28 reports a user-directed trial and a large download. Check the latest co-chat and coordinate actual activity before any port traffic, live inspection or resource-heavy work. No new runtime operation is authorized by this packet.
 
 **Independent inspection completed after window 3:** 2.0 engine/hash and original launchers confirmed, no 2.1 process, clean tree at 7111656. The remaining task is [scoped source/manifest review](MANIFEST_REVIEW_2026-11-14.md), not another runtime test. Preserve all three launcher commits; do not blindly regenerate the workbench hash or add an unreviewed launcher entry.
 
 The existing PC worker owns the operational adapter and laptop runtime. Claude owns teach/CODE-Q1 source and has supplied renderer/tokenizer measurements. Codex maintains evidence/source review. Do not start a competing engine or runner.
 
-Teach revision 6 completed independent offline persistence checks; hook stays **OFF**. No real taught store is reported present. Preserve its files, local Git history and gateway configuration.
+Teach rev6 completed independent offline persistence checks; rev10 has a scoped independent diagnostic-hardening pass. Claude reported the hook enabled after window 6, and rev10 not loaded through round 27. Exact loaded identity and current store contents are independently unverified. Preserve user notes, local Git history and gateway configuration; no activation, purge or restart follows from this packet.
 
 The worker's latest explicit component checkpoint reports 109 isolated tests for collector/admission, bounded SSE/journal and stalled-socket/cancellation behavior. Later local work is in a preserved 18-file commit; exact operational-benchmark readiness still needs its own worker checkpoint. The later independent runtime/source checkpoint is linked above. Component publication remains denied by automatic approval review; no branch was created and no retry/alternate upload is requested.
 
@@ -26,9 +26,9 @@ The worker's latest explicit component checkpoint reports 109 isolated tests for
 See [context-preflight](context-preflight/README.md) and its pinned 12-task input inventory. Claude completed that tokenizer-only work in rounds 22–23. Reported inputs span 118–300 tokens and fenced references including one end token span 31–137; maximum input plus 256 is 556. The normalized reported observation is included. Do not repeat those counts merely to fill a packet.
 
 - No model weights, inference, engine restart, package installation, GPU use or live API probe.
-- Identify installed renderer/flavor, tokenizer/special-token settings and their hashes. The tagged upstream schema has no documented count/tokenize endpoint; do not invent one.
+- Identify installed renderer/flavor, tokenizer/special-token settings and their hashes. The [tagged-source audit](context-preflight/token-admission-audit.md) distinguishes absent dedicated HTTP routes from native C/test interfaces; no diagnostic execution is requested.
 - Count the actual serialized synthetic request, including fixed system/helper text, chat frames and the nonthinking generation prefix. Count fenced authored references separately.
-- Report actual counts and 2048-context/256-output fit with special-token overhead explicitly included; missing/unverified values stay null.
+- Distinguish source-scope no-extra-BOS/EOS from actual installed native count/parity. Claude's next task is an offline installed-renderer/already-saved-usage comparison, with exact request provenance; missing measured values stay null.
 - Do not expose hidden cases, private prompts or credentials. Stop for conflicting worker activity or insufficient lightweight-task headroom.
 
 The static input audit does not validate token fit, and a fitting reference does not guarantee a generated response fits.
