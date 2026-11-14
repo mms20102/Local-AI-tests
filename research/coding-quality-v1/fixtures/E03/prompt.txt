@@ -1,0 +1,29 @@
+Fix the two files below and keep the public functions.
+- invoice.subtotal(items): items is a list of [quantity, unit_cents] rows; return the sum of quantity * unit_cents.
+- invoice.total(items, discount_cents): subtotal minus the discount, never below 0.
+- summary.render(items, discount_cents): return exactly the keys line_count (number of rows; duplicate rows count separately), subtotal_cents and total_cents.
+Do not modify inputs.
+
+```python
+# file: invoice.py
+def subtotal(items):
+    return sum(unit_cents for quantity, unit_cents in items)
+
+
+def total(items, discount_cents):
+    return subtotal(items) - discount_cents
+```
+
+```python
+# file: summary.py
+from invoice import subtotal, total
+
+
+def render(items, discount_cents):
+    return {
+        "line_count": len(set(map(tuple, items))),
+        "subtotal": subtotal(items),
+        "total": total(items, discount_cents),
+    }
+```
+Reply with one fenced Python code block per file. The first line inside each block must be a comment naming the file, for example `# file: invoice.py`. No explanation.

@@ -1,0 +1,4 @@
+Write solution.py with a function parse_kv(text: str) -> dict[str, str].
+Split the text with str.splitlines(). Ignore blank lines and lines whose first non-whitespace character is #. Split every other line at its first =, and strip outer whitespace from the key and from the value; later = characters stay in the value. A repeated key keeps its last value. An empty value is allowed. A line with an empty key or with no = raises ValueError.
+Example: parse_kv("a = 1\n# note\nb=x=y") returns {"a": "1", "b": "x=y"}.
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

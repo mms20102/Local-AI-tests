@@ -1,0 +1,39 @@
+Implement all seven functions in bundle.py below.
+- clamp(value, lo, hi): value limited to the inclusive range lo..hi (lo <= hi).
+- sign(value): -1, 0 or 1.
+- is_even(value): True or False.
+- first_or_none(values): the first item, or None for an empty list.
+- last_or_none(values): the last item, or None for an empty list.
+- count_nonempty(values): how many strings have length > 0 (a space counts as non-empty).
+- reverse_text(text): the text reversed by Unicode code points.
+Do not modify inputs.
+
+```python
+def clamp(value, lo, hi):
+    raise NotImplementedError
+
+
+def sign(value):
+    raise NotImplementedError
+
+
+def is_even(value):
+    raise NotImplementedError
+
+
+def first_or_none(values):
+    raise NotImplementedError
+
+
+def last_or_none(values):
+    raise NotImplementedError
+
+
+def count_nonempty(values):
+    raise NotImplementedError
+
+
+def reverse_text(text):
+    raise NotImplementedError
+```
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

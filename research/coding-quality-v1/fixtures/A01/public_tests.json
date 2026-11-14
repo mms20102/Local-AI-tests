@@ -1,0 +1,12 @@
+[
+ {
+  "args": [
+   "a b a"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "a": 2,
+   "b": 1
+  }
+ }
+]

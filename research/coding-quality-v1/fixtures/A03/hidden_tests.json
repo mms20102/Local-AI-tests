@@ -1,0 +1,87 @@
+[
+ {
+  "args": [
+   "",
+   3
+  ],
+  "call": "chunks.chunk_text",
+  "expect": []
+ },
+ {
+  "args": [
+   "abc",
+   3
+  ],
+  "call": "chunks.chunk_text",
+  "expect": [
+   "abc"
+  ]
+ },
+ {
+  "args": [
+   "abc",
+   10
+  ],
+  "call": "chunks.chunk_text",
+  "expect": [
+   "abc"
+  ]
+ },
+ {
+  "args": [
+   "abcdef",
+   3
+  ],
+  "call": "chunks.chunk_text",
+  "expect": [
+   "abc",
+   "def"
+  ]
+ },
+ {
+  "args": [
+   "سلام عليكم",
+   4
+  ],
+  "call": "chunks.chunk_text",
+  "expect": [
+   "سلام",
+   " علي",
+   "كم"
+  ]
+ },
+ {
+  "args": [
+   "a",
+   1
+  ],
+  "call": "chunks.chunk_text",
+  "expect": [
+   "a"
+  ]
+ },
+ {
+  "args": [
+   "abc",
+   0
+  ],
+  "call": "chunks.chunk_text",
+  "raises": "ValueError"
+ },
+ {
+  "args": [
+   "",
+   0
+  ],
+  "call": "chunks.chunk_text",
+  "raises": "ValueError"
+ },
+ {
+  "args": [
+   "abc",
+   -2
+  ],
+  "call": "chunks.chunk_text",
+  "raises": "ValueError"
+ }
+]

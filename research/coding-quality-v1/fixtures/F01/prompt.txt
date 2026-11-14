@@ -1,0 +1,4 @@
+Write solution.py with a function stable_unique(values: list[str]) -> list[str].
+Return the first occurrence of each distinct string, in the original order. Comparison is case-sensitive. Empty strings and any Unicode are valid. Do not modify the input list.
+Example: stable_unique(["b", "a", "b"]) returns ["b", "a"].
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

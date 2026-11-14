@@ -1,0 +1,12 @@
+[
+ {
+  "args": [
+   "a = 1\n# note\nb=x=y"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "a": "1",
+   "b": "x=y"
+  }
+ }
+]

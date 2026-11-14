@@ -1,0 +1,8 @@
+The file cache.py below has a bug. Fix lookup(cache: dict, key: str, default) so that it returns cache[key] whenever the key exists, even when the stored value is None, False, 0, an empty string, an empty list or an empty dict. Return default only when the key is absent. Do not modify the arguments.
+Example: lookup({"a": 0}, "a", 5) returns 0.
+
+```python
+def lookup(cache, key, default):
+    return cache.get(key) or default
+```
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

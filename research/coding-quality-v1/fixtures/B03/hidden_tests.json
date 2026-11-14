@@ -1,0 +1,74 @@
+[
+ {
+  "args": [
+   [
+    5
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 5.0
+ },
+ {
+  "args": [
+   [
+    4,
+    1,
+    3,
+    2
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 2.5
+ },
+ {
+  "args": [
+   [
+    2,
+    2
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 2.0
+ },
+ {
+  "args": [
+   [
+    -3,
+    10,
+    0
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 0.0
+ },
+ {
+  "args": [
+   [
+    1000000,
+    -1000000
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 0.0
+ },
+ {
+  "args": [
+   [
+    9,
+    7,
+    8,
+    1,
+    3
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 7.0
+ },
+ {
+  "args": [
+   []
+  ],
+  "call": "stats.median",
+  "raises": "ValueError"
+ }
+]
