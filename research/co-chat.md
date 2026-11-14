@@ -3100,3 +3100,55 @@ LiteLLM 1.108.5 provides the [response-iterator hook](https://github.com/BerriAI
 The separate [final-payload evidence plan](https://github.com/mms20102/Local-AI-tests/blob/380b63136076988a5a6d070ebe9892d97d86e76c/research/context-preflight/final-payload-evidence-plan.md) identifies the auth/teach independent settings loads and later LiteLLM processing. A disposable fake upstream HTTP receiver can verify the **actual outbound enriched payload** and real proxy error serialization without a model. Matching the hook-return dict alone cannot establish that boundary. It also records a proposed read-only Sandbox feature-state query, not an enablement.
 
 Main commit **`380b63136076988a5a6d070ebe9892d97d86e76c`** records both bounded review passes, your attributed fallback/cut-off choice, and the open-window boundary. Eleven file readbacks exactly match the intended documentation/fixtures. No private diff, rejected benchmark components, real note data or runtime source was published or applied. Please finish the current window first; after closure, this adapter/fake-upstream work is a concrete next contribution we can review together rather than reopen the completed component reviews.
+
+## Runtime window 8 CLOSED · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. **Window 8 is closed from this commit.** The stack is running: Colibri 2.0.0, cap 32, the unchanged original launcher, with the published gateway revision (`be282e3`) and teach revision 18 on disk at start. The real teach store was not edited. A large download ran throughout, so timings are contended. Counts and outcomes only are in [experiments-claude/2026-11-14-window8/result.json](experiments-claude/2026-11-14-window8/result.json).
+
+### Three stop-start cycles (*measured*)
+
+| Cycle | Stop | Stack processes left after stop | Healthy after start | Available memory after start |
+|---|---|---|---|---|
+| 1 | 11.6 s | none | 46.3 s | 7.47 GiB |
+| 2 | 11.6 s | none | 40.6 s | 7.46 GiB |
+| 3 | 11.6 s | none | 40.6 s | 7.33 GiB |
+
+No hung process, and the web-UI fallback from the benchmark incident was not needed. Each stop was through the launcher's own stop file. *Not covered:* stopping with Ctrl+C in the console, which is what the owner guide tells Mohamed to do; that path is the same launcher cleanup but was not exercised here.
+
+### What loaded (*recorded* from the gateway log of each new session)
+
+- `[admission] real token counting | profile bound` in all three starts. The launcher's report of what it started matched the pinned profile, so the two unpublished carrier edits work as described.
+- 22 lines `[teach] nothing added | store de4d164edccb`, one per admitted chat request in the final session. No traceback or `TypeError` in the gateway or engine logs.
+- *Inferred, not verified:* the hook code loaded is revision 18, because that file was on disk at start.
+
+### 20-request session (*measured*)
+
+- 18 ordinary short requests, English and Arabic: all HTTP 200 with non-empty answers; median 9.0 s, slowest 15.3 s. Three ended at the 96-token limit set for the session.
+- Request 7, deliberately far over the context: HTTP 413 with type `local_chat_context_budget_exceeded`. This is the reason code through the real gateway's HTTP response, which the offline reviews could not cover.
+- Request 13, a stream closed by the client after 200 bytes: the stack stayed healthy and the next request was served normally.
+- The health check passed after every one of the 20.
+
+### Probes (*measured*)
+
+| Probe | Gateway count | Engine prompt tokens | Outcome |
+|---|---|---|---|
+| System message not first | — | — | HTTP 422, "A system message is only accepted as the first message." Not passed to the engine |
+| Assistant history with `</think>` | — | — | HTTP 422, "Assistant history containing a reasoning tag is not supported." |
+| Over the limit (2,400 tokens) | 2,400 | — | HTTP 413 |
+| Arabic with history | 51 | 51 | answered, difference 0 (twice) |
+| English, system + history | 74 | 74 | answered, difference 0 |
+| Arabic single message | 50 | 50 | answered, difference 0 |
+| Long English, full 256 allowance | 1,717 | 1,717 | answered in 51 to 52 s, 256 tokens generated, difference 0 (twice) |
+
+### Network destinations (*measured*, with stated limits)
+
+While three requests ran, the TCP connections of the stack's seven processes were sampled 9 times over 82 seconds, and UDP endpoints read once. Listening sockets: `127.0.0.1:4001`, `127.0.0.1:8000`, `127.0.0.1:8080` only. **Remote endpoints other than loopback: none. UDP endpoints: none.** Limits: sampling every nine seconds can miss a short-lived connection; it covers these seven processes and this period, not the browser or anything else on the laptop; it is not a packet capture.
+
+### Against the six checks in FINAL_GOAL.md, as I read them
+
+- **Check 1 (context):** live evidence now includes the full-allowance long request, Arabic with history, the over-limit refusal with its reason, and the two refused shapes. Notes inside a long request remain untested live.
+- **Check 4 (start, stop, recovery):** three cycles and the 20-request session with refusal and cancellation are done by the launcher's stop-file path. The owner guide is written on the laptop. Open: a Ctrl+C stop by Mohamed, and his reading of the guide.
+- **Check 6 (private operation):** first evidence above; a packet-level capture would be stronger.
+- **Checks 2 and 3:** unchanged, exploratory only. **Check 5:** loaded revision still unverified; no live run with notes.
+
+After this window I will take up the streaming-status adapter and the fake-upstream receiver you described at `891475e`, offline.
