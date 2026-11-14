@@ -2,17 +2,23 @@
 
 Updated 2026-11-14. This replaces the early 27-test packet; [the historical version](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/research/PC_TEST_REQUEST.md) remains available. No new model request or runtime change is authorized by this packet.
 
-## Ownership and current boundaries
+## Collaboration and current boundaries
 
 **Current coordination checkpoint: Claude round 28.** Window 4 and later windows through 6 were reported closed. The earlier window-4 hold is historical, not a current reservation. Do not infer an idle PC: round 28 reports a user-directed trial and a large download. Check the latest co-chat and coordinate actual activity before any port traffic, live inspection or resource-heavy work. No new runtime operation is authorized by this packet.
 
 **Independent inspection completed after window 3:** 2.0 engine/hash and original launchers confirmed, no 2.1 process, clean tree at 7111656. The remaining task is [scoped source/manifest review](MANIFEST_REVIEW_2026-11-14.md), not another runtime test. Preserve all three launcher commits; do not blindly regenerate the workbench hash or add an unreviewed launcher entry.
 
-The existing PC worker owns the operational adapter and laptop runtime. Claude owns teach/CODE-Q1 source and has supplied renderer/tokenizer measurements. Codex maintains evidence/source review. Do not start a competing engine or runner.
+Existing PC-side work supplies the operational adapter and laptop observations. Claude has contributed teach/CODE-Q1 source and renderer/tokenizer measurements; Codex contributes evidence/source review. Help extend the existing components without a competing engine or runner.
 
 Teach rev6 completed independent offline persistence checks; rev10 has a scoped independent diagnostic-hardening pass. Claude reported the hook enabled after window 6, and rev10 not loaded through round 27. Exact loaded identity and current store contents are independently unverified. Preserve user notes, local Git history and gateway configuration; no activation, purge or restart follows from this packet.
 
 The worker's latest explicit component checkpoint reports 109 isolated tests for collector/admission, bounded SSE/journal and stalled-socket/cancellation behavior. Later local work is in a preserved 18-file commit; exact operational-benchmark readiness still needs its own worker checkpoint. The later independent runtime/source checkpoint is linked above. Component publication remains denied by automatic approval review; no branch was created and no retry/alternate upload is requested.
+
+## Latest captured runner assessment
+
+The coordinator relayed a read-only assessment of snapshot `1f067428`: **not ready for live runs**. Planner/SSE/journal/resource components exist and 124 tests previously passed, but the one-arm coordinator is fake-backend-only and the CLI refuses execution. Missing: real launch/identity/readiness, nested Windows Job compatibility, bounded monitoring/cleanup, trustworthy GPU/commit admission and independent provenance. This is captured-snapshot evidence, not proof of newer PC state; no delivery date is established. Scratch directories, Windows Jobs and fixed loopback endpoints do not themselves provide a security sandbox.
+
+See the [shared finish-line proposal](FINAL_GOAL.md) and [grading-isolation design candidate](WINDOWS_ISOLATION_PROPOSAL.md). This packet authorizes neither generated-code execution nor a new live run.
 
 ## A. Unblocked local preparation
 
@@ -38,7 +44,7 @@ The static input audit does not validate token fit, and a fitting reference does
 Capture only missing, sanitized evidence; avoid repeating the broad inventory:
 
 - Immutable installed engine/model identity. Full weight hashing can be I/O-heavy; schedule it appropriately and preserve the working process.
-- Fresh host commit/physical and GPU headroom, production-port ownership and relevant paging counters. Earlier ~0.94 GiB commit-headroom samples are not current clearance.
+- Fresh host commit/physical and GPU headroom, production-port process identities and relevant paging counters. Earlier ~0.94 GiB commit-headroom samples are not current clearance.
 - Names-only environment evidence for lookup absence and pinned placement history. `USAGE_SAVE=0` prevents writes but still permits reads; fresh processes do not flush OS cache.
 - Exact current implementation/stop/rollback status, with unknowns named.
 
@@ -46,10 +52,10 @@ Do not raise cap/context/tier or stop production ports merely to pass admission.
 
 ## D. Runtime work remains gated
 
-Full arm execution requires pinned identity, completed owned lifecycle/restoration, fresh admission success and a coordinator-confirmed idle window. One model instance only. No interference with user traffic.
+Full arm execution requires pinned identity, verified scoped lifecycle/restoration, fresh admission success and a coordinated idle window. One model instance only. No interference with user traffic.
 
 Keep the frozen schema-4 cap4/cap32 plan, lookup unset, 60 measured entries plus 10 warmups. Other comparisons need their own plan. Preserve all failures/truncations and planned/unobserved denominators; unknown token counts do not support comparable-length speed claims.
 
-Round 24 reports an unstarted side-by-side 2.1 install and changes to worker-owned workbench.py at local commit cf4d369; its old checksum is stale. Review/reconcile that additive selector and current checksum privately before relying on the earlier manifest; do not start 2.1 here. Claude has since reported a first start and restoration; the local diff/identity/test claims still need independent read-only inspection. A version comparison needs a separate frozen identity/plan.
+Round 24 reports an unstarted side-by-side 2.1 install and changes to workbench.py at local commit cf4d369; its old checksum is stale. Review/reconcile that additive selector and current checksum privately before relying on the earlier manifest; do not start 2.1 here. Claude has since reported a first start and restoration; the local diff/identity/test claims still need independent read-only inspection. A version comparison needs a separate frozen identity/plan.
 
 No generated code execution, teach activation, UI-control bypass, live purge/recovery or rejected-publication retry is part of this packet. Return sanitized status/evidence through the coordinator, preserving local work.

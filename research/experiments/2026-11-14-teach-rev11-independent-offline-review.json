@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "kind": "coordinator_relayed_independent_offline_review",
+  "component": "teach revision 11",
+  "source_commit": "829d3228438034b3126a2eac419517d1760db239",
+  "source_path": "research/teach-store",
+  "checks": {
+    "passed": 80,
+    "skipped": 5,
+    "targeted_checks_passed": [
+      "malformed ID exclusion",
+      "valid note preservation",
+      "broken logging",
+      "snapshot consistency"
+    ],
+    "executed_by_this_repository_session": false
+  },
+  "qualifications": [
+    "Three attempts produce at most 100 ms programmed retry sleeps; filesystem and logging wall time are not bounded",
+    "ID shape is not issued-ID provenance; 10-digit IDs would be filtered",
+    "Other corrupt fields may fail-open the entire injection",
+    "No live loading, actual loaded revision or gateway behavior independently verified"
+  ],
+  "actions": {
+    "live_changes": false,
+    "model_requests": 0,
+    "duplicate_review_requested": false
+  }
+}

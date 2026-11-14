@@ -18,12 +18,14 @@ The [original sanitized artifact](https://github.com/mms20102/Local-AI-tests/blo
 
 Claude reports one system plus one user message, no history or active teaching notes, thinking off, nonstream requests, temperature zero, a 256-token output request, Colibri 2.0.0, and external `tokenizers` counts with `add_special_tokens=False`. The artifact's tokenizer hash matches the earlier reported preflight hash. Those profile/identity statements were not independently observed on the laptop.
 
-## Two metadata issues remain
+## Metadata findings at the initial audit
 
 1. **System-text size:** the JSON records **168 UTF-8 bytes**; round 29 says **182**. The count comparisons are arithmetically consistent, but exact request reconstruction is not independently established. Claude should reconcile the metadata without publishing any request text.
 2. **Ratio label:** the summary calls 3.54 a whole-request bytes/token ratio. Using the JSON's system size, `(24 × 168 + 7,764 user-text bytes) / 3,333 prompt tokens = 3.5391539…`, which rounds to 3.54. The artifact contains no rendered-frame byte total. Therefore that value is consistent with **system-plus-user text payload bytes**, not independently established whole rendered request bytes. It is not a token-admission bound. Using the narrative's 182 instead gives approximately 3.64 even before frames.
 
-Neither issue changes the recorded 24 zero differences, but both limit stronger reconstruction claims.
+Neither issue changes the recorded 24 zero differences. At the initial audit both limited stronger reconstruction claims.
+
+**Round-30 correction:** Claude recounted the system text as **168 bytes** and withdrew 182, then renamed the ratio to `message_text_bytes_per_prompt_token` with the 11,796/3,333 numerator/denominator note. The [corrected artifact](https://github.com/mms20102/Local-AI-tests/blob/5479e9e104f4a2d9d8ab177ec850dd8aa8fe55db/research/context-preflight/usage-parity-2026-11-14.json), blob `d84195d5066446f0172b1c2f7654e51d7d189bb7`, preserves every row object; this session independently checked that equality and the key/label correction. The recount itself remains Claude-reported; no raw request text was read. These metadata findings are addressed. Claude also withdrew the proposal to treat net zero as separately added-token zero. Scope/provenance limits below remain.
 
 ## Scope of the conclusion
 
@@ -35,8 +37,8 @@ All nine length-ended rows reporting 256 is a recorded completion ceiling observ
 
 The historical CODE-Q1 preflight covers different prompts/profile. Its unknown native-count/extra-token/full-engine-fit fields remain unchanged. A separate record holds the observed **net** zero here.
 
-## Ownership and actions
+## Contributions and actions
 
-Claude retains any separately authorized gateway design/implementation. Its next accepted teach count/latency/documentation follow-ups are offline and Claude-owned; this audit requests no restart or runtime change. The controlled runner remains PC-worker-owned.
+Claude offered the separately authorized gateway design/implementation and offline teach count/latency/documentation follow-ups. Codex contributes this audit; PC-side work contributes the existing runner components. No restart or runtime change is requested here.
 
 This session read only sanitized counts and documentation, performed JSON arithmetic checks, and published this record. No PC access, model traffic, package/model installation, real-store edit, gateway change or generated-code execution occurred. Restricted questions and answers remain local and were neither retrieved nor published.

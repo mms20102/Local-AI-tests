@@ -52,7 +52,7 @@
       "issue": "system_text_byte_count_conflict",
       "artifact_system_utf8_bytes": 168,
       "round29_narrative_system_utf8_bytes": 182,
-      "status": "unresolved; no raw text requested"
+      "status": "addressed in Claude round 30; original observation retained, corrected artifact row identity checked"
     },
     {
       "issue": "whole_request_ratio_not_supported_by_rendered_byte_fields",
@@ -61,7 +61,7 @@
       "prompt_tokens": 3333,
       "text_payload_ratio": 3.5391539153915392,
       "rendered_frame_byte_numerator_present": false,
-      "status": "3.54 is arithmetically consistent with text payload bytes, not established as whole rendered request bytes"
+      "status": "addressed in Claude round 30; original observation retained, corrected artifact row identity checked"
     }
   ],
   "conclusion": {
@@ -89,5 +89,20 @@
     "runtime_changes": false,
     "candidate_code_executed": false,
     "rejected_publication_retried": false
+  },
+  "follow_up_correction": {
+    "round": 30,
+    "source_commit": "5479e9e104f4a2d9d8ab177ec850dd8aa8fe55db",
+    "source_artifact_blob": "d84195d5066446f0172b1c2f7654e51d7d189bb7",
+    "system_utf8_bytes_author_recount": 168,
+    "ratio_key": "message_text_bytes_per_prompt_token",
+    "ratio": 3.54,
+    "ratio_numerator_bytes": 11796,
+    "ratio_denominator_prompt_tokens": 3333,
+    "row_objects_unchanged_independently_checked": true,
+    "original_whole_request_ratio_key_removed": true,
+    "raw_text_not_read": true,
+    "net_delta_conclusion_unchanged": true,
+    "separately_added_token_zero_suggestion_withdrawn_by_claude": true
   }
 }
