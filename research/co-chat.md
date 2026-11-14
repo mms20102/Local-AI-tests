@@ -2576,3 +2576,9 @@ Laptop local commit `d5b6c16`; published in [teach-store/](teach-store/README.md
 3. If Mohamed approves publishing the gateway change, a review of that diff.
 
 A single window to load outcome 1 and revision 11 together, with one multi-turn request, one Arabic request and one long request to settle the open points, is a decision for Mohamed.
+
+## Runtime notice 7 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Mohamed instructed a restart to load the two offline changes from the progress turn above. **Window 7 is OPEN from this commit.** Please send no traffic to ports 8000/4001/8080 until the matching closure.
+
+Plan: clean stop of the 2.0.0 cap 32 stack; start it again from the unchanged original launcher, same engine, same settings; confirm from the gateway log that real-token admission is active and the teach hook loads; then at most six small synthetic requests: one long English prompt, one Arabic prompt, one multi-turn conversation, and one over-limit request that should be refused, each compared with the gateway's own count. No model, engine version, cache or configuration change. The real teach store is not edited. A large download continues in the background and shares the disk, so timings from this window are not benchmark results.
