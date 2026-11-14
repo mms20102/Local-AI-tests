@@ -1857,3 +1857,57 @@ Claude's host-pool-off test is **reported intent**, not a completed result, a ve
 
 Please identify the matching window explicitly in the closure/result so a stale closure cannot release another window. Hook stays **OFF**. No competing test, start/stop, gateway change, host-pool adjustment or publication retry is requested here.
 
+
+## Runtime window 2 CLOSED · Claude (laptop session) — 2026-11-14, about 16:50 local
+
+Written by Claude on the AI laptop. **This closes window 2, the one opened by "Runtime notice 2" (Colibri 2.1.0 with the host pool off).** Window 1 was closed earlier at `6570684`. **The Colibri 2.0.0 fast-profile stack is running again**; the engine executable is in the 2.0.0 runtime folder and all three ports are listening. I plan no further runtime action. PC worker: ports 8000, 4001 and 8080 are yours.
+
+All values are *measured* on the laptop in this session, single observations, taken as samples and not peaks.
+
+### Result against the rule set before the test
+
+Rule from notice 2: keep 2.1.0 running only if both requests complete, at least 5 GiB RAM is available and commit headroom is at least 1 GiB.
+
+| Condition | 2.1.0, host pool off | Met? |
+|---|---|---|
+| Requests complete | 4 of 4, `finish_reason: stop`, expected code | Yes |
+| RAM available after the requests | 4.44 GiB | **No** |
+| Commit headroom after the requests | 0.55 GiB (32.68 of 33.23 GiB) | **No** |
+
+So I restored 2.0.0, as the rule required.
+
+### Same four requests on each version
+
+Each stack was freshly started with the 32-slot profile, then given the same four synthetic drafts in the same order ("add", "clamp", "add", "clamp").
+
+| | 2.1.0, pool off | 2.0.0 (restored) |
+|---|---|---|
+| Engine header | `cache=32/layer`; no host-pool lines; warm start 1,748 experts; `KV cache: float16` | `cache=32/layer`; warm start 1,748 experts |
+| Idle after start: commit / limit | 28.37 / 32.22 GiB | 28.39 / 32.22 GiB |
+| Idle after start: RAM available | 9.05 GiB | 8.98 GiB |
+| After 4 requests: commit / limit | 32.68 / 33.23 GiB | 30.68 / 32.22 GiB |
+| After 4 requests: commit headroom | 0.55 GiB | 1.54 GiB |
+| After 4 requests: RAM available | 4.44 GiB | 6.48 GiB |
+| After 4 requests: engine private / working set | 11.90 / 6.59 GiB | 9.69 / 4.37 GiB |
+| Request totals, in order | 8.98, 8.38, 6.14, 5.47 s | 10.55, 6.12, 3.41, 4.03 s |
+| First visible text, in order | 5.91, 4.72, 3.62, 2.36 s | 5.58, 3.03, 1.84, 1.95 s |
+| Host routed-expert time over the 84 steps | 24.8 s | 20.4 s |
+| RAM hits / disk loads, cumulative | 15,081 / 14,787 | 15,043 / 14,719 |
+| No-key request to gateway and engine | 401 and 401 | not re-checked |
+
+### What I conclude, and what I do not
+
+1. **Switching the host pool off works as the engine describes:** the cache stays at 32 and memory at start matches 2.0.0.
+2. **Under load 2.1.0 still used about 2.2 GiB more engine memory than 2.0.0 at the same point** in the same four-request sequence, and the commit limit rose by about 1 GiB during its run. I do not know which 2.1.0 component accounts for it; float16 KV should make state smaller, not larger.
+3. **I saw no speed benefit from 2.1.0 here.** In this one sequence its requests were not faster than 2.0.0's and its host-side expert time was higher. Four requests per version with one run each is not a benchmark: the difference could be noise or cache state, and I claim neither a slowdown nor a gain. It is simply no evidence for switching.
+4. The cache-hit and disk-load counts are nearly identical, as expected with the same cap and history.
+
+**Recommendation to Mohamed:** stay on 2.0.0. On this laptop 2.1.0 costs memory that is already short and showed nothing in return. That could change with more RAM, or with a proper frozen comparison by the PC worker.
+
+### State left on the laptop
+
+- Running: 2.0.0 from `Start-Fast-Local-Chat.cmd`.
+- Installed and stopped: 2.1.0. `Start-Fast-Local-Chat-2.1.cmd` now passes `--no-host-pool`.
+- `workbench.py` has two optional arguments from today, `--engine-version` (default 2.0.0) and `--no-host-pool`; laptop local commits `cf4d369` and `d9aadbf`. The 2.1 launcher's one-line edit is not yet committed locally.
+- Model folder history file hash unchanged; teach hook off; no gateway or setting change.
+- Traffic I sent in window 2: four drafts on 2.1.0 and four on 2.0.0, all synthetic, through the gateway helper.
