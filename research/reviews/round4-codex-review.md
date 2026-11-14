@@ -52,3 +52,25 @@ The dedicated workflow research independently reached the overlapping-range and 
 The 0.1.5 archive is now confirmed in Library with matching filename/size metadata. Library supplies no readable ZIP contents in this mode, and this session has no usable extraction shell. No archive byte hash or source audit was independently performed here. The archive predates the latest 42-test report, so its earlier checksum must not be presented as that newer revision's identity.
 
 To unblock source review, provide selected sanitized source/test files as readable repository files on the worker's own branch. No duplicate harness or inference is requested.
+
+## Runtime research and Claude round 5 integration
+
+I read the runtime workstream's report at main commit 3f949f8c66c96e073bd1dd997f16306a5739534a and Claude's genuine round 5. I independently checked that the annotated v2.0.0 tag resolves to bf2442915d6e3dd4cdfd2eb9c2a3d2aa44a25850, then inspected the cited release source:
+
+- c/qwen36.c lines 2450–2494 read RAM_GB only inside the automatic-cap branch. Explicit positive cap 4/32 bypasses it. My earlier blanket guide-derived "never read" wording is too broad and is corrected here.
+- c/qwen36.c lines 6335–6379 explicitly turn off the Vulkan dense chain when the active chain has more than one mux slot. This establishes tagged release-source behavior, beyond binary strings, without proving the laptop's executable is byte-identical to that release.
+- c/vk_tier.c lines 1617–1643 enable exclusive behavior unless the environment begins with 0, with an allocation-failure fallback. Do not call an already-active default a new optimization.
+
+[Release source](https://github.com/JustVugg/colibri/blob/bf2442915d6e3dd4cdfd2eb9c2a3d2aa44a25850/c/qwen36.c) · [Tier source](https://github.com/JustVugg/colibri/blob/bf2442915d6e3dd4cdfd2eb9c2a3d2aa44a25850/c/vk_tier.c) · [Runtime report](https://github.com/mms20102/Local-AI-tests/blob/3f949f8c66c96e073bd1dd997f16306a5739534a/research/RUNTIME_MEMORY_RESEARCH_2026-11-14.md)
+
+Claude's log observations already answer three audits: dense weights device-only with 1.81 GiB host RAM released; packed int4 CPU expert kernel active; 3 GiB tier full at 1748 experts with no failed uploads. These are Claude's laptop observations, not new measurements by this session. No re-enable/no-op gain is claimed. Engine loads must not be equated with physical storage reads.
+
+Priority remains: finish evidence contracts, reproduce 4 vs 32, lookup off/on, then 32 vs 48 if justified. Tier 3 vs 3.5 GiB and OMP 8 vs 6 are separate later hypotheses. Main and Claude's branch have diverged; this review does not overwrite either branch.
+
+## Model-stream summary, with compatibility boundaries
+
+The v2.0.0 qwen36 guide explicitly names Qwen3-Coder-30B-A3B and architecture-identical KAT-Coder-V2.5-Dev. I verified those mentions in the release guide; neither is installed/tested by this workstream or established better locally. [Release model guide](https://github.com/JustVugg/colibri/blob/bf2442915d6e3dd4cdfd2eb9c2a3d2aa44a25850/docs/qwen36.md)
+
+The model stream also proposes Qwen3.5-9B GGUF as a smaller possibly GPU-resident trial and Jais-3-7B as an Arabic comparison requiring newer compatible llama.cpp. Those remain stream-reported candidates, not verified Colibri 2.0.0 compatibility or guaranteed laptop residency. Published benchmark methodology differences do not establish a local winner.
+
+Preserve the original model; one model at a time; compare complete useful outputs, coding checks, Arabic, actual memory and latency. A model/runtime migration must be identified separately from a model-only comparison. No download was started.
