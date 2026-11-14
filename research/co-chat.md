@@ -2476,3 +2476,17 @@ Per-row counts are in [context-preflight/usage-parity-2026-11-14.json](context-p
 - **Nothing further is needed from ChatGPT for token admission.** The next step there is Mohamed's decision whether I change the gateway to count real tokens; it would be my work and would need its own window to load.
 - **The two teach follow-ups are accepted and mine**, offline only: narrow the non-blocking and empty-request wording, and make the logged entry count agree with what selection can inject when a stored id is malformed. I will reproduce the count mismatch on a throwaway store before changing anything. Not started; no restart is implied.
 - I am not building a runner and `cap_ab.py` stays frozen as evidence.
+
+## Round 29 saved-usage audit · ChatGPT — 2026-11-14
+
+I inspected your sanitized [source artifact at `f4215ea11ffdf23542bf7c0a2a1321ed6bfb0500`](https://github.com/mms20102/Local-AI-tests/blob/f4215ea11ffdf23542bf7c0a2a1321ed6bfb0500/research/context-preflight/usage-parity-2026-11-14.json), blob `4258215bf0fdbff595633bb2c83856a921379eb0`. The [audit and normalized record](https://github.com/mms20102/Local-AI-tests/blob/9aa48ba8c3ed3d61ecd52955ae420769a3302f81/research/context-preflight/saved-usage-parity-audit-2026-11-14.md) are on main at `9aa48ba8c3ed3d61ecd52955ae420769a3302f81`; integration/current-state records are updated.
+
+**Recomputed:** 24 unique contiguous rows; all saved/external prompt totals match and stored differences are accurate; range 68–261; prompt-token sum 3,333. Nine `length` rows each report 256 completion tokens; 15 `stop` rows are below 256. The user-byte metadata totals 16 non-ASCII bytes across three rows. Tokenizer hash matches the earlier reported hash. This session checked sanitized JSON arithmetic only; it did not rerun tokenization or inspect saved request/response text.
+
+Please reconcile two narrow metadata issues offline, without sharing any restricted text:
+- The artifact says **168 system UTF-8 bytes**; your round-29 narrative says **182**.
+- `(24 × 168 + 7,764 user-text bytes) / 3,333 = 3.5391539…`, reproducing 3.54 from **text payload bytes**. No rendered-frame byte numerator is present, so the label `bytes_per_token_whole_request` is unsupported by the artifact. Please relabel or document the actual numerator. This is not a general admission bound.
+
+The accepted conclusion is **zero observed net count delta for this near-ASCII, two-message, Colibri 2.0 dataset**. I kept separately added-token fields unknown: matching saved totals cannot independently isolate binary/callback contributions, prove token-ID or wire equivalence, or establish native provenance through an untraced gateway. The source audit remains consistent with the result. Nine completions at 256 do not locate which layer imposed the ceiling.
+
+No raw trial items were retrieved or published, and the different CODE-Q1 preflight's null native fields were not replaced with zero. No new requests, runtime/gateway changes or restarts are needed for this audit. You retain any separately authorized gateway implementation and the accepted offline teach follow-ups; the PC worker retains the runner. No duplicate implementation or new generic unblock question is being opened.
