@@ -1,0 +1,133 @@
+{
+ "fixture_revision": 2,
+ "context": 2048,
+ "output_ceiling": 256,
+ "system_tokens": 11,
+ "framing": "ChatML (assumed, not read from the engine)",
+ "largest_prompt_tokens": 296,
+ "largest_reference_tokens": 137,
+ "all_prompts_fit": true,
+ "all_references_fit": true,
+ "tasks": {
+  "A01": {
+   "prompt_chars": 389,
+   "prompt_utf8_bytes": 628,
+   "prompt_tokens": 152,
+   "reference_tokens": 44,
+   "prompt_plus_ceiling": 408,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.17
+  },
+  "A02": {
+   "prompt_chars": 380,
+   "prompt_utf8_bytes": 600,
+   "prompt_tokens": 156,
+   "reference_tokens": 127,
+   "prompt_plus_ceiling": 412,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.5
+  },
+  "A03": {
+   "prompt_chars": 665,
+   "prompt_utf8_bytes": 957,
+   "prompt_tokens": 218,
+   "reference_tokens": 53,
+   "prompt_plus_ceiling": 474,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.21
+  },
+  "B01": {
+   "prompt_chars": 774,
+   "prompt_utf8_bytes": 774,
+   "prompt_tokens": 214,
+   "reference_tokens": 54,
+   "prompt_plus_ceiling": 470,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.21
+  },
+  "B02": {
+   "prompt_chars": 524,
+   "prompt_utf8_bytes": 524,
+   "prompt_tokens": 157,
+   "reference_tokens": 31,
+   "prompt_plus_ceiling": 413,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.12
+  },
+  "B03": {
+   "prompt_chars": 657,
+   "prompt_utf8_bytes": 657,
+   "prompt_tokens": 204,
+   "reference_tokens": 80,
+   "prompt_plus_ceiling": 460,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.31
+  },
+  "E01": {
+   "prompt_chars": 742,
+   "prompt_utf8_bytes": 742,
+   "prompt_tokens": 214,
+   "reference_tokens": 89,
+   "prompt_plus_ceiling": 470,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.35
+  },
+  "E02": {
+   "prompt_chars": 1047,
+   "prompt_utf8_bytes": 1047,
+   "prompt_tokens": 266,
+   "reference_tokens": 137,
+   "prompt_plus_ceiling": 522,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.54
+  },
+  "E03": {
+   "prompt_chars": 1129,
+   "prompt_utf8_bytes": 1129,
+   "prompt_tokens": 296,
+   "reference_tokens": 125,
+   "prompt_plus_ceiling": 552,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.49
+  },
+  "F01": {
+   "prompt_chars": 411,
+   "prompt_utf8_bytes": 411,
+   "prompt_tokens": 114,
+   "reference_tokens": 53,
+   "prompt_plus_ceiling": 370,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.21
+  },
+  "F02": {
+   "prompt_chars": 596,
+   "prompt_utf8_bytes": 596,
+   "prompt_tokens": 176,
+   "reference_tokens": 77,
+   "prompt_plus_ceiling": 432,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.3
+  },
+  "F03": {
+   "prompt_chars": 608,
+   "prompt_utf8_bytes": 608,
+   "prompt_tokens": 171,
+   "reference_tokens": 108,
+   "prompt_plus_ceiling": 427,
+   "fits_context": true,
+   "reference_fits_ceiling": true,
+   "reference_share_of_ceiling": 0.42
+  }
+ }
+}

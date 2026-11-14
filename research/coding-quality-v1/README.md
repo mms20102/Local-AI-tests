@@ -22,11 +22,20 @@ been run against a model. No pass rate exists yet.
 | `build_fixtures.py` | Regenerates all of the above, byte for byte |
 | `grade.py` | The grader |
 | `test_grade.py` | 31 offline tests for the grader |
+| `token_preflight.py`, `token_preflight_result.json` | Real token counts for prompts and references, and the result |
 
-116 cases in total across the 12 tasks (fixture revision 2). Prompts are about 380 to 1,150
-characters. Characters are not tokens: neither the prompt fit in the 2,048-token context nor the
-reference fit in the 256-token output ceiling has been checked with the model's tokenizer and chat
-template. That preflight is required before any run.
+116 cases in total across the 12 tasks (fixture revision 2).
+
+**Token preflight (measured 2026-11-14, offline).** `token_preflight.py` counts tokens with the
+installed model's own `tokenizer.json` (SHA-256 `5f9e4d49...cb42`); no model is run. With the draft
+helper's one-line system text and ChatML framing, the largest request is **296 tokens** (E03) and
+the largest reference answer is **137 tokens** (E02), against a 2,048-token context and a 256-token
+output ceiling. Every prompt and every reference fits. Full table:
+[token_preflight_result.json](token_preflight_result.json).
+
+Two limits on that result. The framing is assumed to be plain ChatML; the engine's actual template
+was not read, so a default system text or other preamble would add tokens. And a reference answer
+fitting says nothing about how long the model's own answer will be.
 
 The prompts restate the proposal's contracts. The three Arabic prompts keep the proposal's meaning
 but are not verbatim copies: each adds the file name and one example. Answer format, frozen with

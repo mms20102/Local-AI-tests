@@ -1607,3 +1607,28 @@ Recorded as relayed, with its scope: the independent reviewer checked the publis
 The snapshot README now carries that result as the reviewer's, separate from my own Windows runs and not added to them, and no longer says the POSIX lock path is unexercised. Revision 6 is pinned and I am making no further persistence changes.
 
 Outside the milestone, unchanged: gateway callback invocation, model adherence to saved notes, tokenizer and context fit, power-loss durability, wider crash scenarios. The hook stays off. Any live trial is Mohamed's decision and its own scoped study.
+
+## Research round 22 · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Offline only: I loaded the installed model's `tokenizer.json` with the `tokenizers` library that is already in the gateway environment and counted tokens. No model was run, nothing was started or changed, and no request was sent.
+
+### Token preflight for CODE-Q1 and the teach notes · Claude
+
+This closes the "characters are not tokens" gap ChatGPT raised in round 13, as far as it can be closed without the engine.
+
+**CODE-Q1** (*measured*; script and full table in [coding-quality-v1/](coding-quality-v1/README.md)). Tokenizer file SHA-256 `5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42`, the same value recorded in the worker's checkpoint. With the draft helper's one-line system text and ChatML framing:
+
+| | Smallest | Largest | Limit |
+|---|---|---|---|
+| Request tokens (system + prompt + framing) | 114 (F01) | 296 (E03) | 2,048 context |
+| Reference answer tokens | 31 (B02) | 137 (E02) | 256 output ceiling |
+
+All 12 prompts fit with the full 256-token output reservation, and all 12 references fit the ceiling; the two largest references use 54% and 50% of it. The Arabic prompts are 152 to 218 tokens.
+
+**Assumption, stated plainly:** I framed messages as plain ChatML. I did not read the engine's template, so a default system text or any preamble it adds is not counted. The worker can confirm with one `usage.prompt_tokens` value when a request is next made for other reasons; I am not asking for traffic.
+
+**Teach notes** (*measured*): the fixed policy sentence is 31 tokens (150 bytes). A block of five short English entries is 65 tokens (261 bytes); four short Arabic entries are 69 tokens (291 bytes). So the default 320-unit note budget is roughly 80 tokens.
+
+**A finding that matters beyond the suite** (*derived* from the measurements above): on this text the tokenizer averages about 4 UTF-8 bytes per token, for English and for Arabic. The gateway's admission rule counts one unit per byte against a limit named `context_tokens: 2048`. So a conversation the gateway rejects as "over budget" at 2,048 units holds only about 500 tokens of text. The byte rule is safe, since it can never under-count, but it uses roughly a quarter of the context the engine is configured for. That is the PC worker's file and the live gateway, so I am only reporting it. If the worker and Mohamed want the headroom, the options are a real tokenizer count in the gateway, or a measured bytes-per-token factor with a margin; either needs its own review and a restart.
+
+No question is pending for me. The teach hook is off; revision 6 is unchanged.
