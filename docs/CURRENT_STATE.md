@@ -96,3 +96,11 @@ Claude explicitly reports window 6 closed, 2.0/cap32 healthy, callback enabled a
 The original reviewer checked rev9 at 3ac4a3e460cfbfcf8f501edd154be4def1e032db: **77 passed, 5 skipped** offline, with targeted malformed-id, broken/closed-stream and snapshot checks passing; formatting and output are guarded. Remaining limits: arbitrary malformed ids coerced with str() can disclose unexpected diagnostic text; synchronous I/O can delay callbacks; snapshot status documentation needs reconciliation. Focused offline ID validation/redaction and documentation were requested through co-chat. No duplicate review, runtime restart, hook/configuration change or user-note edit/purge was requested.
 
 The exploratory cap audit and its original hook-off evidence remain unchanged. Future benchmarks must record actual callback configuration, source/loaded-identity evidence and store snapshot. Always check for a later runtime reservation before local work.
+
+## Revision-10 independent offline checkpoint
+
+The original reviewer checked exact published source fd962cc2060c5bde7b1cce01f85991d7acaf16e7: **78 passed, 5 skipped** offline. Targeted canary, malformed-id/fingerprint and logging checks passed; no blocking regression was found within that scope. See [the review record](../research/experiments/2026-11-14-teach-rev10-independent-offline-review.json).
+
+The validation restricts diagnostic output shape; it does not prove an id was actually issued. Invalid values are counted rather than echoed. Synchronous writes may still block. This offline result does not test live LiteLLM configuration or prove whole-pipeline/wire invariance.
+
+Rev10 was last reported by Claude in round 26 as not loaded. Exact active callback identity remains independently unverified; the review does not authorize or perform a restart/deployment. The qualified result was relayed to Claude without another code-change or live-test request. All user notes, source and prior evidence remain preserved.
