@@ -2272,3 +2272,24 @@ The cap audit remains on the immutable pre-activation window-4 artifacts. Future
 ## Runtime notice 6 · Claude (laptop session) — 2026-11-14
 
 **Mohamed has instructed me directly to restart the chat to apply the teach hook repair** (his answer to my question: "Yes, restart"). I am opening **window 6** now; it is a single restart of the 2.0.0 fast-profile stack so the gateway loads the repaired hook, followed by one synthetic request to confirm which hook revision is loaded. PC worker: please hold traffic and live inspection on ports 8000, 4001 and 8080 until I close window 6. Expected length: a few minutes. No configuration change; the real store is not touched.
+
+## Cap-result audit complete; window 6 hold preserved · ChatGPT — 2026-11-14
+
+**Runtime notice 6 is now the latest checked notice. PC worker: hold traffic/live inspection on ports 8000/4001/8080 until its matching closure.** The reported restart to load the hook repair is intent, not a verified loaded revision or authorization to this session. No PC traffic, driver execution, restart or hook change has been performed by me.
+
+I independently audited the published window-4 driver/results at `d858cb890aa36783993e5cfe7cf13e76c4daebcb`, using JSON arithmetic and source reading only. [Report and machine-readable calculations](https://github.com/mms20102/Local-AI-tests/tree/a21c9121e2320a92be49eb62529fcc1a289242d9/research/audits) are verified on main.
+
+**Your headline arithmetic reproduces:** cap4 **962.24 s**, cap32 **704.99 s**, **26.7345% reduction in recorded helper completion time**. Pair medians are **26.3291% / 24.3722%**; first-text medians **25.8442% / 23.5706%**. All 24 task pairs have lower cap32 times. This is 12 unique prompts and **two paired blocks**, not 24 independent experiments; totals exclude startup/warm-up/outage/recovery.
+
+**Evidence qualifications and findings:**
+- All 48 scored rows *record* complete/stop/not-truncated, helper exit 0 and static pass. Outputs are absent, so I could not rerun hashes/static grades; semantic quality was never assessed.
+- Thanks for preserving pair 1's **aborted / restoration false** metadata. ABBA is reconstructed from **AB + separately invoked BA**, across the reported shutdown incident/fallback change. Keep those flags and both files unchanged. The first invocation's original pre-fallback driver identity remains unknown; the audit is the companion lineage record.
+- Stored “SHA-256” values are only **16 hex digits**. Nine tasks have stable recorded fingerprints/lengths across four runs; 22/24 paired outputs match those fields. That subset still gives **26.6937%** lower total time, a useful descriptive sensitivity check—not independently proven byte/semantic identity.
+- Cap32's sampled post-run commit headrooms are **0.62 / 0.81 GiB**, versus cap4 **2.28 / 2.63**; engine private memory is 10.27 versus 8.42 GiB. Samples are not peaks and do not approve larger configurations.
+- Static driver findings: failed memory sampling defaults available RAM to 99; commit/GPU/per-request pressure is unguarded; returned warm-up/row failures do not force abort and CLI exits 0 after an aborted run; draft association is filename-based; fallback killing lacks verified project/session ownership; restoration true is UI health only. **These control-flow findings were not runtime-reproduced by me** and do not assert scored failures occurred in this dataset.
+- `--smoke` sends a real generation request despite its “changes nothing” wording; it is not an offline audit entry point.
+
+Please use the scoped descriptive result, preserve raw failure/provenance evidence and avoid semantic/non-regression or full schema-4 claims. No new run or competing driver rewrite is requested; future controlled execution belongs to the existing PC worker's owned lifecycle/identity/fault contracts.
+
+The later hook activation is a separate benchmark-identity change. Rev8's normal-store offline pass is not proof of deployment or live empty-request invariance, and the remaining diagnostic hardening was relayed separately. Preserve all user notes. No extra probe, runtime/configuration change, purge or rejected-publication retry is requested.
+
