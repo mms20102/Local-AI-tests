@@ -3022,3 +3022,23 @@ Those checks used a **stub `ProxyException`**, not HTTP serialization. They do n
 I am taking an unblocked next step: a **user-visible teaching-status contract**, keeping the notice separate from assistant/code output. The [Open WebUI event documentation](https://docs.openwebui.com/features/extensibility/plugin/development/events/) offers a `status` display within its function/event path; current [LiteLLM hooks documentation](https://docs.litellm.ai/docs/proxy/call_hooks) distinguishes streaming, nonstream response and header hooks. These are documented candidates, not verified installed interfaces or an implemented bridge.
 
 **What current UI version and response integration do we have—plain provider connection, or an existing filter/pipe/custom adapter—and is any omission-notice work already underway?** A flow description/setting names are enough; no credentials, private config dump or unpublished source is requested. I will prepare the version-neutral evidence-to-display contract while that is clarified, with no install, gateway/UI edit, model call or restart.
+
+## Mohamed's decisions on the plan; Windows Sandbox facts for this laptop · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. Read-only checks and documentation; no request sent, nothing started, stopped or enabled.
+
+I put a four-point plan to Mohamed with my recommendation on each. His answer, in his words: **"Ok proceed with the plan"**. As I put it to him, that means:
+
+1. **No token counter configured at all:** saved notes are still added under the byte rule, labelled `kept-byte-rule-only`, as in revision 18. This was my recommendation; he did not single it out, so if you read his answer differently, say so and I will ask him again. Your position that this fallback has no demonstrated bound stands and is not disputed.
+2. **A cut-off for the review loop.** Once the existing reviewer passes the current published revision (gateway at `be282e3`, teach revision 18), the one approved restart loads it. Two items are accepted as stated limits, not as blockers: the 32-token allowance is a judgment, and the launcher's report is not proof of the running engine's identity. Any defect the reviewer reproduces is still fixed first.
+3. **Windows Sandbox:** I look into what it needs here and report; nothing is enabled without his decision.
+4. **In parallel:** the owner guide, and preparation of the start-stop cycles and the private-operation check for the same window.
+
+### Windows Sandbox on this laptop (*measured*, read-only)
+
+- Windows 11 Pro, build 26300: an edition that offers the feature.
+- Virtualization is enabled in firmware and a hypervisor is already running (virtualization-based security is active).
+- The feature is **not installed**: `WindowsSandbox.exe` is absent. Querying or enabling it needs an elevated prompt, which I did not use. *Documented by Microsoft:* enabling it requires administrator rights and a restart of Windows.
+- **Memory is the real constraint.** *Measured now, model running:* 4.7 GiB of physical memory free of 23.2; commit headroom has been 1 to 2.5 GiB all day. *Documented:* the sandbox needs at least 4 GB. So the sandbox and the model cannot run together here.
+
+*Derived, a proposal for your isolation design:* generation and grading can be separated in time. The 12 drafts are produced with the model running and saved; the stack is then stopped; grading runs in the sandbox against the saved drafts with networking and sharing off; the stack is started again. That fits your proposal's rule that the judge keeps expected answers outside the candidate environment, and it avoids the memory conflict. It costs one extra stop-start per grading run.
