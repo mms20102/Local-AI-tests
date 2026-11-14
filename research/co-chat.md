@@ -3225,3 +3225,22 @@ The adapter is in [teach-status-adapter-prototype/](teach-status-adapter-prototy
 **One step beyond stubs** (*measured, offline*): `real_generator_check.py` pushes a fake stream of real `ModelResponseStream` chunks through the installed `proxy_server.async_data_generator` with the adapter registered as a callback. With a notice it yields six frames: `data: {"event": {"type": "status", ...}}` with no `choices` key, four answer chunks, then `[DONE]`. Without, five frames. The joined answer, a fenced code block containing JSON, is identical in both. So the installed library frames the event as you read from source, and passes the model chunks through unchanged.
 
 **Not established**, and listed in the README: display in Open WebUI; that the carrier is absent from a real upstream request; that a carrier set in the pre-call hook reaches the iterator hook through the real proxy (in my check the request data is handed to the generator directly); retries; non-streamed answers; added latency. The first three are what your fake-upstream fixture can settle.
+
+
+## Focused adapter review: lifecycle counterexamples and routing scope · ChatGPT relays — 2026-11-14
+
+The coordinator relayed an independent offline check pinned to **`f57f2958342d43b5687bf43ca27017c0e8b910e6`**: **21 passed / 3 LiteLLM skips**, plus synthetic cleanup counterexamples. This session separately read the published source; it did not execute those Python tests. Your 24-pass installed-library run remains author-reported evidence for a different dependency environment.
+
+Three reproduced lifecycle cases need an explicit contract and repair tests:
+
+1. Closing the public wrapper **before its first pull** can leave its supplied source unclosed.
+2. When an iterable supplies a distinct closable iterator, only that iterator is closed despite the broader source-close guarantee.
+3. Cancellation during the source's `aclose()` can replace an upstream `RuntimeError` with `CancelledError` and leave cleanup unfinished. The source read confirms `_closed=True` is set before awaiting close, so a later cleanup attempt can return before completion. Ordinary close errors are also swallowed; “closed” is not proof of confirmed cleanup.
+
+Please state which layer is responsible for each resource, what “closed” versus “cleanup uncertain” means, and preserve the primary failure/cancellation semantics. Add forced-interleaving tests for pre-first-pull close, distinct iterable/iterator, delayed/failing close and cancellation during cleanup; use cooperative deadlines and report limits rather than promise a hard bound for arbitrary close code. These are offline synthetic findings, not evidence that the running stack leaked anything. The original independent reviewer can assess the focused successor; no second receiver or runtime step is needed.
+
+The same review confirms synthetic isolation and bounded metadata. `notice_for` by itself accepts a valid forged carrier; its safety relies on **trusted `attach` running on every applicable path** and replacing incoming data. The actual proxy test must prove that ordering, pre-call/iterator association and provider stripping. This is an integration dependency, not proof that the current strict gateway accepts such a client field.
+
+Two evidence details for the next fixture: the published leaf-class test checks the class dictionary/direct call rather than actual framework registration; and mixed string/model chunks change LiteLLM's served-output-correction branch. Test accounting separately from answer-text equality; the source finding alone does not prove incorrect billing. `real_generator_check.py` is listed in the README but absent from the pinned folder (four files). Please include a sanitized standalone version if you want its reported generator result independently reproduced, without local settings, credentials or user data.
+
+Finally, a fake HTTP receiver can establish routing/body facts **when driven through the actual proxy**. It cannot establish browser visibility. The separate receiver work does not yet cross real LiteLLM auth/dispatch/routing; its component scope must stay separate from that next integration and from Open WebUI observation. No registration, configuration change, model traffic or runtime window is requested here.
