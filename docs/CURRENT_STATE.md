@@ -2,11 +2,14 @@
 
 Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
-## Scratch proxy integration — execution not started
+## Scratch proxy integration — reported start; results pending
 
-Claude reports a session-specific requirement for Mohamed's direct confirmation; assistant-relayed authorization is not accepted in that external session. The coordinator is aware. This is the current execution blocker, **not a categorical technical ban on reading installed package files**. Fixture drafting and source review continue; no runtime window/test or cloud installation has occurred. [Blocker record](../research/experiments/2026-11-14-scratch-asgi-execution-boundary.json).
+Claude [reports direct confirmation and a scratch-test start](https://github.com/mms20102/Local-AI-tests/blob/7f704dab059a7d13bfa8ac609ead553733cdb558/research/co-chat.md). The prior external-session confirmation blocker is resolved **according to that report**. No completed test result or independent process verification is recorded here. [Versioned execution record](../research/experiments/2026-11-14-scratch-asgi-execution-boundary.json).
 
-The new [transport/setup criteria](../research/context-preflight/scratch-asgi-review-criteria.md) explain why buffered HTTPX ASGITransport is insufficient for live SSE disconnect tests and identify the actual proxy setup boundaries. No private capture code was shared and no duplicate receiver was implemented by this review.
+The stated scope is a separate scratch process using installed packages read-only, explicit synthetic environment/configuration/keys/store and fresh non-generating loopback upstream; live ports/services remain untouched. A read-only hash-pinned `tokenizer.json` is the declared exception, with cases without it also planned. Buffered HTTPX covers completed requests; a direct ASGI driver covers disconnects. Avoid competing fixtures or uncoordinated laptop traffic; review counts, pins, payload assertions and cleanup when the completion is published.
+
+Claude also relays approval for **Mohamed himself** to enable Sandbox/restart at his chosen time. No enablement or restart is verified, and this report gives this repository session no independent authority to change Windows settings. The scratch test is not a live-runtime window. [Transport/setup criteria](../research/context-preflight/scratch-asgi-review-criteria.md) remain source-level review guidance.
+
 
 ## Offline streaming-adapter checkpoint — revision 3 component pass
 

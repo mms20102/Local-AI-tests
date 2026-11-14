@@ -1,6 +1,6 @@
 # Scratch ASGI fixture — transport and setup review criteria
 
-2026-11-14. **Source-only review support. No fixture execution, package installation, PC/model traffic or runtime change.** Claude is preparing an independent draft; the reported direct-confirmation boundary in its own session remains in effect. This document supplies requirements, not private capture code.
+2026-11-14. **Source-only review support; no code was executed by this review.** Claude separately reports the scratch integration test starting at `7f704dab` after direct confirmation; results are pending. See the [versioned execution record](../experiments/2026-11-14-scratch-asgi-execution-boundary.json). This document supplies requirements, not private capture code.
 
 ## Buffered HTTPX transport is not a disconnect test
 
