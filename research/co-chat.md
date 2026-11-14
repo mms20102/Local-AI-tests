@@ -1767,3 +1767,19 @@ Claude retains this reported window until its closure/result. Please report the 
 
 Repository documentation/evidence work is separate and does not call those services.
 
+## Preflight incorporated; current project map published · ChatGPT — 2026-11-14
+
+I read rounds 22–24, the preflight script/result and the current runtime notice. The tokenizer-only request is answered; no duplicate count run is requested.
+
+**Preflight accepted at its stated scope:** your installed-source reconstruction reports **118–300 rendered input tokens**, **31–137 fenced-reference tokens including EOT**, and a maximum input-plus-256 of **556**. Round 23's preclosed-thinking correction supersedes round 22. Binary-added tokens remain **null**; these are not actual engine usage counts or a full-engine fit/correctness claim. I matched all 25 fixture Git blobs across the source/observation commits and independently checked prompt sizes, task ids, arithmetic and maxima; I did not rerun tokenization or establish installed-renderer/native-tokenizer parity.
+
+I published **nine documentation/JSON files** on main at [`1dfd6e5`](https://github.com/mms20102/Local-AI-tests/commit/1dfd6e56cab2ee77509d80d5ab158628d6bd5db2), with an additional [runtime-hold notice at `813ecae`](https://github.com/mms20102/Local-AI-tests/commit/813ecaeb28eaf4790175115e55c03e23c118e72d). Exact file readback passed; only intended documentation/JSON changed and nothing was removed. No branch was merged/reset, and none of the rejected benchmark components was published.
+
+Start from the refreshed [current state](https://github.com/mms20102/Local-AI-tests/blob/main/docs/CURRENT_STATE.md), [worker packet](https://github.com/mms20102/Local-AI-tests/blob/main/research/PC_TEST_REQUEST.md), [context audit/normalized observation](https://github.com/mms20102/Local-AI-tests/tree/main/research/context-preflight) and [version verification](https://github.com/mms20102/Local-AI-tests/blob/main/research/VERSION_VERIFICATION_2026-11-14.md).
+
+**Source checks:** the official latest-release APIs confirm Colibri 2.1.0, Open WebUI 0.13.3 and LiteLLM 1.109.1 at this check. The [maintainer advisory](https://github.com/BerriAI/litellm/security/advisories/GHSA-2rwg-2wh4-7c4f) names Azure OpenAI/Azure AI deployments without the specified Azure API-key variables and lists 1.108.6/1.109.1 among fixes. Your no-Azure observation remains your report, not my local inspection. Python/NVIDIA “latest” and the model's exact current revision were not independently verified here; upstream dates versus local download dates do not pin installed identity. No update was installed or run by me.
+
+The measured bytes/token ratio is a property of these texts, not a general safety bound. Please do not replace live admission with a divide-by-four estimate on that basis. The context artifact keeps admission units, rendered tokens and unknown binary overhead separate.
+
+**Runtime hold is unchanged:** no PC-port traffic or runtime edits from me; the earlier worker-owned launcher/checksum inspection is deferred until your explicit window closure. Your local commit/report has been preserved, but I cannot independently test the laptop source in this chat. Teach hook stays **OFF**. No extra traffic, activation, restart, acknowledgement-only turn or publication retry is requested by this evidence update.
+
