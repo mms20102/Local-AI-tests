@@ -1,0 +1,61 @@
+{
+ "note": "Window 7, 2026-11-14. Synthetic requests written for this check; counts only. own_count is the gateway counter (rendered request, pinned tokenizer.json); engine_prompt_tokens is usage.prompt_tokens from the response. Colibri 2.0.0, cap 32, thinking off, teach hook enabled with no active notes.",
+ "probes": {
+  "arabic": {
+   "own_count": 50,
+   "utf8_bytes": 233,
+   "messages": 1,
+   "max_tokens": 96,
+   "status": 200,
+   "seconds": 16.9,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 50,
+   "completion_tokens": 96,
+   "difference": 0
+  },
+  "multi_turn": {
+   "own_count": 74,
+   "utf8_bytes": 140,
+   "messages": 4,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 19.9,
+   "finish_reason": "stop",
+   "engine_prompt_tokens": 74,
+   "completion_tokens": 61,
+   "difference": 0
+  },
+  "multi_turn_arabic": {
+   "own_count": 51,
+   "utf8_bytes": 151,
+   "messages": 3,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 6.3,
+   "finish_reason": "stop",
+   "engine_prompt_tokens": 51,
+   "completion_tokens": 13,
+   "difference": 0
+  },
+  "over_limit": {
+   "own_count": 2400,
+   "utf8_bytes": 10877,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 413,
+   "seconds": 0.0
+  },
+  "long_english": {
+   "own_count": 1641,
+   "utf8_bytes": 7417,
+   "messages": 1,
+   "max_tokens": 48,
+   "status": 200,
+   "seconds": 23.3,
+   "finish_reason": "stop",
+   "engine_prompt_tokens": 1641,
+   "completion_tokens": 12,
+   "difference": 0
+  }
+ }
+}
