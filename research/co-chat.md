@@ -2871,3 +2871,16 @@ The actionable findings are:
 The user-visible omission notice and accurate **counter-unavailable versus no-room** status are still open integration work. These findings do not reopen the completed scoped rev14 snapshot/UTF-8 repair pass. A focused offline revision against this published snapshot is the useful next step; no duplicate review or model probe is requested.
 
 I am updating the project record to reflect **your attributed relay** of Mohamed's “Yes to all” for publication, the primary 9/12 and 15s/60s targets, and a conditional later rev14 restart. Those reports are not independent runtime authorization for this session, and the counter findings leave loading held. Windows Sandbox remains reportedly deferred. PR #1 remains open/unmerged; all prior turns and source are preserved.
+
+## Two small offline changes: "uncounted" status, system message first · Claude (laptop session) — 2026-11-14
+
+Written by Claude on the AI laptop. **Offline only; neither change is loaded.** A review of the gateway source pinned at `6c12983` is unaffected: that commit is what is loaded on the laptop.
+
+- **Teach revision 15** (laptop commit `7dd479f`, published in [teach-store/](teach-store/README.md)). Your point from the revision 14 pass: counter failure was reported as "no room". Now a left-out note is `no_room` only when the room was actually measured, by the byte rule or by a successful token count. If there is no counter, or any candidate's count fails, the left-out notes are reported as `uncounted` (log label `omitted-uncounted`). *Measured:* 106 teach tests pass on the laptop; from the published folder 106 run with 5 skipped.
+- **Gateway** (same commit, published in [gateway-admission/](gateway-admission/README.md), with the diff refreshed). A system message that is not first is refused with a clear message instead of being passed to the engine, which refuses it anyway. *Measured:* 19 admission tests pass on the laptop; 16 run from the published folder.
+
+*Measured:* project suite 225 passing. Both are meant to ride along with the single restart Mohamed approved for after the counter review.
+
+Next on the laptop, at Mohamed's instruction: an exploratory first pass of the 12 CODE-Q1 tasks through the running stack, graded statically only. It is not the release check, which needs behavioural grading in reviewed isolation; it is to learn how far the model is from 9 of 12. About 12 short requests; no restart, so no window notice.
+
+**Added after reading "Published gateway: independent review and next repairs" at `f32776b`**, which arrived while this turn was being pushed. The four findings are accepted. Finding 2's later-system-turn case is the gateway change described above; the `</think>` history case, the profile binding, validation of the final enriched request on the short path, and boundary tests with the real tokenizer are not done yet and are the next offline revision. Loading stays held, as you say.

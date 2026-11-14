@@ -1195,7 +1195,7 @@ class TokenBudgetTests(Base):
         self.assertEqual((legacy, legacy_ids), (messages, []))                                    # bytes alone: skipped
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
                                                      count_tokens=word_counter)
-        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0}))
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
         self.assertEqual(result[0], {"role": "system", "content": ts.POLICY})
         self.assertTrue(result[-1]["content"].startswith("<saved_notes>\n- Be brief.\n</saved_notes>\n\n"))
         self.assertTrue(result[-1]["content"].endswith(messages[-1]["content"]))                 # question intact
@@ -1210,7 +1210,7 @@ class TokenBudgetTests(Base):
         self.assertEqual(word_counter(messages), limit)
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
                                                      count_tokens=word_counter)
-        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 2}))
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 2, "uncounted": 0}))
 
     def test_candidate_is_recounted_after_each_dropped_note(self):
         self.store.add("Be brief.")
@@ -1226,7 +1226,7 @@ class TokenBudgetTests(Base):
         limits = dict(LIMITS, context_tokens=room_for_one + 256 + ts.TOKEN_MARGIN)
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), limits, 256,
                                                      count_tokens=counter)
-        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 1}))
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 1, "uncounted": 0}))
         self.assertEqual(len(calls), 2)                               # two whole candidates were counted
         self.assertGreater(calls[0], 0)
         self.assertEqual(calls[1], 0)
@@ -1238,10 +1238,23 @@ class TokenBudgetTests(Base):
 
         def broken(candidate):
             raise RuntimeError("tokenizer fault")
-        for counter in (broken, lambda m: None, lambda m: 0, lambda m: -1, lambda m: True, lambda m: "5", lambda m: 10**9):
+        for counter in (broken, lambda m: None, lambda m: 0, lambda m: -1, lambda m: True, lambda m: "5"):
             result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
                                                          count_tokens=counter)
-            self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 1}))
+            # A count that could not be made is reported as such, not as "no room".
+            self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 0, "uncounted": 1}))
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                     count_tokens=lambda m: 10**9)
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 1, "uncounted": 0}))
+
+    def test_one_failed_count_makes_the_whole_outcome_unmeasured(self):
+        self.store.add("Be brief.")
+        self.store.add("Second note.")
+        messages = self.long_messages()
+        answers = iter([None, 10**9])                     # first candidate: count fails; second: too big
+        result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
+                                                     count_tokens=lambda m: next(answers))
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 0, "uncounted": 2}))
 
     def test_short_request_is_decided_by_bytes_and_counter_is_not_called(self):
         self.store.add("Be brief.")
@@ -1250,19 +1263,21 @@ class TokenBudgetTests(Base):
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
                                                      count_tokens=lambda m: calls.append(1) or 1)
         self.assertEqual((result, used), ts.apply_to_messages(messages, self.store.entries(), LIMITS, 128))
-        self.assertEqual((used, omitted, calls), (["t001"], {"note_cap": 0, "no_room": 0}, []))
+        self.assertEqual((used, omitted, calls), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}, []))
 
     def test_without_counter_result_equals_the_byte_rule_and_omission_is_counted(self):
         self.store.add("Be brief.")
         messages = self.long_messages()
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256)
-        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 1}))
+        self.assertEqual((result, used, omitted), (messages, [], {"note_cap": 0, "no_room": 0, "uncounted": 1}))
+        line = teach_hook.log_line(used, "abc123abc123", omitted)
+        self.assertEqual(line, "[teach] nothing added | omitted-uncounted:1 | store abc123abc123")
 
     def test_no_relevant_notes_reports_nothing_omitted(self):
         self.store.add("Use tabs.", when=["python"])
         result, used, omitted = ts.apply_with_status(self.long_messages(), self.store.entries(), LIMITS, 256,
                                                      count_tokens=word_counter)
-        self.assertEqual((used, omitted), ([], {"note_cap": 0, "no_room": 0}))
+        self.assertEqual((used, omitted), ([], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
 
     def test_applying_twice_adds_nothing_the_second_time_in_token_mode(self):
         self.store.add("Be brief.")
@@ -1270,7 +1285,7 @@ class TokenBudgetTests(Base):
                                              count_tokens=word_counter)
         twice, used_again, omitted = ts.apply_with_status(once, self.store.entries(), LIMITS, 256,
                                                           count_tokens=word_counter)
-        self.assertEqual((twice, used_again, omitted), (once, [], {"note_cap": 0, "no_room": 0}))
+        self.assertEqual((twice, used_again, omitted), (once, [], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
 
     def test_arabic_long_request_gets_its_note(self):
         self.store.add("\u0627\u0643\u062a\u0628 \u0628\u0625\u064a\u062c\u0627\u0632.")
@@ -1278,20 +1293,20 @@ class TokenBudgetTests(Base):
         self.assertGreater(ts.request_units(messages, LIMITS, 256), LIMITS["context_tokens"])
         result, used, omitted = ts.apply_with_status(messages, self.store.entries(), LIMITS, 256,
                                                      count_tokens=word_counter)
-        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0}))
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0}))
 
     def test_hook_status_and_log_line_report_omission_without_text(self):
         self.store.add("Be brief. CANARY-NOTE")
         request = body(self.long_messages(), 256)
         changed, used, fingerprint, omitted = teach_hook.inject_with_status(
             request, LIMITS, self.folder, count_tokens=lambda m: 10**9)
-        self.assertEqual((changed, used, omitted), (request, [], {"note_cap": 0, "no_room": 1, "invalid": 0}))
+        self.assertEqual((changed, used, omitted), (request, [], {"note_cap": 0, "no_room": 1, "uncounted": 0, "invalid": 0}))
         line = teach_hook.log_line(used, fingerprint, omitted)
         self.assertEqual(line, f"[teach] nothing added | omitted-no-room:1 | store {fingerprint}")
         self.assertNotIn("CANARY", line)
         changed, used, fingerprint, omitted = teach_hook.inject_with_status(
             request, LIMITS, self.folder, count_tokens=word_counter)
-        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "invalid": 0}))
+        self.assertEqual((used, omitted), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 0}))
         self.assertEqual(teach_hook.log_line(used, fingerprint, omitted),
                          f"[teach] added 1 entries: t001 | store {fingerprint}")
 
@@ -1311,13 +1326,13 @@ class TokenBudgetTests(Base):
         self.store.add(("note word " * 30).strip()[:294])
         messages = [{"role": "user", "content": "hi"}]
         result, used, left_out = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128)
-        self.assertEqual((result, used, left_out), (messages, [], {"note_cap": 1, "no_room": 0}))
+        self.assertEqual((result, used, left_out), (messages, [], {"note_cap": 1, "no_room": 0, "uncounted": 0}))
         result, used, left_out = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128,
                                                       count_tokens=word_counter)
-        self.assertEqual((used, left_out), ([], {"note_cap": 1, "no_room": 0}))
+        self.assertEqual((used, left_out), ([], {"note_cap": 1, "no_room": 0, "uncounted": 0}))
         request = body(messages)
         changed, used, fingerprint, status = teach_hook.inject_with_status(request, LIMITS, self.folder)
-        self.assertEqual((changed, status), (request, {"note_cap": 1, "no_room": 0, "invalid": 0}))
+        self.assertEqual((changed, status), (request, {"note_cap": 1, "no_room": 0, "uncounted": 0, "invalid": 0}))
         self.assertEqual(teach_hook.log_line(used, fingerprint, status),
                          f"[teach] nothing added | omitted-note-cap:1 | store {fingerprint}")
 
@@ -1331,7 +1346,7 @@ class TokenBudgetTests(Base):
         self.assertEqual([e["id"] for e in applicable], ["t001", "t002", "t003"])
         result, used, left_out = ts.apply_with_status(messages, self.store.entries(), LIMITS, 128)
         self.assertEqual(len(used) + left_out["note_cap"] + left_out["no_room"], len(applicable))
-        self.assertEqual((used, left_out), (["t001", "t003"], {"note_cap": 1, "no_room": 0}))
+        self.assertEqual((used, left_out), (["t001", "t003"], {"note_cap": 1, "no_room": 0, "uncounted": 0}))
 
     def test_malformed_entry_beside_a_valid_note_is_skipped_alone(self):
         # Reviewer's case: malformed `when` metadata beside a valid note must not hide the valid note.
@@ -1349,7 +1364,7 @@ class TokenBudgetTests(Base):
         self.assertEqual(used, ["t001"])
         self.assertNotEqual(fingerprint, "unknown")
         self.assertIn("Be brief.", changed["messages"][-1]["content"])
-        self.assertEqual(status, {"note_cap": 0, "no_room": 0, "invalid": 9})
+        self.assertEqual(status, {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 9})
         line = teach_hook.log_line(used, fingerprint, status)
         self.assertEqual(line, f"[teach] added 1 entries: t001 | skipped-invalid:9 | store {fingerprint}")
         self.assertNotIn("CANARY", line)
@@ -1379,7 +1394,7 @@ class TokenBudgetTests(Base):
             teach_hook.apply_with_status = real_apply
         self.assertNotEqual(hashlib.sha256(path.read_bytes()).hexdigest()[:12], before)   # it really changed
         self.assertEqual(fingerprint, before)
-        self.assertEqual(status, {"note_cap": 0, "no_room": 0, "invalid": 2})              # counts of the FIRST version
+        self.assertEqual(status, {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 2})              # counts of the FIRST version
         self.assertEqual(used, ["t001"])
         self.assertIn("Be brief.", changed["messages"][-1]["content"])
         self.assertNotIn("Replaced.", changed["messages"][-1]["content"])
@@ -1415,7 +1430,7 @@ class TokenBudgetTests(Base):
         self.assertEqual(([e["id"] for e in active], invalid), (["t001"], 3))
         request = body([{"role": "user", "content": "hi"}])
         changed, used, fingerprint, status = teach_hook.inject_with_status(request, LIMITS, self.folder)
-        self.assertEqual((used, status), (["t001"], {"note_cap": 0, "no_room": 0, "invalid": 3}))
+        self.assertEqual((used, status), (["t001"], {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 3}))
         self.assertNotEqual(fingerprint, "unknown")
         json.dumps(changed).encode("utf-8")                              # the request can be sent
         self.assertIn("Be brief.", changed["messages"][-1]["content"])
@@ -1431,14 +1446,14 @@ class TokenBudgetTests(Base):
             encoding="utf-8")
         request = body([{"role": "user", "content": "hi"}])
         changed, used, fingerprint, status = teach_hook.inject_with_status(request, LIMITS, self.folder)
-        self.assertEqual((changed, used, status), (request, [], {"note_cap": 0, "no_room": 0, "invalid": 0}))
+        self.assertEqual((changed, used, status), (request, [], {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 0}))
 
     def test_unreadable_store_is_reported_by_fingerprint_not_by_counts(self):
         self.folder.mkdir(parents=True)
         (self.folder / "store.json").write_text("not json", encoding="utf-8")
         request = body([{"role": "user", "content": "hi"}])
         self.assertEqual(teach_hook.inject_with_status(request, LIMITS, self.folder),
-                         (request, [], "unknown", {"note_cap": 0, "no_room": 0, "invalid": 0}))
+                         (request, [], "unknown", {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 0}))
 
     def test_old_three_value_function_still_works(self):
         self.store.add("Be brief.")

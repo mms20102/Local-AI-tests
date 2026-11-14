@@ -40,12 +40,13 @@ def inject_with_status(data: dict, limits: dict, folder: Path = DEFAULT_DIR,
     teach_store.apply_with_status). status is a dict of counts, all zero when there is nothing
     to report:
       "note_cap"  applicable entries left out because they exceed the size cap for notes;
-      "no_room"   applicable entries left out because the request had no room;
+      "no_room"   applicable entries left out because the request had no room (measured);
+      "uncounted" applicable entries left out because a token count could not be made;
       "invalid"   entries marked active in the store that are malformed and were skipped.
     The question and the history are sent regardless. A store that could not be read at all is
     reported through the fingerprint "unknown", not through these counts.
     """
-    none = {"note_cap": 0, "no_room": 0, "invalid": 0}
+    none = {"note_cap": 0, "no_room": 0, "uncounted": 0, "invalid": 0}
     try:
         messages = data.get("messages")
         if not isinstance(messages, list) or not all(
@@ -112,7 +113,8 @@ ID_FORM = re.compile(r"t[0-9]{3,9}")
 FINGERPRINT_FORM = re.compile(r"[0-9a-f]{12}|none|unknown|not-read")
 
 
-STATUS_LABELS = (("note_cap", "omitted-note-cap"), ("no_room", "omitted-no-room"), ("invalid", "skipped-invalid"))
+STATUS_LABELS = (("note_cap", "omitted-note-cap"), ("no_room", "omitted-no-room"),
+                 ("uncounted", "omitted-uncounted"), ("invalid", "skipped-invalid"))
 
 
 def log_line(used, fingerprint, status=None) -> str:

@@ -126,6 +126,18 @@ class AdmissionTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             validate_chat(body, self.s, counter)
 
+    def test_system_message_must_be_first(self):
+        first = [{"role": "system", "content": "Answer briefly."}, {"role": "user", "content": "hi"}]
+        validate_chat(dict(self.body, messages=first), self.s)
+        for messages in ([{"role": "user", "content": "hi"}, {"role": "system", "content": "late"},
+                          {"role": "user", "content": "again"}],
+                         [{"role": "system", "content": "a"}, {"role": "system", "content": "b"},
+                          {"role": "user", "content": "hi"}]):
+            for counter in (None, words(10)):
+                with self.assertRaises(ContractError) as caught:
+                    validate_chat(dict(self.body, messages=messages), self.s, counter)
+                self.assertIn("first message", str(caught.exception))
+
     def test_messages_not_modified(self):
         before = copy.deepcopy(self.body)
         validate_chat(self.body, self.s, words(500))

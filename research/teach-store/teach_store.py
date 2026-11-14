@@ -726,9 +726,15 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
 
     left_out counts the entries that apply to this message but were not added, by reason:
       "note_cap": they did not fit the fixed size cap for the notes block (budget_units);
-      "no_room":  they fit the cap, but the request had no room left for them.
-    Both are counted against relevant(), the full list of applicable entries, never against a
-    list that was already filtered. An entry is in exactly one of: used, note_cap, no_room.
+      "no_room":  they fit the cap, but the request had no room left for them. This is said
+                  only when the room was actually measured: by the byte rule for a request the
+                  byte rule can serve, or by a successful token count;
+      "uncounted": they fit the cap, the byte rule had no room, and a token count could not be
+                  made (no counter, or the counter failed). Whether they would have fitted is
+                  not known.
+    All are counted against relevant(), the full list of applicable entries, never against a
+    list that was already filtered. An entry is in exactly one of: used, note_cap, no_room,
+    uncounted.
 
     The byte rule (apply_to_messages) is tried first and its result is kept whenever it places
     every relevant entry. Only when it leaves some out, and count_tokens(messages) -> prompt
@@ -744,18 +750,23 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
     """
     legacy, legacy_ids = apply_to_messages(messages, entries, limits, output_tokens, budget_units)
     if not messages or messages[-1].get("role") != "user" or already_applied(messages):
-        return legacy, legacy_ids, {"note_cap": 0, "no_room": 0}
+        return legacy, legacy_ids, {"note_cap": 0, "no_room": 0, "uncounted": 0}
     applicable = relevant(entries, messages[-1]["content"])
     wanted = select(entries, messages[-1]["content"], budget_units)
     over_cap = len(applicable) - len(wanted)
 
-    def left(used_ids):
-        return {"note_cap": over_cap, "no_room": len(wanted) - len(used_ids)}
-    if len(legacy_ids) >= len(wanted) or count_tokens is None:
+    def left(used_ids, measured=True):
+        missing = len(wanted) - len(used_ids)
+        return {"note_cap": over_cap, "no_room": missing if measured else 0,
+                "uncounted": 0 if measured else missing}
+    if len(legacy_ids) >= len(wanted):
         return legacy, legacy_ids, left(legacy_ids)
     has_system = messages[0].get("role") == "system"
     if not has_system and len(messages) >= limits["max_messages"]:
-        return legacy, legacy_ids, left(legacy_ids)
+        return legacy, legacy_ids, left(legacy_ids)        # no room for a system message: a measured fact
+    if count_tokens is None:
+        return legacy, legacy_ids, left(legacy_ids, measured=False)
+    measured = True
     has_policy = has_system and messages[0]["content"].endswith(POLICY)
     chosen = list(wanted)
     while len(chosen) > len(legacy_ids):
@@ -771,10 +782,12 @@ def apply_with_status(messages: list[dict], entries: list[dict], limits: dict, o
             prompt = count_tokens(result)
         except Exception:
             prompt = None
-        if type(prompt) is int and prompt > 0 and prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]:
-            return result, [e["id"] for e in chosen], left(chosen)
+        if not (type(prompt) is int and prompt > 0):
+            measured = False                                # one failed count: the outcome is not a measurement
+        elif prompt + output_tokens + TOKEN_MARGIN <= limits["context_tokens"]:
+            return result, [e["id"] for e in chosen], left(chosen, measured)
         chosen.pop()
-    return legacy, legacy_ids, left(legacy_ids)
+    return legacy, legacy_ids, left(legacy_ids, measured)
 
 
 def apply_to_messages(messages: list[dict], entries: list[dict], limits: dict, output_tokens: int,

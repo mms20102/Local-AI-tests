@@ -6,10 +6,10 @@ logins, chats or logs.
 
 | File | SHA-256 |
 |---|---|
-| `chat_contract.py` | `67607b8dc0409041367c2038d5201b079ef1219693fa1c810e3df6e2471a10b7` |
+| `chat_contract.py` | `26ddfdae334c2b35f7f753fdc338578af8aeef8e26c941f2cdc74dda70473be5` |
 | `gateway_auth.py` | `17af7b5f25f3b956ea8ce21250b3b2dc24f87f1b0b35f2d751662bb9b8f093f1` |
 | `token_count.py` | `6833251bd4d70538716cc528be26db41a7ed327b7dad1b8757ab5d83aca85a6d` |
-| `tests/test_token_admission.py` | `f0af5cf76bf98774b8432395101d37b3f6f962a464fb3f0a0b616a57305f548c` |
+| `tests/test_token_admission.py` | `20b3df36f9a8e55d0c30c1e2ac16df855b7bf100ddf933c207c6cf0b885c223d` |
 
 Laptop local commits: `28753be` (the change) and `aa545f9` (tests runnable from this copy).
 `changes-since-baseline.diff` is the exact diff of `chat_contract.py` and `gateway_auth.py`
@@ -45,8 +45,9 @@ against the laptop baseline commit; `token_count.py` and the test file are new.
   read from source and confirmed only on a few requests (two Arabic, two with history).
 - The counter is loaded once when the gateway starts. A tokenizer file replaced afterwards is
   not noticed until restart; the hash pin is checked at load only.
-- A system message that is not first is accepted and counted here, and then refused by the
-  engine with its own message.
+- Added after publication (laptop commit `7dd479f`, **not loaded**): a system message that is not
+  first is refused here with a clear message. The version loaded on the laptop still accepts and
+  counts it, and the engine then refuses it.
 - Assistant history containing `</think>` is rendered here without the engine's special handling.
 - The teach hook runs after this check. See `../teach-store/` for how notes are budgeted.
 
@@ -56,6 +57,6 @@ against the laptop baseline commit; `token_count.py` and the test file are new.
 python -m unittest discover -s tests
 ```
 
-Needs nothing beyond the standard library for 15 tests. The 3 tests in `RealTokenizerTests` are
+Needs nothing beyond the standard library for 16 tests. The 3 tests in `RealTokenizerTests` are
 skipped unless the `tokenizers` package and the pinned tokenizer file are present, which is only
 the case on the laptop.

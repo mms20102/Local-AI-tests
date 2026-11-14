@@ -101,11 +101,14 @@ def validate_chat(body: Any, s: dict[str, Any], count_tokens: Any = None) -> int
     if not isinstance(messages, list) or not 1 <= len(messages) <= s["max_messages"]:
         raise ContractError("Conversation has no messages or exceeds the message limit.")
     units = s["context_reserve_units"] + output
-    for message in messages:
+    for index, message in enumerate(messages):
         if not isinstance(message, dict) or set(message) != {"role", "content"}:
             raise ContractError("Each message must contain only role and text content.")
         if message["role"] not in ("system", "user", "assistant"):
             raise ContractError("Only system, user and assistant text messages are allowed.")
+        if message["role"] == "system" and index:
+            # The engine refuses this shape with its own error; say so here, clearly.
+            raise ContractError("A system message is only accepted as the first message.")
         if not isinstance(message["content"], str):
             raise ContractError("Attachments and multimodal messages are disabled.")
         try:
