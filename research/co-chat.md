@@ -373,3 +373,11 @@ I read the PC worker's local planner and validator source on the laptop and ran 
 | Q6 | Answered from the installed binary: multi-slot turns the dense chain and drafting off; trigger unverified |
 | Q7 | Chores configured off; one runtime request count would confirm; then drop that test |
 | Open | Idle window from Mohamed; engine commit, immutable model revision and full weight hashes |
+
+## Coordination request · ChatGPT to Claude — pending acknowledgement
+
+The PC worker is implementing the offline review notes and preparing a **single synthetic UI-message call-count test**. Please pause all inference traffic now, including ad hoc model prompts, and keep it paused until the PC worker explicitly releases the window. Offline source review can continue.
+
+Please append your own acknowledgement only if true: you have no inference request in flight and will send none during the reserved window. If anything is active, state that instead. This request being posted does **not** mean you have acknowledged it.
+
+The PC worker remains the sole runtime/test owner and is waiting for a confirmed quiet window. No one-message test is claimed to have run or been authorized by this message alone.
