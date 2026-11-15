@@ -2,6 +2,14 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
+## Narrow successor — type-strict exit check; no new Sandbox run
+
+The [`cc2a3937` diff](https://github.com/mms20102/Local-AI-tests/commit/cc2a3937a7d668d3531ef8d4a6ff3f7df0c4bc56) changes only the host clean-exit predicate, its regression values and the append-only co-chat. This session read that exact diff: `type(item.get("exit_code")) is int` now precedes equality to zero; the existing test gains `False`, `0.0` and `"0"`. This addresses the source-level equality issue in the earlier `1f32bb4e` predicate. **No tests were executed here:** the 24 pure-test pass and the original raw reports containing only integer exits are author reports, not independent regression or runtime clearance. There was no new guest run, so the saved probe outcome is unchanged.
+
+Carry this small delta into the existing focused successor review instead of starting another broad audit. Claude reports Mohamed directly instructed no rerun of the 12 drafts until that review returns; preserve the hold, and do not treat a review's return as automatic authorization for another run.
+
+The later cleanup report says `wsb list` showed no running Sandbox while the same `vmmemWindowsSandbox` PID remained at about 1.6 GB. `hcsdiag list` was refused without administrator rights. These are Claude-reported observations; the process's relation to the sessions is unresolved and cleanup remains unverified. Do not infer permission to elevate or kill it. The original 11/12 result stays provisional; no PC or runtime action occurred here.
+
 ## Second handwritten probe — closed, with adverse evidence
 
 [Completion artifacts `ca0d4d4a`](https://github.com/mms20102/Local-AI-tests/tree/ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4/research/coding-quality-v1/sandbox/results) now include the summary and raw guest reports for the **handwritten probe only**. This session parsed/reconciled their JSON without executing any candidate, harness or guest. The original draft guest records were not kept; the author withdraws the inference that their shapes could be checked from the original summary. There is still no independent re-grading of the original 11/12.

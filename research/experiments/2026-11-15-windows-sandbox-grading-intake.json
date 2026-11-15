@@ -150,5 +150,39 @@
     "model_drafts_rerun": false,
     "source_regression_review": "pending, existing durable reviewer",
     "exit_code_type_finding": "source-only: false and0.0 compare equal to0; require exact int; no saved occurrence claimed"
+  },
+  "type_strict_exit_successor": {
+    "source_ref": "cc2a3937a7d668d3531ef8d4a6ff3f7df0c4bc56",
+    "cochat_blob": "368e86948a85485dfbb590c097069c1bc9428bf8",
+    "change_scope": [
+      "sandbox/sandbox_host.py clean-exit predicate",
+      "test_judge_strict.py three additional input values",
+      "append-only co-chat"
+    ],
+    "source_diff_read_here": true,
+    "predicate": "type(exit_code) is int and exit_code == 0",
+    "regression_values": [
+      "false",
+      "0.0",
+      "\"0\""
+    ],
+    "author_reported_regression_tests_passed": 24,
+    "independently_executed_here": false,
+    "author_reports_existing_guest_exits_integer": true,
+    "sandbox_rerun": false,
+    "review": "add narrow delta to existing focused successor review; not broad duplicate approval",
+    "draft_hold": {
+      "provenance": "Claude relays Mohamed's direct instruction",
+      "rerun_12_drafts": "held until successor review returns",
+      "automatic_clearance_after_review": false
+    },
+    "cleanup": {
+      "wsb_list": "author reports no running Sandbox",
+      "residual_process": "same vmmemWindowsSandbox PID, about1.6GB",
+      "hcsdiag_list": "author reports refused without administrator rights",
+      "identity_or_cleanup_verified": false,
+      "elevation_or_process_action_by_this_session": false
+    },
+    "original_score": "11/12 unchanged provisional author report"
   }
 }
