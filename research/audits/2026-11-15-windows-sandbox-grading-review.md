@@ -2,7 +2,23 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
-## Third probe failed; revision 5 and conditional fourth notice
+## Third/fourth artifacts available; fourth failed closed; revision 6 notice
+
+The author publishes the requested source-pinned third/fourth summaries and raw reports at [`9a00a52a`](https://github.com/mms20102/Local-AI-tests/commit/9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce). This session parses/reconciles their JSON only; it does not run `grade.py`, candidates or Windows. [Normalized intake](../experiments/2026-11-15-sandbox-probes3-4-intake.json) pins all four artifact blobs.
+
+| Saved artifact | Reconciled outcome |
+|---|---|
+| Probe 3 / runner revision 4 (`a1e3fca9`) | **8 planned sessions / 36 intended entries / 6 raw reports / 34 reporting entries.** Session 6 (`P_kill_runner`) is null after a 902.2-second deadline outcome; session 7 (`P_write`) is null and not started after the 3,161 MB sample. Both are `NOT JUDGED`; `probe_ok: false`. |
+| Probe 4 / runner revision 5 (`40b9e3df`) | **8 reports / 36 entries; all 36 exit 3221225794 (`0xC0000142`), zero output and zero per-case records.** The author identifies this as DLL initialization failure. All references lack usable observations; 20 index outcomes mismatch, 16 are recorded expected, `probe_ok: false`. |
+| Probe 4 reported protections | All 36 guest records say job/integrity as requested, and all eight sessions report protection fields/self-shutdown. These remain guest/host report evidence, not independent runtime inspection. No successful candidate attack was exercised, so the surviving runner session proves no protection against the prior attack. |
+
+The fourth result is a harness-startup failure, **not a new model score**. Expected decoy failures in a run where references also fail are not a positive control for grading. Nothing is marked trusted in its published host verdict. Missing original draft observations remain unrecoverable; preserve the provisional original 11/12.
+
+**Revision 6** removes the Administrators deny-only token adjustment while retaining the runner DACL, low-integrity restricted token, fresh-handle check, progress and host rejection. Source blob: `89f72ff483598a7ca897236b1d46e3c077f98ffd`. The narrow code delta is read; the author's causal explanation is **an inference, not an established guest mechanism**. Host-only harmless checks and 262 suite tests are author-reported and cannot substitute for guest validation.
+
+The fifth notice is handwritten-only, eight sessions and memory permitting; at the pin there is no completion evidence. The 12-draft hold stands, and return of a review is not automatic run clearance. Add this explicit source successor to the existing review, preserving older results at their tested revisions. No duplicate implementation, cloud probe, Actions job, PC/VM traffic, privilege change or candidate execution is performed here. Earlier artifact-request text below is historical now that the four files are published.
+
+## Historical third-probe report and revision-5 notice — before saved artifacts
 
 Claude's [`40b9e3df` turn](https://github.com/mms20102/Local-AI-tests/commit/40b9e3df294e184fee758b94b750d7d4371fd230) reports **`probe_ok: false`** for revision 4 (`a1e3fca9`). This is co-chat evidence, not a result independently rerun here. Eight sessions were planned: sessions 0–5 reported 34 entries with job/integrity fields and the expected reference/decoy outcomes; session 6 (`P_kill_runner`) again produced no report and reached the host deadline at roughly 902 seconds; session 7 (`P_write`) **was not started / not judged** because a 3,161 MB sample was below the 3,584 MB guard. Both unsuccessful outcomes remain in the plan.
 
