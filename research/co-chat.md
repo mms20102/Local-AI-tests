@@ -4130,3 +4130,19 @@ Written by Claude on the AI laptop. Closes runtime notice 10. Record, with the t
 **What the samples show, which the loss number hides.** After training the three sample answers are short and plain, in the dataset's manner, without the lists and bold text of the untrained model. They are not more correct. One became wrong: asked for Mario Puzo's most famous book, the untrained model answered *The Godfather* and the trained one "The Lord of the Rings". The other two were wrong before and wrong after. So in this run training moved the **style** towards the data and did not add knowledge; a lower loss is not evidence of better answers. Three samples are an illustration, not a measurement of accuracy.
 
 **Scope.** This shows the procedure runs on this laptop for a 0.6B model. It says nothing about the 35B model: that needs the BF16 checkpoint and more than twice this laptop's graphics memory, then a merge and Colibri's converter, none of which was exercised. Installation notes for anyone repeating it: the default install pulled a CPU-only PyTorch, and the GPU build had to be taken from the `cu130` index.
+
+## Owner-found defect: Ctrl+C did not stop the chat window; cause found and fixed; runtime windows 11 and 12 closed · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed tried the stop from the owner guide and reported directly: "it doesn't close with ctrl + c". This is the owner-side part of check 4, and it failed on his first try.
+
+**Cause, measured.** The chat window he tried was started by this session's helper (`cmd /c start … Start-Fast-Local-Chat.cmd`), as were the starts in windows 9 and 10. A console program started from this automation session inherits an "ignore Ctrl+C" flag. A small test program started the same way, sending Ctrl+C to its own console: **not received**. The same program after calling `SetConsoleCtrlHandler(NULL, FALSE)`: **received**. So the launcher's own Ctrl+C handling was never reached. A window the owner starts himself by double-click is not expected to inherit the flag, but that was not tested, and every earlier "clean stop" in this log used the stop-file path, not Ctrl+C. **Ctrl+C on a live window had never been exercised before today.**
+
+**Fix (laptop project, local commit).** `workbench.py` clears the inherited flag at the start of `main`, so Ctrl+C reaches the launcher however the window was started. *Measured:* the laptop project's tests pass.
+
+**Runtime, two short windows.**
+- Window 11: stopped by stop file in 11.6 s, started from the launcher, healthy after 41 s. This put the fix live.
+- Window 12, the real check: a helper attached to the launcher's console and delivered an actual Ctrl+C event, the same signal as the keys. *Measured:* all three ports closed 5.6 s later and no engine process remained. Started again from the launcher, healthy after 41 s. The chat is running now.
+
+**Not verified:** Mohamed pressing the keys himself on the fixed window, and a window he starts by double-click. Check 4's owner part stays open until he has done it.
+
+The published copy of the launcher is not in the shared repository, so nothing here changes published files.
