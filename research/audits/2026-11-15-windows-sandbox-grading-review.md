@@ -2,7 +2,21 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
-## Runner revision 4 notice — new token/pipe paths; third handwritten probe pending
+## Third probe failed; revision 5 and conditional fourth notice
+
+Claude's [`40b9e3df` turn](https://github.com/mms20102/Local-AI-tests/commit/40b9e3df294e184fee758b94b750d7d4371fd230) reports **`probe_ok: false`** for revision 4 (`a1e3fca9`). This is co-chat evidence, not a result independently rerun here. Eight sessions were planned: sessions 0–5 reported 34 entries with job/integrity fields and the expected reference/decoy outcomes; session 6 (`P_kill_runner`) again produced no report and reached the host deadline at roughly 902 seconds; session 7 (`P_write`) **was not started / not judged** because a 3,161 MB sample was below the 3,584 MB guard. Both unsuccessful outcomes remain in the plan.
+
+Reported pipe collection was 1,048,606 bytes for `P_print_flood` and 1,114,112 for `P_output`. The author withdraws the claim that low integrity by itself protects the runner. Its separate harmless host handle check reportedly allowed terminate/query/synchronize and denied VM-write before the DACL change. These are author-reported observations, not a general Windows access-control conclusion independently established by this intake.
+
+**Revision 5 is source under review:** runner blob `8d977c73fee366f99566aa665c0febcef790238f`; host blob `cc157efe91d9efba6a8205ef95836bb95cf28be3`. The author reports `protect_self` applies `D:P(A;;GA;;;SY)(A;;RC;;;OW)`, refuses candidates unless a fresh terminate-handle check is refused, adds Administrators as deny-only, writes progress traces, and requires the protection fields in the host report. The host-only handle/smoke checks and 262 suite tests without failures remain author reports. Guest efficacy is explicitly unknown; no general ACL, inherited-handle, report-share, collection or cleanup guarantee follows.
+
+The pinned results directory still has only the original and second-probe files. [Co-chat follow-up](https://github.com/mms20102/Local-AI-tests/blob/53201042fd5cfb2d2ab2cb7b40eda7362b6683b9/research/co-chat.md) requests already-recorded third-probe summary/raw or partial reports/progress under distinct names, with the actual revision-4 run identity. Do not overwrite earlier evidence or synthesize reports for the failed/skipped sessions.
+
+Residual `vmmemWindowsSandbox` and `vmwp` processes, empty environment listings and a listing-created server process are author reports. Their relationship to the sessions and full cleanup are unresolved. No elevation, extra inspection or termination follows from this relay. The fourth handwritten-only probe is announced **once memory permits**, not reported complete. Other same-user guest processes and shared-interpreter observation remain unresolved in the author's own account.
+
+Include this explicit successor in the existing review; an older judge/token result does not clear revision 5. Preserve the 12-draft hold, the provisional 11/12 and all failure/skip outcomes. No new implementation, probe, PC/VM/runtime traffic, privilege change or cloud job was performed here.
+
+## Historical runner revision 4 notice — before the failed probe
 
 The author publishes [`a1e3fca9`](https://github.com/mms20102/Local-AI-tests/commit/a1e3fca9f6c21bfda680c5f3330a9bc16f588048) after a reported direct request to continue investigation, while explicitly retaining the no-rerun hold on the 12 model drafts. The commit changes the runner substantially; prior parser/exit-code review does not validate this new Windows lifecycle path. It belongs in the existing review handoff as an explicit successor, without silently treating an older pinned result as coverage.
 
