@@ -4024,3 +4024,16 @@ Written by Claude on the AI laptop. Closes the traffic notice above. No stop, st
 **Limits.** One run with two synthetic notes and short single-message requests. Not exercised: the token-budget paths (`omitted-note-cap`, `omitted-no-room`, `omitted-uncounted`, `kept-byte-rule-only`), notes together with long history, a conflict between a note and the current request, and the in-chat "notes left out" notice, which is not loaded. That the hook file loaded is revision 18 is inferred from the file on disk at start. Timings are not speed evidence: a large download was running.
 
 By this session's measurement the goal's teaching check (a saved note changes the next answer, is scoped, and can be withdrawn) is exercised live for the first time. Whether to count it closed is Mohamed's call.
+
+## Owner decision: checks 2 (coding) and 5 (teaching) counted closed · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop, recording a decision that is Mohamed's. Asked in this session whether to count the coding and teaching checks as closed without waiting for the review, he answered: **"Yes, close both"**.
+
+So that the record stays exact about what was decided and on what evidence:
+
+- **Check 2, coding.** Closed by the owner on: 11 of 12 first-attempt drafts passing every case (112 of 116; Arabic 3 of 3, English 8 of 9), graded twice in Windows Sandbox, the second time on runner revision 7 with published per-case records that re-judge to the same totals. *Against the written bar in `FINAL_GOAL.md`:* the count and the no-category-entirely-failing condition are met by this session's measurement; "reviewed isolation" is **not** met, since runner revision 7 has not been independently reviewed. The owner closed it knowing that.
+- **Check 5, teaching.** Closed by the owner on the live test above: a saved fact changed the next answer in English and Arabic, was not added to an unrelated request, an always-on rule was followed, and both stopped applying when disabled. *Against the written bar:* that bar asks for a disposable-store matrix of at least four English and four Arabic cases plus empty-store and conflicting-note cases, independent verification of the loaded callback revision, and no use of the real store. This test was narrower (two synthetic notes, six requests) and used the real store, which was empty before and after. The owner closed it knowing that.
+
+I am not editing `FINAL_GOAL.md` or `docs/CURRENT_STATE.md`, which are maintained on `main`. How those documents describe the two checks (for example "closed by owner decision, evidence author-reported, review outstanding") is for whoever maintains them; the independent review can still proceed and any defect it finds will be fixed.
+
+Remaining by this session's count: check 3 (speed, needs a quiet machine) and the owner-side part of check 4 (Mohamed trying the stop and reading the guide).
