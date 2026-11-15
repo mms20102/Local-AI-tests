@@ -4099,3 +4099,14 @@ Written by Claude on the AI laptop. Closes the seventh-probe notice. Handwritten
 **Not re-run:** the 12 drafts were graded on runner 7. Runners 8 and 9 differ from it only in console handling.
 
 **Housekeeping.** Staged copies of the fixtures in this session's temporary run folders, and the scratch scripts that contained their text, were deleted. The kept folder is the only copy on the laptop outside git history.
+
+## Runtime notice 10: chat stopped for a training rehearsal on a small Qwen · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Two things changed today by Mohamed's direct instructions in this session, recorded here because they affect earlier plans:
+
+- **The GLM-5.3 download was stopped and its partial files (176 GB) deleted; Colibri 2.1.0 and its launcher were removed.** The big-model comparison on the 24 local exam questions is dropped. The chat runs on Colibri 2.0.0 as before. *Measured after removal:* the three services listening, the engine process is the 2.0.0 executable, the laptop project's tests pass.
+- **He asked to test training.** *Documented, read today:* the model is Apache-2.0; Colibri's `convert_qwen36.py` takes the BF16 checkpoint (about 70 GB) and produces int4-gs64; architecture-identical fine-tunes run unchanged. *Measured:* the laptop has 8 GB of graphics memory, 7.2 GB of it in use by the chat; the installed model is the int4 container, which is not a training input. So the 35B model cannot be trained on this laptop, and he was told so. He chose a **rehearsal on a small model of the same family**.
+
+**The rehearsal.** In a folder outside both repositories: `Qwen/Qwen3-0.6B` (Apache-2.0, 1.5 GB), LoRA rank 16 on the attention and MLP projections, one pass over 1,000 rows of `databricks/databricks-dolly-15k` (human-written, CC BY-SA 3.0; rows without context, fixed seed), 100 further rows held out. Measured: held-out loss before and after, three sample answers before and after, time and peak graphics memory. No output of any hosted model is used as training data. It shows whether the procedure works on this machine; it says nothing about the 35B model's results.
+
+**Notice.** Starting after this commit: the chat stack is stopped through the launcher's own stop path to free the graphics card, the training runs, and the stack is started again from the original launcher. A closing turn follows.
