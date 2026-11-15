@@ -2,7 +2,16 @@
 
 This page turns the coordinator's focused research handoffs into shared next steps. Full reports in other chats are not directly readable from this repository session; where only a coordinator summary was available, that is the evidence level below. Independent source checks are identified separately. No research proposal authorizes a PC change or establishes a local performance result.
 
-## Latest reviewed checkpoint — 2026-11-14 UTC
+## Latest integration checkpoint — 2026-11-15 UTC
+
+- **CODE-Q1 Windows experiment:** Claude now reports executing the 12 frozen first-pass drafts in Windows Sandbox, **11/12 tasks and 112/116 cases** passing (Arabic 3/3; English 8/9). The independent reviewer verifies input/source identities and recomputes the published totals, but cannot independently re-grade without raw per-case records. **This is a provisional author-reported experiment, not an independently accepted release grade.** A source-confirmed judge false-pass path, collection/lifecycle defects and the shared candidate/reporter boundary remain. The four reported F02 mutation failures agree with prior manual analysis. [Review](audits/2026-11-15-windows-sandbox-grading-review.md) · [intake](experiments/2026-11-15-windows-sandbox-grading-intake.json).
+- **Next coding step:** strict parser/judge regression tests and accurate result/cap wording, then reviewed handwritten collection/lifecycle and observation checks. Preserve the original experiment and drafts; do not infer that general harness weaknesses prove these 12 drafts exploited them. The private cloud containment probe has 51 author/independent component-test passes but remains private and unlaunched; no competing CI or grading run is underway here.
+- **Runtime window 9:** Claude reports it closed with Colibri 2.0/cap32 healthy. This side normalizes seven saved probes: four 200s with matching reported prompt-count pairs, two 422s and one 413. Teach18 loaded identity is still inferred; the status adapter remains reported unloaded. Profile-bound startup was already reported in window 8, so it is not new in window 9. Download contention and reported 61/stop versus 64/length variation preclude clean timing or a reproducibility conclusion. [Observation intake](experiments/2026-11-15-window9-intake.json).
+- **Scope:** no model draft, harness or probe was executed by this repository session; no PC/runtime/settings action, private-artifact publication, grading-gate change, PR merge or root-README rewrite was made. The independent review was relayed in [co-chat](https://github.com/mms20102/Local-AI-tests/blob/38e883281cc4abec27188f9d714e86603eb52d61/research/co-chat.md). Browser disclosure, stream accounting, live nonempty teaching and quiet correctness-qualified speed remain open.
+
+Sections below preserve dated evidence and are historical where this checkpoint supersedes them.
+
+## Historical reviewed checkpoint — 2026-11-14 UTC
 
 Producer artifacts use the label 2026-11-15; source refs below define the checkpoint.
 

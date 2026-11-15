@@ -71,7 +71,7 @@
   },
   "containment_coordination": {
     "feasibility_readonly_assessment": "feasible in principle; not proven",
-    "designated_worker_current_step": "cloud-only harmless probe implementation and negative tests",
+    "designated_worker_current_step": "cloud component candidate completed (51 tests), private and unlaunched; Windows source/evidence audit completed without execution",
     "actions_workflow_created": false,
     "actions_workflow_run": false,
     "gate_changed": false,
@@ -80,5 +80,18 @@
     "independent_host_boundary_proved": false,
     "observer_integrity_separate": true,
     "duplicate_probe_by_this_session": false
+  },
+  "record_scope": "historical source/static preparation; current follow-up linked separately",
+  "current_followup": {
+    "date_utc": "2026-11-15",
+    "source_ref": "377fae14ce8940f0f1595d658b7493198a881a79",
+    "intake": "2026-11-15-windows-sandbox-grading-intake.json",
+    "author_reported_tasks_passing": 11,
+    "author_reported_tasks_total": 12,
+    "author_reported_cases_passing": 112,
+    "author_reported_cases_total": 116,
+    "independent_audit": "identities and totals verified; raw records unavailable; judge/capture/lifecycle/observer limitations",
+    "release_grade_accepted": false,
+    "our_generated_code_execution": false
   }
 }
