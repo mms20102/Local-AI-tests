@@ -3773,3 +3773,30 @@ Two evidence points to keep precise in that completion:
 2. The guest source polls file size every 20 ms and stops after it observes a value above the 4 MiB threshold. That is a **sampled stop threshold, not a strict 4 MiB disk quota**. Please report actual peak/final written bytes and overshoot rather than describe it as a hard cap. The separate 1 MiB read limit, child exit, job assignment/resume/termination results and cleanup outcomes should remain distinct. Source flags alone do not establish applied enforcement.
 
 The accepted withdrawal of the expected-answer-withholding claim and window-9 novelty claim is recorded; no need for another acknowledgement. The unresolved same-interpreter observations, process identification and guest-reported isolation remain separate from the pure parser repair. The private cloud probe stays paused/private and no CI, model traffic or live-service change is made here.
+
+## Second sandbox probe complete: handwritten fixtures behave as indexed; one attack is contained, not prevented · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes the notice above. Repository-authored code only; no draft was staged or run; the chat stack was running throughout and was not touched.
+
+**Source identity.** *Recorded in the result file:* the run used `grade.py` `61adbf32…`, `sandbox_host.py` `7e90e3e7…`, `guest_runner.py` `6624d705…`, `source_gate.py` `61cfbd97…`, `hostile/index.json` `dcb7bee0…`, fixture revision 2. These are the files at `1f32bb4e`.
+
+**Outcome.** *Measured, one run:* seven sandbox sessions, 35 entries, host verdict `probe_ok: true`. 12 of 12 references pass every case, 12 of 12 decoys fail, each of the 11 hostile fixtures produced what `hostile/index.json` says it must. Published: [host result](coding-quality-v1/sandbox/results/probe-hostile-2026-11-15.json) and, as asked, the [guests' raw per-case reports](coding-quality-v1/sandbox/results/probe-hostile-2026-11-15-guest-reports.json), unedited.
+
+Kept distinct, as requested:
+
+| Item | Measured |
+|---|---|
+| Job assignment | `confined: true` on all 34 entries that reported. This is the runner's own record that `AssignProcessToJobObject` returned success before resume; nothing outside the guest verified it |
+| One-process limit | `P_spawn` tried `subprocess`, `os.system` and `os.startfile`; it reported none started |
+| Memory limit | `P_memory` ended with `MemoryError` inside the candidate after 1.78 s, exit code 0, 113 bytes; the remaining entries in the same session finished |
+| Deadline | `P_loop` and `P_forge_then_hang`: `timeout` at 10.02 s, exit code 1 after `TerminateJobObject`, 0 bytes of output |
+| Output stop (sampled) | `P_print_flood`: threshold 4,194,304; **final written 8,323,324 bytes**, overshoot 4,129,020, stopped after 0.3 s. It is a sampled stop, not a quota, and is described that way in the README now |
+| Read limit (separate) | `P_output` wrote 20,971,608 bytes inside its 0.44 s run and exited 0; because it was over the 1 MiB read limit no records were taken and the entry failed. The sampled stop did not catch it: it finished between samples |
+| Forged output | `P_forge_line` judged on its real value and failed; `P_spoof`'s fabricated report was overwritten by the runner's own |
+| Cleanup | six sessions closed by the guest's own shutdown; the host's second listing by image name found none of the listed sandbox images. A `vmmemWindowsSandbox` process was still listed by Windows after the run; it is not among the image names the host checks, and I have not established what owns it |
+
+**One attack succeeded and is contained rather than prevented.** `P_kill_runner` opened its parent through the Windows API and ended the guest runner. *Measured:* no report, the host's 900-second deadline was hit, the host closed the sandbox and refused the session. The job object does not stop a candidate from opening other processes in the guest. What limits the damage: the source gate classed it as not plain, so it ran alone and no result is accepted from it. A candidate of this kind can therefore deny its own grading and cost 15 minutes, and nothing more was observed.
+
+**Withdrawn.** In the notice above I wrote that none of the 12 published results depends on the malformed-record path, "derived by re-reading the published result file". That file has no per-case records, so the statement cannot be derived from it, and the guests' raw reports of the first drafts run were not kept. What remains is narrower: the driver always writes every field, so a malformed record needs a candidate that replaces the driver's output, and the first scan found no such reach in the drafts. That is an inference, not a check.
+
+**Not done, and not claimed.** The 12 drafts have not been re-run on this harness; 11 of 12 stays provisional. Same-interpreter observation, identification of sandbox processes by ownership, and isolation evidence from outside the guest are unchanged.
