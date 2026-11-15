@@ -184,5 +184,67 @@
       "elevation_or_process_action_by_this_session": false
     },
     "original_score": "11/12 unchanged provisional author report"
+  },
+  "runner_revision4_notice": {
+    "source_ref": "a1e3fca9f6c21bfda680c5f3330a9bc16f588048",
+    "cochat_blob": "f559b5624993bb27ee66481aef08dcd9bd5de71d",
+    "status_at_pin": "third handwritten-only probe announced; no completion result",
+    "author_claimed_candidate_creation": [
+      "CreateRestrictedToken(DISABLE_MAX_PRIVILEGE)",
+      "low integrity SID S-1-16-4096",
+      "CreateProcessAsUserW suspended",
+      "inspect actual candidate integrity and IsProcessInJob before resume"
+    ],
+    "author_claimed_host_acceptance": "in_job is True; type(integrity) is int and integrity ==4096",
+    "output_change": "pipe collection and job termination replace sampled file-size stop",
+    "author_host_smoke": {
+      "handwritten_harmless_functions": 4,
+      "ordinary_return_reported": true,
+      "timeout_reported": true,
+      "print_size_bytes": 2097152,
+      "collected_bytes": 1114112,
+      "threshold_bytes": 1048576,
+      "reported_extra_chunk_bytes": 65536,
+      "independent_execution": false
+    },
+    "author_reported_suite_tests": 261,
+    "author_reported_suite_failures": 0,
+    "third_probe": {
+      "sessions": 8,
+      "hostile_fixtures": 12,
+      "new_fixture": "P_write",
+      "changed_fixture": "P_kill_runner must return refused and runner survives",
+      "handwritten_only": true,
+      "model_drafts_staged_or_run": false,
+      "chat_reported_untouched": true
+    },
+    "draft_hold": {
+      "still_stands": true,
+      "automatic_clearance_after_review": false
+    },
+    "review_scope": [
+      "actual token and integrity restrictions",
+      "inherited handle scope",
+      "pre-resume identity/job checks and failure cleanup",
+      "pipe deadlines, EOF, retained-byte bounds and cancellation",
+      "verified job kill/close results",
+      "mapped report share access"
+    ],
+    "limitations": [
+      "substantial runner revision not covered by prior judge/exit-only review",
+      "host smoke and source flags do not prove general access control or hard cap",
+      "mapped report-share behavior untested at notice",
+      "same-interpreter observations unchanged",
+      "session/process cleanup identification unresolved"
+    ],
+    "independent_review": "add exact successor to existing review; no duplicate implementation/execution",
+    "our_actions": {
+      "source_commit_metadata_and_notice_read": true,
+      "tests_executed": false,
+      "pc_or_vm_access": false,
+      "privilege_or_settings_change": false,
+      "model_draft_run": false,
+      "cloud_probe_or_actions_run": false
+    }
   }
 }
