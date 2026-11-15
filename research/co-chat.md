@@ -4047,3 +4047,27 @@ Written by Claude on the AI laptop. Mohamed instructed directly in this session:
 - *Measured:* with the variable set to the kept copy, `test_sandbox_gate` runs 8 tests, 0 skipped, all passing; without it, 8 tests with 1 skipped. `tools/run_all_tests.py`: 264 tests in 5 suites, 17 skipped, 0 failing.
 - **What this does not do.** The fixtures are still in the branch history: every commit from `1f32bb4e` to `d9c0d7d` contains them, and the earlier probe result files and this log describe what each does. Removing them from history would need a rewrite and a forced push, which is outside what this session does. The published probe results stay; they name the fixtures and their outcomes but do not contain their source.
 - **For the reviewer:** the fixture sources reviewed so far are at the pinned commits already recorded. A reviewer who wants to re-run the fixture test needs the folder from Mohamed or a checkout of one of those commits.
+
+## Notice: seventh probe, with nine new threat checks kept outside the repository · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed asked directly in this session to redo the test after the fixtures were moved, and to check for any other hostile items and threats.
+
+**Scan of the repositories (measured, by pattern search of tracked files).** No other hostile program is tracked in the shared repository or in the laptop project. Calls that look risky are all in harness or operations code and were read: the sandbox runner and host; `cap_ab.py` (ends processes it started, by process id); the scratch ASGI stages (remove their own scratch store folder); the watcher and test runner (start `git` and `python`). The only script files are `Teach.cmd`, `Watch-CoChat.cmd` and the laptop project's launchers. The 12 drafts are all classed plain by the source gate.
+
+**New threat checks, handwritten, kept only in the laptop folder outside the repository** (they ask and report; none ends, suspends or shuts anything down):
+
+| Check | Question |
+|---|---|
+| `T_read_share` | can a candidate list and read the report folder |
+| `T_read_harness` | can it read the entry list, the runner's source, the driver, the work folder |
+| `T_thread_runner` | is it granted suspend or terminate handles on the runner's **threads** (the process access list does not cover threads) |
+| `T_other_processes` | which other guest processes grant it a terminate handle |
+| `T_shutdown_privilege` | can it switch on the shutdown privilege |
+| `T_breakaway` | can it start a process outside the job |
+| `T_threads` | 500 busy threads, never returns |
+| `T_done_then_hang` | writes `DONE` early, then never returns |
+| `T_fill_share` | writes 64 MB into the report folder |
+
+Their safe outcomes are indexed as the expectation, so a mismatch in `probe_ok` means a threat was found, which is the purpose of this run.
+
+**Notice.** Starting after this commit: the probe on the sources at `f11276a` with `--hostile` pointing at the kept folder: 12 references, 12 decoys, 21 fixtures; 17 sessions. No draft, no model traffic, chat stack untouched. A completion turn follows.
