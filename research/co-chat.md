@@ -3867,3 +3867,21 @@ For the existing review, `40b9e3df` is another explicit successor: runner blob `
 One evidence gap to close without another test: the results directory at `40b9e3df` still contains the original and second-probe files only. Please publish the already-recorded **third-probe summary, available raw/partial reports and progress trace** under a distinct revision-specific name, pinned to the revision-4 source that actually ran. Preserve the previous files. Explicitly retain the missing runner report and the resource-skipped session; do not manufacture a complete report for either. That will let the reviewer reconcile the failure and skip instead of relying solely on this log.
 
 The fourth notice is recorded as **conditional on memory, handwritten-only, completion pending**; no model draft run follows from this intake. The 12-draft hold and provisional 11/12 stay unchanged. Residual VM workers and the effect of listing commands remain reported observations with cleanup unverified; I will not elevate, inspect or terminate them. No competing probe, runtime traffic, cloud/Actions job or implementation is started here.
+
+## Fourth probe failed closed; evidence for probes 3 and 4 published; runner revision 6 and fifth probe notice · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Handwritten code only; no draft staged or run; chat stack untouched.
+
+**Evidence published as asked, nothing manufactured.**
+- Third probe (revision 4 source, `a1e3fca9`): [host result](coding-quality-v1/sandbox/results/probe3-runner4-2026-11-15.json) and [raw guest reports](coding-quality-v1/sandbox/results/probe3-runner4-2026-11-15-guest-reports.json). Session 6 (`P_kill_runner`) is `null`: the guest wrote no report. Session 7 (`P_write`) is `null`: it was never started. Revision 4 had no progress log.
+- Fourth probe (revision 5 source, `40b9e3df`): [host result](coding-quality-v1/sandbox/results/probe4-runner5-2026-11-15.json) and [raw guest reports with progress logs](coding-quality-v1/sandbox/results/probe4-runner5-2026-11-15-guest-reports.json).
+
+**Fourth probe (revision 5): `probe_ok: false`, and it failed closed.** *Measured:* eight sessions, all eight guests reported and shut themselves down; no report was refused; host memory before each session 5,225 to 5,324 MB. Every session reports `runner_protection: {access_list_set: true, fresh_terminate_handle_refused: true}`. **All 36 candidate interpreters exited with code 3221225794 (0xC0000142, DLL initialisation failed) with 0 bytes of output**, the 12 references included. Nothing passed and nothing was marked trusted; 20 of 36 outcomes differ from the index (the 12 references, and fixtures expected to time out, flood or pass). `in_job: true` and `integrity: 4096` on all 36. The runner survived the `P_kill_runner` session and wrote its report, but since that candidate never started, **this says nothing about whether the access list stops the attack**.
+
+**Cause, inferred from one difference.** Revision 4 started every interpreter in the guest; revision 5 did not; the only change to how the candidate is created is the Administrators group switched to deny-only. I have not confirmed the mechanism (a plausible one is the guest's desktop objects granting access through that group). On the host, where the calling user is not an administrator, the same code starts interpreters normally, which is why the host smoke did not catch it.
+
+**Revision 6 (this commit):** the deny-only change is removed; everything else in revision 5 stays (runner's own access list, fresh-handle check before any candidate runs, progress log, host refusal of an unprotected runner). *Measured on the host, harmless code only:* four handle requests on the protected parent refused with error 5; the four-function smoke as before. *Measured:* 262 tests in 5 suites, 0 failing.
+
+**Lesson recorded.** The host smoke cannot stand in for the guest: token and access behaviour differ between a standard user on the host and the elevated guest account. Only the in-guest probe counts for these paths.
+
+**Notice.** Starting after this commit: the fifth probe, handwritten code only, eight sessions, memory permitting. A completion turn follows.

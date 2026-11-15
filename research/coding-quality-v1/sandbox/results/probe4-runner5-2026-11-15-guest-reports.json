@@ -1,0 +1,831 @@
+{
+ "note": "Fourth probe, runner revision 5 (source 40b9e3df). probe_ok false: every candidate interpreter failed to start (exit code 0xC0000142). Raw guest reports, one per sandbox session, unedited; null where the guest wrote none.",
+ "sessions": {
+  "session-00": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "A01_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "A01_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "A02_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "A02_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "A03_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "A03_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "B01_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "B01_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "B02_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "B02_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "B03_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "B03_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "E01_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "E01_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "E02_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "E02_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "E03_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "E03_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "F01_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "F01_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "F02_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "F02_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "F03_reference",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "F03_decoy",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "P_loop",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "P_print_flood",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    },
+    {
+     "id": "P_memory",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "P_forge_line",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    },
+    {
+     "id": "P_forge_then_hang",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 1.4
+  },
+  "session-01": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_output",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.1
+  },
+  "session-02": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_network",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.2
+  },
+  "session-03": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_host_files",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.2
+  },
+  "session-04": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_spoof",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.2
+  },
+  "session-05": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_spawn",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.2
+  },
+  "session-06": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_kill_runner",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.02
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.1
+  },
+  "session-07": {
+   "guest_runner": "cq1-sandbox-5",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "P_write",
+     "records": null,
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 3221225794,
+     "stdout_bytes": 0,
+     "stdout_capped": false,
+     "seconds": 0.03
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 0.2
+  }
+ },
+ "progress_logs": {
+  "session-00": [
+   "12:40:40 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:40:40 start A01_reference",
+   "12:40:40 end A01_reference finished",
+   "12:40:40 start A01_decoy",
+   "12:40:40 end A01_decoy finished",
+   "12:40:40 start A02_reference",
+   "12:40:40 end A02_reference finished",
+   "12:40:40 start A02_decoy",
+   "12:40:40 end A02_decoy finished",
+   "12:40:40 start A03_reference",
+   "12:40:40 end A03_reference finished",
+   "12:40:40 start A03_decoy",
+   "12:40:40 end A03_decoy finished",
+   "12:40:40 start B01_reference",
+   "12:40:40 end B01_reference finished",
+   "12:40:40 start B01_decoy",
+   "12:40:40 end B01_decoy finished",
+   "12:40:40 start B02_reference",
+   "12:40:40 end B02_reference finished",
+   "12:40:40 start B02_decoy",
+   "12:40:40 end B02_decoy finished",
+   "12:40:40 start B03_reference",
+   "12:40:40 end B03_reference finished",
+   "12:40:40 start B03_decoy",
+   "12:40:40 end B03_decoy finished",
+   "12:40:40 start E01_reference",
+   "12:40:40 end E01_reference finished",
+   "12:40:40 start E01_decoy",
+   "12:40:40 end E01_decoy finished",
+   "12:40:40 start E02_reference",
+   "12:40:40 end E02_reference finished",
+   "12:40:40 start E02_decoy",
+   "12:40:40 end E02_decoy finished",
+   "12:40:40 start E03_reference",
+   "12:40:40 end E03_reference finished",
+   "12:40:40 start E03_decoy",
+   "12:40:41 end E03_decoy finished",
+   "12:40:41 start F01_reference",
+   "12:40:41 end F01_reference finished",
+   "12:40:41 start F01_decoy",
+   "12:40:41 end F01_decoy finished",
+   "12:40:41 start F02_reference",
+   "12:40:41 end F02_reference finished",
+   "12:40:41 start F02_decoy",
+   "12:40:41 end F02_decoy finished",
+   "12:40:41 start F03_reference",
+   "12:40:41 end F03_reference finished",
+   "12:40:41 start F03_decoy",
+   "12:40:41 end F03_decoy finished",
+   "12:40:41 start P_loop",
+   "12:40:41 end P_loop finished",
+   "12:40:41 start P_print_flood",
+   "12:40:41 end P_print_flood finished",
+   "12:40:41 start P_memory",
+   "12:40:41 end P_memory finished",
+   "12:40:41 start P_forge_line",
+   "12:40:41 end P_forge_line finished",
+   "12:40:41 start P_forge_then_hang",
+   "12:40:41 end P_forge_then_hang finished"
+  ],
+  "session-01": [
+   "12:41:19 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:41:19 start P_output",
+   "12:41:19 end P_output finished"
+  ],
+  "session-02": [
+   "12:42:00 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:42:00 start P_network",
+   "12:42:00 end P_network finished"
+  ],
+  "session-03": [
+   "12:42:41 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:42:41 start P_host_files",
+   "12:42:41 end P_host_files finished"
+  ],
+  "session-04": [
+   "12:43:21 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:43:21 start P_spoof",
+   "12:43:21 end P_spoof finished"
+  ],
+  "session-05": [
+   "12:44:00 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:44:00 start P_spawn",
+   "12:44:00 end P_spawn finished"
+  ],
+  "session-06": [
+   "12:44:38 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:44:38 start P_kill_runner",
+   "12:44:38 end P_kill_runner finished"
+  ],
+  "session-07": [
+   "12:45:17 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "12:45:17 start P_write",
+   "12:45:17 end P_write finished"
+  ]
+ }
+}

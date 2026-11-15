@@ -12,8 +12,8 @@ Every candidate interpreter is confined before it executes a single instruction:
     to terminate it (that right is not among the "write" rights integrity blocks), so the access
     list is what protects the runner;
   - it is created with a RESTRICTED, LOW-INTEGRITY copy of the runner's token: every privilege that
-    can be removed is removed, the Administrators group is switched to deny-only, and Windows
-    refuses a low-integrity process write access to files and objects of higher integrity;
+    can be removed is removed, and Windows refuses a low-integrity process write access to files
+    and objects of higher integrity;
   - it is created SUSPENDED, placed in a Windows job object, and only then resumed;
   - the job allows ONE process (the candidate cannot start another), caps its memory, and is
     terminated as a whole on the deadline, on too much output, or when this runner exits;
@@ -57,7 +57,6 @@ JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
 JobObjectExtendedLimitInformation = 9
 TOKEN_ALL_ACCESS, TOKEN_QUERY = 0xF01FF, 0x0008
 DISABLE_MAX_PRIVILEGE = 0x1
-ADMINISTRATORS_SID = "S-1-5-32-544"
 DACL_SECURITY_INFORMATION = 0x4
 # Protected access list: SYSTEM everything; OWNER RIGHTS read-only, which removes the owner's implicit
 # right to rewrite the list. Nobody else is granted anything.
@@ -204,17 +203,12 @@ def low_rights_token(kernel, advapi):
     own, restricted, sid = wintypes.HANDLE(), wintypes.HANDLE(), ctypes.c_void_p()
     if not advapi.OpenProcessToken(kernel.GetCurrentProcess(), TOKEN_ALL_ACCESS, ctypes.byref(own)):
         raise OSError("OpenProcessToken failed")
-    administrators = ctypes.c_void_p()
-    if not advapi.ConvertStringSidToSidW(ADMINISTRATORS_SID, ctypes.byref(administrators)):
-        kernel.CloseHandle(own)
-        raise OSError("ConvertStringSidToSidW failed")
+    # The Administrators group is left as it is. Revision 5 switched it to deny-only and, in the guest,
+    # every candidate interpreter then failed to start (exit code 0xC0000142, DLL initialisation failed).
     try:
-        deny_only = SidAndAttributes(administrators, 0)
-        if not advapi.CreateRestrictedToken(own, DISABLE_MAX_PRIVILEGE, 1, ctypes.byref(deny_only), 0, None, 0, None,
-                                            ctypes.byref(restricted)):
+        if not advapi.CreateRestrictedToken(own, DISABLE_MAX_PRIVILEGE, 0, None, 0, None, 0, None, ctypes.byref(restricted)):
             raise OSError("CreateRestrictedToken failed")
     finally:
-        kernel.LocalFree(administrators)
         kernel.CloseHandle(own)
     if not advapi.ConvertStringSidToSidW(LOW_INTEGRITY_SID, ctypes.byref(sid)):
         kernel.CloseHandle(restricted)
@@ -406,7 +400,7 @@ def run_entry(entry_id: str) -> dict:
 
 def main() -> None:
     started = time.monotonic()
-    result = {"guest_runner": "cq1-sandbox-5", "environment": {}, "entries": [], "complete": False,
+    result = {"guest_runner": "cq1-sandbox-6", "environment": {}, "entries": [], "complete": False,
               "limits": {"entry_timeout_s": ENTRY_TIMEOUT_S, "max_output_bytes": MAX_OUTPUT_BYTES,
                          "memory_limit_bytes": MEMORY_LIMIT_BYTES, "active_process_limit": 1,
                          "candidate_integrity": LOW_INTEGRITY_RID}}
