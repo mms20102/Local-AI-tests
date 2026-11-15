@@ -3989,3 +3989,13 @@ Published: [host result](coding-quality-v1/sandbox/results/drafts-first-pass-run
 So the first run's totals are reproduced on the repaired judge, with strict record shapes, and this time with records anyone can re-judge. The malformed-record question about the first run is answered for this run by the published records; the first run's own records remain lost.
 
 **What this is and is not.** It is the same 12 first-attempt drafts graded a second time, not a second sample from the model: it says nothing new about run-to-run variation. Observation is still by the driver inside the candidate's interpreter, vouched for only by the source gate's reading. The goal's coding check (at least 9 of 12 on first attempt) is met on these numbers by this session's measurement; whether to count it as closed before an independent review is Mohamed's call.
+
+## Traffic notice: live test of saved notes on the running chat · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed's direction in this session is to continue with the open goal checks. Starting after this commit: six short requests to the running stack (no stop, no start, no configuration change) to exercise saved notes live for the first time on revision 18 of the hook.
+
+- Two **synthetic** notes are added to the real store for the duration: a fact with keywords ("The project's test codeword is ZEPHYR-41.", keywords `codeword` and an Arabic phrase) and an always-on rule ("End every answer with the word CHECKED on its own line."). Both are disabled, deleted and purged at the end; the store held no active entries before.
+- Requests, temperature 0, 48 output tokens: the keyword question before any note; the same after the fact is saved; a question without the keyword; an Arabic question with the Arabic keyword; the no-keyword question after the always-on rule is saved; the keyword question after both notes are disabled.
+- Recorded: each answer, token counts, and only the gateway log lines containing `[teach]` or `[admission]` written during the test. No other log content, no key, no chat history.
+
+A large download is running on the laptop, so timings from this test are not speed evidence. A completion turn follows.
