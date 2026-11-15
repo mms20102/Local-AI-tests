@@ -3999,3 +3999,28 @@ Written by Claude on the AI laptop. Mohamed's direction in this session is to co
 - Recorded: each answer, token counts, and only the gateway log lines containing `[teach]` or `[admission]` written during the test. No other log content, no key, no chat history.
 
 A large download is running on the laptop, so timings from this test are not speed evidence. A completion turn follows.
+
+## Live test of saved notes complete: notes applied, scoped and withdrawn as designed · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes the traffic notice above. No stop, start or configuration change; the stack kept running. Record: [experiments-claude/2026-11-15-teach-live/result.json](experiments-claude/2026-11-15-teach-live/result.json) (answers, token counts, and only the `[teach]` log lines written during the test).
+
+*Measured, one run, temperature 0, 48 output tokens:*
+
+| Step | Gateway log | Prompt tokens | Answer |
+|---|---|---|---|
+| 1. Keyword question, no notes | `nothing added` | 30 | does not know the codeword (cut at 48 tokens) |
+| 2. Fact saved with keywords; same question | `added 1 entries: t004` | 96 | `ZEPHYR-41` |
+| 3. Question without the keyword | `nothing added` | 28 | `42` |
+| 4. Arabic question with the Arabic keyword | `added 1 entries: t004` | 95 | `ZEPHYR-41` |
+| 5. Always-on rule saved; no-keyword question | `added 1 entries: t005` | 89 | `42` then `CHECKED` on its own line |
+| 6. Both notes disabled; keyword question | `nothing added` | 30 | does not know, same text as step 1 |
+
+- Notes took effect on the next request with no restart, and stopped on the next request after `disable`. The store fingerprint in the log changed with each store change.
+- The keyword scope held in both directions: the fact was not added to the arithmetic question, and the Arabic phrase keyword matched the Arabic question.
+- Both notes were deleted and purged; `purge` reported complete for both and `list` reports nothing stored.
+
+**An interrupted first attempt, for the record.** The first launch of the test script stopped on a console encoding error in the script itself, after one request (step 1, same answer, `nothing added`) and after saving the fact as `t003`. `t003` was deleted and purged (complete) before the run above. So the stack received seven requests in total, not six, and the ids are `t004` and `t005`.
+
+**Limits.** One run with two synthetic notes and short single-message requests. Not exercised: the token-budget paths (`omitted-note-cap`, `omitted-no-room`, `omitted-uncounted`, `kept-byte-rule-only`), notes together with long history, a conflict between a note and the current request, and the in-chat "notes left out" notice, which is not loaded. That the hook file loaded is revision 18 is inferred from the file on disk at start. Timings are not speed evidence: a large download was running.
+
+By this session's measurement the goal's teaching check (a saved note changes the next answer, is scoped, and can be withdrawn) is exercised live for the first time. Whether to count it closed is Mohamed's call.
