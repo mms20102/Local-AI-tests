@@ -1,12 +1,21 @@
 # Current project state
 
-Checkpoint: 2026-11-14. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
+Checkpoint: 2026-11-15. This page supersedes the early 27-test/incomplete-inventory status. The [earlier checkpoint](https://github.com/mms20102/Local-AI-tests/blob/3701d34729efb8fe7a174d2b48957709692fdfdb/docs/CURRENT_STATE.md) remains in history.
 
-## Latest reviewed checkpoint — 2026-11-14 UTC
+## Latest reviewed checkpoint — 2026-11-15 UTC
+
+- **CODE-Q1 Windows experiment:** Claude now reports executing the 12 frozen first-pass drafts in Windows Sandbox, **11/12 tasks and 112/116 cases** passing (Arabic 3/3; English 8/9). The independent reviewer verifies input/source identities and recomputes the published totals, but cannot independently re-grade without raw per-case records. **This is a provisional author-reported experiment, not an independently accepted release grade.** A source-confirmed judge false-pass path, collection/lifecycle defects and the shared candidate/reporter boundary remain. The four reported F02 mutation failures agree with prior manual analysis. [Review](../research/audits/2026-11-15-windows-sandbox-grading-review.md) · [intake](../research/experiments/2026-11-15-windows-sandbox-grading-intake.json).
+- **Next coding step:** strict parser/judge regression tests and accurate result/cap wording, then reviewed handwritten collection/lifecycle and observation checks. Preserve the original experiment and drafts; do not infer that general harness weaknesses prove these 12 drafts exploited them. The private cloud containment probe has 51 author/independent component-test passes but remains private and unlaunched; no competing CI or grading run is underway here.
+- **Runtime window 9:** Claude reports it closed with Colibri 2.0/cap32 healthy. This side normalizes seven saved probes: four 200s with matching reported prompt-count pairs, two 422s and one 413. Teach18 loaded identity is still inferred; the status adapter remains reported unloaded. Profile-bound startup was already reported in window 8, so it is not new in window 9. Download contention and reported 61/stop versus 64/length variation preclude clean timing or a reproducibility conclusion. [Observation intake](../research/experiments/2026-11-15-window9-intake.json).
+- **Scope:** no model draft, harness or probe was executed by this repository session; no PC/runtime/settings action, private-artifact publication, grading-gate change, PR merge or root-README rewrite was made. The independent review was relayed in [co-chat](https://github.com/mms20102/Local-AI-tests/blob/38e883281cc4abec27188f9d714e86603eb52d61/research/co-chat.md). Browser disclosure, stream accounting, live nonempty teaching and quiet correctness-qualified speed remain open.
+
+Sections below preserve dated evidence and are historical where this checkpoint supersedes them.
+
+## Historical reviewed checkpoint — 2026-11-14 UTC
 
 Producer artifacts use the label 2026-11-15; source refs below define the checkpoint.
 
-- **Scratch ASGI:** revision 2 at `bd7f005e` corrects settings-before-import bootstrap and guard placement. This side recomputed 27 saved assertion groups / 34 captures / zero detected internal-key captures; no independent rerun. Pre-first cancellation and spec-2.4 secondary error remain, plus a narrow stage-3 exit-gate inconsistency. [Completion review](../research/audits/2026-11-14-scratch-asgi-completion-review.md).
+- **Scratch ASGI:** revision 2 at `bd7f005e` corrects settings-before-import bootstrap and guard placement. This side recomputed 27 saved assertion groups / 34 captures / zero detected internal-key captures; no independent rerun. Pre-first cancellation and spec-2.4 secondary error remain; the stage-3 exit gate is now corrected at `6ae83f76` as a source-only change with no rerun. [Completion review](../research/audits/2026-11-14-scratch-asgi-completion-review.md).
 - **CODE-Q1:** the 12 first-pass drafts are approved/published at `afc71839`. The designated worker reports matching input hashes and **12/12 complete transport / structure pass**. Behavioral execution is **unassessed, denominator 12**, blocked by containment, not missing drafts. F02 has a source-derived mutation defect; no runtime score is inferred. [Readiness](../research/audits/2026-11-14-codeq1-grading-readiness.md).
 - **Repository/CI:** the landing-page direction is accepted; dated updates stay here and in linked audits. GitHub run `43642451133` reports successful Ubuntu/Windows jobs, which is not arbitrary-candidate isolation. [Maintenance review](../research/audits/2026-11-14-repository-maintenance-review.md).
 - **Scope:** no private capture artifact was rehosted, no draft executed by this repository session, no live settings changed, and PR #1 is not merged by this review. Browser status, streamed accounting, quiet timing and the remaining owner checks stay open.
@@ -67,7 +76,7 @@ The latest explicit implementation checkpoint still had one-arm lifecycle/identi
 - No current full-stack UI call-count result; the previous UI attempt was blocked before input.
 - Claude reports the hook enabled and gateway invocation observed in windows 5–6. Independent current live configuration, exact loaded callback code, whole-pipeline/wire equivalence and broad adherence remain unverified; the former hook-off checkpoint is superseded as a current-state claim.
 - Renderer-only token fit is reported; binary-added tokens and full-engine overhead/context fit remain unverified.
-- No sandboxed semantic assessment of model-generated code or CODE-Q1 model pass rate.
+- No independently accepted CODE-Q1 semantic release grade; the later Windows experiment is reported and audited above.
 - No power-loss guarantee; broader crash scenarios remain outside the tested scope.
 - No larger cache/context, replacement model, RAM purchase or dependency upgrade adopted from research alone.
 
@@ -75,7 +84,7 @@ The latest explicit implementation checkpoint still had one-arm lifecycle/identi
 
 This section records what was known before the later runtime windows. In particular, round 24's “not started” applies to that checkpoint only; subsequent windows 1–3 report 2.1 starts and restoration. Current teach status is summarized above.
 
-Claude completed the **tokenizer-only preflight** in rounds 22–23 using existing assets. The installed nonthinking renderer adds four tokens beyond his earlier plain-ChatML assumption. The reported maximum input plus a 256-output reservation is 556; binary-added tokens remain null. See the [normalized observation](../research/context-preflight/reported-renderer-preflight.json). Do not generate traffic just to fill that field; validate against usage during a later otherwise-authorized request. Codex owns this source/fixture audit and current project map; the PC worker retains runtime ownership.
+Claude completed the **tokenizer-only preflight** in rounds 22–23 using existing assets. The installed nonthinking renderer adds four tokens beyond his earlier plain-ChatML assumption. The reported maximum input plus a 256-output reservation is 556; binary-added tokens remain null. See the [normalized observation](../research/context-preflight/reported-renderer-preflight.json). Do not generate traffic just to fill that field; validate against usage during a later otherwise-authorized request. This repository session contributes source/fixture review and project-map updates; the PC worker coordinates runtime work.
 
 At round 24, Claude additionally reported Colibri 2.1.0 extracted beside 2.0.0 and not yet started, plus a launcher version selector added to worker-owned workbench.py at local commit cf4d369. This changes that file's previous checksum. The PC worker must reconcile the local diff/manifest before use. The published release asset size/digest matches Claude's report, but laptop installation/source behavior was not independently checked here. No update was installed or run by this session; [version/security verification](../research/VERSION_VERIFICATION_2026-11-14.md) records the boundaries.
 

@@ -1,8 +1,14 @@
 # CODE-Q1 independent grading: preparation and current boundary
 
-Review checkpoint: **2026-11-14 21:32 UTC**. Canonical grader/fixtures were inspected at `df660942`; published first-pass drafts are at [`afc71839`](https://github.com/mms20102/Local-AI-tests/tree/afc71839667c0c212787afae982d4e217e6dc1d4/research/coding-quality-v1/drafts-2026-11-14-first-pass). Claude reports direct approval for their publication. No private laptop drafts were retrieved by this review.
+Historical preparation checkpoint: **2026-11-14 21:32 UTC**. Canonical grader/fixtures were inspected at `df660942`; published first-pass drafts are at [`afc71839`](https://github.com/mms20102/Local-AI-tests/tree/afc71839667c0c212787afae982d4e217e6dc1d4/research/coding-quality-v1/drafts-2026-11-14-first-pass). Claude reports direct approval for their publication. No private laptop drafts were retrieved by this review.
 
-**No generated draft was executed by this repository session. Behavioral grading remains unassessed.** The designated grading worker handled input verification/static grading; no duplicate run was assigned here. Its private handoff files remain unpublished.
+**No generated draft was executed by this repository session. Behavioral grading was unassessed at this historical preparation checkpoint.** The designated grading worker handled input verification/static grading; no duplicate run was assigned here. Its private handoff files remain unpublished.
+
+## Current follow-up — 2026-11-15
+
+Claude subsequently reports a Windows Sandbox run: **11/12 tasks, 112/116 cases**, Arabic 3/3 and English 8/9. The designated independent audit verifies the frozen hashes and published arithmetic, but raw guest observations are absent and a concrete judge false-pass path plus collection/lifecycle and observer-integrity gaps remain. The result is **provisional author-reported**, not an independently accepted release grade. [Full review](2026-11-15-windows-sandbox-grading-review.md) · [intake](../experiments/2026-11-15-windows-sandbox-grading-intake.json).
+
+The private cloud probe is complete only at the 51-component-test milestone and remains unpublished/unlaunched. No competing probe, CI workflow or grading run is being created here. The canonical manifest still says execution disabled, but Claude reused its parser/driver/judge outside that entry path; the flag must not be used to claim no project draft execution occurred. The earlier containment-blocked statements below describe this side's preparation, not the later reported Windows action.
 
 ## Frozen inputs and denominators
 
@@ -61,4 +67,4 @@ Actual runner/Docker containment must be verified, including denied network, exp
 - [Candidate/report driver](https://github.com/mms20102/Local-AI-tests/blob/afc71839667c0c212787afae982d4e217e6dc1d4/research/coding-quality-v1/grade.py#L41) shares the candidate interpreter. Parent-held expected values do not authenticate reported return/exception/mutation observations against adversarial interference. Disclose that distinction separately from host containment.
 - Static checks verify syntax/names, not signatures, behavior or all requested formatting. The semantic function can proceed with unknown transport, so complete first-attempt provenance must be enforced separately. Canonical input hashes must be verified externally before execution.
 
-A future report should separate transport, structure, requested-format compliance, manually derived observations, executed authored cases and observer-integrity limits. Report exact per-case failures and first-attempt fully passing tasks out of 12, with 3 Arabic/9 English task breakdowns. Quiet-run timing and representativeness remain separate. No behavioral score is available now.
+A future report should separate transport, structure, requested-format compliance, manually derived observations, executed authored cases and observer-integrity limits. Report exact per-case failures and first-attempt fully passing tasks out of 12, with 3 Arabic/9 English task breakdowns. Quiet-run timing and representativeness remain separate. At this historical preparation checkpoint no behavioral score was available; the later provisional report and its review are linked above.

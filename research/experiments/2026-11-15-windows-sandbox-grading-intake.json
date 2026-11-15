@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "kind": "author_reported_windows_experiment_with_relayed_independent_source_audit",
+  "date_utc": "2026-11-15",
+  "source_ref": "377fae14ce8940f0f1595d658b7493198a881a79",
+  "source_folder": "research/coding-quality-v1/sandbox",
+  "cochat_blob": "4d52341669e39d24977ff78f8d4d03d599d3330e",
+  "probe_notice_ref": "1b4edb5a6817b5b801e7a14aac1dfcd52472695e",
+  "published_draft_ref": "afc71839667c0c212787afae982d4e217e6dc1d4",
+  "authority_provenance": "Claude reports direct Mohamed instructions and owner-enabled Windows Sandbox in its own session; not independent runtime authorization for this repository session",
+  "author_report": {
+    "tasks_passing": 11,
+    "tasks_total": 12,
+    "cases_passing": 112,
+    "cases_total": 116,
+    "arabic_tasks": {
+      "pass": 3,
+      "total": 3
+    },
+    "english_tasks": {
+      "pass": 8,
+      "total": 9
+    },
+    "families": {
+      "A": "3/3",
+      "B": "3/3",
+      "E": "3/3",
+      "F": "2/3"
+    },
+    "F02_failure_indexes": [
+      0,
+      3,
+      4,
+      6
+    ],
+    "F02_reason": "mutated input",
+    "E02": "21/21",
+    "first_attempts_preserved": true,
+    "generated_drafts_run_by_Claude": 12,
+    "probe_runs_reported": 2,
+    "probe_sessions_published": 1
+  },
+  "independent_reviewer": {
+    "executed_code": false,
+    "pc_or_vm_access": false,
+    "original_blobs_verified": 91,
+    "source_hashes_verified": 4,
+    "draft_hashes_verified": 12,
+    "fixture_denominators_match": true,
+    "score_arithmetic_matches": true,
+    "raw_guest_case_records_available": false,
+    "independent_regrading_possible": false,
+    "observed_general_attack_in_actual_drafts": false
+  },
+  "priority_findings": [
+    "judge accepts raised record with missing error for normal value case via None == None",
+    "status-specific schema and duplicate-key validation inadequate",
+    "candidate and observer share interpreter/account; fields not authenticated",
+    "nonzero child exit and stdout_capped not rejected consistently",
+    "1MiB is post-run read cap; probe wrote 20971608 bytes",
+    "descendant ownership, bounded inspection/kill and cancellation cleanup not established",
+    "AST and guest network self-reports do not prove isolation"
+  ],
+  "decision": {
+    "score_status": "provisional author-reported, arithmetic consistent",
+    "release_quality_check_independently_accepted": false,
+    "original_results_preserved": true,
+    "canonical_manifest_gate": false,
+    "manual_driver_reuse_reported": true,
+    "next": "pure parser/judge regression fixes and corrected wording; then reviewed handwritten collection/lifecycle/observation checks"
+  },
+  "coordination": {
+    "independent_review_complete": true,
+    "duplicate_review_or_grading_run": false,
+    "private_cloud_probe_tests": 51,
+    "private_cloud_probe_published": false,
+    "private_cloud_probe_launched": false,
+    "actions_workflow_created_or_run": false,
+    "generated_code_executed_by_this_session": 0,
+    "runtime_changes_by_this_session": false,
+    "PR1_merge_or_close": false
+  },
+  "review_path": "../audits/2026-11-15-windows-sandbox-grading-review.md"
+}

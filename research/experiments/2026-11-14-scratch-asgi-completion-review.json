@@ -205,7 +205,7 @@
     "runtime_changes": false,
     "private_capture_code_rehosted": false
   },
-  "current_reviewed_ref": "bd7f005e175637d60a687d8a7f987a08c087a619",
+  "current_reviewed_ref": "6ae83f767c346e2c97587323de8bf20a61926082",
   "revision2": {
     "source_ref": "bd7f005e175637d60a687d8a7f987a08c087a619",
     "cochat_blob": "b3d0bbcf01668be3a9cb95f32a0319094b11ffcc",
@@ -320,5 +320,16 @@
     }
   },
   "kind": "versioned_artifact_and_source_review",
-  "record_scope_note": "Top-level source_ref and initial findings describe revision1 at573fa44b; revision2/current_reviewed_ref contain the successor assessment."
+  "record_scope_note": "Top-level source_ref and initial findings describe revision1 at573fa44b; revision2/current_reviewed_ref contain the successor assessment.",
+  "execution_result_ref": "bd7f005e175637d60a687d8a7f987a08c087a619",
+  "gate_fix_followup": {
+    "source_ref": "6ae83f767c346e2c97587323de8bf20a61926082",
+    "cochat_blob": "98f8a879d5fa5a4189fba46f3c03c7172f11e780",
+    "stage3_git_blob": "e1dedacaca6ef65a9e45936aad158b3739f3a6e0",
+    "exact_expected_one_line_change": true,
+    "stage3_nonzero_counter_now_causes_failure": true,
+    "rerun": false,
+    "result_json_blobs_unchanged": true,
+    "new_execution_evidence": false
+  }
 }

@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "saved_author_artifact_normalization_not_runtime_verification",
+  "date_utc": "2026-11-15",
+  "source_ref": "6f34a3db2edcf822e8fec218d3649655fa8b03d2",
+  "source_path": "research/experiments-claude/2026-11-15-window9/result.json",
+  "artifact_blob": "361d120cbe983654ced8beb9d55b06b25aed223c",
+  "cochat_blob": "9d7816caba8a12f7f71fc3ca0f57ace0c32fc2d4",
+  "runtime_report": {
+    "window": 9,
+    "closed": true,
+    "stack": "Colibri 2.0.0 cap32, original launcher",
+    "healthy_after_seconds": 76,
+    "teach_revision": 18,
+    "teach_identity": "inferred from disk at startup, not independently verified",
+    "status_adapter_loaded": false,
+    "real_store_edited": false,
+    "download_contention": true,
+    "authorization": "Claude-attributed direct owner instruction, not runtime authority inferred by this session"
+  },
+  "normalization": {
+    "probes": 7,
+    "statuses": {
+      "200": 4,
+      "413": 1,
+      "422": 2
+    },
+    "admitted": [
+      {
+        "id": "arabic",
+        "own": 50,
+        "engine": 50,
+        "match": true,
+        "finish": "length",
+        "output": 96,
+        "max": 96
+      },
+      {
+        "id": "multi_turn",
+        "own": 74,
+        "engine": 74,
+        "match": true,
+        "finish": "length",
+        "output": 64,
+        "max": 64
+      },
+      {
+        "id": "multi_turn_arabic",
+        "own": 51,
+        "engine": 51,
+        "match": true,
+        "finish": "stop",
+        "output": 13,
+        "max": 64
+      },
+      {
+        "id": "long_256",
+        "own": 1717,
+        "engine": 1717,
+        "match": true,
+        "finish": "length",
+        "output": 256,
+        "max": 256
+      }
+    ],
+    "refused": [
+      {
+        "id": "later_system",
+        "status": 422
+      },
+      {
+        "id": "reasoning_tag_history",
+        "status": 422
+      },
+      {
+        "id": "over_limit",
+        "status": 413
+      }
+    ],
+    "commit_headroom_gib": 8.86
+  },
+  "novelty_correction": {
+    "claim": "first profile-bound laptop start",
+    "supported": false,
+    "earlier_ref": "370b6765feb4a1a5507334143eeaa575ad064092",
+    "earlier_evidence": "window8 co-chat reports same profile-bound admission line in all three starts",
+    "first_reported_live_reasoning_tag_refusal": true
+  },
+  "variation": {
+    "current": {
+      "prompt_tokens": 74,
+      "finish": "length",
+      "output_tokens": 64
+    },
+    "previous_author_report": {
+      "windows": [
+        7,
+        8
+      ],
+      "finish": "stop",
+      "output_tokens": 61
+    },
+    "full_texts_compared": false,
+    "controlled_reproducibility_study": false,
+    "interpretation": "reported across-start output variation; preserve but do not quantify causation"
+  },
+  "limits": [
+    "matching saved prompt-count pairs are not independent engine observations",
+    "three admitted replies length-ended; not quality evidence",
+    "nonempty live notes and other counter reason codes not exercised",
+    "profile launcher report is not actual engine identity binding",
+    "no clean speed, first-useful-text, browser notice or stream accounting claim"
+  ],
+  "our_actions": {
+    "runtime_traffic": false,
+    "live_inspection": false,
+    "settings_or_store_changes": false,
+    "new_runtime_test": false
+  }
+}
