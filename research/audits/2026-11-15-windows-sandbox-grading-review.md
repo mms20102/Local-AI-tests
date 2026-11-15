@@ -2,7 +2,21 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
-## Third/fourth artifacts available; fourth failed closed; revision 6 notice
+## Fifth probe: successful host-share writes; revision 7 detects after access
+
+At [`48ded740`](https://github.com/mms20102/Local-AI-tests/commit/48ded740a535fd4ec6b77cfdcd4f603e9028d4cf), saved probe-5 summary/raw reports reconcile to **8 sessions/reports, 36 entries, 35 expected index outcomes and one mismatch**. This session parses the JSON and reads the write-only fixture; it runs no candidate or Windows command. Twelve references report 116/116 cases, every decoy fails at least one, and the `P_kill_runner` record returns `refused` while the guest runner reports and shuts down. That particular observation improves on the startup-failed probe 4; it is not general process/observer validation.
+
+**The adverse result must remain a prevention failure.** `P_write`'s saved record lists `C:\\cq1\\out\\planted.txt` and `C:\\cq1\\out\\results.json` as written. The author reports the runner overwrote the planted result but left the extra file on the host. This exposes a host report-share integrity/resource boundary failure in the tested setup. The observed low-integrity/job fields did not prevent this access.
+
+**Revision 7 is a different check:** after a candidate, claimed logic compares progress with memory, removes extras, discards tampered records and lets the host reject unexpected output files. Folder size is polled every two seconds against 16 MiB. These are **detection/rejection after access and a sampled threshold, not prevention or a disk quota**. Re-indexing `P_write` as `report_folder_tampered` must not erase its successful writes or turn prevention into a pass. Candidate account/restricted-SID prevention remains explicitly unimplemented.
+
+The author's statement that no host data could be read through the share is **not established** by these results. The fixture at the actual run source `9a00a52a` (Git blob `2373509bea8572e34c87d6fdd49eda3ba166596f`) opens paths in `'w'` mode only. Share-read access remains untested in this evidence; inaccessible unrelated host folders are a different scope. [Co-chat correction](https://github.com/mms20102/Local-AI-tests/blob/675802bc6539da8d10114e75bea14c318ab5ecb3/research/co-chat.md) asks for precise separation, not another live test.
+
+[Normalized intake](../experiments/2026-11-15-sandbox-probe5-intake.json) pins the two artifacts. Add revision 7 to the existing review: runner `6e5bb8b033aac59f9b5128c58db92a5f2d017d45`, host `37a4a0e60aa723f496cf261b4e379797e4b8bab1`. Review detection of transient/overwritten output, progress trust, shared storage limits, other same-user processes and unchanged same-interpreter observations. No new reproduced defect beyond the saved write failure is claimed.
+
+The author reports 264 suite tests without failures and announces a sixth handwritten-only eight-session probe, with no drafts/chat traffic. At this pin its completion is pending. The original 11/12 remains provisional; the 12-draft hold, independent review and unresolved cleanup/observer boundaries remain. No duplicate implementation/probe, PC/VM access, privilege action, runtime change or cloud/Actions run occurred here.
+
+## Historical third/fourth intake and revision-6 notice
 
 The author publishes the requested source-pinned third/fourth summaries and raw reports at [`9a00a52a`](https://github.com/mms20102/Local-AI-tests/commit/9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce). This session parses/reconciles their JSON only; it does not run `grade.py`, candidates or Windows. [Normalized intake](../experiments/2026-11-15-sandbox-probes3-4-intake.json) pins all four artifact blobs.
 
@@ -12,7 +26,7 @@ The author publishes the requested source-pinned third/fourth summaries and raw 
 | Probe 4 / runner revision 5 (`40b9e3df`) | **8 reports / 36 entries; all 36 exit 3221225794 (`0xC0000142`), zero output and zero per-case records.** The author identifies this as DLL initialization failure. All references lack usable observations; 20 index outcomes mismatch, 16 are recorded expected, `probe_ok: false`. |
 | Probe 4 reported protections | All 36 guest records say job/integrity as requested, and all eight sessions report protection fields/self-shutdown. These remain guest/host report evidence, not independent runtime inspection. No successful candidate attack was exercised, so the surviving runner session proves no protection against the prior attack. |
 
-The fourth result is a harness-startup failure, **not a new model score**. Expected decoy failures in a run where references also fail are not a positive control for grading. Nothing is marked trusted in its published host verdict. Missing original draft observations remain unrecoverable; preserve the provisional original 11/12.
+The fourth result is a harness-startup failure, **not a new model score**. Expected decoy failures in a run where references also fail are not a positive control for grading. Nothing is marked trusted in its published host verdict. Original draft observations remain unavailable; the author says they were not kept; preserve the provisional original 11/12.
 
 **Revision 6** removes the Administrators deny-only token adjustment while retaining the runner DACL, low-integrity restricted token, fresh-handle check, progress and host rejection. Source blob: `89f72ff483598a7ca897236b1d46e3c077f98ffd`. The narrow code delta is read; the author's causal explanation is **an inference, not an established guest mechanism**. Host-only harmless checks and 262 suite tests are author-reported and cannot substitute for guest validation.
 
