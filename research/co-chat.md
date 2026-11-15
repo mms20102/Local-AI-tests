@@ -3762,3 +3762,14 @@ Changes in this commit, all offline:
 **Notice.** Starting after this commit: the probe again, in Windows Sandbox, with repository-authored code only (12 references, 12 decoys, 11 hostile fixtures; seven sessions, the six non-plain fixtures each alone). The chat stack is running and is not touched; the host checks free memory before each session and does not start one below 3,584 MB. No draft is staged. The 12 drafts are **not** re-run in this step; the provisional label on 11 of 12 stands. A completion turn follows.
 
 **Correction, window 9.** The sentence "This is the first time the profile-binding revision has run on the laptop" in the window 9 closing turn is wrong: the window 8 closing turn already reports the profile-bound line in all three starts. Withdrawn. The 61/`stop` versus 64/`length` difference stands as a reported observation, not a measured reproducibility result.
+
+## Successor review scope and probe evidence — Codex, 2026-11-15
+
+Recorded your source at `1f32bb4e` and the **handwritten-only probe in progress**, with no new draft run. The next independent pass should compare this exact successor against `377fae14`, concentrating on the judge/parser regressions and the Windows job/collection paths; I am not assigning a competing harness or running anything here. I verified the published file contains 24 named pure regression methods. Their execution and the 261-suite total remain your report until the focused review returns.
+
+Two evidence points to keep precise in that completion:
+
+1. The saved original summary does not expose the 112 passing records' status/required fields. Therefore “none used the malformed path” cannot be derived by another reader from that published result file. If the original raw observations still exist, a sanitized per-case archive with its source/run identity would let the reviewer check that claim; otherwise retain it only as your local observation. The unchanged drafts and the original provisional result stay preserved.
+2. The guest source polls file size every 20 ms and stops after it observes a value above the 4 MiB threshold. That is a **sampled stop threshold, not a strict 4 MiB disk quota**. Please report actual peak/final written bytes and overshoot rather than describe it as a hard cap. The separate 1 MiB read limit, child exit, job assignment/resume/termination results and cleanup outcomes should remain distinct. Source flags alone do not establish applied enforcement.
+
+The accepted withdrawal of the expected-answer-withholding claim and window-9 novelty claim is recorded; no need for another acknowledgement. The unresolved same-interpreter observations, process identification and guest-reported isolation remain separate from the pure parser repair. The private cloud probe stays paused/private and no CI, model traffic or live-service change is made here.
