@@ -80,5 +80,41 @@
     "runtime_changes_by_this_session": false,
     "PR1_merge_or_close": false
   },
-  "review_path": "../audits/2026-11-15-windows-sandbox-grading-review.md"
+  "review_path": "../audits/2026-11-15-windows-sandbox-grading-review.md",
+  "successor_notice": {
+    "source_ref": "1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2",
+    "cochat_blob": "bd9d904c196115730b69a194e36d1536373c5c98",
+    "author_confirms_false_pass": true,
+    "expected_answer_guarantee_withdrawn": true,
+    "author_claimed_repairs": [
+      "strict case/record schemas and duplicate/nonfinite JSON handling",
+      "positive expected exception/value match",
+      "reject nonzero exits and capped output",
+      "required exact four network-check results",
+      "suspended child assigned to one-process 1024MB kill-on-close Windows job before resume",
+      "10second deadline; polled output stop above4MiB",
+      "AST triage and separate non-plain sessions"
+    ],
+    "regression_methods_source_counted": 24,
+    "tests_executed_by_this_session": false,
+    "author_reported_suite_tests": 261,
+    "author_reported_suite_failures": 0,
+    "author_reported_suite_skips": null,
+    "independent_successor_review": "pending; coordinate existing grading reviewer, no duplicate audit",
+    "probe": {
+      "status_at_notice": "announced starting; no completion at pinned source",
+      "references": 12,
+      "decoys": 12,
+      "hostile": 11,
+      "guest_sessions": 7,
+      "non_plain_alone": 6,
+      "minimum_available_memory_mb": 3584,
+      "chat_reported_running_untouched": true,
+      "model_drafts_staged_or_run": false
+    },
+    "output_limit_interpretation": "4MiB is sampled stop threshold with20ms polling, not quota;1MiB is separate read limit",
+    "original_record_shape_claim": "cannot be independently checked from published summary without raw records",
+    "original_score_status": "unchanged provisional author report",
+    "cochat_followup_commit": "e379571b6eb18e09ac6cbcc48376eec0ab37cd47"
+  }
 }

@@ -2,6 +2,26 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
+## Successor source — repairs published; review and probe completion pending
+
+Claude confirms the false pass, withdraws the expected-answer-withholding guarantee, and publishes [`1f32bb4e`](https://github.com/mms20102/Local-AI-tests/tree/1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2/research/coding-quality-v1). The findings below describe `377fae14`, not an independently verified assessment of its successor.
+
+**Author-reported repairs:** strict case/record schemas and JSON parsing; positive exception/value matches; refusal of nonzero exits/capped output; exact four-check network fields; suspended child assigned to a one-process/1024 MB kill-on-close Windows job before resume; 10-second deadline and a polled output stop above 4 MiB; AST triage and eleven retained hostile fixtures. The author reports 261 suite tests without failures. This session source-counted **24 named pure regression methods**, but executed none.
+
+| File | Successor Git blob |
+|---|---|
+| `grade.py` | `11cbe7f3724439e5fd51247b1c9889d788d1c156` |
+| `test_judge_strict.py` | `bb783f34b9a10d0f0ff335b3e2247d1bf7e75fe5` |
+| `sandbox/guest_runner.py` | `5eb3ea9ebc165002937b3e572e50f6c06365c774` |
+| `sandbox/sandbox_host.py` | `65febbcc4ebefef2e641d949d828813fecfbf93d` |
+| `sandbox/source_gate.py` | `59a8d31334a093d3dc279db7b56f2f4b58f94e49` |
+
+The notice announces a second **handwritten-only** probe: 12 references, 12 decoys and 11 hostile fixtures across seven sessions, six non-plain fixtures alone. Chat is reported running but untouched; admission uses a 3584 MB available-memory sample. No model drafts are reported staged or rerun. At this pinned notice no completion evidence is available. A focused successor review should use the existing independent grading reviewer rather than duplicate the first audit.
+
+Two points were returned in [co-chat](https://github.com/mms20102/Local-AI-tests/blob/e379571b6eb18e09ac6cbcc48376eec0ab37cd47/research/co-chat.md). File size is polled every 20 ms: 4 MiB is a **sampled stop threshold that can overshoot, not a strict quota**; the 1 MiB read limit is separate. Also, the original summary lacks raw per-case observations and cannot substantiate that all 112 passing records contained required fields. Archive sanitized original records if available; otherwise retain that claim only as an author-local observation. The original score stays provisional.
+
+Shared-interpreter observations, process identification and guest-reported isolation remain explicitly unresolved. The Windows-job flags and source alone do not establish applied enforcement. The private cloud probe stays paused/private; no competing implementation, CI run or candidate execution occurred here. Claude's window-9 novelty correction is accepted and recorded.
+
 ## Result supported by the available evidence
 
 Claude reports enabling/running through Windows Sandbox after Mohamed's own actions and direct instructions in Claude's session. Its earlier notice at `1b4edb5` announced handwritten probes only; the later completion additionally reports all 12 drafts executed before independent harness review. This is an attributed action/authorization report, not retrospective clearance from this session.
