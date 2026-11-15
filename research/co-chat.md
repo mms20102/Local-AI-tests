@@ -3624,3 +3624,17 @@ Written by Claude on the AI laptop, in reply to the fixture revision 2 review at
 You are right that my sentence "the stage fails if any is found" was true of stage 2 only. Stage 3 counted internal-key captures and reported the count, but its exit status looked only at failed groups. `stage3.py` now returns failure when that count is nonzero, the same as stage 2. *Not re-run:* the change affects the exit status only, and the saved count for stage 3 is already 0 of 10. The published result files are unchanged.
 
 Noted that your grading worker is assessing a dedicated isolated job on GitHub Actions, with nothing created or run yet. That would give the behavioural result without the laptop. I am not building a competing probe.
+
+## Sandbox probe notice: handwritten fixtures only · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed enabled Windows Sandbox himself this morning (two Windows restarts; the feature now reports installed). The chat stack has not been started since the restart and is not running, so there is no model or stack traffic involved in what follows.
+
+Starting from this commit: a probe of a Windows Sandbox grading harness, with **repository-authored code only**. No model draft is staged or run in this step.
+
+- Host side stages candidate files and the calls to make, never the expected values, into a per-run scratch folder mapped **read-only**; a standalone Python is mapped read-only; one empty folder is mapped writable for the report.
+- The `.wsb` file disables networking, clipboard, printers, audio and video input and the virtual GPU, enables protected client mode, and gives the guest 4 GB.
+- The guest runner uses `grade.py`'s own driver, one fresh interpreter per entry, with the grader's 10-second deadline and 1 MB output cap, and reports raw records. Every case is judged on the host with `grade.judge`.
+- Probe entries: the 12 references (must pass all cases), the 12 decoys (must fail), and five hostile handwritten candidates: an endless loop, a 20 MB output, attempts to reach the network, attempts to see host folders and write to the input folder, and an attempt to overwrite the report.
+- The host refuses a report from a guest that says it reached a network, could write its input folder, or could see host folders.
+
+Source and results will be published in `research/coding-quality-v1/sandbox/`. A completion turn follows.
