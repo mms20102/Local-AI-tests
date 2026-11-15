@@ -3910,3 +3910,33 @@ Written by Claude on the AI laptop. Handwritten code only; no draft staged or ru
 **Not eliminated, stated plainly.** The write itself is detected after the fact, not prevented. Preventing it needs the candidate to run as a different account or with a restricted-SID token, neither of which is attempted here. Other guest processes running as the same user remain reachable. Same-interpreter observation is unchanged. Unreviewed.
 
 **Notice.** Starting after this commit: the sixth probe, handwritten code only, eight sessions. A completion turn follows.
+
+## Sixth probe complete: all 36 outcomes as indexed on runner revision 7 · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes the notice above. Handwritten code only; no draft staged or run; chat stack untouched. The hold on the 12 drafts stands; this is not a request to lift it.
+
+**Source identity.** *Recorded in the result file:* `guest_runner.py` `860dda91…`, `sandbox_host.py` `38d98c69…`, the files at `48ded74`. Published: [host result](coding-quality-v1/sandbox/results/probe6-runner7-2026-11-15.json), [raw guest reports and progress logs](coding-quality-v1/sandbox/results/probe6-runner7-2026-11-15-guest-reports.json).
+
+*Measured, one run:*
+
+| Item | Observed |
+|---|---|
+| Sessions | 8 planned, 8 guest reports, 8 guest shutdowns, none refused, none closed by force |
+| Controls | 12 of 12 references pass every case and are marked trusted; 12 of 12 decoys fail |
+| Confinement fields | all 36 entries `in_job: true`, `integrity: 4096`; every session `runner_protection` both true. Guest testimony, as before |
+| `P_kill_runner` | returned `refused`, exit 0; second in-guest run with this outcome (probes 5 and 6) |
+| `P_write` | status `report_folder_tampered`; runner listed and removed `planted.txt` and `results.json`; records discarded |
+| `P_spoof` | status `report_folder_tampered`; runner removed `DONE` and `results.json` |
+| `P_print_flood`, `P_output` | `output_flood`, 1,048,606 and 1,114,112 bytes accepted |
+| `P_loop`, `P_forge_then_hang` | `timeout` |
+| `P_memory`, `P_forge_line` | finished and failed on `MemoryError` and on the real value |
+| `P_spawn`, `P_network`, `P_host_files` | empty lists |
+| Host's final report folders | only `DONE`, `progress.log`, `results.json` in each session |
+
+`probe_ok: true` here means the 36 outcomes matched `hostile/index.json` at this revision. Two index entries changed since the second probe and should be read with that in mind: `P_kill_runner` now requires the runner to survive (stricter), and `P_write` requires detection of a write that is not prevented.
+
+**One thing the `P_spoof` session shows that the index does not test.** The candidate wrote a `DONE` marker early. The host stops waiting when `DONE` appears, then allows 60 s for the guest to shut itself down before reading the report. In this run the runner removed the marker, finished and shut down inside that allowance, and the host read the runner's report. I have not tested a candidate that writes `DONE` and then runs to its 10-second deadline in a session with more entries behind it; by reading the code, the host would close the sandbox by force after 60 s and refuse the session, which fails closed but loses the other entries. For non-plain candidates that is one entry, since they run alone.
+
+**The README** in `coding-quality-v1/sandbox/` is rewritten around cause, change and observation for each attack, with the probe history including the three failed probes, and the limits: report-folder writes detected not prevented; other same-user guest processes reachable; gate is triage; same-interpreter observation; identification by image name; evidence is the guest's own report; a host check does not stand in for the guest.
+
+*Measured:* `tools/run_all_tests.py` 264 tests in 5 suites, 0 failing; `tools/check_links.py` 0 broken.
