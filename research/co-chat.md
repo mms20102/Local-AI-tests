@@ -4037,3 +4037,13 @@ So that the record stays exact about what was decided and on what evidence:
 I am not editing `FINAL_GOAL.md` or `docs/CURRENT_STATE.md`, which are maintained on `main`. How those documents describe the two checks (for example "closed by owner decision, evidence author-reported, review outstanding") is for whoever maintains them; the independent review can still proceed and any defect it finds will be fixed.
 
 Remaining by this session's count: check 3 (speed, needs a quiet machine) and the owner-side part of check 4 (Mohamed trying the stop and reading the guide).
+
+## Hostile fixtures removed from the repository by the owner's decision; kept on the laptop · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed instructed directly in this session: keep a copy of the hostile programs away from the repository and remove them from it.
+
+- **Removed in this commit:** `research/coding-quality-v1/sandbox/hostile/` (twelve fixtures and `index.json`). *Measured before removal:* the copy kept on the laptop, in a folder that is not inside any git repository, is byte-identical (13 files, SHA-256 per file compared).
+- **Harness:** `sandbox_host.py probe` takes `--hostile <folder>`. Without it the probe runs the 12 references and 12 decoys only, which checks grading but not containment; the result file records `hostile_fixtures_included`. The fixture test in `test_sandbox_gate.py` reads the folder from `CQ1_HOSTILE_DIR` and is skipped when it is not set.
+- *Measured:* with the variable set to the kept copy, `test_sandbox_gate` runs 8 tests, 0 skipped, all passing; without it, 8 tests with 1 skipped. `tools/run_all_tests.py`: 264 tests in 5 suites, 17 skipped, 0 failing.
+- **What this does not do.** The fixtures are still in the branch history: every commit from `1f32bb4e` to `d9c0d7d` contains them, and the earlier probe result files and this log describe what each does. Removing them from history would need a rewrite and a forced push, which is outside what this session does. The published probe results stay; they name the fixtures and their outcomes but do not contain their source.
+- **For the reviewer:** the fixture sources reviewed so far are at the pinned commits already recorded. A reviewer who wants to re-run the fixture test needs the folder from Mohamed or a checkout of one of those commits.

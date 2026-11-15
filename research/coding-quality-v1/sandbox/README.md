@@ -6,7 +6,7 @@ laptop.
 | Version | Commit | Status |
 |---|---|---|
 | First harness | `377fae14` | Graded the 12 drafts once. [Independently reviewed](../../audits/2026-11-15-windows-sandbox-grading-review.md): totals recompute; a judge false pass and several collection gaps were found |
-| Runner revision 7 (`cq1-sandbox-7`) | `48ded74` | Judge and parsing repaired; candidates confined; hostile fixtures kept. Sixth probe, handwritten code only: all 36 outcomes as indexed. **Not independently reviewed. The drafts have not been re-run on it** |
+| Runner revision 7 (`cq1-sandbox-7`) | `48ded74` | Judge and parsing repaired; candidates confined; hostile fixtures kept outside the repository. Sixth probe, handwritten code only: all 36 outcomes as indexed. Drafts re-graded on it: 11 of 12. **Not independently reviewed** |
 
 ## Result so far (provisional)
 
@@ -30,7 +30,7 @@ Drafts: [../drafts-2026-11-14-first-pass/](../drafts-2026-11-14-first-pass/index
 | `sandbox_host.py` | Host side. Stages candidates and calls, writes the `.wsb`, starts and closes the sandbox, reads the report as untrusted data with a strict parser, and judges every case with `grade.judge` |
 | `guest_runner.py` | Runs inside the guest from a read-only folder. Protects its own process, runs one confined interpreter per entry with `grade.py`'s own driver, reports raw records; decides nothing |
 | `source_gate.py` | Reads a candidate's syntax tree, without importing or running it, and says whether it stays inside plain computation |
-| `hostile/` | Twelve handwritten hostile programs, kept for re-testing the harness, with `index.json` saying what each must produce. **Never run them outside this harness** |
+| hostile fixtures (**not in the repository**) | Twelve handwritten hostile programs with an `index.json` saying what each must produce. Removed from the repository on 2026-11-15 by the owner's decision and kept on the laptop for re-testing. Pass their folder with `--hostile`. Commits up to `d9c0d7d` still contain them at `sandbox/hostile/`. **Never run them outside this harness** |
 | `../test_sandbox_gate.py`, `../test_judge_strict.py` | Offline tests: the gate's escape routes and ordinary code; the judge and report parsing against handwritten malformed and forged records |
 | `results/` | Every probe, including the failed ones, each with the guests' raw reports |
 
@@ -65,7 +65,7 @@ its driver text and its judge.
 
 Sixth probe: [host result](results/probe6-runner7-2026-11-15.json),
 [raw guest reports](results/probe6-runner7-2026-11-15-guest-reports.json). `probe_ok` means every
-outcome matched `hostile/index.json`; it is not a statement that every safety property holds.
+outcome matched the fixtures' `index.json`; it is not a statement that every safety property holds.
 
 ## How it is contained
 
@@ -108,9 +108,10 @@ Python folder containing `python.exe` to map into the guest. Only one sandbox ca
 leftover `WindowsSandboxServer.exe` (the `wsb list` command starts one) must be closed first.
 
 ```
-python sandbox_host.py probe  --python <python folder> --run-dir <empty folder> --out probe.json
+python sandbox_host.py probe  --python <python folder> --run-dir <empty folder> --out probe.json [--hostile <fixtures folder>]
 python sandbox_host.py drafts --python <python folder> --run-dir <empty folder> --drafts ..\drafts-2026-11-14-first-pass --out drafts.json
 ```
 
-Run the probe first (about three minutes). Do not run drafts if it does not report
+Run the probe first (about three minutes with the hostile fixtures; without `--hostile` it runs the
+references and decoys only, which checks grading but not containment). Do not run drafts if it does not report
 `"probe_ok": true`.

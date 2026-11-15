@@ -261,9 +261,9 @@ def one_session(run_dir: Path, python_dir: Path, entries: dict[str, dict], plain
     return result
 
 
-def probe_entries() -> tuple[dict, dict]:
-    """Repository-authored code only: every task's reference (must pass), decoys (must fail), and the
-    hostile fixtures kept in hostile/."""
+def probe_entries(hostile: Path | None) -> tuple[dict, dict]:
+    """Handwritten code only: every task's reference (must pass), decoys (must fail), and, when a folder
+    is given with --hostile, the hostile fixtures. Those are kept OUTSIDE this repository."""
     entries, expect = {}, {}
     for task_id in sorted(grade.manifest()["tasks"]):
         task = grade.load_task(task_id)
@@ -276,9 +276,9 @@ def probe_entries() -> tuple[dict, dict]:
         if files:
             entries[f"{task_id}_decoy"] = {"files": files, "cases": cases}
             expect[f"{task_id}_decoy"] = "fail"
-    index = json.loads((HERE / "hostile" / "index.json").read_text(encoding="utf-8"))
+    index = json.loads((hostile / "index.json").read_text(encoding="utf-8")) if hostile else {}
     for name, spec in index.items():
-        entries[name] = {"files": {"solution.py": (HERE / "hostile" / name / "solution.py").read_text(encoding="utf-8")},
+        entries[name] = {"files": {"solution.py": (hostile / name / "solution.py").read_text(encoding="utf-8")},
                          "cases": spec["cases"]}
         expect[name] = spec["expect"]
     return entries, expect
@@ -318,6 +318,8 @@ def main() -> int:
     parser.add_argument("--python", type=Path, required=True, help="folder of a standalone Python to map read-only into the guest")
     parser.add_argument("--run-dir", type=Path, required=True, help="empty scratch folder for this run")
     parser.add_argument("--drafts", type=Path)
+    parser.add_argument("--hostile", type=Path, help="probe only: folder of the hostile fixtures (kept outside the repository); "
+                                                     "without it the probe runs references and decoys only")
     parser.add_argument("--out", type=Path, required=True, help="where to write the host's result JSON")
     args = parser.parse_args()
     if not (args.python / "python.exe").is_file():
@@ -325,10 +327,15 @@ def main() -> int:
     identities = {name: sha256(path) for name, path in (
         ("grade.py", HERE.parent / "grade.py"), ("manifest.json", HERE.parent / "manifest.json"),
         ("sandbox_host.py", Path(__file__)), ("guest_runner.py", HERE / "guest_runner.py"),
-        ("source_gate.py", HERE / "source_gate.py"), ("hostile/index.json", HERE / "hostile" / "index.json"))}
+        ("source_gate.py", HERE / "source_gate.py"))}
+    if args.hostile:
+        if not (args.hostile / "index.json").is_file():
+            raise SystemExit("no index.json in --hostile")
+        identities["hostile/index.json"] = sha256(args.hostile / "index.json")
+    identities["hostile_fixtures_included"] = bool(args.hostile)
     identities["fixture_revision"] = grade.manifest()["fixture_revision"]
     if args.mode == "probe":
-        entries, expect = probe_entries()
+        entries, expect = probe_entries(args.hostile)
         static = None
     else:
         entries, static = draft_entries(args.drafts)

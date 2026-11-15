@@ -1,6 +1,7 @@
 """Tests for sandbox/source_gate.py and the hostile fixtures. Nothing here executes a candidate:
 sources are parsed and read. Standard library only."""
 import json
+import os
 import sys
 import unittest
 from pathlib import Path
@@ -133,12 +134,17 @@ class RepositoryContentTests(unittest.TestCase):
             self.assertTrue(result["plain"], f"{task_id}: {result['reasons']}")
 
     def test_hostile_fixtures_are_kept_and_classified(self):
-        index = json.loads((ROOT / "sandbox" / "hostile" / "index.json").read_text(encoding="utf-8"))
+        # The fixtures are kept outside the repository. Point CQ1_HOSTILE_DIR at the folder to run this check.
+        folder = os.environ.get("CQ1_HOSTILE_DIR")
+        if not folder or not (Path(folder) / "index.json").is_file():
+            self.skipTest("hostile fixtures are not in the repository; set CQ1_HOSTILE_DIR")
+        folder = Path(folder)
+        index = json.loads((folder / "index.json").read_text(encoding="utf-8"))
         must_share = {"P_loop", "P_print_flood", "P_memory", "P_forge_line", "P_forge_then_hang"}
         must_be_alone = {"P_output", "P_network", "P_host_files", "P_spoof", "P_spawn", "P_kill_runner", "P_write"}
         self.assertEqual(set(index), must_share | must_be_alone)
         for name, spec in index.items():
-            path = ROOT / "sandbox" / "hostile" / name / "solution.py"
+            path = folder / name / "solution.py"
             source = path.read_text(encoding="utf-8")
             self.assertIn("HOSTILE TEST FIXTURE", source)
             self.assertEqual(source_gate.reach_of({"solution.py": source})["plain"], name in must_share, name)
