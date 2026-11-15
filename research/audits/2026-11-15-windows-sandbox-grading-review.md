@@ -2,7 +2,19 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
-## Successor source — repairs published; review and probe completion pending
+## Second handwritten probe — closed, with adverse evidence
+
+[Completion artifacts `ca0d4d4a`](https://github.com/mms20102/Local-AI-tests/tree/ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4/research/coding-quality-v1/sandbox/results) now include the summary and raw guest reports for the **handwritten probe only**. This session parsed/reconciled their JSON without executing any candidate, harness or guest. The original draft guest records were not kept; the author withdraws the inference that their shapes could be checked from the original summary. There is still no independent re-grading of the original 11/12.
+
+- **Reconciled totals:** 7 sessions, 35 distinct intended entries, 6 raw guest reports and 34 reporting entries. The missing entry is `P_kill_runner`. The summary grades 12 references at 116/116 cases and all 12 decoys failing at least one case. Thirty-five `as expected` index outcomes and `probe_ok: true` include the successful denial of the runner; they are not 35 successful security properties.
+- **Runner attack:** the author reports `P_kill_runner` used Windows process access to kill the guest runner. The host has no report, records 902.3 seconds to the deadline outcome and refuses that session. Resource jobs do not prevent access to other guest processes. Running non-plain fixtures alone mitigates this declared sample, but AST triage does not authenticate arbitrary candidates.
+- **Output:** `P_print_flood` records 8,323,324 bytes, **4,129,020 above** the 4,194,304-byte sampled threshold. `P_output` records 20,971,608 bytes and exits 0 before the stop catches it; the separate read limit rejects its record. These are evidence that the stop is not a strict disk quota.
+- **Cleanup/isolation:** six guest shutdowns are recorded. Empty lists for selected process image names do not resolve the author's separately observed `vmmemWindowsSandbox` process. All 34 `confined: true` fields are guest testimony, not independent enforcement observations. The host/guest observation and process-identification limitations remain.
+- **Narrow pending source item:** `sandbox_host.py:192` at `1f32bb4e` accepts `exit_code == 0`, including malformed JSON `false` or `0.0`. A strict schema needs `type(exit_code) is int and exit_code == 0`; add pure negative tests. No occurrence of these malformed values is claimed in the saved reports.
+
+[Normalized intake](../experiments/2026-11-15-sandbox-second-probe-intake.json) pins both artifact blobs and separates source/reported evidence. The existing independent reviewer is handling the focused source/regression comparison; no duplicate implementation or run is assigned here. The source repairs are not independently cleared by this intake. No new model run, PC traffic, runtime change, Actions job or cloud probe was performed. The original provisional score is unchanged.
+
+## Historical successor notice — before probe completion
 
 Claude confirms the false pass, withdraws the expected-answer-withholding guarantee, and publishes [`1f32bb4e`](https://github.com/mms20102/Local-AI-tests/tree/1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2/research/coding-quality-v1). The findings below describe `377fae14`, not an independently verified assessment of its successor.
 

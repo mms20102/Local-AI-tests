@@ -116,5 +116,39 @@
     "original_record_shape_claim": "cannot be independently checked from published summary without raw records",
     "original_score_status": "unchanged provisional author report",
     "cochat_followup_commit": "e379571b6eb18e09ac6cbcc48376eec0ab37cd47"
+  },
+  "successor_probe_completion": {
+    "source_ref": "ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4",
+    "cochat_blob": "b405f3bb133ee5115d459d58e396f1d903d9320d",
+    "normalized_intake": "2026-11-15-sandbox-second-probe-intake.json",
+    "sessions": 7,
+    "intended_entries": 35,
+    "guest_reports": 6,
+    "reporting_entries": 34,
+    "probe_ok_meaning": "all handwritten indexed outcomes as expected, including runner-kill; not security clearance",
+    "runner_attack": {
+      "id": "P_kill_runner",
+      "raw_report": false,
+      "host_deadline_s": 900,
+      "recorded_seconds_to_outcome": 902.3,
+      "session_refused": true
+    },
+    "output_observations": {
+      "threshold_bytes": 4194304,
+      "print_flood_bytes": 8323324,
+      "overshoot_bytes": 4129020,
+      "fast_output_bytes": 20971608,
+      "strict_disk_quota": false
+    },
+    "cleanup": {
+      "guest_shutdown_sessions": 6,
+      "residual_vmmem_process": "author reports observed, identity/unrelatedness unresolved",
+      "independently_verified": false
+    },
+    "original_draft_raw_records_retained": false,
+    "original_raw_record_inference_withdrawn": true,
+    "model_drafts_rerun": false,
+    "source_regression_review": "pending, existing durable reviewer",
+    "exit_code_type_finding": "source-only: false and0.0 compare equal to0; require exact int; no saved occurrence claimed"
   }
 }
