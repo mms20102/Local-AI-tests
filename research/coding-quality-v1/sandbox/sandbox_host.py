@@ -189,7 +189,8 @@ def judge_entries(report: dict, entries: dict[str, dict], plain_session: bool) -
     judged = {}
     for item in report["entries"]:
         cases, records = entries[item["id"]]["cases"], item.get("records")
-        clean = (item.get("status") == "finished" and item.get("confined") is True and item.get("exit_code") == 0
+        clean = (item.get("status") == "finished" and item.get("confined") is True
+                 and type(item.get("exit_code")) is int and item.get("exit_code") == 0
                  and item.get("stdout_capped") is False and isinstance(records, list) and len(records) == len(cases))
         if clean:
             results = [grade.judge(case, record) for case, record in zip(cases, records)]

@@ -185,7 +185,7 @@ class EntryJudgingTests(unittest.TestCase):
         self.assertEqual((got["passed"], got["trusted_observation"]), (1, False))
 
     def test_valid_looking_records_do_not_pass_when_the_run_was_not_clean(self):
-        for changes in ({"exit_code": 1}, {"exit_code": None}, {"exit_code": -1073741819}, {"stdout_capped": True},
+        for changes in ({"exit_code": 1}, {"exit_code": None}, {"exit_code": False}, {"exit_code": 0.0}, {"exit_code": "0"}, {"exit_code": -1073741819}, {"stdout_capped": True},
                         {"stdout_capped": None}, {"confined": False}, {"confined": None}, {"status": "timeout"},
                         {"status": "output_flood"}, {"status": None}, {"records": [dict(RETURNED), dict(RETURNED)]},
                         {"records": []}, {"records": None}, {"records": {"0": RETURNED}}):
