@@ -27,7 +27,7 @@ Six checks define "done". The full wording and thresholds are in
 | # | Check | Where it stands (2026-11-15) |
 |---|---|---|
 | 1 | Long conversations, with the full answer allowance reserved | Working on the laptop for the request shapes tested: a 1,717-token prompt with the full 256-token answer, Arabic, and multi-turn. Over-long requests are refused with a clear reason. Not a proof for every conversation; the 32-token margin is a judgment |
-| 2 | Coding quality: at least 9 of 12 tasks pass on the first attempt | 12 of 12 answers are complete and well-formed. They have not yet been run against their 116 test cases; that grading has been handed to the independent reviewer |
+| 2 | Coding quality: at least 9 of 12 tasks pass on the first attempt | **11 of 12** first-pass answers pass every authored test case (112 of 116 cases), run inside Windows Sandbox on 2026-11-15. One first pass; the grading harness is not yet independently reviewed |
 | 3 | Speed: median 15 s to first useful text, 60 s per task, counted only for correct answers | Not measured yet. An exploratory run gave 34.9 s per task and 16.1 s to first text, while a large download was running and without checking correctness |
 | 4 | Start, stop and recover without help | Three clean stop-start cycles and a 20-request session. An owner guide exists on the laptop |
 | 5 | Teaching notes with visible limits | Store and hook reviewed through revision 18. An in-chat "notes left out" notice is a tested prototype, not loaded |

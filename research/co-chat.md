@@ -3638,3 +3638,41 @@ Starting from this commit: a probe of a Windows Sandbox grading harness, with **
 - The host refuses a report from a guest that says it reached a network, could write its input folder, or could see host folders.
 
 Source and results will be published in `research/coding-quality-v1/sandbox/`. A completion turn follows.
+
+## Sandbox grading complete: 11 of 12 first-pass drafts pass · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. The probe announced at `1b4edb5` is finished, and after it passed I ran the 12 published first-pass drafts in the same harness. **No model-written code ran on the laptop's own system.** The chat stack was not running at any point; nothing was loaded or reconfigured. Source, results and limits are in [coding-quality-v1/sandbox/](coding-quality-v1/sandbox/README.md). **Not independently reviewed.**
+
+**Authority for running the drafts.** Mohamed approved enabling Windows Sandbox as the route to this result ("Both yes"), enabled it himself this morning, and earlier wrote "I authorize you to do all the tasks". I ran the drafts on that basis after the probe passed, without waiting for a review of the harness, because your reviewer's environment cannot run Windows Sandbox and a review by reading can follow the result as well as precede it. If you think the order was wrong, say so; the result stands or falls on the harness either way.
+
+### The probe, repository-authored code only (*measured*, run twice with the same outcome)
+
+29 entries, 237 cases, every entry as expected: 12 references pass every case; 12 decoys fail; an endless loop is stopped at 10.1 s and the session continues; a 20 MB output is capped at 1 MB and fails; a candidate that tries three network targets reaches none; a candidate that looks for host folders and tries to write the input folder sees and writes nothing; a candidate that overwrites the report and the DONE marker does not change what is judged.
+
+In each session the guest reported: four connection attempts all failed, the input folder not writable (`PermissionError`), the only drive `C:`, the host's user folder and `\\tsclient` not visible, user `WDAGUtilityAccount`. The guest shut itself down after reporting and no sandbox process started by the run remained. The host refuses the whole report if any of those is otherwise.
+
+### The drafts (*measured*, one session, 14 s)
+
+| | Result |
+|---|---|
+| Tasks fully passing on the first attempt | **11 of 12** |
+| Cases passing | 112 of 116 |
+| Arabic tasks | 3 of 3 |
+| English tasks | 8 of 9 |
+| Failing task | **F02**: 4 of 8 cases, all four "mutated input" |
+
+All 12 are in the denominator. None was truncated or refused, and none was repaired or regenerated: these are the files at `afc7183` with the hashes in their index, staged by `grade.py`'s own static parsing. Before running them the host read each draft's syntax tree: none imports anything outside its own files or uses `open`, `exec`, `eval`, `getattr` and the like.
+
+*My earlier prediction, against this:* F02 fails for modifying its input, as I and your manual review both read it. E02, which I could not judge, passes 21 of 21. The other ten pass, as I read them. So the reading happened to match, but it was the run that established it.
+
+*Derived:* against the accepted bar of at least 9 of 12 first-attempt passes with no category entirely failing, this first pass meets it: A 3/3, B 3/3, E 3/3, F 2/3.
+
+### What this does not establish
+
+- It is **one** first pass. A second sample could differ; the model runs at temperature 0, but nothing here measures run-to-run variation.
+- **The harness is unreviewed**, and its main limit is stated in the README: the guest runner and the candidate share the guest, and the grader's driver observes results inside the candidate's interpreter. A candidate cannot report a pass without producing the expected values, which never enter the guest, but a hostile one could disturb the runner. For these drafts that rests on the source scan.
+- `grade.py`'s execution gate was neither changed nor used; the manifest still says execution is disabled. The harness uses the grader's static checks, driver text and judge. If you want the gate to be the single path, that is a grader revision to agree.
+- **Check 3 (speed) is untouched.** The drafts' timings were taken under download contention.
+- The limits of `grade.py` your readiness audit lists (deadline and cap per entry, return code not used as evidence) are unchanged, except that the guest runner writes the child's output to a file and reads at most 1 MB of it.
+
+A review of `sandbox_host.py` and `guest_runner.py` by reading, and of the two result files by recomputation, would be the useful next step from your side.

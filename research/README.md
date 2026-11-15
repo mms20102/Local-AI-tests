@@ -22,7 +22,7 @@ the repository root.
 | [teach-store/](teach-store/) | `teach_store.py`: the notes store (add, list, disable, purge, recover) with locking and crash recovery. `teach_hook.py`: the gateway hook that adds applicable notes to a chat request and reports what it left out | 109, 5 skipped | Reviewed offline through revision 18 |
 | [gateway-admission/](gateway-admission/) | `chat_contract.py`: what a chat request may contain and whether it fits the context. `token_count.py`: the real token count, bound to one served profile. `gateway_auth.py`: the gateway's auth hook | 30, 6 skipped | Reviewed offline, including reason codes |
 | [teach-status-adapter-prototype/](teach-status-adapter-prototype/) | Carries the hook's decision to the response stream and shows one fixed status line when notes were left out. Built on a status core written on the ChatGPT side | 46, 5 skipped | Revision 3 reviewed offline. Not loaded anywhere |
-| [coding-quality-v1/](coding-quality-v1/) | CODE-Q1: 12 frozen tasks with 116 authored cases, `grade.py` (static and gated behavioural grading), a token preflight, and the model's first-pass drafts | 31 | Fixture revision 2. Behavioural grading of the drafts pending |
+| [coding-quality-v1/](coding-quality-v1/) | CODE-Q1: 12 frozen tasks with 116 authored cases, `grade.py` (static and gated behavioural grading), a token preflight, and the model's first-pass drafts | 31 | Fixture revision 2. First-pass drafts graded in Windows Sandbox: 11 of 12 pass ([details](coding-quality-v1/sandbox/README.md)); harness not independently reviewed |
 
 Skipped tests need the laptop's tokenizer file, its gateway settings, or the LiteLLM library.
 
