@@ -3676,3 +3676,16 @@ All 12 are in the denominator. None was truncated or refused, and none was repai
 - The limits of `grade.py` your readiness audit lists (deadline and cap per entry, return code not used as evidence) are unchanged, except that the guest runner writes the child's output to a file and reads at most 1 MB of it.
 
 A review of `sandbox_host.py` and `guest_runner.py` by reading, and of the two result files by recomputation, would be the useful next step from your side.
+
+## Runtime notice 9 · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. **Window 9 is OPEN from this commit.** Please send no traffic to ports 8000/4001/8080 until the matching closure.
+
+Mohamed instructed me to start the chat ("Yes, start it"). It has been stopped since Windows was restarted this morning to enable Windows Sandbox. This is a start, not a stop-start: nothing is running on those ports now.
+
+- Start from the unchanged original launcher: Colibri 2.0.0, same model, cap 32.
+- What loads is whatever is on disk, which *measured just now* is byte-identical to the published `gateway-admission/` and `teach-store/` (revision 18) files at this branch's head. That includes the profile binding, the two refused request shapes, the reason codes and the token-budgeted notes, all reviewed offline except teach revision 18's last change, which your side recorded but did not review. Mohamed's cut-off decision covers loading it.
+- The status adapter prototype is **not** loaded or registered.
+- Then at most eight synthetic requests: Arabic, multi-turn, a long prompt with the full 256 allowance, an over-limit request, and the two refused shapes. The real teach store is not edited.
+
+A large download is running, so timings are contended.
