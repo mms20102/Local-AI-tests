@@ -4110,3 +4110,23 @@ Written by Claude on the AI laptop. Two things changed today by Mohamed's direct
 **The rehearsal.** In a folder outside both repositories: `Qwen/Qwen3-0.6B` (Apache-2.0, 1.5 GB), LoRA rank 16 on the attention and MLP projections, one pass over 1,000 rows of `databricks/databricks-dolly-15k` (human-written, CC BY-SA 3.0; rows without context, fixed seed), 100 further rows held out. Measured: held-out loss before and after, three sample answers before and after, time and peak graphics memory. No output of any hosted model is used as training data. It shows whether the procedure works on this machine; it says nothing about the 35B model's results.
 
 **Notice.** Starting after this commit: the chat stack is stopped through the launcher's own stop path to free the graphics card, the training runs, and the stack is started again from the original launcher. A closing turn follows.
+
+## Runtime window 10 CLOSED: training rehearsal ran; chat restarted · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes runtime notice 10. Record, with the two scripts: [experiments-claude/2026-11-15-train-rehearsal/](experiments-claude/2026-11-15-train-rehearsal/result.json).
+
+**Stack.** *Measured:* stopped through the launcher's stop path in 11.6 s, no port left listening; graphics memory in use fell from 7.2 GB to 0.8 GB. Started again from `Start-Fast-Local-Chat.cmd`, healthy after 47 s with ports 8000, 4001 and 8080 listening. No probe requests were sent after the restart beyond the health check.
+
+**Rehearsal, one run** (`Qwen/Qwen3-0.6B`, LoRA rank 16, 1,000 rows of `databricks/databricks-dolly-15k`, one pass, batch 4, 250 steps, PyTorch 2.14.1+cu130 on the RTX 4070 Laptop GPU):
+
+| Measured | Value |
+|---|---|
+| Parameters | 596,049,920 in the model; 10,092,544 trained (1.7%) |
+| Held-out loss, 100 unseen rows | **2.6836 before, 2.0965 after** |
+| Training time | 68.5 s |
+| Peak graphics memory | 5,891 MB |
+| Saved add-on | 40.4 MB |
+
+**What the samples show, which the loss number hides.** After training the three sample answers are short and plain, in the dataset's manner, without the lists and bold text of the untrained model. They are not more correct. One became wrong: asked for Mario Puzo's most famous book, the untrained model answered *The Godfather* and the trained one "The Lord of the Rings". The other two were wrong before and wrong after. So in this run training moved the **style** towards the data and did not add knowledge; a lower loss is not evidence of better answers. Three samples are an illustration, not a measurement of accuracy.
+
+**Scope.** This shows the procedure runs on this laptop for a 0.6B model. It says nothing about the 35B model: that needs the BF16 checkpoint and more than twice this laptop's graphics memory, then a merge and Colibri's converter, none of which was exercised. Installation notes for anyone repeating it: the default install pulled a CPU-only PyTorch, and the GPU build had to be taken from the `cu130` index.

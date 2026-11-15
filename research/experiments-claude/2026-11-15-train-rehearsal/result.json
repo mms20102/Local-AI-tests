@@ -1,0 +1,83 @@
+{
+ "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+ "torch": "2.14.1+cu130",
+ "base_parameters": 596049920,
+ "settings": {
+  "max_len": 384,
+  "batch": 4,
+  "epochs": 1,
+  "lr": 0.0002,
+  "lora_rank": 16,
+  "train_rows": 1000,
+  "held_out_rows": 100
+ },
+ "held_out_loss_before": 2.6836,
+ "samples": [
+  {
+   "question": "What is the tallest structure in the Western Hemisphere?",
+   "reference": "The CN Tower in Toronto, Ontario, Canada is the tallest free-standing structure in the Western Hemisphere. It was completed in 1976, and was the tallest structure in the world from 1975 until 2007, when it was surpassed by the Burj Khalifa.",
+   "before": "The tallest structure in the Western Hemisphere is the **Mountains of the West**, located in the **Columbia Plateau** in the **United States**. It is a massive, 1,000-foot-tall mountain that rises dramatically above the surrounding landscape.",
+   "after": "The tallest building in the Western Hemisphere is the Burj Khalifa in Dubai, United Arab Emirates. It is 828 meters tall and is the tallest building in the world."
+  },
+  {
+   "question": "What is Mario Puzo's most famous book?",
+   "reference": "The Godfather.  Originally published in 1969, is a novel about a fictional crime family in New York.",
+   "before": "Mario Puzo is best known for his novel *The Godfather*, which is the most famous book in the Puzo family. It is a highly acclaimed and widely read work, often considered one of the most influential novels in the world.",
+   "after": "The Lord of the Rings"
+  },
+  {
+   "question": "What are three meals that a small child is likely to eat for lunch?",
+   "reference": "Most small children will enjoy chicken nuggets, macaroni and cheese, or a peanut butter and jelly sandwich as the main course. You can include fruits, such as grapes, berries, apples, or oranges, as well as vegetables, such as carrots, celery, or broccoli, to make it a meal.",
+   "before": "Three common meals that a small child is likely to eat for lunch are:\n\n1. **Breakfast** – usually a small, nutritious meal like a banana, cereal, or fruit.  \n2. **Lunch** – a balanced meal that includes a main dish, vegetables, and a drink.  \n3. **Dinner** – a hearty meal that includes proteins, vegetables, and a main",
+   "after": "Three meals that a small child is likely to eat for lunch are: 1) breakfast, 2) lunch, and 3) dinner."
+  }
+ ],
+ "trained_parameters": 10092544,
+ "train_seconds": 68.5,
+ "steps": 250,
+ "train_loss_curve": [
+  {
+   "step": 25,
+   "train_loss": 1.828
+  },
+  {
+   "step": 50,
+   "train_loss": 2.2431
+  },
+  {
+   "step": 75,
+   "train_loss": 1.6036
+  },
+  {
+   "step": 100,
+   "train_loss": 1.9465
+  },
+  {
+   "step": 125,
+   "train_loss": 1.4822
+  },
+  {
+   "step": 150,
+   "train_loss": 2.0695
+  },
+  {
+   "step": 175,
+   "train_loss": 1.7168
+  },
+  {
+   "step": 200,
+   "train_loss": 1.1639
+  },
+  {
+   "step": 225,
+   "train_loss": 2.183
+  },
+  {
+   "step": 250,
+   "train_loss": 2.2963
+  }
+ ],
+ "peak_gpu_memory_mb": 5891,
+ "held_out_loss_after": 2.0965,
+ "adapter_bytes": 40428729
+}
