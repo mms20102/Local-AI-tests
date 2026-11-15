@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-11-15",
+  "kind": "saved_handwritten_probe5_reconciliation_not_execution_or_containment_clearance",
+  "publication_ref": "48ded740a535fd4ec6b77cfdcd4f603e9028d4cf",
+  "implementation_ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+  "artifacts": {
+    "summary": {
+      "path": "research/coding-quality-v1/sandbox/results/probe5-runner6-2026-11-15.json",
+      "git_blob": "4019575dadcdb1699eb5a25ff5e657255f01be50"
+    },
+    "raw": {
+      "path": "research/coding-quality-v1/sandbox/results/probe5-runner6-2026-11-15-guest-reports.json",
+      "git_blob": "5fe9c369148b5cc2be124000c47eab38440764f3"
+    }
+  },
+  "reconciled_saved_fields": {
+    "sessions": 8,
+    "intended_entries": 36,
+    "raw_reports": 8,
+    "reporting_entries": 36,
+    "guest_shutdown_sessions": 8,
+    "probe_ok": false,
+    "outcome_counts": {
+      "as expected": 35,
+      "UNEXPECTED: did not pass": 1
+    },
+    "job_true": 36,
+    "integrity4096": 36,
+    "references": {
+      "fully_passing": 12,
+      "cases_passed": 116,
+      "cases_total": 116
+    },
+    "decoys_failing_at_least_one": 12,
+    "critical_entries": [
+      {
+        "session": "session-00",
+        "id": "P_print_flood",
+        "status": "output_flood",
+        "exit_code": 1,
+        "stdout_bytes": 1048606,
+        "in_job": true,
+        "integrity": 4096,
+        "records": null
+      },
+      {
+        "session": "session-01",
+        "id": "P_output",
+        "status": "output_flood",
+        "exit_code": 1,
+        "stdout_bytes": 1114112,
+        "in_job": true,
+        "integrity": 4096,
+        "records": null
+      },
+      {
+        "session": "session-06",
+        "id": "P_kill_runner",
+        "status": "finished",
+        "exit_code": 0,
+        "stdout_bytes": 96,
+        "in_job": true,
+        "integrity": 4096,
+        "records": [
+          {
+            "status": "returned",
+            "args_after": [
+              1
+            ],
+            "value": "refused",
+            "same_object_as_input": false
+          }
+        ]
+      },
+      {
+        "session": "session-07",
+        "id": "P_write",
+        "status": "finished",
+        "exit_code": 0,
+        "stdout_bytes": 146,
+        "in_job": true,
+        "integrity": 4096,
+        "records": [
+          {
+            "status": "returned",
+            "args_after": [
+              1
+            ],
+            "value": [
+              "C:\\cq1\\out\\planted.txt",
+              "C:\\cq1\\out\\results.json"
+            ],
+            "same_object_as_input": false
+          }
+        ]
+      }
+    ],
+    "mismatches": [
+      [
+        "P_write",
+        "UNEXPECTED: did not pass"
+      ]
+    ],
+    "original_model_drafts_in_probe": false
+  },
+  "interpretation": {
+    "runner_kill": "saved record returns refused and runner reports; supports only tested fixture, not general observer/access-control proof",
+    "host_share_write": "saved record reports two successful writes; author says final report overwritten and planted.txt left in host scratch",
+    "write_prevention": "failed in tested setup",
+    "read_access": "not tested by inspected write-only fixture; no no-read guarantee",
+    "same_interpreter_and_other_same_user_processes": "unresolved",
+    "all_job_integrity_fields": "guest testimony, not independent runtime inspection"
+  },
+  "revision7": {
+    "ref": "48ded740a535fd4ec6b77cfdcd4f603e9028d4cf",
+    "guest_runner_git_blob": "6e5bb8b033aac59f9b5128c58db92a5f2d017d45",
+    "sandbox_host_git_blob": "37a4a0e60aa723f496cf261b4e379797e4b8bab1",
+    "author_claimed_changes": [
+      "post-candidate extra-file detection/removal",
+      "progress comparison against memory",
+      "discard tampered records",
+      "host rejection of unexpected report files",
+      "folder-size polling every2seconds above16MiB"
+    ],
+    "write_prevention_implemented": false,
+    "strict_disk_quota": false,
+    "new_index_expectation": "P_write status report_folder_tampered",
+    "interpretation": "separate detection check; does not erase failed write prevention",
+    "author_reported_suite_tests": 264,
+    "author_reported_suite_failures": 0,
+    "independent_test_execution_here": false
+  },
+  "sixth_probe": {
+    "handwritten_only": true,
+    "sessions": 8,
+    "completion_at_pin": false,
+    "model_drafts_staged_or_run": false,
+    "chat_reported_untouched": true
+  },
+  "write_fixture_source": {
+    "ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+    "git_blob": "2373509bea8572e34c87d6fdd49eda3ba166596f",
+    "mode": "write-only open('w')",
+    "read_access_probe": false
+  },
+  "cochat_followup": "675802bc6539da8d10114e75bea14c318ab5ecb3",
+  "decision": {
+    "original_score": "11/12 provisional author report",
+    "draft_hold": true,
+    "review_return_automatic_run_clearance": false,
+    "existing_review": "include explicit revision7 successor; no duplicate implementation",
+    "private_cloud_probe": "private and unlaunched"
+  },
+  "our_actions": {
+    "parsed_published_json": true,
+    "read_fixture_source": true,
+    "code_or_candidate_execution": false,
+    "pc_or_vm_access": false,
+    "privilege_or_settings_change": false,
+    "runtime_traffic": false,
+    "cloud_probe_or_actions_run": false
+  },
+  "limitations": [
+    "saved guest/host fields are not independent live observations",
+    "probe index match is not a general security pass",
+    "raw probe reports do not restore original model-draft observations",
+    "no claim of quiet speed, model quality or repeatability"
+  ]
+}

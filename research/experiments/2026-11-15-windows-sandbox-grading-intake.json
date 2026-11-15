@@ -383,5 +383,44 @@
     "draft_hold": true,
     "independent_successor_review_pending": true,
     "our_code_or_runtime_execution": false
+  },
+  "fifth_probe_and_revision7": {
+    "publication_ref": "48ded740a535fd4ec6b77cfdcd4f603e9028d4cf",
+    "normalized_intake": "2026-11-15-sandbox-probe5-intake.json",
+    "probe5": {
+      "sessions": 8,
+      "entries": 36,
+      "reports": 8,
+      "probe_ok": false,
+      "index_matches": 35,
+      "index_mismatches": 1,
+      "failed_fixture": "P_write",
+      "runner_kill_fixture": "returned refused and runner survived",
+      "host_share_written_paths": [
+        "C:\\cq1\\out\\planted.txt",
+        "C:\\cq1\\out\\results.json"
+      ],
+      "write_prevention_failed": true,
+      "share_read_denial_demonstrated": false
+    },
+    "revision7": {
+      "source_ref": "48ded740a535fd4ec6b77cfdcd4f603e9028d4cf",
+      "mitigation": "post-access detection/rejection, not prevention",
+      "sampled_host_folder_threshold_bytes": 16777216,
+      "poll_seconds": 2,
+      "strict_disk_quota": false,
+      "new_index_must_not_erase_writes": true,
+      "author_reported_tests": 264,
+      "independent_clearance": false
+    },
+    "sixth_notice": {
+      "handwritten_only": true,
+      "sessions": 8,
+      "completion_at_pin": false
+    },
+    "original_score": "11/12 unchanged provisional",
+    "draft_hold": true,
+    "cochat_correction_commit": "675802bc6539da8d10114e75bea14c318ab5ecb3",
+    "our_execution_or_runtime_change": false
   }
 }
