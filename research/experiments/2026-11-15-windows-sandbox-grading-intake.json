@@ -80,5 +80,109 @@
     "runtime_changes_by_this_session": false,
     "PR1_merge_or_close": false
   },
-  "review_path": "../audits/2026-11-15-windows-sandbox-grading-review.md"
+  "review_path": "../audits/2026-11-15-windows-sandbox-grading-review.md",
+  "successor_notice": {
+    "source_ref": "1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2",
+    "cochat_blob": "bd9d904c196115730b69a194e36d1536373c5c98",
+    "author_confirms_false_pass": true,
+    "expected_answer_guarantee_withdrawn": true,
+    "author_claimed_repairs": [
+      "strict case/record schemas and duplicate/nonfinite JSON handling",
+      "positive expected exception/value match",
+      "reject nonzero exits and capped output",
+      "required exact four network-check results",
+      "suspended child assigned to one-process 1024MB kill-on-close Windows job before resume",
+      "10second deadline; polled output stop above4MiB",
+      "AST triage and separate non-plain sessions"
+    ],
+    "regression_methods_source_counted": 24,
+    "tests_executed_by_this_session": false,
+    "author_reported_suite_tests": 261,
+    "author_reported_suite_failures": 0,
+    "author_reported_suite_skips": null,
+    "independent_successor_review": "pending; coordinate existing grading reviewer, no duplicate audit",
+    "probe": {
+      "status_at_notice": "announced starting; no completion at pinned source",
+      "references": 12,
+      "decoys": 12,
+      "hostile": 11,
+      "guest_sessions": 7,
+      "non_plain_alone": 6,
+      "minimum_available_memory_mb": 3584,
+      "chat_reported_running_untouched": true,
+      "model_drafts_staged_or_run": false
+    },
+    "output_limit_interpretation": "4MiB is sampled stop threshold with20ms polling, not quota;1MiB is separate read limit",
+    "original_record_shape_claim": "cannot be independently checked from published summary without raw records",
+    "original_score_status": "unchanged provisional author report",
+    "cochat_followup_commit": "e379571b6eb18e09ac6cbcc48376eec0ab37cd47"
+  },
+  "successor_probe_completion": {
+    "source_ref": "ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4",
+    "cochat_blob": "b405f3bb133ee5115d459d58e396f1d903d9320d",
+    "normalized_intake": "2026-11-15-sandbox-second-probe-intake.json",
+    "sessions": 7,
+    "intended_entries": 35,
+    "guest_reports": 6,
+    "reporting_entries": 34,
+    "probe_ok_meaning": "all handwritten indexed outcomes as expected, including runner-kill; not security clearance",
+    "runner_attack": {
+      "id": "P_kill_runner",
+      "raw_report": false,
+      "host_deadline_s": 900,
+      "recorded_seconds_to_outcome": 902.3,
+      "session_refused": true
+    },
+    "output_observations": {
+      "threshold_bytes": 4194304,
+      "print_flood_bytes": 8323324,
+      "overshoot_bytes": 4129020,
+      "fast_output_bytes": 20971608,
+      "strict_disk_quota": false
+    },
+    "cleanup": {
+      "guest_shutdown_sessions": 6,
+      "residual_vmmem_process": "author reports observed, identity/unrelatedness unresolved",
+      "independently_verified": false
+    },
+    "original_draft_raw_records_retained": false,
+    "original_raw_record_inference_withdrawn": true,
+    "model_drafts_rerun": false,
+    "source_regression_review": "pending, existing durable reviewer",
+    "exit_code_type_finding": "source-only: false and0.0 compare equal to0; require exact int; no saved occurrence claimed"
+  },
+  "type_strict_exit_successor": {
+    "source_ref": "cc2a3937a7d668d3531ef8d4a6ff3f7df0c4bc56",
+    "cochat_blob": "368e86948a85485dfbb590c097069c1bc9428bf8",
+    "change_scope": [
+      "sandbox/sandbox_host.py clean-exit predicate",
+      "test_judge_strict.py three additional input values",
+      "append-only co-chat"
+    ],
+    "source_diff_read_here": true,
+    "predicate": "type(exit_code) is int and exit_code == 0",
+    "regression_values": [
+      "false",
+      "0.0",
+      "\"0\""
+    ],
+    "author_reported_regression_tests_passed": 24,
+    "independently_executed_here": false,
+    "author_reports_existing_guest_exits_integer": true,
+    "sandbox_rerun": false,
+    "review": "add narrow delta to existing focused successor review; not broad duplicate approval",
+    "draft_hold": {
+      "provenance": "Claude relays Mohamed's direct instruction",
+      "rerun_12_drafts": "held until successor review returns",
+      "automatic_clearance_after_review": false
+    },
+    "cleanup": {
+      "wsb_list": "author reports no running Sandbox",
+      "residual_process": "same vmmemWindowsSandbox PID, about1.6GB",
+      "hcsdiag_list": "author reports refused without administrator rights",
+      "identity_or_cleanup_verified": false,
+      "elevation_or_process_action_by_this_session": false
+    },
+    "original_score": "11/12 unchanged provisional author report"
+  }
 }

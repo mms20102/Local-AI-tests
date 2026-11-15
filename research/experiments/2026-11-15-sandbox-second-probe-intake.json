@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-11-15",
+  "kind": "published_handwritten_probe_artifact_normalization_not_execution_or_containment_clearance",
+  "source_ref": "ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4",
+  "implementation_ref": "1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2",
+  "artifacts": {
+    "summary": {
+      "path": "research/coding-quality-v1/sandbox/results/probe-hostile-2026-11-15.json",
+      "git_blob": "f79a12ef88d20dfd11a42aa813a94abf93cdd243"
+    },
+    "raw": {
+      "path": "research/coding-quality-v1/sandbox/results/probe-hostile-2026-11-15-guest-reports.json",
+      "git_blob": "b15c66bbe0797f96d66a8c6d7ffc2e036e7c70fa"
+    }
+  },
+  "author_reported_source_sha256": {
+    "grade.py": "61adbf320209d662b8b009c0fef5dc6f325d3208f22b768a8c49b546fad6ccae",
+    "manifest.json": "58a0546eebf904ab8736d3a85fbaa4d43e415176416278f03238704b01c3b6e4",
+    "sandbox_host.py": "7e90e3e7674d6c48f1acbe3b57d713ca7aaaf2bc64ee119f562a6f844e6cc65c",
+    "guest_runner.py": "6624d70587d746f1bf8f22a4ceb1da0400df7b9c48dff35c8c2be504ca6ca4c5",
+    "source_gate.py": "61cfbd977524e54e69030e612e6a47845d144d38e9a2a7c2b67ab2ff8c7292bc",
+    "hostile/index.json": "dcb7bee0d0a770817b6d2e7859df52253070d16277edc2548b92fb490b9de7b2",
+    "fixture_revision": 2
+  },
+  "recomputed_from_saved_json": {
+    "sessions": 7,
+    "intended_entries": 35,
+    "distinct_intended_entries": 35,
+    "raw_guest_reports": 6,
+    "reporting_entries": 34,
+    "confined_true_entries": 34,
+    "missing_ids": [
+      "P_kill_runner"
+    ],
+    "deadline_hit_sessions": [
+      {
+        "entries": [
+          "P_kill_runner"
+        ],
+        "seconds_to_report": 902.3,
+        "refused": [
+          "no report",
+          "guest did not shut itself down after reporting"
+        ]
+      }
+    ],
+    "guest_shutdown_sessions": 6,
+    "index_expectation_matches": 35,
+    "probe_ok_flag": true,
+    "flood": {
+      "threshold": 4194304,
+      "written": 8323324,
+      "overshoot": 4129020
+    },
+    "output": [
+      {
+        "id": "P_print_flood",
+        "status": "output_flood",
+        "exit": 1,
+        "written": 8323324,
+        "capped": true,
+        "record_count": 0,
+        "seconds": 0.3
+      },
+      {
+        "id": "P_output",
+        "status": "finished",
+        "exit": 0,
+        "written": 20971608,
+        "capped": true,
+        "record_count": 0,
+        "seconds": 0.44
+      }
+    ],
+    "case_observations": 238,
+    "judged_entries": 34,
+    "ref_count": 12,
+    "decoy_count": 12,
+    "reference_decoy_grades": {
+      "reference_tasks_fully_passing": 12,
+      "reference_cases_passed": 116,
+      "reference_cases_total": 116,
+      "decoy_tasks_failing_at_least_one": 12,
+      "decoy_cases_passed": 40,
+      "decoy_cases_total": 116
+    }
+  },
+  "interpretation": {
+    "probe_ok": "matches handwritten index, including expected denial and failed safety behavior; not generic containment approval",
+    "job_applied": "34 guest self-reported true values, not independently observed",
+    "output_threshold": "sampled stop can overshoot or miss fast exits;1MiB post-run read limit is separate",
+    "runner_kill": "author attributes missing report and host timeout to fixture terminating guest runner; job resource limits did not prevent that access",
+    "cleanup": "six shutdowns recorded; process image-name lists do not resolve author-reported remaining vmmemWindowsSandbox",
+    "plain_source_label": "source triage is not an observation-authenticity or isolation proof"
+  },
+  "original_draft_experiment": {
+    "raw_guest_records_retained": false,
+    "malformed_path_absence_claim_withdrawn": true,
+    "score": "11/12 provisional author report",
+    "drafts_rerun": false
+  },
+  "pending_source_item": {
+    "path": "sandbox/sandbox_host.py",
+    "line": 192,
+    "ref": "1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2",
+    "issue": "exit_code==0 accepts false and0.0; strict schema requires exact int",
+    "reproduced_by_execution_here": false,
+    "claimed_saved_occurrence": false
+  },
+  "review_coordination": {
+    "focused_successor_review": "existing durable reviewer active; no duplicate audit implementation",
+    "independent_source_regression_clearance": false,
+    "private_cloud_probe_paused": true
+  },
+  "our_actions": {
+    "parsed_published_json": true,
+    "executed_repository_code": false,
+    "executed_generated_code": false,
+    "pc_or_vm_access": false,
+    "live_traffic": false,
+    "model_requests": false,
+    "settings_changes": false,
+    "actions_or_cloud_probe_run": false,
+    "private_artifact_publication": false
+  },
+  "cochat_followup": "e11eca1f99c2e07e6ab3d0ab372865365251c488",
+  "limitations": [
+    "guest reports belong to handwritten probe, not original model draft run",
+    "source hashes in summary are author-reported; this intake does not independently hash source bytes",
+    "host verdict totals are reconciled, not independently rejudged by running grade.py",
+    "no proof of arbitrary-candidate containment or observer integrity",
+    "no claim of live speed or model behavior repeatability"
+  ]
+}

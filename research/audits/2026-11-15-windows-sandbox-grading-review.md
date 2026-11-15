@@ -2,6 +2,46 @@
 
 Checkpoint: **2026-11-15 UTC**. Source: [`377fae14`](https://github.com/mms20102/Local-AI-tests/tree/377fae14ce8940f0f1595d658b7493198a881a79/research/coding-quality-v1/sandbox). This document integrates the designated independent reviewer's portable findings. That reviewer performed read-only source, hash and result-arithmetic checks, with a second source reviewer confirming the priority findings. This repository session also read the critical judge branch. **Neither review executed candidates, the harness or probes, or accessed the PC/VM/runtime.** The private workspace report/code is not copied or published.
 
+## Narrow successor — type-strict exit check; no new Sandbox run
+
+The [`cc2a3937` diff](https://github.com/mms20102/Local-AI-tests/commit/cc2a3937a7d668d3531ef8d4a6ff3f7df0c4bc56) changes only the host clean-exit predicate, its regression values and the append-only co-chat. This session read that exact diff: `type(item.get("exit_code")) is int` now precedes equality to zero; the existing test gains `False`, `0.0` and `"0"`. This addresses the source-level equality issue in the earlier `1f32bb4e` predicate. **No tests were executed here:** the 24 pure-test pass and the original raw reports containing only integer exits are author reports, not independent regression or runtime clearance. There was no new guest run, so the saved probe outcome is unchanged.
+
+Carry this small delta into the existing focused successor review instead of starting another broad audit. Claude reports Mohamed directly instructed no rerun of the 12 drafts until that review returns; preserve the hold, and do not treat a review's return as automatic authorization for another run.
+
+The later cleanup report says `wsb list` showed no running Sandbox while the same `vmmemWindowsSandbox` PID remained at about 1.6 GB. `hcsdiag list` was refused without administrator rights. These are Claude-reported observations; the process's relation to the sessions is unresolved and cleanup remains unverified. Do not infer permission to elevate or kill it. The original 11/12 result stays provisional; no PC or runtime action occurred here.
+
+## Second handwritten probe — closed, with adverse evidence
+
+[Completion artifacts `ca0d4d4a`](https://github.com/mms20102/Local-AI-tests/tree/ca0d4d4aa950aa2ec646ca0acc5cbee3c8bd9cc4/research/coding-quality-v1/sandbox/results) now include the summary and raw guest reports for the **handwritten probe only**. This session parsed/reconciled their JSON without executing any candidate, harness or guest. The original draft guest records were not kept; the author withdraws the inference that their shapes could be checked from the original summary. There is still no independent re-grading of the original 11/12.
+
+- **Reconciled totals:** 7 sessions, 35 distinct intended entries, 6 raw guest reports and 34 reporting entries. The missing entry is `P_kill_runner`. The summary grades 12 references at 116/116 cases and all 12 decoys failing at least one case. Thirty-five `as expected` index outcomes and `probe_ok: true` include the successful denial of the runner; they are not 35 successful security properties.
+- **Runner attack:** the author reports `P_kill_runner` used Windows process access to kill the guest runner. The host has no report, records 902.3 seconds to the deadline outcome and refuses that session. Resource jobs do not prevent access to other guest processes. Running non-plain fixtures alone mitigates this declared sample, but AST triage does not authenticate arbitrary candidates.
+- **Output:** `P_print_flood` records 8,323,324 bytes, **4,129,020 above** the 4,194,304-byte sampled threshold. `P_output` records 20,971,608 bytes and exits 0 before the stop catches it; the separate read limit rejects its record. These are evidence that the stop is not a strict disk quota.
+- **Cleanup/isolation:** six guest shutdowns are recorded. Empty lists for selected process image names do not resolve the author's separately observed `vmmemWindowsSandbox` process. All 34 `confined: true` fields are guest testimony, not independent enforcement observations. The host/guest observation and process-identification limitations remain.
+- **Narrow pending source item:** `sandbox_host.py:192` at `1f32bb4e` accepts `exit_code == 0`, including malformed JSON `false` or `0.0`. A strict schema needs `type(exit_code) is int and exit_code == 0`; add pure negative tests. No occurrence of these malformed values is claimed in the saved reports.
+
+[Normalized intake](../experiments/2026-11-15-sandbox-second-probe-intake.json) pins both artifact blobs and separates source/reported evidence. The existing independent reviewer is handling the focused source/regression comparison; no duplicate implementation or run is assigned here. The source repairs are not independently cleared by this intake. No new model run, PC traffic, runtime change, Actions job or cloud probe was performed. The original provisional score is unchanged.
+
+## Historical successor notice — before probe completion
+
+Claude confirms the false pass, withdraws the expected-answer-withholding guarantee, and publishes [`1f32bb4e`](https://github.com/mms20102/Local-AI-tests/tree/1f32bb4e6e0f47ae79d34404cf0816fbd044c7c2/research/coding-quality-v1). The findings below describe `377fae14`, not an independently verified assessment of its successor.
+
+**Author-reported repairs:** strict case/record schemas and JSON parsing; positive exception/value matches; refusal of nonzero exits/capped output; exact four-check network fields; suspended child assigned to a one-process/1024 MB kill-on-close Windows job before resume; 10-second deadline and a polled output stop above 4 MiB; AST triage and eleven retained hostile fixtures. The author reports 261 suite tests without failures. This session source-counted **24 named pure regression methods**, but executed none.
+
+| File | Successor Git blob |
+|---|---|
+| `grade.py` | `11cbe7f3724439e5fd51247b1c9889d788d1c156` |
+| `test_judge_strict.py` | `bb783f34b9a10d0f0ff335b3e2247d1bf7e75fe5` |
+| `sandbox/guest_runner.py` | `5eb3ea9ebc165002937b3e572e50f6c06365c774` |
+| `sandbox/sandbox_host.py` | `65febbcc4ebefef2e641d949d828813fecfbf93d` |
+| `sandbox/source_gate.py` | `59a8d31334a093d3dc279db7b56f2f4b58f94e49` |
+
+The notice announces a second **handwritten-only** probe: 12 references, 12 decoys and 11 hostile fixtures across seven sessions, six non-plain fixtures alone. Chat is reported running but untouched; admission uses a 3584 MB available-memory sample. No model drafts are reported staged or rerun. At this pinned notice no completion evidence is available. A focused successor review should use the existing independent grading reviewer rather than duplicate the first audit.
+
+Two points were returned in [co-chat](https://github.com/mms20102/Local-AI-tests/blob/e379571b6eb18e09ac6cbcc48376eec0ab37cd47/research/co-chat.md). File size is polled every 20 ms: 4 MiB is a **sampled stop threshold that can overshoot, not a strict quota**; the 1 MiB read limit is separate. Also, the original summary lacks raw per-case observations and cannot substantiate that all 112 passing records contained required fields. Archive sanitized original records if available; otherwise retain that claim only as an author-local observation. The original score stays provisional.
+
+Shared-interpreter observations, process identification and guest-reported isolation remain explicitly unresolved. The Windows-job flags and source alone do not establish applied enforcement. The private cloud probe stays paused/private; no competing implementation, CI run or candidate execution occurred here. Claude's window-9 novelty correction is accepted and recorded.
+
 ## Result supported by the available evidence
 
 Claude reports enabling/running through Windows Sandbox after Mohamed's own actions and direct instructions in Claude's session. Its earlier notice at `1b4edb5` announced handwritten probes only; the later completion additionally reports all 12 drafts executed before independent harness review. This is an attributed action/authorization report, not retrospective clearance from this session.
