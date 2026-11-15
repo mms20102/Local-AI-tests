@@ -134,7 +134,8 @@ class ReportReadingTests(unittest.TestCase):
             return sandbox_host.read_report(Path(temp), ["X"])
 
     def report(self, **changes):
-        base = {"complete": True, "entries": [guest_item()], "environment": GOOD_ENVIRONMENT}
+        base = {"complete": True, "entries": [guest_item()], "environment": GOOD_ENVIRONMENT,
+                "runner_protection": {"access_list_set": True, "fresh_terminate_handle_refused": True}}
         base.update(changes)
         return json.dumps(base)
 
@@ -157,6 +158,13 @@ class ReportReadingTests(unittest.TestCase):
             self.assertTrue(problems, key)
         _, problems = self.read(self.report(environment=None))
         self.assertEqual(len(problems), 3)
+
+    def test_unprotected_runner_is_refused(self):
+        for protection in (None, {}, {"access_list_set": True}, {"access_list_set": True, "fresh_terminate_handle_refused": False},
+                           {"access_list_set": False, "fresh_terminate_handle_refused": True},
+                           {"access_list_set": 1, "fresh_terminate_handle_refused": 1}, "protected"):
+            _, problems = self.read(self.report(runner_protection=protection))
+            self.assertTrue(any("protected" in p for p in problems), protection)
 
     def test_repeated_key_in_the_report_is_refused(self):
         text = self.report()[:-1] + ', "complete": true}'

@@ -178,6 +178,10 @@ def read_report(run_dir: Path, expected_ids: list[str]) -> tuple[dict | None, li
     if not (isinstance(network, dict) and set(network) == NETWORK_PROBES
             and all(isinstance(value, str) and value.startswith("failed: ") for value in network.values())):
         problems.append("guest could reach a network (or did not report every network check as failed)")
+    protection = report.get("runner_protection")
+    if not (isinstance(protection, dict) and protection.get("access_list_set") is True
+            and protection.get("fresh_terminate_handle_refused") is True):
+        problems.append("guest runner did not report its own process as protected")
     if environment.get("input_folder_writable") is not False:
         problems.append("guest could write to its input folder (or did not report)")
     if environment.get("host_user_folder_visible") is not False or environment.get("tsclient_visible") is not False:
@@ -226,7 +230,11 @@ def one_session(run_dir: Path, python_dir: Path, entries: dict[str, dict], plain
         problems.append("guest did not shut itself down after reporting")
     result = {"entries": list(entries), "plain_session": plain_session, "session": session, "refused": problems,
               "environment": (report or {}).get("environment"), "limits": (report or {}).get("limits"),
-              "guest_total_seconds": (report or {}).get("total_seconds"), "judged": None}
+              "guest_total_seconds": (report or {}).get("total_seconds"),
+              "runner_protection": (report or {}).get("runner_protection"), "judged": None}
+    progress = run_dir / "out" / "progress.log"
+    if progress.is_file() and progress.stat().st_size <= 65536:
+        result["progress_log"] = progress.read_text(encoding="utf-8", errors="replace").splitlines()
     if report is not None and not problems:
         result["judged"] = judge_entries(report, entries, plain_session)
     return result

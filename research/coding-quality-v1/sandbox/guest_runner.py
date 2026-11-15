@@ -6,9 +6,14 @@ interpreter, and records what the driver reported. It never sees expected values
 pass or fail: the host does that.
 
 Every candidate interpreter is confined before it executes a single instruction:
+  - this runner first replaces the access list of ITS OWN process with one that grants access to
+    the SYSTEM account only, and gives the owner no implicit right to change it back. Measured on
+    Windows 11: low integrity alone does NOT stop a child from opening its parent with the right
+    to terminate it (that right is not among the "write" rights integrity blocks), so the access
+    list is what protects the runner;
   - it is created with a RESTRICTED, LOW-INTEGRITY copy of the runner's token: every privilege that
-    can be removed is removed, and Windows refuses a low-integrity process write access to objects
-    of higher integrity, which includes this runner's process and the files the runner creates;
+    can be removed is removed, the Administrators group is switched to deny-only, and Windows
+    refuses a low-integrity process write access to files and objects of higher integrity;
   - it is created SUSPENDED, placed in a Windows job object, and only then resumed;
   - the job allows ONE process (the candidate cannot start another), caps its memory, and is
     terminated as a whole on the deadline, on too much output, or when this runner exits;
@@ -52,6 +57,12 @@ JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
 JobObjectExtendedLimitInformation = 9
 TOKEN_ALL_ACCESS, TOKEN_QUERY = 0xF01FF, 0x0008
 DISABLE_MAX_PRIVILEGE = 0x1
+ADMINISTRATORS_SID = "S-1-5-32-544"
+DACL_SECURITY_INFORMATION = 0x4
+# Protected access list: SYSTEM everything; OWNER RIGHTS read-only, which removes the owner's implicit
+# right to rewrite the list. Nobody else is granted anything.
+RUNNER_PROCESS_SDDL = "D:P(A;;GA;;;SY)(A;;RC;;;OW)"
+PROCESS_TERMINATE = 0x0001
 TokenIntegrityLevel = 25
 SE_GROUP_INTEGRITY = 0x20
 
@@ -137,6 +148,11 @@ def windows():
             (advapi, "GetTokenInformation", wintypes.BOOL, [handle, ctypes.c_int, pointer, dword, ctypes.POINTER(dword)]),
             (advapi, "GetSidSubAuthorityCount", ctypes.POINTER(ctypes.c_ubyte), [pointer]),
             (advapi, "GetSidSubAuthority", ctypes.POINTER(dword), [pointer, dword]),
+            (advapi, "ConvertStringSecurityDescriptorToSecurityDescriptorW", wintypes.BOOL,
+             [wintypes.LPCWSTR, dword, ctypes.POINTER(pointer), pointer]),
+            (advapi, "SetKernelObjectSecurity", wintypes.BOOL, [handle, dword, pointer]),
+            (kernel, "OpenProcess", handle, [dword, wintypes.BOOL, dword]),
+            (kernel, "GetCurrentProcessId", dword, []),
             (advapi, "CreateProcessAsUserW", wintypes.BOOL, [handle, wintypes.LPCWSTR, wintypes.LPWSTR, pointer, pointer,
                                                              wintypes.BOOL, dword, pointer, wintypes.LPCWSTR,
                                                              ctypes.POINTER(StartupInfo), ctypes.POINTER(ProcessInformation)])):
@@ -163,15 +179,42 @@ def confining_job(kernel):
     return job
 
 
+def protect_self(kernel, advapi) -> dict:
+    """Replace this process's access list so that only SYSTEM is granted access. Returns what was observed:
+    whether the list was set, and whether THIS process, asking afresh by process id, is now refused the right
+    to terminate itself (the same question a candidate running as the same user would ask)."""
+    outcome = {"access_list_set": False, "fresh_terminate_handle_refused": None}
+    descriptor = ctypes.c_void_p()
+    if not advapi.ConvertStringSecurityDescriptorToSecurityDescriptorW(RUNNER_PROCESS_SDDL, 1, ctypes.byref(descriptor), None):
+        return outcome
+    try:
+        outcome["access_list_set"] = bool(advapi.SetKernelObjectSecurity(kernel.GetCurrentProcess(), DACL_SECURITY_INFORMATION,
+                                                                         descriptor))
+    finally:
+        kernel.LocalFree(descriptor)
+    fresh = kernel.OpenProcess(PROCESS_TERMINATE, False, kernel.GetCurrentProcessId())
+    outcome["fresh_terminate_handle_refused"] = not fresh
+    if fresh:
+        kernel.CloseHandle(fresh)
+    return outcome
+
+
 def low_rights_token(kernel, advapi):
     """A copy of this process's token with removable privileges removed and LOW integrity. Returns a handle or raises."""
     own, restricted, sid = wintypes.HANDLE(), wintypes.HANDLE(), ctypes.c_void_p()
     if not advapi.OpenProcessToken(kernel.GetCurrentProcess(), TOKEN_ALL_ACCESS, ctypes.byref(own)):
         raise OSError("OpenProcessToken failed")
+    administrators = ctypes.c_void_p()
+    if not advapi.ConvertStringSidToSidW(ADMINISTRATORS_SID, ctypes.byref(administrators)):
+        kernel.CloseHandle(own)
+        raise OSError("ConvertStringSidToSidW failed")
     try:
-        if not advapi.CreateRestrictedToken(own, DISABLE_MAX_PRIVILEGE, 0, None, 0, None, 0, None, ctypes.byref(restricted)):
+        deny_only = SidAndAttributes(administrators, 0)
+        if not advapi.CreateRestrictedToken(own, DISABLE_MAX_PRIVILEGE, 1, ctypes.byref(deny_only), 0, None, 0, None,
+                                            ctypes.byref(restricted)):
             raise OSError("CreateRestrictedToken failed")
     finally:
+        kernel.LocalFree(administrators)
         kernel.CloseHandle(own)
     if not advapi.ConvertStringSidToSidW(LOW_INTEGRITY_SID, ctypes.byref(sid)):
         kernel.CloseHandle(restricted)
@@ -342,21 +385,38 @@ def run_confined(folder: Path) -> dict:
                     pass
 
 
+def note(text: str) -> None:
+    """A breadcrumb in the report folder, so a runner that dies leaves a trace of how far it got."""
+    try:
+        with open(OUT / "progress.log", "a", encoding="utf-8") as log:
+            log.write(f"{time.strftime('%H:%M:%S')} {text}\n")
+    except OSError:
+        pass
+
+
 def run_entry(entry_id: str) -> dict:
     source, folder = IN / "entries" / entry_id, WORK / entry_id
     shutil.copytree(source, folder)
     shutil.copy(IN / "__driver__.py", folder / "__driver__.py")
-    return {"id": entry_id, **run_confined(folder)}
+    note(f"start {entry_id}")
+    record = {"id": entry_id, **run_confined(folder)}
+    note(f"end {entry_id} {record.get('status')}")
+    return record
 
 
 def main() -> None:
     started = time.monotonic()
-    result = {"guest_runner": "cq1-sandbox-4", "environment": {}, "entries": [], "complete": False,
+    result = {"guest_runner": "cq1-sandbox-5", "environment": {}, "entries": [], "complete": False,
               "limits": {"entry_timeout_s": ENTRY_TIMEOUT_S, "max_output_bytes": MAX_OUTPUT_BYTES,
                          "memory_limit_bytes": MEMORY_LIMIT_BYTES, "active_process_limit": 1,
                          "candidate_integrity": LOW_INTEGRITY_RID}}
     try:
         result["environment"] = environment_facts()
+        kernel, advapi = windows()
+        result["runner_protection"] = protect_self(kernel, advapi)
+        note(f"runner protected {result['runner_protection']}")
+        if result["runner_protection"]["fresh_terminate_handle_refused"] is not True:
+            raise RuntimeError("runner not protected")       # no candidate is run beside an unprotected runner
         entries = json.loads((IN / "entries.json").read_text(encoding="utf-8"))
         WORK.mkdir(exist_ok=True)
         for entry_id in entries:
@@ -369,7 +429,7 @@ def main() -> None:
                 result["entries"].append({"id": entry_id, "status": "runner_error", "error": type(error).__name__, "records": None})
         result["complete"] = True
     except Exception as error:  # noqa: BLE001
-        result["runner_error"] = type(error).__name__
+        result["runner_error"] = type(error).__name__ + ": " + str(error)
     result["total_seconds"] = round(time.monotonic() - started, 1)
     # Written once, at the very end, after every candidate job has been closed.
     (OUT / "results.json").write_text(json.dumps(result), encoding="utf-8")

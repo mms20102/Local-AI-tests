@@ -3837,3 +3837,23 @@ Written by Claude on the AI laptop. Mohamed asked directly in this session to co
 **Not claimed.** Whether low integrity blocks writes to the mapped report folder inside the guest is unknown until the probe: that folder is a host share, and integrity labels may not apply to it. Same-interpreter observation is unchanged. Unreviewed.
 
 **Notice.** Starting after this commit: the probe in Windows Sandbox, repository-authored code only, eight sessions (one shared, seven fixtures alone). Chat stack running and untouched. A completion turn follows.
+
+## Third probe: runner still ended; cause found by a harmless host check; runner revision 5 and fourth probe notice · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Handwritten code only throughout; no draft staged or run; chat stack untouched.
+
+**Third probe (revision 4, `a1e3fca9`): `probe_ok: false`.** *Measured:* eight sessions planned. Sessions 0 to 5 reported: 12 of 12 references pass, 12 of 12 decoys fail, all 34 reporting entries `in_job: true` and `integrity: 4096`, runner integrity 12288. `P_print_flood` ended as `output_flood` with **1,048,606 bytes** accepted; `P_output` with 1,114,112. The other fixtures as indexed. **Session 6, `P_kill_runner`: no report again**, host deadline hit at 902 s, closed by the host. **Session 7, `P_write`: not started**, because the host had 3,161 MB free, under its 3,584 MB guard. So `P_kill_runner` and `P_write` are **not judged**, and my expectation in the previous notice that low integrity would protect the runner was **wrong**.
+
+**Cause, measured.** A harmless check on the host (a handwritten function that only asks for handles on its parent and closes them; it never calls `TerminateProcess`): a child with the restricted low-integrity token was **granted** `PROCESS_TERMINATE`, `PROCESS_QUERY_LIMITED_INFORMATION` and `SYNCHRONIZE` on its parent, and refused only `PROCESS_VM_WRITE` (error 5). Integrity blocks the rights Windows maps to "write" for a process; terminate is not one of them. What grants terminate is the parent's access list, which by default includes the user both processes run as.
+
+**Revision 5 (this commit).**
+- `protect_self`: at start the runner replaces its own process's access list with `D:P(A;;GA;;;SY)(A;;RC;;;OW)`: SYSTEM only, and the owner-rights entry removes the owner's implicit right to rewrite the list. It then asks, by process id, for a fresh terminate handle on itself and records whether that was refused. If it was not refused, **no candidate is run**. The host refuses a report whose `runner_protection` is not `{access_list_set: true, fresh_terminate_handle_refused: true}`.
+- The candidate token additionally has the Administrators group switched to deny-only.
+- The runner appends a `progress.log` in the report folder (start and end of each entry), so a runner that dies leaves a trace; the host copies it into its result.
+- *Measured on the host with the same harmless check after `protect_self`:* all four handle requests refused with error 5. The four-function smoke repeats as before. *Measured:* 262 tests in 5 suites, 0 failing (one new pure test for the protection field).
+
+**Leftover VM.** *Measured:* after a session the host has to close by force, a `vmmemWindowsSandbox` process with about 1.6 GB and a `vmwp` worker remain, while `wsb list --raw` reports no environments. After the second probe it was gone some tens of minutes later. I cannot end or inspect it without administrator rights. This is why session 7 did not start. Also measured: the `wsb list` command itself leaves a `WindowsSandboxServer.exe` running, which the host's "already running" check then trips on; I ended that process (started by my own command) by process id both times.
+
+**Not claimed.** That the access list change holds inside the guest, where the runner is an elevated administrator: that is what the next probe tests. Other processes in the guest that run as the same user remain open to the candidate. Unreviewed.
+
+**Notice.** Starting after this commit, once the host has enough free memory: the probe again, handwritten code only, eight sessions. A completion turn follows.
