@@ -96,23 +96,71 @@ def same(a, b) -> bool:
     return a == b
 
 
+def loads_strict(text: str):
+    """json.loads that refuses what the lenient parser lets through: a repeated key in an object
+    (the last one would silently win) and the non-JSON constants NaN and Infinity."""
+    def pairs(items):
+        keys = [key for key, _ in items]
+        if len(keys) != len(set(keys)):
+            raise ValueError("repeated key")
+        return dict(items)
+
+    def constant(name):
+        raise ValueError("non-JSON constant " + name)
+
+    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
+
+
+_OBSERVED = {"status", "args_after", "value", "same_object_as_input"}
+RECORD_FIELDS = {"import_error": {"status", "error"}, "returned": _OBSERVED,
+                 "raised": _OBSERVED | {"error"}, "not_json": _OBSERVED | {"error"}}
+
+
+def record_shape_ok(record) -> bool:
+    """Exactly the fields the driver writes for that status, with the types it writes. Nothing missing, nothing extra."""
+    if not isinstance(record, dict) or not isinstance(record.get("status"), str) or record["status"] not in RECORD_FIELDS:
+        return False
+    if set(record) != RECORD_FIELDS[record["status"]]:
+        return False
+    if "error" in record and not (isinstance(record["error"], str) and record["error"]):
+        return False
+    if "same_object_as_input" in record and type(record["same_object_as_input"]) is not bool:
+        return False
+    if record["status"] in ("raised", "not_json") and (record["value"] is not None or record["same_object_as_input"] is not False):
+        return False
+    return True
+
+
+def case_shape_ok(case) -> bool:
+    """A case expects EITHER a value or a named exception, never both and never neither."""
+    if not isinstance(case, dict) or not isinstance(case.get("args"), list) or ("expect" in case) == ("raises" in case):
+        return False
+    return "raises" not in case or (isinstance(case["raises"], str) and bool(case["raises"]))
+
+
 def judge(case: dict, record) -> dict:
-    """Decide one case from the child's report. Runs in the judge process only."""
-    if not isinstance(record, dict) or record.get("status") not in ("returned", "raised", "not_json", "import_error"):
+    """Decide one case from the child's report. Runs in the judge process only.
+
+    A pass needs a positive match: a well-formed record AND either the expected value or the expected
+    exception name. Absent fields never compare equal to absent expectations.
+    """
+    if not case_shape_ok(case):
+        return {"ok": False, "why": "bad case"}
+    if not record_shape_ok(record):
         return {"ok": False, "why": "bad result"}
     if record["status"] == "import_error":
-        return {"ok": False, "why": "import: " + str(record.get("error"))}
-    if not same(record.get("args_after"), case["args"]):
+        return {"ok": False, "why": "import: " + record["error"]}
+    if not same(record["args_after"], case["args"]):
         return {"ok": False, "why": "mutated input"}
     if record["status"] == "raised":
-        return {"ok": case.get("raises") == record.get("error"), "why": "raised " + str(record.get("error"))}
+        return {"ok": "raises" in case and case["raises"] == record["error"], "why": "raised " + record["error"]}
     if "raises" in case:
         return {"ok": False, "why": "no exception"}
     if record["status"] == "not_json":
-        return {"ok": False, "why": "returned " + str(record.get("error"))}
-    if case.get("new_object") and record.get("same_object_as_input") is not False:
+        return {"ok": False, "why": "returned " + record["error"]}
+    if case.get("new_object") and record["same_object_as_input"] is not False:
         return {"ok": False, "why": "returned the input object"}
-    return {"ok": same(record.get("value"), case["expect"]), "why": "value"}
+    return {"ok": same(record["value"], case["expect"]), "why": "value"}
 
 
 def sha256(path: Path) -> str:
@@ -251,10 +299,14 @@ def run_cases(files: dict[str, str], cases: list[dict]) -> list[dict]:
                                   capture_output=True, timeout=RUN_TIMEOUT_S)
         except subprocess.TimeoutExpired:
             return [{"ok": False, "why": "timeout"} for _ in cases]
-        output = done.stdout[:MAX_CHILD_OUTPUT_BYTES].decode("utf-8", errors="replace")
+        if done.returncode != 0:
+            return [{"ok": False, "why": f"crashed (exit code {done.returncode})"} for _ in cases]
+        if len(done.stdout) > MAX_CHILD_OUTPUT_BYTES:
+            return [{"ok": False, "why": "output over the limit"} for _ in cases]
+        output = done.stdout.decode("utf-8", errors="replace")
         try:
-            records = json.loads(output.strip().splitlines()[-1])
-        except (ValueError, IndexError):
+            records = loads_strict(output.strip().splitlines()[-1])
+        except (ValueError, IndexError, RecursionError):
             return [{"ok": False, "why": "crashed"} for _ in cases]
         if not isinstance(records, list) or len(records) != len(cases):
             return [{"ok": False, "why": "bad result"} for _ in cases]

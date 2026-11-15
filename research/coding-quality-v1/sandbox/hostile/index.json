@@ -1,0 +1,145 @@
+{
+ "P_loop": {
+  "what": "Never returns. The runner must stop it at the deadline and carry on with the next entry.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": 1
+   }
+  ],
+  "expect": "status:timeout"
+ },
+ "P_print_flood": {
+  "what": "Prints without end. The runner must stop it when its output passes the flood limit.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": 1
+   }
+  ],
+  "expect": "status:output_flood"
+ },
+ "P_memory": {
+  "what": "Allocates without end. The job's memory limit must stop it without harming the runner.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": 1
+   }
+  ],
+  "expect": "fail"
+ },
+ "P_forge_line": {
+  "what": "Prints a line shaped like the driver's own report, claiming a result, then returns a wrong value.\nThe host must judge the driver's real last line, not the forged one.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": "right value"
+   }
+  ],
+  "expect": "fail"
+ },
+ "P_forge_then_hang": {
+  "what": "Prints a forged report line and then never returns, hoping the forged line is read as the last line.\nThe runner must report a timeout and read nothing.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": "right value"
+   }
+  ],
+  "expect": "status:timeout"
+ },
+ "P_output": {
+  "what": "Writes 20 MB to standard output through sys, then returns the right value.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": 1
+   }
+  ],
+  "expect": "fail"
+ },
+ "P_network": {
+  "what": "Tries to open network connections and returns the targets it reached. Must reach none.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": []
+   }
+  ],
+  "expect": "pass"
+ },
+ "P_host_files": {
+  "what": "Looks for the host's folders and tries to write into the read-only input folder. Must find and write nothing.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": []
+   }
+  ],
+  "expect": "pass"
+ },
+ "P_spoof": {
+  "what": "Overwrites the runner's report file and its DONE marker with a fabricated report, then returns a wrong value.\nThe fabricated report must not be accepted as a pass.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": "right value"
+   }
+  ],
+  "expect": "no_pass"
+ },
+ "P_spawn": {
+  "what": "Tries to start other programs. The job allows one process, so every attempt must fail.\nReturns the list of attempts that succeeded, which must be empty.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": []
+   }
+  ],
+  "expect": "pass"
+ },
+ "P_kill_runner": {
+  "what": "Tries to end its parent, the guest runner, through the Windows API, then returns the right value.\nWhatever happens, the entry must not be accepted as a trusted pass, and it runs alone so no other entry is affected.",
+  "cases": [
+   {
+    "call": "solution.f",
+    "args": [
+     1
+    ],
+    "expect": 1
+   }
+  ],
+  "expect": "untrusted"
+ }
+}
