@@ -246,5 +246,101 @@
       "model_draft_run": false,
       "cloud_probe_or_actions_run": false
     }
+  },
+  "third_probe_failure_and_revision5": {
+    "source_ref": "40b9e3df294e184fee758b94b750d7d4371fd230",
+    "cochat_blob": "d6ffc42ba70b57be0a742c5c8d13e335848fa0b9",
+    "evidence_kind": "author co-chat report; third-probe summary/raw files not present at pinned results directory",
+    "third_probe": {
+      "implementation_ref": "a1e3fca9f6c21bfda680c5f3330a9bc16f588048",
+      "probe_ok": false,
+      "planned_sessions": 8,
+      "reporting_sessions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "reporting_entries": 34,
+      "session6": {
+        "fixture": "P_kill_runner",
+        "raw_report": false,
+        "reported_host_timeout_seconds": 902,
+        "judged": false
+      },
+      "session7": {
+        "fixture": "P_write",
+        "started": false,
+        "judged": false,
+        "reason": "available memory below guard",
+        "available_mb": 3161,
+        "guard_mb": 3584
+      },
+      "author_reported_output_collected": {
+        "P_print_flood": 1048606,
+        "P_output": 1114112
+      },
+      "low_integrity_protects_runner_claim_withdrawn": true
+    },
+    "author_host_check": {
+      "before_dacl": "terminate/query/synchronize reportedly allowed; VM-write refused",
+      "after_dacl": "all four reportedly refused",
+      "executed_here": false
+    },
+    "revision5": {
+      "guest_runner_git_blob": "8d977c73fee366f99566aa665c0febcef790238f",
+      "sandbox_host_git_blob": "cc157efe91d9efba6a8205ef95836bb95cf28be3",
+      "author_claimed_changes": [
+        "protect_self process DACL D:P(A;;GA;;;SY)(A;;RC;;;OW)",
+        "fresh terminate handle must be refused before candidates",
+        "Administrators deny-only candidate token",
+        "progress.log and host runner_protection checks"
+      ],
+      "author_reported_suite_tests": 262,
+      "author_reported_suite_failures": 0,
+      "independently_tested": false,
+      "guest_efficacy": "unknown at notice"
+    },
+    "fourth_probe": {
+      "handwritten_only": true,
+      "conditional_on_memory": true,
+      "completion_reported": false,
+      "model_drafts_staged_or_run": false,
+      "chat_reported_untouched": true
+    },
+    "unresolved": [
+      "exact ACL/owner-rights and inherited-handle behavior",
+      "other same-user guest processes",
+      "mapped-share writes",
+      "collection and process cleanup",
+      "candidate/reporter same interpreter"
+    ],
+    "cleanup_report": {
+      "residual_processes": [
+        "vmmemWindowsSandbox",
+        "vmwp"
+      ],
+      "listing_reports_no_environment": true,
+      "listing_server_started_by_command": "author reports terminating only its command-started server PID",
+      "independently_verified": false,
+      "elevation_or_termination_here": false
+    },
+    "review_coordination": {
+      "existing_focused_review": "include explicit revision5 successor without duplicate audit or implementation",
+      "saved_artifact_request_commit": "53201042fd5cfb2d2ab2cb7b40eda7362b6683b9",
+      "draft_hold": true,
+      "automatic_clearance_after_review": false,
+      "original_score": "11/12 provisional"
+    },
+    "our_actions": {
+      "source_metadata_and_notice_read": true,
+      "tests_executed": false,
+      "pc_or_vm_access": false,
+      "privilege_or_settings_change": false,
+      "model_draft_run": false,
+      "cloud_probe_or_actions_run": false
+    }
   }
 }
