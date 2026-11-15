@@ -159,6 +159,27 @@ class ReportReadingTests(unittest.TestCase):
         _, problems = self.read(self.report(environment=None))
         self.assertEqual(len(problems), 3)
 
+    def test_unexpected_files_in_the_report_folder_are_refused(self):
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / "out"
+            out.mkdir()
+            (out / "results.json").write_text(self.report(), encoding="utf-8")
+            (out / "DONE").write_text("done", encoding="utf-8")
+            (out / "progress.log").write_text("x", encoding="utf-8")
+            self.assertEqual(sandbox_host.read_report(Path(temp), ["X"])[1], [])
+            (out / "planted.txt").write_text("x", encoding="utf-8")
+            report, problems = sandbox_host.read_report(Path(temp), ["X"])
+            self.assertIsNone(report)
+            self.assertIn("unexpected files", problems[0])
+            (out / "planted.txt").unlink()
+            (out / "folder").mkdir()
+            self.assertIsNone(sandbox_host.read_report(Path(temp), ["X"])[0])
+
+    def test_tampered_entry_never_passes(self):
+        item = guest_item(status="report_folder_tampered", records=[dict(RETURNED)], report_folder_tampering=["planted.txt"])
+        got = sandbox_host.judge_entries({"entries": [item]}, {"X": {"cases": [VALUE_CASE]}}, True)["X"]
+        self.assertEqual((got["passed"], got["trusted_observation"]), (0, False))
+
     def test_unprotected_runner_is_refused(self):
         for protection in (None, {}, {"access_list_set": True}, {"access_list_set": True, "fresh_terminate_handle_refused": False},
                            {"access_list_set": False, "fresh_terminate_handle_refused": True},

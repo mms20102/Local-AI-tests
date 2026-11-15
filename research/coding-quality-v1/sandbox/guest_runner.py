@@ -379,13 +379,38 @@ def run_confined(folder: Path) -> dict:
                     pass
 
 
+PROGRESS = []          # what this runner has written to progress.log, kept here to detect tampering
+
+
 def note(text: str) -> None:
-    """A breadcrumb in the report folder, so a runner that dies leaves a trace of how far it got."""
+    """A breadcrumb in the report folder, so a runner that dies leaves a trace of how far it got.
+    The whole file is rewritten from this runner's own memory each time."""
+    PROGRESS.append(f"{time.strftime('%H:%M:%S')} {text}\n")
     try:
-        with open(OUT / "progress.log", "a", encoding="utf-8") as log:
-            log.write(f"{time.strftime('%H:%M:%S')} {text}\n")
+        (OUT / "progress.log").write_bytes("".join(PROGRESS).encode("utf-8"))
     except OSError:
         pass
+
+
+def report_folder_tampering() -> list:
+    """The report folder is a host share, and Windows does not apply integrity levels to it: measured, a
+    low-integrity candidate can create files there. So after every candidate the runner looks. Anything
+    other than its own progress.log, byte for byte, is tampering; extra files are removed."""
+    found = []
+    try:
+        for path in sorted(OUT.iterdir()):
+            if path.name == "progress.log" and path.is_file():
+                if path.read_bytes() != "".join(PROGRESS).encode("utf-8"):
+                    found.append("progress.log changed")
+                continue
+            found.append(path.name[:80])
+            try:
+                shutil.rmtree(path) if path.is_dir() else path.unlink()
+            except OSError:
+                found.append("could not remove " + path.name[:80])
+    except OSError as error:
+        found.append("could not list: " + type(error).__name__)
+    return found[:20]
 
 
 def run_entry(entry_id: str) -> dict:
@@ -394,13 +419,16 @@ def run_entry(entry_id: str) -> dict:
     shutil.copy(IN / "__driver__.py", folder / "__driver__.py")
     note(f"start {entry_id}")
     record = {"id": entry_id, **run_confined(folder)}
+    tampering = report_folder_tampering()
+    if tampering:
+        record.update(status="report_folder_tampered", records=None, report_folder_tampering=tampering)
     note(f"end {entry_id} {record.get('status')}")
     return record
 
 
 def main() -> None:
     started = time.monotonic()
-    result = {"guest_runner": "cq1-sandbox-6", "environment": {}, "entries": [], "complete": False,
+    result = {"guest_runner": "cq1-sandbox-7", "environment": {}, "entries": [], "complete": False,
               "limits": {"entry_timeout_s": ENTRY_TIMEOUT_S, "max_output_bytes": MAX_OUTPUT_BYTES,
                          "memory_limit_bytes": MEMORY_LIMIT_BYTES, "active_process_limit": 1,
                          "candidate_integrity": LOW_INTEGRITY_RID}}

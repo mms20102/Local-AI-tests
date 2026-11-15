@@ -143,7 +143,7 @@
   "expect": "pass"
  },
  "P_write": {
-  "what": "Tries to create files in the report folder, the runner's working folder, the Windows temp folder and\nits own folder. Returns the places it could write, which must be none.",
+  "what": "Tries to create files in the report folder, the runner's working folder, the Windows temp folder and\nits own folder, and returns the places it could write. Measured: the report folder is a host share and\naccepts the write. The runner must notice the planted files, remove them and mark the entry as tampering.",
   "cases": [
    {
     "call": "solution.f",
@@ -153,6 +153,6 @@
     "expect": []
    }
   ],
-  "expect": "pass"
+  "expect": "status:report_folder_tampered"
  }
 }

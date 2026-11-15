@@ -64,6 +64,8 @@ WSB = """<Configuration>
 """
 
 
+REPORT_FILES = {"results.json", "DONE", "progress.log"}      # the only names the guest runner writes
+MAX_REPORT_FOLDER_BYTES = 16 * 1048576
 LOW_INTEGRITY = 4096          # as in guest_runner.py: the candidate's integrity level, checked by the runner
 NETWORK_PROBES = {"public_ip", "public_dns_name", "default_gateway_guess", "link_local_host"}   # as in guest_runner.py
 
@@ -82,6 +84,16 @@ def available_memory_mb() -> int:
     status.dwLength = ctypes.sizeof(Status)
     ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status))
     return int(min(status.ullAvailPhys, status.ullAvailPageFile) // (1024 * 1024))
+
+
+def folder_bytes(folder: Path) -> int:
+    total = 0
+    for path in folder.rglob("*"):
+        try:
+            total += path.stat().st_size
+        except OSError:
+            pass
+    return total
 
 
 def sandbox_processes() -> set[int]:
@@ -138,6 +150,9 @@ def run_sandbox(run_dir: Path, wsb: Path) -> dict:
     while time.monotonic() - started < SANDBOX_DEADLINE_S:
         if done.exists():
             break
+        if folder_bytes(run_dir / "out") > MAX_REPORT_FOLDER_BYTES:
+            session["report_folder_over_limit"] = True      # sampled every 2 s: a bound on damage, not a quota
+            break
         if time.monotonic() - started > 180 and not sandbox_processes():
             session["sandbox_exited_without_report"] = True
             break
@@ -161,6 +176,9 @@ def run_sandbox(run_dir: Path, wsb: Path) -> dict:
 def read_report(run_dir: Path, expected_ids: list[str]) -> tuple[dict | None, list[str]]:
     """Parse the guest's report as untrusted data. Returns (report or None, reasons it was refused)."""
     path, problems = run_dir / "out" / "results.json", []
+    extra = sorted(p.name for p in (run_dir / "out").iterdir() if p.name not in REPORT_FILES or not p.is_file())
+    if extra:
+        return None, [f"unexpected files in the report folder ({len(extra)})"]
     if not path.is_file():
         return None, ["no report"]
     if path.stat().st_size > MAX_RESULT_BYTES:
@@ -216,6 +234,7 @@ def judge_entries(report: dict, entries: dict[str, dict], plain_session: bool) -
         judged[item["id"]] = {"status": item.get("status"), "confined": item.get("confined"), "seconds": item.get("seconds"),
                               "exit_code": item.get("exit_code"), "stdout_bytes": item.get("stdout_bytes"),
                               "in_job": item.get("in_job"), "integrity": item.get("integrity"),
+                              "report_folder_tampering": item.get("report_folder_tampering"),
                               "trusted_observation": bool(plain_session and clean), **summary}
     return judged
 
@@ -224,6 +243,8 @@ def one_session(run_dir: Path, python_dir: Path, entries: dict[str, dict], plain
     wsb = stage(run_dir, python_dir, entries)
     session = run_sandbox(run_dir, wsb)
     report, problems = read_report(run_dir, list(entries)) if "not_started" not in session else (None, [session["not_started"]])
+    if session.get("report_folder_over_limit"):
+        problems.append("report folder grew past its limit")
     if not session["closed_by_guest_shutdown"] and "not_started" not in session:
         # The runner shuts the guest down right after writing its report. A DONE file that appears
         # while the guest keeps running was not written at the end of the runner, so it is not trusted.

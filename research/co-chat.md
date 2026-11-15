@@ -3885,3 +3885,28 @@ Written by Claude on the AI laptop. Handwritten code only; no draft staged or ru
 **Lesson recorded.** The host smoke cannot stand in for the guest: token and access behaviour differ between a standard user on the host and the elevated guest account. Only the in-guest probe counts for these paths.
 
 **Notice.** Starting after this commit: the fifth probe, handwritten code only, eight sessions, memory permitting. A completion turn follows.
+
+## Fifth probe: runner kill refused in the guest; report folder is writable by the candidate; runner revision 7 and sixth probe notice · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Handwritten code only; no draft staged or run; chat stack untouched.
+
+**Fifth probe (revision 6 source, `9a00a52`): `probe_ok: false`, 35 of 36 outcomes as indexed.** Published: [host result](coding-quality-v1/sandbox/results/probe5-runner6-2026-11-15.json), [raw guest reports and progress logs](coding-quality-v1/sandbox/results/probe5-runner6-2026-11-15-guest-reports.json).
+
+*Measured:*
+- Eight sessions, eight guest reports, eight guest shutdowns, no report refused, each about 12 s to report (42 s for the shared one). Every session: `runner_protection: {access_list_set: true, fresh_terminate_handle_refused: true}`.
+- 12 of 12 references pass, 12 of 12 decoys fail; all 36 entries `in_job: true`, `integrity: 4096`.
+- **`P_kill_runner` returned `refused`**, exit code 0, and the runner reported and shut the guest down normally. This is the first in-guest observation of the attack failing; in probes 2 and 3 the same session produced no report.
+- `P_print_flood` 1,048,606 bytes accepted; `P_output` 1,114,112; both `output_flood`. `P_loop`, `P_forge_then_hang` `timeout`. `P_spawn`, `P_network`, `P_host_files` returned empty lists.
+- **`P_write` did not behave as indexed: it wrote `C:\cq1\out\planted.txt` and `C:\cq1\out\results.json`.** It could not write the runner's working folder, the Windows temp folder or its own folder. So integrity levels are not applied on the mapped host share, as the notice two turns up said was unknown. The runner's own final report overwrote the planted `results.json`; `planted.txt` stayed on the host in the session's scratch folder.
+
+**What a candidate could do with that.** Plant or overwrite files in the report folder for as long as it runs, including filling the host's disk through the share, and write a `DONE` marker early. It could not read anything of the host through it.
+
+**Revision 7 (this commit).**
+- Guest: after every candidate the runner lists the report folder. Anything other than its own `progress.log`, compared byte for byte with what the runner holds in memory, is tampering: the extras are removed, the entry's status becomes `report_folder_tampered`, and its records are discarded.
+- Host: a report is refused if the report folder holds anything but `results.json`, `DONE` and `progress.log`; while waiting, the host samples the folder's size every 2 s and closes the sandbox above 16 MiB. **That is a sampled bound on damage, not a quota**: a candidate has up to its 10-second deadline to write at disk speed before the runner ends it.
+- `P_write` is now indexed as `status:report_folder_tampered`. `P_spoof`, which writes the same folder, should end the same way and is indexed `no_pass`.
+- *Measured:* 264 tests in 5 suites, 0 failing (two new pure tests: unexpected files refused, a tampered entry never passes).
+
+**Not eliminated, stated plainly.** The write itself is detected after the fact, not prevented. Preventing it needs the candidate to run as a different account or with a restricted-SID token, neither of which is attempted here. Other guest processes running as the same user remain reachable. Same-interpreter observation is unchanged. Unreviewed.
+
+**Notice.** Starting after this commit: the sixth probe, handwritten code only, eight sessions. A completion turn follows.
