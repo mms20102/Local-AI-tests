@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-11-15",
+  "kind": "source_pinned_saved_probe_reconciliation_not_code_execution",
+  "publication_ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+  "cochat_blob": "9c820053e68b088f81ee9611f568fdca24d22278",
+  "artifacts": {
+    "p3": {
+      "path": "research/coding-quality-v1/sandbox/results/probe3-runner4-2026-11-15.json",
+      "git_blob": "bd948fd0b8dd6f2546a8db5202e3125186938ee3"
+    },
+    "p3raw": {
+      "path": "research/coding-quality-v1/sandbox/results/probe3-runner4-2026-11-15-guest-reports.json",
+      "git_blob": "841006336d3cd7d172ee911ae1ce5c36511540b8"
+    },
+    "p4": {
+      "path": "research/coding-quality-v1/sandbox/results/probe4-runner5-2026-11-15.json",
+      "git_blob": "894b9c71a939ae6c149ffc9c1b65141ee5985393"
+    },
+    "p4raw": {
+      "path": "research/coding-quality-v1/sandbox/results/probe4-runner5-2026-11-15-guest-reports.json",
+      "git_blob": "e2e1c682d0e03170a0ccfd96452115115e57ded6"
+    }
+  },
+  "probe3": {
+    "implementation_ref": "a1e3fca9f6c21bfda680c5f3330a9bc16f588048",
+    "normalization": {
+      "host_sessions": 8,
+      "planned_entries": 36,
+      "raw_session_keys": 8,
+      "raw_reports": 6,
+      "null_sessions": [
+        "session-06",
+        "session-07"
+      ],
+      "reporting_entries": 34,
+      "probe_ok": false,
+      "outcome_counts": {
+        "as expected": 34,
+        "NOT JUDGED": 2
+      },
+      "exit_counts": {
+        "0": 30,
+        "1": 4
+      },
+      "all_zero_output": false,
+      "job_true": 34,
+      "integrity4096": 34,
+      "confined_true": 34,
+      "record_count": 238,
+      "host_judged_entries": 34,
+      "trusted_observation_fields": 26,
+      "refs": {
+        "count": 12,
+        "full_pass": 12,
+        "passed": 116,
+        "total": 116
+      },
+      "decoys": {
+        "count": 12,
+        "full_pass": 0
+      },
+      "guest_shutdown_sessions": 6,
+      "exceptions": [
+        {
+          "index": 6,
+          "entries": [
+            "P_kill_runner"
+          ],
+          "session": {
+            "deadline_hit": true,
+            "host_available_mb_before": 5252,
+            "seconds_to_report": 902.2,
+            "closed_by_guest_shutdown": false,
+            "sandbox_processes_after": []
+          },
+          "refused": [
+            "no report",
+            "guest did not shut itself down after reporting"
+          ]
+        },
+        {
+          "index": 7,
+          "entries": [
+            "P_write"
+          ],
+          "session": {
+            "deadline_hit": false,
+            "host_available_mb_before": 3161,
+            "not_started": "not enough free memory on the host",
+            "closed_by_guest_shutdown": false
+          },
+          "refused": [
+            "not enough free memory on the host"
+          ]
+        }
+      ],
+      "memory_samples_mb": [
+        5116,
+        5072,
+        5232,
+        5179,
+        5252,
+        5240,
+        5252,
+        3161
+      ],
+      "progress_log_session_keys": []
+    },
+    "progress_logs_present": false,
+    "missing_and_skipped_reports_preserved_as_null": true
+  },
+  "probe4": {
+    "implementation_ref": "40b9e3df294e184fee758b94b750d7d4371fd230",
+    "normalization": {
+      "host_sessions": 8,
+      "planned_entries": 36,
+      "raw_session_keys": 8,
+      "raw_reports": 8,
+      "null_sessions": [],
+      "reporting_entries": 36,
+      "probe_ok": false,
+      "outcome_counts": {
+        "UNEXPECTED: did not pass": 17,
+        "as expected": 16,
+        "UNEXPECTED: status finished": 3
+      },
+      "exit_counts": {
+        "3221225794": 36
+      },
+      "all_zero_output": true,
+      "job_true": 36,
+      "integrity4096": 36,
+      "confined_true": 36,
+      "record_count": 0,
+      "host_judged_entries": 36,
+      "trusted_observation_fields": 0,
+      "refs": {
+        "count": 12,
+        "full_pass": 0,
+        "passed": 0,
+        "total": 116
+      },
+      "decoys": {
+        "count": 12,
+        "full_pass": 0
+      },
+      "guest_shutdown_sessions": 8,
+      "exceptions": [],
+      "memory_samples_mb": [
+        5317,
+        5297,
+        5229,
+        5268,
+        5304,
+        5324,
+        5268,
+        5225
+      ],
+      "progress_log_session_keys": [
+        "session-00",
+        "session-01",
+        "session-02",
+        "session-03",
+        "session-04",
+        "session-05",
+        "session-06",
+        "session-07"
+      ]
+    },
+    "exit_code_hex": "0xC0000142",
+    "exit_code_description": "author identifies DLL initialization failed",
+    "runner_protection_all_sessions_reported_expected": true,
+    "progress_log_sessions": 8,
+    "positive_candidate_execution_control_passed": false,
+    "interpretation": "failed closed at interpreter startup, not model grading; 16 expected outcomes do not demonstrate successful security properties; no usable candidate case observations"
+  },
+  "revision6": {
+    "ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+    "guest_runner_git_blob": "89f72ff483598a7ca897236b1d46e3c077f98ffd",
+    "delta": "remove Administrators deny-only token change; other runner protections retained",
+    "proposed_cause": "author inference, guest mechanism unconfirmed",
+    "host_smoke_and262_tests": "author reported, not guest validation",
+    "guest_validation": false
+  },
+  "fifth_probe_notice": {
+    "handwritten_only": true,
+    "sessions": 8,
+    "memory_permitting": true,
+    "completion_reported_at_pin": false,
+    "model_drafts_staged_or_run": false,
+    "chat_reported_untouched": true
+  },
+  "decision": {
+    "original_model_score": "11/12 unchanged provisional",
+    "draft_hold": true,
+    "review_return_automatically_clears_run": false,
+    "existing_review": "include explicit successors, no duplicate implementation or audit",
+    "cleanup_and_observer_integrity": "unverified"
+  },
+  "our_actions": {
+    "parsed_published_json": true,
+    "read_narrow_source_diff": true,
+    "executed_grader_or_candidates": false,
+    "pc_or_vm_access": false,
+    "privilege_or_settings_change": false,
+    "cloud_probe_or_actions_run": false,
+    "private_artifact_publication": false
+  },
+  "limits": [
+    "arithmetic and saved fields are reconciled, not independently observed in Windows",
+    "new raw reports belong to handwritten probes, not original model draft run",
+    "report fields do not prove general access control or cleanup",
+    "no causal conclusion from one token-setting difference",
+    "no model-quality, quiet-speed or repeatability claim"
+  ]
+}

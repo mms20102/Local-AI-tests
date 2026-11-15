@@ -342,5 +342,46 @@
       "model_draft_run": false,
       "cloud_probe_or_actions_run": false
     }
+  },
+  "probes3_4_published_and_revision6": {
+    "publication_ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+    "normalized_intake": "2026-11-15-sandbox-probes3-4-intake.json",
+    "third_probe_artifact_gap_closed": true,
+    "probe3": {
+      "planned_entries": 36,
+      "reports": 6,
+      "reporting_entries": 34,
+      "unjudged": 2,
+      "probe_ok": false,
+      "runner_kill_seconds": 902.2,
+      "write_fixture_skipped": true
+    },
+    "probe4": {
+      "reports": 8,
+      "entries": 36,
+      "all_exit_code": 3221225794,
+      "all_zero_output": true,
+      "case_observations": 0,
+      "reference_usable_observations": false,
+      "index_mismatches": 20,
+      "probe_ok": false,
+      "security_attack_validation": false
+    },
+    "revision6": {
+      "source_ref": "9a00a52a6670d7e966eeb6bc57ae1ef1f3b271ce",
+      "guest_runner_git_blob": "89f72ff483598a7ca897236b1d46e3c077f98ffd",
+      "removes": "Administrators deny-only adjustment",
+      "cause_confirmed": false,
+      "guest_validation": false
+    },
+    "fifth_notice": {
+      "handwritten_only": true,
+      "conditional_on_memory": true,
+      "completion_at_pin": false
+    },
+    "original_score": "11/12 unchanged provisional",
+    "draft_hold": true,
+    "independent_successor_review_pending": true,
+    "our_code_or_runtime_execution": false
   }
 }
