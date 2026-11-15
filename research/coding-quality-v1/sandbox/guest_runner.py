@@ -47,7 +47,8 @@ MEMORY_LIMIT_BYTES = 1024 * 1048576
 TOTAL_DEADLINE_S = 900
 LOW_INTEGRITY_SID, LOW_INTEGRITY_RID = "S-1-16-4096", 4096
 
-CREATE_SUSPENDED, CREATE_UNICODE_ENVIRONMENT, CREATE_NO_WINDOW = 0x00000004, 0x00000400, 0x08000000
+CREATE_SUSPENDED, CREATE_UNICODE_ENVIRONMENT = 0x00000004, 0x00000400
+DETACHED_PROCESS = 0x00000008     # no console at all for the candidate, so no console host process beside it
 STARTF_USESTDHANDLES = 0x00000100
 JOB_OBJECT_LIMIT_ACTIVE_PROCESS = 0x00000008
 JOB_OBJECT_LIMIT_PROCESS_MEMORY = 0x00000100
@@ -304,7 +305,7 @@ def run_confined(folder: Path) -> dict:
         block = ctypes.create_unicode_buffer("".join(f"{k}={v}\0" for k, v in sorted(variables.items())) + "\0")
         command = ctypes.create_unicode_buffer(subprocess.list2cmdline([sys.executable, "-I", "-B", "__driver__.py"]))
         created = advapi.CreateProcessAsUserW(token, sys.executable, command, None, None, True,
-                                              CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+                                              CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS,
                                               block, str(folder), ctypes.byref(startup), ctypes.byref(info))
         error_code = ctypes.get_last_error()
         os.close(write_fd)                                # the child holds its own copy; ours would keep the pipe open
@@ -433,7 +434,7 @@ def run_entry(entry_id: str) -> dict:
 
 def main() -> None:
     started = time.monotonic()
-    result = {"guest_runner": "cq1-sandbox-8", "environment": {}, "entries": [], "complete": False,
+    result = {"guest_runner": "cq1-sandbox-9", "environment": {}, "entries": [], "complete": False,
               "limits": {"entry_timeout_s": ENTRY_TIMEOUT_S, "max_output_bytes": MAX_OUTPUT_BYTES,
                          "memory_limit_bytes": MEMORY_LIMIT_BYTES, "active_process_limit": 1,
                          "candidate_integrity": LOW_INTEGRITY_RID}}

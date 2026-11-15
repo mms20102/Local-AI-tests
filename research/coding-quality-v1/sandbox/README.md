@@ -62,10 +62,38 @@ its driver text and its judge.
 | 4 | 5 | **failed closed**: all 36 interpreters exited 0xC0000142 after the Administrators group was made deny-only |
 | 5 | 6 | **failed**: `P_kill_runner` refused for the first time; `P_write` wrote the report folder |
 | 6 | 7 | `probe_ok: true`: 12 references pass, 12 decoys fail, 12 fixtures as indexed; 8 sessions, 8 reports, 8 guest shutdowns |
+| 7 | 7 | fixtures moved outside the repository; the 12 original ones as indexed again. Nine new threat checks: **four found something** |
+| partial | 8, 9 | runner leaves its console; candidates detached from any console; thread check rewritten |
+| 8 | 9 | 45 entries, 17 sessions: 43 as indexed. **Two findings remain open**: a candidate can read the report folder and the harness's own input |
 
 Sixth probe: [host result](results/probe6-runner7-2026-11-15.json),
 [raw guest reports](results/probe6-runner7-2026-11-15-guest-reports.json). `probe_ok` means every
 outcome matched the fixtures' `index.json`; it is not a statement that every safety property holds.
+
+## Threat checks added after the first twelve (probe 8, runner revision 9)
+
+These only ask and report; none ends, suspends or shuts anything down.
+
+| Check | Question | Observed |
+|---|---|---|
+| `T_thread_runner` | handles to suspend or end the runner's threads, by guessing thread numbers | none granted; its own threads were found, so the method works |
+| `T_other_processes` | a terminate handle on any other guest process | none. On runner 7 it was granted one on `conhost.exe`; candidates are now created detached from any console and the runner leaves its own |
+| `T_shutdown_privilege` | switch on the shutdown privilege | refused |
+| `T_breakaway` | start a process outside the job, in a new group, or detached | none started |
+| `T_threads` | 500 busy threads, never returns | `timeout` |
+| `T_done_then_hang` | write `DONE` early, then never return | `report_folder_tampered`; session closed normally |
+| `T_fill_share` | write 64 MB into the report folder | wrote it; detected and removed, `report_folder_tampered`. The host's sampled 16 MiB check did not trigger in the time it took |
+| `T_read_share` | read the report folder | **open**: read `progress.log` |
+| `T_read_harness` | read the harness's input | **open**: read `entries.json`, the runner's source, the driver, and listed the entries and work folders |
+
+The two open findings mean a candidate that shares a session with others could read their source
+files and the calls made to them. It cannot read expected values, which never enter the guest. Only
+candidates the source gate calls plain share a session, and plain code cannot open files; that is
+the gate's reading, not a boundary.
+
+Results: [probe 7](results/probe7-runner7-2026-11-15.json), [probe 8](results/probe8-runner9-2026-11-15.json),
+each with its raw guest reports beside it. The drafts were graded on runner 7; runners 8 and 9
+change only how the console is handled, and the drafts have not been re-run on them.
 
 ## How it is contained
 
@@ -88,8 +116,8 @@ unexpected files in the report folder, or did not shut itself down after reporti
 
 - **Writes to the report folder are detected, not prevented**, and the size check is sampled. A
   candidate has up to its 10-second deadline to write to the host's scratch folder at disk speed.
-- **Other guest processes that run as the same user** are still reachable by a candidate; only the
-  runner protects itself.
+- **Read access inside the guest is not restricted.** A candidate can read the report folder and the
+  harness's input, including other entries staged in the same session.
 - **The source gate is a triage rule, not a safety boundary or a proof.** It is unreviewed.
 - **The report driver still runs in the candidate's interpreter.** For a plain candidate the
   returned value, the exception and the state of the arguments are the driver's word.

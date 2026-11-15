@@ -4071,3 +4071,31 @@ Written by Claude on the AI laptop. Mohamed asked directly in this session to re
 Their safe outcomes are indexed as the expectation, so a mismatch in `probe_ok` means a threat was found, which is the purpose of this run.
 
 **Notice.** Starting after this commit: the probe on the sources at `f11276a` with `--hostile` pointing at the kept folder: 12 references, 12 decoys, 21 fixtures; 17 sessions. No draft, no model traffic, chat stack untouched. A completion turn follows.
+
+## Probes 7 and 8 complete: original fixtures hold after the move; new threat checks leave two read-access findings open · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes the seventh-probe notice. Handwritten code only; no draft, no model traffic, chat stack untouched. Fixture sources are kept outside the repository; results are published.
+
+**Probe 7 (runner revision 7, `f11276a`)**: [result](coding-quality-v1/sandbox/results/probe7-runner7-2026-11-15.json), [raw reports](coding-quality-v1/sandbox/results/probe7-runner7-2026-11-15-guest-reports.json). *Measured:* 17 sessions, 17 reports. The 12 references pass, 12 decoys fail, and the 12 original fixtures are all as indexed after the move. Of the nine new checks, four did not match their safe outcome:
+
+| Check | Observed on runner 7 |
+|---|---|
+| `T_read_share` | read `progress.log` in the report folder. This is the share-read test that was missing |
+| `T_read_harness` | read `entries.json`, `guest_runner.py`, `__driver__.py`; listed the entries folder and the work folder |
+| `T_other_processes` | granted a terminate handle on one process name, `conhost.exe` |
+| `T_thread_runner` | inconclusive: threads were listed but none of the runner's were visible, so nothing was asked of them |
+
+**Changes (runner revisions 8 and 9, this commit).**
+- The runner calls `FreeConsole` at start (`console_left` is reported). That alone did not change `T_other_processes` (a partial probe on revision 8 still returned `conhost.exe`), so the console host was the candidate's own: `CREATE_NO_WINDOW` gives the child a console of its own.
+- Candidates are now created with `DETACHED_PROCESS`, with no console at all. *Measured on revision 9:* `T_other_processes` returns an empty list.
+- `T_thread_runner` rewritten: it guesses thread numbers from 4 to 80,000, asks for a suspend/terminate/query handle on each and checks the owner. *Measured:* it found its own threads and was granted nothing on the runner's.
+- `sandbox_host.py probe --only` runs named entries; the result records `partial_probe_only`. Used for the two partial runs, which are not full verdicts and are not published as such.
+
+**Probe 8 (runner revision 9), full**: [result](coding-quality-v1/sandbox/results/probe8-runner9-2026-11-15.json), [raw reports](coding-quality-v1/sandbox/results/probe8-runner9-2026-11-15-guest-reports.json). *Measured:* 45 entries, 17 sessions, 17 reports, 17 guest shutdowns, none refused; every session `runner_protection` with all three fields true; all entries `in_job: true`, `integrity: 4096`. 12 references pass, 12 decoys fail, 19 of 21 fixtures as indexed. `probe_ok: false` because two findings are left as findings:
+
+- **`T_read_share` and `T_read_harness` remain open.** A candidate can read the report folder and the harness's input. In a session shared with other entries that includes their source files and the calls made to them, never expected values. Only gate-plain candidates share a session and plain code cannot open files, which is the gate's reading and not a boundary. I have not changed the index to make this pass.
+- `T_fill_share` wrote all 64 MB before returning; the runner detected and removed the file and failed the entry. The host's sampled size check did not trigger. This confirms in measurement that the sampled check is not a quota.
+
+**Not re-run:** the 12 drafts were graded on runner 7. Runners 8 and 9 differ from it only in console handling.
+
+**Housekeeping.** Staged copies of the fixtures in this session's temporary run folders, and the scratch scripts that contained their text, were deleted. The kept folder is the only copy on the laptop outside git history.
