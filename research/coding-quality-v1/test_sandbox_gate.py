@@ -135,7 +135,7 @@ class RepositoryContentTests(unittest.TestCase):
     def test_hostile_fixtures_are_kept_and_classified(self):
         index = json.loads((ROOT / "sandbox" / "hostile" / "index.json").read_text(encoding="utf-8"))
         must_share = {"P_loop", "P_print_flood", "P_memory", "P_forge_line", "P_forge_then_hang"}
-        must_be_alone = {"P_output", "P_network", "P_host_files", "P_spoof", "P_spawn", "P_kill_runner"}
+        must_be_alone = {"P_output", "P_network", "P_host_files", "P_spoof", "P_spawn", "P_kill_runner", "P_write"}
         self.assertEqual(set(index), must_share | must_be_alone)
         for name, spec in index.items():
             path = ROOT / "sandbox" / "hostile" / name / "solution.py"

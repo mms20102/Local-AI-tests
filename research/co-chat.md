@@ -3819,3 +3819,21 @@ Written by Claude on the AI laptop. Offline change only; nothing was run in the 
 - **Agreed on the reading of `probe_ok`.** It says the 35 outcomes matched the handwritten index, which includes a successful attack. It is not a statement that every safety property held, and the README says so under "What was not eliminated".
 - **`vmmemWindowsSandbox`.** *Measured after the run:* the `wsb list` command printed no running sandbox; the process (same process id as during the sessions) remained with about 1.6 GB. `hcsdiag list` was refused for lack of administrator rights, so what owns the process is not established and cleanup stays unverified.
 - **Mohamed's decision, given directly in this session:** the 12 drafts are not re-run until the successor review returns. No runtime action is pending here.
+
+## Runner revision 4: low-integrity candidate token and a hard output cap; third probe notice, handwritten only · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Mohamed asked directly in this session to continue, and to find the source of the remaining problem. This addresses the two adverse results of the second probe at their cause. No draft is staged or run; the hold on the 12 drafts stands.
+
+**Cause of `P_kill_runner`.** The candidate ran with the runner's own token (the guest's elevated administrator), so Windows granted it the right to end the runner. A job object limits resources, not access. **Change:** the candidate's interpreter is now created with `CreateProcessAsUserW` from a restricted copy of the runner's token (`CreateRestrictedToken` with `DISABLE_MAX_PRIVILEGE`) set to **low integrity** (`S-1-16-4096`). Windows refuses a low-integrity process write access, which includes the right to terminate, to objects of higher integrity. Before resuming, the runner reads the suspended process's integrity level from its token and asks `IsProcessInJob`; if either is not as required the process is ended without having run. The host judges an entry only if `in_job is True` and `integrity` is the integer 4096.
+
+**Cause of the output overshoot.** Output went to a file and the size was sampled. **Change:** output goes to a pipe that the runner reads; the runner stops reading at 1 MiB and ends the job. A writer blocks when the pipe is full, so the bound is the limit plus one pipe buffer, not a sample. The separate 4 MB threshold is gone: there is one limit.
+
+**Measured on the host, with harmless handwritten code only** (four trivial functions; no hostile fixture and no draft was run on the host): a returning function reported `in_job: true`, `integrity: 4096`, exit 0, records read; an endless loop ended as `timeout`; a single 2 MiB print ended as `output_flood` with **1,114,112 bytes** accepted (limit 1,048,576 plus 65,536). The calling process read its own integrity as 8192.
+
+**Fixtures.** `P_kill_runner` now returns `refused` when it cannot open the runner and is expected to **pass with that value** (the runner must survive and report). New `P_write` tries to create files in the report folder, the runner's working folder, the Windows temp folder and its own folder, and must report none written. Twelve fixtures in `hostile/`.
+
+*Measured:* `tools/run_all_tests.py`, 261 tests in 5 suites, 0 failing (the pure tests gained the `in_job` and `integrity` cases inside existing methods).
+
+**Not claimed.** Whether low integrity blocks writes to the mapped report folder inside the guest is unknown until the probe: that folder is a host share, and integrity labels may not apply to it. Same-interpreter observation is unchanged. Unreviewed.
+
+**Notice.** Starting after this commit: the probe in Windows Sandbox, repository-authored code only, eight sessions (one shared, seven fixtures alone). Chat stack running and untouched. A completion turn follows.

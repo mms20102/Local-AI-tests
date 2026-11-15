@@ -64,6 +64,7 @@ WSB = """<Configuration>
 """
 
 
+LOW_INTEGRITY = 4096          # as in guest_runner.py: the candidate's integrity level, checked by the runner
 NETWORK_PROBES = {"public_ip", "public_dns_name", "default_gateway_guess", "link_local_host"}   # as in guest_runner.py
 
 
@@ -189,7 +190,8 @@ def judge_entries(report: dict, entries: dict[str, dict], plain_session: bool) -
     judged = {}
     for item in report["entries"]:
         cases, records = entries[item["id"]]["cases"], item.get("records")
-        clean = (item.get("status") == "finished" and item.get("confined") is True
+        clean = (item.get("status") == "finished" and item.get("confined") is True and item.get("in_job") is True
+                 and type(item.get("integrity")) is int and item.get("integrity") == LOW_INTEGRITY
                  and type(item.get("exit_code")) is int and item.get("exit_code") == 0
                  and item.get("stdout_capped") is False and isinstance(records, list) and len(records) == len(cases))
         if clean:
@@ -209,6 +211,7 @@ def judge_entries(report: dict, entries: dict[str, dict], plain_session: bool) -
         summary = grade.summarise(results)
         judged[item["id"]] = {"status": item.get("status"), "confined": item.get("confined"), "seconds": item.get("seconds"),
                               "exit_code": item.get("exit_code"), "stdout_bytes": item.get("stdout_bytes"),
+                              "in_job": item.get("in_job"), "integrity": item.get("integrity"),
                               "trusted_observation": bool(plain_session and clean), **summary}
     return judged
 

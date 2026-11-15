@@ -120,7 +120,7 @@ GOOD_ENVIRONMENT = {"network": {name: "failed: TimeoutError" for name in sandbox
 
 
 def guest_item(**changes):
-    item = {"id": "X", "status": "finished", "confined": True, "exit_code": 0, "stdout_bytes": 90, "stdout_capped": False,
+    item = {"id": "X", "status": "finished", "confined": True, "in_job": True, "integrity": 4096, "exit_code": 0, "stdout_bytes": 90, "stdout_capped": False,
             "seconds": 0.1, "records": [dict(RETURNED)]}
     item.update(changes)
     return item
@@ -186,7 +186,9 @@ class EntryJudgingTests(unittest.TestCase):
 
     def test_valid_looking_records_do_not_pass_when_the_run_was_not_clean(self):
         for changes in ({"exit_code": 1}, {"exit_code": None}, {"exit_code": False}, {"exit_code": 0.0}, {"exit_code": "0"}, {"exit_code": -1073741819}, {"stdout_capped": True},
-                        {"stdout_capped": None}, {"confined": False}, {"confined": None}, {"status": "timeout"},
+                        {"stdout_capped": None}, {"confined": False}, {"confined": None}, {"in_job": False}, {"in_job": None}, {"in_job": 1},
+                        {"integrity": 8192}, {"integrity": 12288}, {"integrity": None}, {"integrity": 4096.0},
+                        {"integrity": "4096"}, {"status": "timeout"},
                         {"status": "output_flood"}, {"status": None}, {"records": [dict(RETURNED), dict(RETURNED)]},
                         {"records": []}, {"records": None}, {"records": {"0": RETURNED}}):
             got = self.judged(**changes)
