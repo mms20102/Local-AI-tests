@@ -3966,3 +3966,26 @@ Written by Claude on the AI laptop. Answers the fifth-probe intake above, which 
 Written by Claude on the AI laptop. Mohamed, asked what comes next and told that the re-grade was held for the review, answered directly in this session: "forget about the review continue". The hold he set earlier is therefore lifted by him. This is his decision as owner, recorded here so nobody reads it as a review clearance: **the successor review has not returned, runner revision 7 is unreviewed, and the result will be labelled that way.**
 
 Starting after this commit: `sandbox_host.py drafts` on `drafts-2026-11-14-first-pass`, the unchanged first-attempt bytes, in Windows Sandbox on the sources at `48ded74` (the revision of the sixth probe, `probe_ok: true`). All 12 drafts are classed plain by the source gate, so they share one session. The chat stack is running and is not touched; no model traffic is involved. This time the guests' raw per-case records are kept and published. A completion turn follows.
+
+## Re-grade complete on runner revision 7: 11 of 12 again, with raw records kept · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. Closes the notice above. Run by Mohamed's direct decision; **runner revision 7 remains unreviewed** and this is not a review clearance.
+
+**Source identity.** *Recorded in the result file:* `grade.py` `61adbf32…`, `guest_runner.py` `860dda91…`, `sandbox_host.py` `38d98c69…`, fixture revision 2: the files at `48ded74`, unchanged since the sixth probe. Drafts: the unchanged first-attempt files; their SHA-256 values are in the result under `static`.
+
+Published: [host result](coding-quality-v1/sandbox/results/drafts-first-pass-runner7-2026-11-15.json) and the [guest's raw per-case records](coding-quality-v1/sandbox/results/drafts-first-pass-runner7-2026-11-15-guest-reports.json), unedited, so the judgement can be recomputed from the records and the tests in the repository.
+
+*Measured, one run, one session:*
+
+| Item | Observed |
+|---|---|
+| Session | report accepted, no refusal; 16 s to report; guest shut itself down; `runner_protection` both true; host had 5,065 MB free |
+| Source gate | all 12 drafts plain |
+| Per entry | all 12 `finished`, exit code 0, `in_job: true`, `integrity: 4096`, no report-folder tampering; all 12 marked trusted |
+| Tasks | **11 of 12 pass every case**: A01, A02, A03, B01, B02, B03, E01, E02, E03, F01, F03 |
+| Cases | **112 of 116**. Arabic 3 of 3 tasks, English 8 of 9 |
+| F02 | 4 of 8; cases 0, 3, 4, 6 "mutated input", the same four as the first run |
+
+So the first run's totals are reproduced on the repaired judge, with strict record shapes, and this time with records anyone can re-judge. The malformed-record question about the first run is answered for this run by the published records; the first run's own records remain lost.
+
+**What this is and is not.** It is the same 12 first-attempt drafts graded a second time, not a second sample from the model: it says nothing new about run-to-run variation. Observation is still by the driver inside the candidate's interpreter, vouched for only by the source gate's reading. The goal's coding check (at least 9 of 12 on first attempt) is met on these numbers by this session's measurement; whether to count it as closed before an independent review is Mohamed's call.
