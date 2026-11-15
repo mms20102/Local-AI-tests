@@ -318,6 +318,7 @@ def main() -> int:
     parser.add_argument("--python", type=Path, required=True, help="folder of a standalone Python to map read-only into the guest")
     parser.add_argument("--run-dir", type=Path, required=True, help="empty scratch folder for this run")
     parser.add_argument("--drafts", type=Path)
+    parser.add_argument("--only", help="probe only: comma-separated entry names; a partial probe, never a full verdict")
     parser.add_argument("--hostile", type=Path, help="probe only: folder of the hostile fixtures (kept outside the repository); "
                                                      "without it the probe runs references and decoys only")
     parser.add_argument("--out", type=Path, required=True, help="where to write the host's result JSON")
@@ -333,9 +334,17 @@ def main() -> int:
             raise SystemExit("no index.json in --hostile")
         identities["hostile/index.json"] = sha256(args.hostile / "index.json")
     identities["hostile_fixtures_included"] = bool(args.hostile)
+    identities["partial_probe_only"] = sorted(args.only.split(",")) if args.only else None
     identities["fixture_revision"] = grade.manifest()["fixture_revision"]
     if args.mode == "probe":
         entries, expect = probe_entries(args.hostile)
+        if args.only:
+            wanted = set(args.only.split(","))
+            missing = wanted - set(entries)
+            if missing:
+                raise SystemExit(f"unknown entries in --only: {sorted(missing)}")
+            entries = {k: v for k, v in entries.items() if k in wanted}
+            expect = {k: v for k, v in expect.items() if k in wanted}
         static = None
     else:
         entries, static = draft_entries(args.drafts)

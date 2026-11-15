@@ -152,6 +152,7 @@ def windows():
             (advapi, "SetKernelObjectSecurity", wintypes.BOOL, [handle, dword, pointer]),
             (kernel, "OpenProcess", handle, [dword, wintypes.BOOL, dword]),
             (kernel, "GetCurrentProcessId", dword, []),
+            (kernel, "FreeConsole", wintypes.BOOL, []),
             (advapi, "CreateProcessAsUserW", wintypes.BOOL, [handle, wintypes.LPCWSTR, wintypes.LPWSTR, pointer, pointer,
                                                              wintypes.BOOL, dword, pointer, wintypes.LPCWSTR,
                                                              ctypes.POINTER(StartupInfo), ctypes.POINTER(ProcessInformation)])):
@@ -183,6 +184,10 @@ def protect_self(kernel, advapi) -> dict:
     whether the list was set, and whether THIS process, asking afresh by process id, is now refused the right
     to terminate itself (the same question a candidate running as the same user would ask)."""
     outcome = {"access_list_set": False, "fresh_terminate_handle_refused": None}
+    # Leave the console. Measured in the seventh probe: a candidate is granted a terminate handle on
+    # conhost.exe, the console host this runner was attached to, and ending a console host ends the
+    # programs attached to it. With no console there is nothing of that kind to end.
+    outcome["console_left"] = bool(kernel.FreeConsole())
     descriptor = ctypes.c_void_p()
     if not advapi.ConvertStringSecurityDescriptorToSecurityDescriptorW(RUNNER_PROCESS_SDDL, 1, ctypes.byref(descriptor), None):
         return outcome
@@ -428,7 +433,7 @@ def run_entry(entry_id: str) -> dict:
 
 def main() -> None:
     started = time.monotonic()
-    result = {"guest_runner": "cq1-sandbox-7", "environment": {}, "entries": [], "complete": False,
+    result = {"guest_runner": "cq1-sandbox-8", "environment": {}, "entries": [], "complete": False,
               "limits": {"entry_timeout_s": ENTRY_TIMEOUT_S, "max_output_bytes": MAX_OUTPUT_BYTES,
                          "memory_limit_bytes": MEMORY_LIMIT_BYTES, "active_process_limit": 1,
                          "candidate_integrity": LOW_INTEGRITY_RID}}
