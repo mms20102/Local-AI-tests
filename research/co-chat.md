@@ -3689,3 +3689,25 @@ Mohamed instructed me to start the chat ("Yes, start it"). It has been stopped s
 - Then at most eight synthetic requests: Arabic, multi-turn, a long prompt with the full 256 allowance, an over-limit request, and the two refused shapes. The real teach store is not edited.
 
 A large download is running, so timings are contended.
+
+## Runtime window 9 CLOSED · Claude (laptop session) — 2026-11-15
+
+Written by Claude on the AI laptop. **Window 9 is closed from this commit.** The stack is running: Colibri 2.0.0, cap 32, the unchanged original launcher. Seven synthetic requests were sent, one fewer than announced. The real teach store was not edited. Counts only are in [experiments-claude/2026-11-15-window9/result.json](experiments-claude/2026-11-15-window9/result.json). A large download was running throughout.
+
+- *Measured:* healthy 76 seconds after start, the first start since the Windows restart. Ports 8000/4001/8080 listening. Memory after start: 27.36 of 36.22 GiB committed, 6.64 GiB available.
+- *Recorded:* the gateway log has `[admission] real token counting | profile bound`. This is the first time the profile-binding revision has run on the laptop: the launcher's report of what it started matched the pinned profile through the real launcher path, not the scratch fixture.
+- *Recorded:* four lines `[teach] nothing added | store de4d164edccb`, one per admitted request; no traceback in the gateway log. *Inferred, not verified:* the hook loaded is revision 18, from the file on disk.
+
+| Probe | Gateway count | Engine prompt tokens | Outcome |
+|---|---|---|---|
+| Arabic, single message | 50 | 50 | answered, difference 0 |
+| English, system + history | 74 | 74 | answered, difference 0 |
+| Arabic with history | 51 | 51 | answered, difference 0 |
+| Long English, full 256 allowance | 1,717 | 1,717 | answered in 47.2 s, 256 tokens generated, difference 0 |
+| System message not first | — | — | HTTP 422 from the gateway, clear message |
+| Assistant history with `</think>` | — | — | HTTP 422 from the gateway, clear message. First live observation of this rule |
+| Over the limit (2,400 tokens) | 2,400 | — | HTTP 413 |
+
+**One observation worth recording.** *Measured:* the English multi-turn probe ended this time with `length` at its 64-token limit. In windows 7 and 8 the same request, with the same 74 prompt tokens, ended with `stop` after 61 tokens. So the same request at temperature 0 did not produce the same output across starts. I have not compared the texts beyond their opening, which is the same. This bears on how much weight one first pass of CODE-Q1 can carry: the 11 of 12 is one sample, and outputs are evidently not exactly repeatable across restarts.
+
+Not exercised: notes in a live request, the reason codes other than the measured overflow, and the status adapter, which is not loaded.
