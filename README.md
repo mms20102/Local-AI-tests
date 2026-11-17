@@ -37,6 +37,10 @@ For the detailed, dated status with every qualification, see [docs/CURRENT_STATE
 
 ## Quick start
 
+The current safe implementation boundary is documented in the [audit inventory](docs/audit/current-state.md), [gap matrix](docs/audit/gap-matrix.md), [evidence provenance map](docs/audit/evidence-provenance.md), and [implementation plan](docs/implementation-plan.md). The machine-readable [release gate](docs/audit/release-gate.json) is intentionally **BLOCKED**; no candidate execution or live benchmark is enabled by this repository.
+
+The [CODE-Q1 exploration](research/experiments/2026-11-14-codeq1-exploratory-first-pass.json) reports 12/12 static passes with contended timings; semantic correctness and first-useful-text remain unmeasured, so release checks 2/3 are incomplete. The [published gateway review](research/gateway-admission-review.md) reports **15 passed / 3 skipped**, without restart or live-integration clearance. Profile binding, unsupported shapes, final post-hook validation and user-visible omission/status remain open. Conditional restart approval is Claude-relayed; no runtime action is performed here.
+
 You need Python 3.12 or newer. No packages are required.
 
 ```
