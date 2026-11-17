@@ -20,6 +20,8 @@ The working laptop stack is **Open WebUI → LiteLLM → Colibri → Qwen**. Thi
 
 Start with the [shared finish-line proposal](research/FINAL_GOAL.md) (**coding scope and primary targets relayed as accepted; gateway findings open**), [current state](docs/CURRENT_STATE.md), the [shared research queue](research/INTEGRATION_QUEUE.md), [worker packet](research/PC_TEST_REQUEST.md) and [context audit](research/context-preflight/README.md).
 
+The current safe implementation boundary is documented in the [audit inventory](docs/audit/current-state.md), [gap matrix](docs/audit/gap-matrix.md), [evidence provenance map](docs/audit/evidence-provenance.md), and [implementation plan](docs/implementation-plan.md). The machine-readable [release gate](docs/audit/release-gate.json) is intentionally **BLOCKED**; no candidate execution or live benchmark is enabled by this repository.
+
 The [CODE-Q1 exploration](research/experiments/2026-11-14-codeq1-exploratory-first-pass.json) reports 12/12 static passes with contended timings; semantic correctness and first-useful-text remain unmeasured, so release checks 2/3 are incomplete. The [published gateway review](research/gateway-admission-review.md) reports **15 passed / 3 skipped**, without restart or live-integration clearance. Profile binding, unsupported shapes, final post-hook validation and user-visible omission/status remain open. Conditional restart approval is Claude-relayed; no runtime action is performed here.
 
 ## Where active work lives
