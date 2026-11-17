@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "checkpoint": "2026-11-17",
+  "release_status": "BLOCKED",
+  "independent_review": "UNREVIEWED",
+  "gates": {
+    "judge_integrity": "BLOCKED",
+    "raw_evidence": "BLOCKED",
+    "sandbox_isolation": "FAIL",
+    "runtime_identity": "BLOCKED",
+    "context_admission": "BLOCKED",
+    "teaching_privacy": "BLOCKED",
+    "lifecycle_recovery": "BLOCKED",
+    "quality_target": "NOT_RUN",
+    "speed_target": "NOT_RUN"
+  },
+  "candidate_execution_enabled": false,
+  "live_benchmark_enabled": false,
+  "basis": [
+    "Host-share writes were observed in the saved sandbox probe.",
+    "The provisional quality result lacks raw per-case records for independent re-grading.",
+    "Runtime and teaching identities are not independently verified.",
+    "Correctness-qualified quiet-window performance evidence is not available."
+  ],
+  "source_documents": [
+    "docs/audit/current-state.md",
+    "docs/audit/gap-matrix.md",
+    "docs/audit/evidence-provenance.md",
+    "research/audits/2026-11-15-windows-sandbox-grading-review.md"
+  ]
+}
