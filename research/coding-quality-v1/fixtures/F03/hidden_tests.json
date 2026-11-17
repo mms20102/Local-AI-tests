@@ -1,0 +1,75 @@
+[
+ {
+  "args": [
+   ""
+  ],
+  "call": "solution.parse_kv",
+  "expect": {}
+ },
+ {
+  "args": [
+   "\n   \n  # only a comment\n"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {}
+ },
+ {
+  "args": [
+   "k=\n"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "k": ""
+  }
+ },
+ {
+  "args": [
+   "k=1\nk=2"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "k": "2"
+  }
+ },
+ {
+  "args": [
+   "  name =  two  words  "
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "name": "two  words"
+  }
+ },
+ {
+  "args": [
+   "url=http://x/?a=b&c=d"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "url": "http://x/?a=b&c=d"
+  }
+ },
+ {
+  "args": [
+   "اسم=قيمة"
+  ],
+  "call": "solution.parse_kv",
+  "expect": {
+   "اسم": "قيمة"
+  }
+ },
+ {
+  "args": [
+   "novalue"
+  ],
+  "call": "solution.parse_kv",
+  "raises": "ValueError"
+ },
+ {
+  "args": [
+   " = 3"
+  ],
+  "call": "solution.parse_kv",
+  "raises": "ValueError"
+ }
+]

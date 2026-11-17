@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef median(values: list[int]) -> float:\n    if not values:\n        raise ValueError(\"Cannot compute median of an empty list\")\n    \n    sorted_values = sorted(values)\n    n = len(sorted_values)\n    middle = n // 2\n    \n    if n % 2 == 1:\n        return float(sorted_values[middle])\n    else:\n        return (sorted_values[middle - 1] + sorted_values[middle]) / 2.0\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 35.17,
+ "first_text_seconds": 17.53,
+ "executed": false
+}

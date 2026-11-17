@@ -1,0 +1,9 @@
+Change to_seconds in config.py below. It must return a new dict. If the key timeout_ms is present, replace it with the key timeout_s whose value is timeout_ms / 1000 (always a float, so 2000 becomes 2.0), and keep every other entry. timeout_ms is a non-negative integer. If both timeout_ms and timeout_s are present, raise ValueError. If timeout_ms is absent, return an equal copy. Do not modify the input.
+Example: to_seconds({"timeout_ms": 1500, "name": "a"}) returns {"timeout_s": 1.5, "name": "a"}.
+
+```python
+def to_seconds(config):
+    """Return the configuration unchanged (timeouts are still in milliseconds)."""
+    return dict(config)
+```
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

@@ -1,0 +1,133 @@
+{
+ "steps": [
+  {
+   "step": "teach list",
+   "exit": 0,
+   "output": "Nothing stored yet."
+  },
+  {
+   "step": "1 before any note, keyword question",
+   "question": "What is the project's test codeword? Reply with the codeword only.",
+   "status": 200,
+   "answer": "I cannot provide a specific project's test codeword as it is not a standard or publicly available piece of information. If this is for a specific challenge, game, or internal project, please refer to the official documentation or instructions provided by",
+   "finish": "length",
+   "prompt_tokens": 30,
+   "completion_tokens": 48,
+   "seconds": 7.5,
+   "gateway_log": [
+    "[teach] nothing added | store f4a62f9d7ff8"
+   ]
+  },
+  {
+   "step": "teach add The project's test codeword is ZEPHYR-41. --kind fact --when codeword,كلمة السر",
+   "exit": 0,
+   "output": "Saved t004 (fact): The project's test codeword is ZEPHYR-41.\nApplies when the message mentions: codeword, كلمة السر"
+  },
+  {
+   "step": "2 note saved, keyword question",
+   "question": "What is the project's test codeword? Reply with the codeword only.",
+   "status": 200,
+   "answer": "ZEPHYR-41",
+   "finish": "stop",
+   "prompt_tokens": 96,
+   "completion_tokens": 7,
+   "seconds": 10.2,
+   "gateway_log": [
+    "[teach] added 1 entries: t004 | store ab3233fa507f"
+   ]
+  },
+  {
+   "step": "3 note saved, question without the keyword",
+   "question": "What is 17 + 25? Reply with the number only.",
+   "status": 200,
+   "answer": "42",
+   "finish": "stop",
+   "prompt_tokens": 28,
+   "completion_tokens": 2,
+   "seconds": 4.2,
+   "gateway_log": [
+    "[teach] nothing added | store ab3233fa507f"
+   ]
+  },
+  {
+   "step": "4 note saved, Arabic keyword question",
+   "question": "ما هي كلمة السر التجريبية للمشروع؟ أجب بالكلمة فقط.",
+   "status": 200,
+   "answer": "ZEPHYR-41",
+   "finish": "stop",
+   "prompt_tokens": 95,
+   "completion_tokens": 7,
+   "seconds": 11.0,
+   "gateway_log": [
+    "[teach] added 1 entries: t004 | store ab3233fa507f"
+   ]
+  },
+  {
+   "step": "teach add End every answer with the word CHECKED on its own line. --kind rule",
+   "exit": 0,
+   "output": "Saved t005 (rule): End every answer with the word CHECKED on its own line.\nApplies to every chat."
+  },
+  {
+   "step": "5 always-on rule saved, question without the keyword",
+   "question": "What is 17 + 25? Reply with the number only.",
+   "status": 200,
+   "answer": "42\nCHECKED",
+   "finish": "stop",
+   "prompt_tokens": 89,
+   "completion_tokens": 5,
+   "seconds": 10.8,
+   "gateway_log": [
+    "[teach] added 1 entries: t005 | store 360ae2b2a5e3"
+   ]
+  },
+  {
+   "step": "teach disable t004",
+   "exit": 0,
+   "output": "t004 is now disabled."
+  },
+  {
+   "step": "teach disable t005",
+   "exit": 0,
+   "output": "t005 is now disabled."
+  },
+  {
+   "step": "6 both notes disabled, keyword question",
+   "question": "What is the project's test codeword? Reply with the codeword only.",
+   "status": 200,
+   "answer": "I cannot provide a specific project's test codeword as it is not a standard or publicly available piece of information. If this is for a specific challenge, game, or internal project, please refer to the official documentation or instructions provided by",
+   "finish": "length",
+   "prompt_tokens": 30,
+   "completion_tokens": 48,
+   "seconds": 7.7,
+   "gateway_log": [
+    "[teach] nothing added | store 2e5e8af033c9"
+   ]
+  },
+  {
+   "step": "teach delete t004",
+   "exit": 0,
+   "output": "t004 is now deleted."
+  },
+  {
+   "step": "teach purge t004",
+   "exit": 0,
+   "output": "t004: its records were overwritten in audit.jsonl, store.json.bak, store.json.\nPurge complete for the files this tool manages.\nThis is not secure erasure: the disk may keep old data, and copies outside this folder are untouched."
+  },
+  {
+   "step": "teach delete t005",
+   "exit": 0,
+   "output": "t005 is now deleted."
+  },
+  {
+   "step": "teach purge t005",
+   "exit": 0,
+   "output": "t005: its records were overwritten in audit.jsonl, store.json.bak, store.json.\nPurge complete for the files this tool manages.\nThis is not secure erasure: the disk may keep old data, and copies outside this folder are untouched."
+  },
+  {
+   "step": "teach list",
+   "exit": 0,
+   "output": "Nothing stored yet."
+  }
+ ],
+ "model_alias": "local-qwen36-chat"
+}

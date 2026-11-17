@@ -1,0 +1,149 @@
+[
+ {
+  "args": [
+   []
+  ],
+  "call": "invoice.subtotal",
+  "expect": 0
+ },
+ {
+  "args": [
+   [
+    [
+     2,
+     250
+    ],
+    [
+     1,
+     100
+    ],
+    [
+     2,
+     250
+    ]
+   ]
+  ],
+  "call": "invoice.subtotal",
+  "expect": 1100
+ },
+ {
+  "args": [
+   [
+    [
+     0,
+     999
+    ],
+    [
+     3,
+     0
+    ]
+   ]
+  ],
+  "call": "invoice.subtotal",
+  "expect": 0
+ },
+ {
+  "args": [
+   [
+    [
+     2,
+     250
+    ],
+    [
+     1,
+     100
+    ],
+    [
+     2,
+     250
+    ]
+   ],
+   100
+  ],
+  "call": "invoice.total",
+  "expect": 1000
+ },
+ {
+  "args": [
+   [
+    [
+     2,
+     250
+    ],
+    [
+     1,
+     100
+    ],
+    [
+     2,
+     250
+    ]
+   ],
+   5000
+  ],
+  "call": "invoice.total",
+  "expect": 0
+ },
+ {
+  "args": [
+   [],
+   0
+  ],
+  "call": "invoice.total",
+  "expect": 0
+ },
+ {
+  "args": [
+   [
+    [
+     2,
+     250
+    ],
+    [
+     1,
+     100
+    ],
+    [
+     2,
+     250
+    ]
+   ],
+   100
+  ],
+  "call": "summary.render",
+  "expect": {
+   "line_count": 3,
+   "subtotal_cents": 1100,
+   "total_cents": 1000
+  }
+ },
+ {
+  "args": [
+   [],
+   50
+  ],
+  "call": "summary.render",
+  "expect": {
+   "line_count": 0,
+   "subtotal_cents": 0,
+   "total_cents": 0
+  }
+ },
+ {
+  "args": [
+   [
+    [
+     1,
+     1
+    ]
+   ],
+   0
+  ],
+  "call": "summary.render",
+  "expect": {
+   "line_count": 1,
+   "subtotal_cents": 1,
+   "total_cents": 1
+  }
+ }
+]

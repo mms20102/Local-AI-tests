@@ -1,0 +1,23 @@
+[
+ {
+  "args": [
+   [
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     6
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    1,
+    6
+   ]
+  ]
+ }
+]

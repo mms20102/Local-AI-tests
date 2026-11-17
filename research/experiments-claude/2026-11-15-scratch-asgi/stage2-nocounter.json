@@ -1,0 +1,69 @@
+{
+ "mode": "nocounter",
+ "counter": [
+  false,
+  "no-profile-reported"
+ ],
+ "passed": 10,
+ "failed": 0,
+ "upstream_captures": 11,
+ "upstream_captures_with_internal_keys": 0,
+ "upstream_port": 51866,
+ "guard_violations": [],
+ "loopback_ports_connected": [
+  51866
+ ],
+ "proactor_guarded": true,
+ "results": [
+  {
+   "case": "empty store, non-streamed",
+   "result": "pass",
+   "detail": "upstream keys: max_tokens,messages,model,temperature"
+  },
+  {
+   "case": "empty store, streamed",
+   "result": "pass",
+   "detail": "6 frames"
+  },
+  {
+   "case": "rejected shapes reach no upstream",
+   "result": "pass",
+   "detail": "later system=422/local_chat_policy; reasoning tag=422/local_chat_policy; tools=403/local_chat_policy; null content=422/local_chat_policy; list content=422/local_chat_policy; wrong model=403/local_chat_policy; extra field=422/local_chat_policy; planted carrier=422/local_chat_policy; bad json=400/invalid_request_error; wrong content type=415/local_chat_policy; bad key=401/local_chat_policy; no key=401"
+  },
+  {
+   "case": "selected note, exact upstream body",
+   "result": "pass",
+   "detail": "status {'note_cap': 0, 'no_room': 0, 'uncounted': 0, 'byte_only': 1, 'invalid': 0}; final prompt 64 tokens"
+  },
+  {
+   "case": "Arabic with history and a note",
+   "result": "pass",
+   "detail": "history preserved, note in the latest user message only"
+  },
+  {
+   "case": "left-out note, streamed: one event, answer frames identical",
+   "result": "pass",
+   "detail": "status {'note_cap': 1, 'no_room': 0, 'uncounted': 0, 'byte_only': 0, 'invalid': 0}; cleanup done"
+  },
+  {
+   "case": "left-out note, non-streamed: no notice",
+   "result": "pass",
+   "detail": "non-streamed answer carries no notice (known limit)"
+  },
+  {
+   "case": "four concurrent streams",
+   "result": "pass",
+   "detail": "event counts [1, 0, 1, 0]"
+  },
+  {
+   "case": "absent counter: long request refused with its reason",
+   "result": "pass",
+   "detail": "local_chat_counter_unavailable"
+  },
+  {
+   "case": "absent counter: note kept on the byte rule and labelled",
+   "result": "pass",
+   "detail": "status {'note_cap': 0, 'no_room': 0, 'uncounted': 0, 'byte_only': 1, 'invalid': 0}"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+[
+ {
+  "args": [
+   [
+    3,
+    1,
+    2
+   ]
+  ],
+  "call": "stats.median",
+  "expect": 2.0
+ }
+]

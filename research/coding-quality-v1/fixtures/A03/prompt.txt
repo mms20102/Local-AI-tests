@@ -1,0 +1,11 @@
+أصلح الدالة chunk_text(text, width) في الملف chunks.py أدناه لتقسيم النص من اليسار إلى اليمين إلى مقاطع لا يتجاوز طول كل منها width من نقاط Unicode، لا من البايتات أو العناقيد الكتابية أو عرض المحارف على الشاشة. حافظ على جميع المحارف كما هي. إذا كان width غير موجب فارفع ValueError حتى مع النص الفارغ؛ والنص الفارغ مع عرض موجب يعطي قائمة فارغة.
+مثال: chunk_text("abcde", 2) تعيد ["ab", "cd", "e"].
+
+```python
+def chunk_text(text, width):
+    chunks = []
+    for start in range(0, len(text) - width, width):
+        chunks.append(text[start:start + width])
+    return chunks
+```
+أجب بمقطع برمجي واحد فقط بلغة Python داخل علامات ``` يحتوي الملف كاملا، ومن دون أي شرح.

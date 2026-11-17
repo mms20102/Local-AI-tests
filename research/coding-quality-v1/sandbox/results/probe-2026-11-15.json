@@ -1,0 +1,431 @@
+{
+ "mode": "probe",
+ "identities": {
+  "grade.py": "e9f21618d0fa0e2e063d3e60758a0cb35dbde8b2ebc44bf716ff6ffbdf6fdf07",
+  "manifest.json": "58a0546eebf904ab8736d3a85fbaa4d43e415176416278f03238704b01c3b6e4",
+  "sandbox_host.py": "3a5b2dffe7632750561617e3de1e1a0fb9f13b83b2f4e9b31b1c389e074cf9d9",
+  "guest_runner.py": "86fe724647699323d7e24df5ce00dd46268ca51aa19719d7cfec45ea4d2077d9",
+  "fixture_revision": 2
+ },
+ "isolated_sessions": false,
+ "sessions": [
+  {
+   "session": {
+    "deadline_hit": false,
+    "seconds_to_report": 30.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false
+   },
+   "guest_total_seconds": 18.6
+  }
+ ],
+ "static": null,
+ "judged": {
+  "A01_reference": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 1062,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A01_decoy0": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1070,
+   "passed": 3,
+   "total": 8,
+   "failures": [
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 7: value"
+   ]
+  },
+  "A02_reference": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A02_decoy0": {
+   "status": "finished",
+   "seconds": 0.34,
+   "exit_code": 0,
+   "stdout_bytes": 971,
+   "passed": 7,
+   "total": 8,
+   "failures": [
+    "case 6: value"
+   ]
+  },
+  "A03_reference": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 1167,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "A03_decoy0": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1103,
+   "passed": 3,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: value",
+    "case 9: no exception"
+   ]
+  },
+  "B01_reference": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B01_decoy0": {
+   "status": "finished",
+   "seconds": 0.33,
+   "exit_code": 0,
+   "stdout_bytes": 915,
+   "passed": 2,
+   "total": 9,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: no exception",
+    "case 7: no exception",
+    "case 8: no exception"
+   ]
+  },
+  "B02_reference": {
+   "status": "finished",
+   "seconds": 0.33,
+   "exit_code": 0,
+   "stdout_bytes": 957,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B02_decoy0": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 961,
+   "passed": 3,
+   "total": 9,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value"
+   ]
+  },
+  "B03_reference": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 797,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "B03_decoy0": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 784,
+   "passed": 0,
+   "total": 8,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: value",
+    "case 7: raised IndexError"
+   ]
+  },
+  "E01_reference": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1057,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E01_decoy0": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 1068,
+   "passed": 3,
+   "total": 8,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 6: value",
+    "case 7: no exception"
+   ]
+  },
+  "E02_reference": {
+   "status": "finished",
+   "seconds": 0.23,
+   "exit_code": 0,
+   "stdout_bytes": 1966,
+   "passed": 21,
+   "total": 21,
+   "failures": []
+  },
+  "E02_decoy0": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 2604,
+   "passed": 0,
+   "total": 21,
+   "failures": [
+    "case 0: raised NotImplementedError",
+    "case 1: raised NotImplementedError",
+    "case 2: raised NotImplementedError",
+    "case 3: raised NotImplementedError",
+    "case 4: raised NotImplementedError",
+    "case 5: raised NotImplementedError",
+    "case 6: raised NotImplementedError",
+    "case 7: raised NotImplementedError",
+    "case 8: raised NotImplementedError",
+    "case 9: raised NotImplementedError",
+    "case 10: raised NotImplementedError",
+    "case 11: raised NotImplementedError",
+    "case 12: raised NotImplementedError",
+    "case 13: raised NotImplementedError",
+    "case 14: raised NotImplementedError",
+    "case 15: raised NotImplementedError",
+    "case 16: raised NotImplementedError",
+    "case 17: raised NotImplementedError",
+    "case 18: raised NotImplementedError",
+    "case 19: raised NotImplementedError",
+    "case 20: raised NotImplementedError"
+   ]
+  },
+  "E03_reference": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1229,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "E03_decoy0": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1197,
+   "passed": 2,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 7: value",
+    "case 8: value",
+    "case 9: value"
+   ]
+  },
+  "F01_reference": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "passed": 7,
+   "total": 7,
+   "failures": []
+  },
+  "F01_decoy0": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "passed": 3,
+   "total": 7,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 4: value",
+    "case 5: value"
+   ]
+  },
+  "F02_reference": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 922,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "F02_decoy0": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 914,
+   "passed": 7,
+   "total": 8,
+   "failures": [
+    "case 2: value"
+   ]
+  },
+  "F03_reference": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1213,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "F03_decoy0": {
+   "status": "finished",
+   "seconds": 0.23,
+   "exit_code": 0,
+   "stdout_bytes": 1189,
+   "passed": 7,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 6: value",
+    "case 9: no exception"
+   ]
+  },
+  "P_loop": {
+   "status": "timeout",
+   "seconds": 10.09,
+   "exit_code": null,
+   "stdout_bytes": 0,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: timeout"
+   ]
+  },
+  "P_output": {
+   "status": "finished",
+   "seconds": 0.33,
+   "exit_code": 0,
+   "stdout_bytes": 20971608,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: output capped"
+   ]
+  },
+  "P_network": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 89,
+   "passed": 1,
+   "total": 1,
+   "failures": []
+  },
+  "P_host_files": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 89,
+   "passed": 1,
+   "total": 1,
+   "failures": []
+  },
+  "P_spoof": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 100,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: value"
+   ]
+  }
+ },
+ "probe_outcome": {
+  "A01_reference": "as expected",
+  "A01_decoy0": "as expected",
+  "A02_reference": "as expected",
+  "A02_decoy0": "as expected",
+  "A03_reference": "as expected",
+  "A03_decoy0": "as expected",
+  "B01_reference": "as expected",
+  "B01_decoy0": "as expected",
+  "B02_reference": "as expected",
+  "B02_decoy0": "as expected",
+  "B03_reference": "as expected",
+  "B03_decoy0": "as expected",
+  "E01_reference": "as expected",
+  "E01_decoy0": "as expected",
+  "E02_reference": "as expected",
+  "E02_decoy0": "as expected",
+  "E03_reference": "as expected",
+  "E03_decoy0": "as expected",
+  "F01_reference": "as expected",
+  "F01_decoy0": "as expected",
+  "F02_reference": "as expected",
+  "F02_decoy0": "as expected",
+  "F03_reference": "as expected",
+  "F03_decoy0": "as expected",
+  "P_loop": "as expected",
+  "P_output": "as expected",
+  "P_network": "as expected",
+  "P_host_files": "as expected",
+  "P_spoof": "as expected"
+ },
+ "probe_ok": true
+}

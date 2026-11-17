@@ -1,0 +1,67 @@
+[
+ {
+  "args": [
+   ""
+  ],
+  "call": "solution.word_counts",
+  "expect": {}
+ },
+ {
+  "args": [
+   "  \n\t "
+  ],
+  "call": "solution.word_counts",
+  "expect": {}
+ },
+ {
+  "args": [
+   "Hi hi HI"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "HI": 1,
+   "Hi": 1,
+   "hi": 1
+  }
+ },
+ {
+  "args": [
+   "one,  one, one"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "one": 1,
+   "one,": 2
+  }
+ },
+ {
+  "args": [
+   "سلام عليكم سلام"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "سلام": 2,
+   "عليكم": 1
+  }
+ },
+ {
+  "args": [
+   "عِلم علم"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "علم": 1,
+   "عِلم": 1
+  }
+ },
+ {
+  "args": [
+   "x\ny\tx"
+  ],
+  "call": "solution.word_counts",
+  "expect": {
+   "x": 2,
+   "y": 1
+  }
+ }
+]

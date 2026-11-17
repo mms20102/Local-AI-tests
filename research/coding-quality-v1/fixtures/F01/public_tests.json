@@ -1,0 +1,16 @@
+[
+ {
+  "args": [
+   [
+    "b",
+    "a",
+    "b"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "b",
+   "a"
+  ]
+ }
+]

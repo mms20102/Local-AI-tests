@@ -1,0 +1,11 @@
+The file windows.py below has bugs. Fix sliding_windows(values: list[int], size: int) -> list[list[int]] so that it returns every contiguous window of the given size, moving one position at a time, in order. If size is larger than the list, return []. If size equals the list length (and the list is not empty), return one window. If size <= 0, raise ValueError. An empty list with a positive size returns []. Do not modify the input.
+Example: sliding_windows([1, 2, 3], 2) returns [[1, 2], [2, 3]].
+
+```python
+def sliding_windows(values, size):
+    windows = []
+    for start in range(len(values) - size):
+        windows.append(values[start:start + size])
+    return windows
+```
+Reply with exactly one fenced Python code block containing the complete file. No explanation.

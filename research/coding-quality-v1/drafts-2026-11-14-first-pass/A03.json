@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef chunk_text(text, width):\n    if width <= 0:\n        raise ValueError(\"width must be positive\")\n    if not text:\n        return []\n    return [text[i:i+width] for i in range(0, len(text), width)]\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 29.2,
+ "first_text_seconds": 16.27,
+ "executed": false
+}

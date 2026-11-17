@@ -1,0 +1,9 @@
+[
+ {
+  "args": [
+   "١٢"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "12"
+ }
+]

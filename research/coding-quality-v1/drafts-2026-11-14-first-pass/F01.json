@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef stable_unique(values: list[str]) -> list[str]:\n    seen = set()\n    result = []\n    for v in values:\n        if v not in seen:\n            seen.add(v)\n            result.append(v)\n    return result\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 18.83,
+ "first_text_seconds": 11.08,
+ "executed": false
+}

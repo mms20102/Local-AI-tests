@@ -1,0 +1,80 @@
+[
+ {
+  "args": [
+   []
+  ],
+  "call": "solution.stable_unique",
+  "expect": []
+ },
+ {
+  "args": [
+   [
+    "a",
+    "A",
+    "a"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "a",
+   "A"
+  ]
+ },
+ {
+  "args": [
+   [
+    "",
+    "x",
+    "",
+    "x"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "",
+   "x"
+  ]
+ },
+ {
+  "args": [
+   [
+    "z",
+    "y",
+    "x",
+    "y",
+    "z"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "z",
+   "y",
+   "x"
+  ]
+ },
+ {
+  "args": [
+   [
+    "سلام",
+    "hi",
+    "سلام"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "سلام",
+   "hi"
+  ]
+ },
+ {
+  "args": [
+   [
+    "one"
+   ]
+  ],
+  "call": "solution.stable_unique",
+  "expect": [
+   "one"
+  ]
+ }
+]

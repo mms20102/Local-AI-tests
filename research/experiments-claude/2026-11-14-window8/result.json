@@ -1,0 +1,363 @@
+{
+ "note": "Runtime window 8, 2026-11-14. Colibri 2.0.0, cap 32, original launcher. Synthetic requests; counts and outcomes only, no answer text. A large download was running, so timings are contended.",
+ "cycles": [
+  {
+   "cycle": 1,
+   "stop_seconds": 11.6,
+   "leftover_processes_after_stop": [],
+   "start_seconds": 46.3,
+   "session": "20261114-221915-0bbc818d",
+   "memory": {
+    "commit_gib": 29.81,
+    "commit_limit_gib": 32.22,
+    "available_gib": 7.47,
+    "engine_private_gib": 7.33,
+    "engine_ws_gib": 2.1
+   }
+  },
+  {
+   "cycle": 2,
+   "stop_seconds": 11.6,
+   "leftover_processes_after_stop": [],
+   "start_seconds": 40.6,
+   "session": "20261114-222015-b870a43a",
+   "memory": {
+    "commit_gib": 29.9,
+    "commit_limit_gib": 32.22,
+    "available_gib": 7.46,
+    "engine_private_gib": 7.33,
+    "engine_ws_gib": 2.1
+   }
+  },
+  {
+   "cycle": 3,
+   "stop_seconds": 11.6,
+   "leftover_processes_after_stop": [],
+   "start_seconds": 40.6,
+   "session": "20261114-222110-7f53b983",
+   "memory": {
+    "commit_gib": 29.96,
+    "commit_limit_gib": 32.22,
+    "available_gib": 7.33,
+    "engine_private_gib": 7.33,
+    "engine_ws_gib": 2.1
+   }
+  }
+ ],
+ "session": [
+  {
+   "n": 1,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 27,
+   "completion_tokens": 77,
+   "empty": false,
+   "seconds": 13.5,
+   "healthy_after": true
+  },
+  {
+   "n": 2,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 54,
+   "empty": false,
+   "seconds": 9.2,
+   "healthy_after": true
+  },
+  {
+   "n": 3,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "length",
+   "prompt_tokens": 25,
+   "completion_tokens": 96,
+   "empty": false,
+   "seconds": 15.3,
+   "healthy_after": true
+  },
+  {
+   "n": 4,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 28,
+   "completion_tokens": 67,
+   "empty": false,
+   "seconds": 9.6,
+   "healthy_after": true
+  },
+  {
+   "n": 5,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 25,
+   "completion_tokens": 15,
+   "empty": false,
+   "seconds": 4.7,
+   "healthy_after": true
+  },
+  {
+   "n": 6,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 31,
+   "empty": false,
+   "seconds": 6.2,
+   "healthy_after": true
+  },
+  {
+   "n": 7,
+   "kind": "refusal",
+   "status": 413,
+   "error_type": "local_chat_context_budget_exceeded",
+   "seconds": 0.0,
+   "healthy_after": true
+  },
+  {
+   "n": 8,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 54,
+   "empty": false,
+   "seconds": 7.9,
+   "healthy_after": true
+  },
+  {
+   "n": 9,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "length",
+   "prompt_tokens": 25,
+   "completion_tokens": 96,
+   "empty": false,
+   "seconds": 14.4,
+   "healthy_after": true
+  },
+  {
+   "n": 10,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 28,
+   "completion_tokens": 67,
+   "empty": false,
+   "seconds": 9.3,
+   "healthy_after": true
+  },
+  {
+   "n": 11,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 25,
+   "completion_tokens": 15,
+   "empty": false,
+   "seconds": 4.4,
+   "healthy_after": true
+  },
+  {
+   "n": 12,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 31,
+   "empty": false,
+   "seconds": 6.0,
+   "healthy_after": true
+  },
+  {
+   "n": 13,
+   "kind": "cancel",
+   "status": "closed-early",
+   "seconds": 0.2,
+   "healthy_after": true
+  },
+  {
+   "n": 14,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 54,
+   "empty": false,
+   "seconds": 9.3,
+   "healthy_after": true
+  },
+  {
+   "n": 15,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "length",
+   "prompt_tokens": 25,
+   "completion_tokens": 96,
+   "empty": false,
+   "seconds": 15.0,
+   "healthy_after": true
+  },
+  {
+   "n": 16,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 28,
+   "completion_tokens": 67,
+   "empty": false,
+   "seconds": 9.4,
+   "healthy_after": true
+  },
+  {
+   "n": 17,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 25,
+   "completion_tokens": 15,
+   "empty": false,
+   "seconds": 4.6,
+   "healthy_after": true
+  },
+  {
+   "n": 18,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 31,
+   "empty": false,
+   "seconds": 6.2,
+   "healthy_after": true
+  },
+  {
+   "n": 19,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 27,
+   "completion_tokens": 77,
+   "empty": false,
+   "seconds": 8.8,
+   "healthy_after": true
+  },
+  {
+   "n": 20,
+   "kind": "ordinary",
+   "status": 200,
+   "finish": "stop",
+   "prompt_tokens": 24,
+   "completion_tokens": 54,
+   "empty": false,
+   "seconds": 8.4,
+   "healthy_after": true
+  }
+ ],
+ "probes": {
+  "later_system": {
+   "own_count": 30,
+   "utf8_bytes": 33,
+   "messages": 3,
+   "max_tokens": 32,
+   "status": 422,
+   "seconds": 0.0,
+   "message": "A system message is only accepted as the first message."
+  },
+  "reasoning_tag_history": {
+   "own_count": 37,
+   "utf8_bytes": 50,
+   "messages": 3,
+   "max_tokens": 32,
+   "status": 422,
+   "seconds": 0.0,
+   "message": "Assistant history containing a reasoning tag is not supported."
+  },
+  "over_limit": {
+   "own_count": 2400,
+   "utf8_bytes": 10877,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 413,
+   "seconds": 0.0,
+   "message": "Conversation is too long for this model's context. Start a new chat or shorten the text; history was NOT silently truncated."
+  },
+  "multi_turn_arabic": {
+   "own_count": 51,
+   "utf8_bytes": 151,
+   "messages": 3,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 6.5,
+   "finish_reason": "stop",
+   "engine_prompt_tokens": 51,
+   "completion_tokens": 13,
+   "difference": 0
+  },
+  "long_256": {
+   "own_count": 1717,
+   "utf8_bytes": 7755,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 200,
+   "seconds": 51.1,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 1717,
+   "completion_tokens": 256,
+   "difference": 0
+  }
+ },
+ "requests_during_network_check": {
+  "arabic": {
+   "own_count": 50,
+   "utf8_bytes": 233,
+   "messages": 1,
+   "max_tokens": 96,
+   "status": 200,
+   "seconds": 17.8,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 50,
+   "completion_tokens": 96,
+   "difference": 0
+  },
+  "multi_turn": {
+   "own_count": 74,
+   "utf8_bytes": 140,
+   "messages": 4,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 22.5,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 74,
+   "completion_tokens": 64,
+   "difference": 0
+  },
+  "long_256": {
+   "own_count": 1717,
+   "utf8_bytes": 7755,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 200,
+   "seconds": 52.0,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 1717,
+   "completion_tokens": 256,
+   "difference": 0
+  }
+ },
+ "network_check": {
+  "method": "Get-NetTCPConnection filtered to the stack's 7 process ids, 9 samples over 82 s while three requests ran; plus one Get-NetUDPEndpoint read",
+  "listening": [
+   "127.0.0.1:4001",
+   "127.0.0.1:8000",
+   "127.0.0.1:8080"
+  ],
+  "non_loopback_remote_endpoints": [],
+  "udp_endpoints": []
+ }
+}

@@ -1,0 +1,1077 @@
+{
+ "mode": "probe",
+ "identities": {
+  "grade.py": "61adbf320209d662b8b009c0fef5dc6f325d3208f22b768a8c49b546fad6ccae",
+  "manifest.json": "58a0546eebf904ab8736d3a85fbaa4d43e415176416278f03238704b01c3b6e4",
+  "sandbox_host.py": "353a9c6d3fbfda17573531847b676d1602fe115a9d7071117a9013bb9aa7a470",
+  "guest_runner.py": "3e3152253f1763af294dba1facdcb424a74e584cb49f1f47e473ada8998fcf83",
+  "source_gate.py": "61cfbd977524e54e69030e612e6a47845d144d38e9a2a7c2b67ab2ff8c7292bc",
+  "hostile/index.json": "47cb59608b175c496493d251e7cd9ef59b2fa2707b3c77fa6b331349514d52e6",
+  "fixture_revision": 2
+ },
+ "source_gate": {
+  "A01_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "A01_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "A02_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "A02_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "A03_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "A03_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "B01_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "B01_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "B02_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "B02_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "B03_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "B03_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "E01_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "E01_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "E02_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "E02_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "E03_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "E03_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "F01_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "F01_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "F02_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "F02_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "F03_reference": {
+   "plain": true,
+   "reasons": []
+  },
+  "F03_decoy": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_loop": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_print_flood": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_memory": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_forge_line": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_forge_then_hang": {
+   "plain": true,
+   "reasons": []
+  },
+  "P_output": {
+   "plain": false,
+   "reasons": [
+    "import sys"
+   ]
+  },
+  "P_network": {
+   "plain": false,
+   "reasons": [
+    "import socket"
+   ]
+  },
+  "P_host_files": {
+   "plain": false,
+   "reasons": [
+    "import os",
+    "name open"
+   ]
+  },
+  "P_spoof": {
+   "plain": false,
+   "reasons": [
+    "import json",
+    "name open"
+   ]
+  },
+  "P_spawn": {
+   "plain": false,
+   "reasons": [
+    "import os",
+    "import subprocess",
+    "name getattr"
+   ]
+  },
+  "P_kill_runner": {
+   "plain": false,
+   "reasons": [
+    "import ctypes",
+    "import os"
+   ]
+  },
+  "P_write": {
+   "plain": false,
+   "reasons": [
+    "name open"
+   ]
+  }
+ },
+ "sessions": [
+  {
+   "entries": [
+    "A01_reference",
+    "A01_decoy",
+    "A02_reference",
+    "A02_decoy",
+    "A03_reference",
+    "A03_decoy",
+    "B01_reference",
+    "B01_decoy",
+    "B02_reference",
+    "B02_decoy",
+    "B03_reference",
+    "B03_decoy",
+    "E01_reference",
+    "E01_decoy",
+    "E02_reference",
+    "E02_decoy",
+    "E03_reference",
+    "E03_decoy",
+    "F01_reference",
+    "F01_decoy",
+    "F02_reference",
+    "F02_decoy",
+    "F03_reference",
+    "F03_decoy",
+    "P_loop",
+    "P_print_flood",
+    "P_memory",
+    "P_forge_line",
+    "P_forge_then_hang"
+   ],
+   "plain_session": true,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5116,
+    "seconds_to_report": 42.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 29.9
+  },
+  {
+   "entries": [
+    "P_output"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5072,
+    "seconds_to_report": 12.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 0.6
+  },
+  {
+   "entries": [
+    "P_network"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5232,
+    "seconds_to_report": 12.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 0.5
+  },
+  {
+   "entries": [
+    "P_host_files"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5179,
+    "seconds_to_report": 12.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 0.4
+  },
+  {
+   "entries": [
+    "P_spoof"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5252,
+    "seconds_to_report": 12.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 0.5
+  },
+  {
+   "entries": [
+    "P_spawn"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5240,
+    "seconds_to_report": 12.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 0.5
+  },
+  {
+   "entries": [
+    "P_kill_runner"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": true,
+    "host_available_mb_before": 5252,
+    "seconds_to_report": 902.2,
+    "closed_by_guest_shutdown": false,
+    "sandbox_processes_after": []
+   },
+   "refused": [
+    "no report",
+    "guest did not shut itself down after reporting"
+   ],
+   "environment": null,
+   "limits": null,
+   "guest_total_seconds": null
+  },
+  {
+   "entries": [
+    "P_write"
+   ],
+   "plain_session": false,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 3161,
+    "not_started": "not enough free memory on the host",
+    "closed_by_guest_shutdown": false
+   },
+   "refused": [
+    "not enough free memory on the host"
+   ],
+   "environment": null,
+   "limits": null,
+   "guest_total_seconds": null
+  }
+ ],
+ "static": null,
+ "judged": {
+  "A01_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.34,
+   "exit_code": 0,
+   "stdout_bytes": 1062,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A01_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1070,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 3,
+   "total": 8,
+   "failures": [
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 7: value"
+   ]
+  },
+  "A02_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.33,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A02_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 971,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 7,
+   "total": 8,
+   "failures": [
+    "case 6: value"
+   ]
+  },
+  "A03_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1167,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "A03_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 1103,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 3,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: value",
+    "case 9: no exception"
+   ]
+  },
+  "B01_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B01_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 915,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 2,
+   "total": 9,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: no exception",
+    "case 7: no exception",
+    "case 8: no exception"
+   ]
+  },
+  "B02_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 957,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B02_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 961,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 3,
+   "total": 9,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value"
+   ]
+  },
+  "B03_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 797,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "B03_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 784,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 0,
+   "total": 8,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 6: value",
+    "case 7: raised IndexError"
+   ]
+  },
+  "E01_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 1057,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E01_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 1068,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 3,
+   "total": 8,
+   "failures": [
+    "case 0: value",
+    "case 1: value",
+    "case 2: value",
+    "case 6: value",
+    "case 7: no exception"
+   ]
+  },
+  "E02_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1966,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 21,
+   "total": 21,
+   "failures": []
+  },
+  "E02_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 2604,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 0,
+   "total": 21,
+   "failures": [
+    "case 0: raised NotImplementedError",
+    "case 1: raised NotImplementedError",
+    "case 2: raised NotImplementedError",
+    "case 3: raised NotImplementedError",
+    "case 4: raised NotImplementedError",
+    "case 5: raised NotImplementedError",
+    "case 6: raised NotImplementedError",
+    "case 7: raised NotImplementedError",
+    "case 8: raised NotImplementedError",
+    "case 9: raised NotImplementedError",
+    "case 10: raised NotImplementedError",
+    "case 11: raised NotImplementedError",
+    "case 12: raised NotImplementedError",
+    "case 13: raised NotImplementedError",
+    "case 14: raised NotImplementedError",
+    "case 15: raised NotImplementedError",
+    "case 16: raised NotImplementedError",
+    "case 17: raised NotImplementedError",
+    "case 18: raised NotImplementedError",
+    "case 19: raised NotImplementedError",
+    "case 20: raised NotImplementedError"
+   ]
+  },
+  "E03_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1229,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "E03_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1197,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 2,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 3: value",
+    "case 4: value",
+    "case 5: value",
+    "case 7: value",
+    "case 8: value",
+    "case 9: value"
+   ]
+  },
+  "F01_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 7,
+   "total": 7,
+   "failures": []
+  },
+  "F01_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 3,
+   "total": 7,
+   "failures": [
+    "case 0: value",
+    "case 2: value",
+    "case 4: value",
+    "case 5: value"
+   ]
+  },
+  "F02_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 922,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "F02_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 914,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 7,
+   "total": 8,
+   "failures": [
+    "case 2: value"
+   ]
+  },
+  "F03_reference": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1213,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "F03_decoy": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1189,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 7,
+   "total": 10,
+   "failures": [
+    "case 0: value",
+    "case 6: value",
+    "case 9: no exception"
+   ]
+  },
+  "P_loop": {
+   "status": "timeout",
+   "confined": true,
+   "seconds": 10.03,
+   "exit_code": 1,
+   "stdout_bytes": 0,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: timeout"
+   ]
+  },
+  "P_print_flood": {
+   "status": "output_flood",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 1,
+   "stdout_bytes": 1048606,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: output_flood"
+   ]
+  },
+  "P_memory": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 1.84,
+   "exit_code": 0,
+   "stdout_bytes": 113,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: raised MemoryError"
+   ]
+  },
+  "P_forge_line": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 200,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": true,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: value"
+   ]
+  },
+  "P_forge_then_hang": {
+   "status": "timeout",
+   "confined": true,
+   "seconds": 10.03,
+   "exit_code": 1,
+   "stdout_bytes": 0,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: timeout"
+   ]
+  },
+  "P_output": {
+   "status": "output_flood",
+   "confined": true,
+   "seconds": 0.48,
+   "exit_code": 1,
+   "stdout_bytes": 1114112,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: output_flood"
+   ]
+  },
+  "P_network": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.44,
+   "exit_code": 0,
+   "stdout_bytes": 89,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 1,
+   "total": 1,
+   "failures": []
+  },
+  "P_host_files": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.33,
+   "exit_code": 0,
+   "stdout_bytes": 89,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 1,
+   "total": 1,
+   "failures": []
+  },
+  "P_spoof": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.34,
+   "exit_code": 0,
+   "stdout_bytes": 100,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 0,
+   "total": 1,
+   "failures": [
+    "case 0: value"
+   ]
+  },
+  "P_spawn": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.42,
+   "exit_code": 0,
+   "stdout_bytes": 89,
+   "in_job": true,
+   "integrity": 4096,
+   "trusted_observation": false,
+   "passed": 1,
+   "total": 1,
+   "failures": []
+  }
+ },
+ "probe_outcome": {
+  "A01_reference": "as expected",
+  "A01_decoy": "as expected",
+  "A02_reference": "as expected",
+  "A02_decoy": "as expected",
+  "A03_reference": "as expected",
+  "A03_decoy": "as expected",
+  "B01_reference": "as expected",
+  "B01_decoy": "as expected",
+  "B02_reference": "as expected",
+  "B02_decoy": "as expected",
+  "B03_reference": "as expected",
+  "B03_decoy": "as expected",
+  "E01_reference": "as expected",
+  "E01_decoy": "as expected",
+  "E02_reference": "as expected",
+  "E02_decoy": "as expected",
+  "E03_reference": "as expected",
+  "E03_decoy": "as expected",
+  "F01_reference": "as expected",
+  "F01_decoy": "as expected",
+  "F02_reference": "as expected",
+  "F02_decoy": "as expected",
+  "F03_reference": "as expected",
+  "F03_decoy": "as expected",
+  "P_loop": "as expected",
+  "P_print_flood": "as expected",
+  "P_memory": "as expected",
+  "P_forge_line": "as expected",
+  "P_forge_then_hang": "as expected",
+  "P_output": "as expected",
+  "P_network": "as expected",
+  "P_host_files": "as expected",
+  "P_spoof": "as expected",
+  "P_spawn": "as expected",
+  "P_kill_runner": "NOT JUDGED",
+  "P_write": "NOT JUDGED"
+ },
+ "probe_ok": false
+}

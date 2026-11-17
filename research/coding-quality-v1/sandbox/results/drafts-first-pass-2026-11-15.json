@@ -1,0 +1,302 @@
+{
+ "mode": "drafts",
+ "identities": {
+  "grade.py": "e9f21618d0fa0e2e063d3e60758a0cb35dbde8b2ebc44bf716ff6ffbdf6fdf07",
+  "manifest.json": "58a0546eebf904ab8736d3a85fbaa4d43e415176416278f03238704b01c3b6e4",
+  "sandbox_host.py": "3a5b2dffe7632750561617e3de1e1a0fb9f13b83b2f4e9b31b1c389e074cf9d9",
+  "guest_runner.py": "86fe724647699323d7e24df5ce00dd46268ca51aa19719d7cfec45ea4d2077d9",
+  "fixture_revision": 2
+ },
+ "isolated_sessions": false,
+ "sessions": [
+  {
+   "session": {
+    "deadline_hit": false,
+    "seconds_to_report": 14.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false
+   },
+   "guest_total_seconds": 3.6
+  }
+ ],
+ "static": {
+  "A01": {
+   "draft_sha256": "80e5d1f536c6b5d6e51bbddf93db0fee43b4ed8e9fb2347f46aeeb8f2eda94a2",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "A02": {
+   "draft_sha256": "855ebc07c3fe4c7ee9d6445cc165089a63c613093f8db92afc819c0dd0271f2d",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "A03": {
+   "draft_sha256": "cdee9f6383f3af0718c101c72ac60b8dd00023b719319a82871e5cf3b2682829",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "B01": {
+   "draft_sha256": "126c95a0019c353e889ec826519f8559008d000ee76268d7dc17a07447633e1a",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "B02": {
+   "draft_sha256": "2dcc8addfde67fdc0e14ec038bc71e50f2ef61dcd9659f57bd4080a3a42ad258",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "B03": {
+   "draft_sha256": "a6c4ae5db18d32ecd2b318eb192a0b265f3e0efaa2164c7b4934440b02c70511",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "E01": {
+   "draft_sha256": "f71032971ade08ef0c66e27e103d853ec6162a12a0a30a3bba2015d5bad1c689",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "E02": {
+   "draft_sha256": "1a6acf62c09cb8f54e54969de7344fa4754ff15caa64030c97defbbd3aa90613",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "E03": {
+   "draft_sha256": "f77d0bb4bf5bb18d5b9660bc556d1b251800ae85e515fac2c688ee37a20fd52c",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "F01": {
+   "draft_sha256": "d0d1c22f510643195fde6e746f86b7ea719d937763524b5af109b4604e4b8705",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "F02": {
+   "draft_sha256": "1171eefa4a7e0118b6169b37ec5d6bc54e07dfcb1e1774b244560e984e70bfa1",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  },
+  "F03": {
+   "draft_sha256": "699b2db6e67c65cd6f8b3d1496d44cd4bfe76a0266cccd7892885b2fc38741c5",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": [],
+   "reach": {
+    "imports_outside_own_files": [],
+    "risky_names": [],
+    "dunder_attributes": false,
+    "plain": true
+   }
+  }
+ },
+ "judged": {
+  "A01": {
+   "status": "finished",
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 1062,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A02": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A03": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1167,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "B01": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B02": {
+   "status": "finished",
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 957,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B03": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 797,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E01": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1057,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E02": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1966,
+   "passed": 21,
+   "total": 21,
+   "failures": []
+  },
+  "E03": {
+   "status": "finished",
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1229,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "F01": {
+   "status": "finished",
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "passed": 7,
+   "total": 7,
+   "failures": []
+  },
+  "F02": {
+   "status": "finished",
+   "seconds": 0.23,
+   "exit_code": 0,
+   "stdout_bytes": 921,
+   "passed": 4,
+   "total": 8,
+   "failures": [
+    "case 0: mutated input",
+    "case 3: mutated input",
+    "case 4: mutated input",
+    "case 6: mutated input"
+   ]
+  },
+  "F03": {
+   "status": "finished",
+   "seconds": 0.25,
+   "exit_code": 0,
+   "stdout_bytes": 1213,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  }
+ }
+}

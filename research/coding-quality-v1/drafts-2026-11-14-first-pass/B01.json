@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef sliding_windows(values: list[int], size: int) -> list[list[int]]:\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    if size > len(values):\n        return []\n    windows = []\n    for start in range(len(values) - size + 1):\n        windows.append(values[start:start + size])\n    return windows\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 36.17,
+ "first_text_seconds": 18.41,
+ "executed": false
+}

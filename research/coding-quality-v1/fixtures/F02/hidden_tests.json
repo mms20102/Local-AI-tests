@@ -1,0 +1,168 @@
+[
+ {
+  "args": [
+   []
+  ],
+  "call": "solution.merge_intervals",
+  "expect": []
+ },
+ {
+  "args": [
+   [
+    [
+     1,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    1,
+    2
+   ],
+   [
+    3,
+    4
+   ]
+  ],
+  "new_object": true
+ },
+ {
+  "args": [
+   [
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     5
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    1,
+    5
+   ]
+  ]
+ },
+ {
+  "args": [
+   [
+    [
+     8,
+     10
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     15,
+     18
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    1,
+    6
+   ],
+   [
+    8,
+    10
+   ],
+   [
+    15,
+    18
+   ]
+  ]
+ },
+ {
+  "args": [
+   [
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     4,
+     5
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    1,
+    10
+   ]
+  ]
+ },
+ {
+  "args": [
+   [
+    [
+     -5,
+     -1
+    ],
+    [
+     -2,
+     0
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    -5,
+    0
+   ],
+   [
+    5,
+    5
+   ]
+  ]
+ },
+ {
+  "args": [
+   [
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ]
+   ]
+  ],
+  "call": "solution.merge_intervals",
+  "expect": [
+   [
+    4,
+    4
+   ]
+  ]
+ }
+]

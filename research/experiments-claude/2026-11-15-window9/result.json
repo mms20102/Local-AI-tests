@@ -1,0 +1,96 @@
+{
+ "note": "Runtime window 9, 2026-11-15. A start after a Windows restart; Colibri 2.0.0, cap 32, original launcher. Synthetic requests; counts and outcomes only. A large download was running, so timings are contended.",
+ "start": {
+  "healthy_after_seconds": 76,
+  "gateway_log_admission_line": "[admission] real token counting | profile bound",
+  "teach_log_lines": "4 x '[teach] nothing added | store de4d164edccb'",
+  "tracebacks_in_gateway_log": 0,
+  "memory_before": {
+   "commit_gib": 17.39,
+   "commit_limit_gib": 36.22,
+   "available_gib": 10.45
+  },
+  "memory_after": {
+   "commit_gib": 27.36,
+   "commit_limit_gib": 36.22,
+   "available_gib": 6.64
+  }
+ },
+ "probes": {
+  "arabic": {
+   "own_count": 50,
+   "utf8_bytes": 233,
+   "messages": 1,
+   "max_tokens": 96,
+   "status": 200,
+   "seconds": 25.4,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 50,
+   "completion_tokens": 96,
+   "difference": 0
+  },
+  "multi_turn": {
+   "own_count": 74,
+   "utf8_bytes": 140,
+   "messages": 4,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 19.5,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 74,
+   "completion_tokens": 64,
+   "difference": 0
+  },
+  "multi_turn_arabic": {
+   "own_count": 51,
+   "utf8_bytes": 151,
+   "messages": 3,
+   "max_tokens": 64,
+   "status": 200,
+   "seconds": 6.1,
+   "finish_reason": "stop",
+   "engine_prompt_tokens": 51,
+   "completion_tokens": 13,
+   "difference": 0
+  },
+  "later_system": {
+   "own_count": 30,
+   "utf8_bytes": 33,
+   "messages": 3,
+   "max_tokens": 32,
+   "status": 422,
+   "seconds": 0.0,
+   "message": "A system message is only accepted as the first message."
+  },
+  "reasoning_tag_history": {
+   "own_count": 37,
+   "utf8_bytes": 50,
+   "messages": 3,
+   "max_tokens": 32,
+   "status": 422,
+   "seconds": 0.0,
+   "message": "Assistant history containing a reasoning tag is not supported."
+  },
+  "over_limit": {
+   "own_count": 2400,
+   "utf8_bytes": 10877,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 413,
+   "seconds": 0.0,
+   "message": "Conversation is too long for this model's context. Start a new chat or shorten the text; history was NOT silently truncated."
+  },
+  "long_256": {
+   "own_count": 1717,
+   "utf8_bytes": 7755,
+   "messages": 1,
+   "max_tokens": 256,
+   "status": 200,
+   "seconds": 47.2,
+   "finish_reason": "length",
+   "engine_prompt_tokens": 1717,
+   "completion_tokens": 256,
+   "difference": 0
+  }
+ }
+}

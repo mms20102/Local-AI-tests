@@ -1,0 +1,1683 @@
+{
+ "note": "Re-grade of the 12 first-pass drafts on runner revision 7 (source 48ded74). Raw guest reports, one per sandbox session, unedited; null where the guest wrote none.",
+ "sessions": {
+  "session-00": {
+   "guest_runner": "cq1-sandbox-7",
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "entries": [
+    {
+     "id": "A01",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        "a b a"
+       ],
+       "value": {
+        "a": 2,
+        "b": 1
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        ""
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "  \n\t "
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "Hi hi HI"
+       ],
+       "value": {
+        "Hi": 1,
+        "hi": 1,
+        "HI": 1
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "one,  one, one"
+       ],
+       "value": {
+        "one,": 2,
+        "one": 1
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "سلام عليكم سلام"
+       ],
+       "value": {
+        "سلام": 2,
+        "عليكم": 1
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "عِلم علم"
+       ],
+       "value": {
+        "عِلم": 1,
+        "علم": 1
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "x\ny\tx"
+       ],
+       "value": {
+        "x": 2,
+        "y": 1
+       },
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1062,
+     "stdout_capped": false,
+     "seconds": 0.34
+    },
+    {
+     "id": "A02",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        "١٢"
+       ],
+       "value": "12",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        ""
+       ],
+       "value": "",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "٠١٢٣٤٥٦٧٨٩"
+       ],
+       "value": "0123456789",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "۰۱۲۳۴۵۶۷۸۹"
+       ],
+       "value": "0123456789",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "a1٢b"
+       ],
+       "value": "a12b",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "عام ٢٠٢٦"
+       ],
+       "value": "عام 2026",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "१२"
+       ],
+       "value": "१२",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "no digits"
+       ],
+       "value": "no digits",
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 981,
+     "stdout_capped": false,
+     "seconds": 0.31
+    },
+    {
+     "id": "A03",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        "abcde",
+        2
+       ],
+       "value": [
+        "ab",
+        "cd",
+        "e"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "",
+        3
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "abc",
+        3
+       ],
+       "value": [
+        "abc"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "abc",
+        10
+       ],
+       "value": [
+        "abc"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "abcdef",
+        3
+       ],
+       "value": [
+        "abc",
+        "def"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "سلام عليكم",
+        4
+       ],
+       "value": [
+        "سلام",
+        " علي",
+        "كم"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "a",
+        1
+       ],
+       "value": [
+        "a"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        "abc",
+        0
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        "",
+        0
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        "abc",
+        -2
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1167,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "B01",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1,
+         2,
+         3
+        ],
+        2
+       ],
+       "value": [
+        [
+         1,
+         2
+        ],
+        [
+         2,
+         3
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1,
+         2,
+         3
+        ],
+        3
+       ],
+       "value": [
+        [
+         1,
+         2,
+         3
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1,
+         2,
+         3
+        ],
+        4
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [],
+        1
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         7
+        ],
+        1
+       ],
+       "value": [
+        [
+         7
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1,
+         2,
+         3,
+         4
+        ],
+        1
+       ],
+       "value": [
+        [
+         1
+        ],
+        [
+         2
+        ],
+        [
+         3
+        ],
+        [
+         4
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        [
+         1,
+         2,
+         3
+        ],
+        0
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        [
+         1,
+         2,
+         3
+        ],
+        -1
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        [],
+        0
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 981,
+     "stdout_capped": false,
+     "seconds": 0.3
+    },
+    {
+     "id": "B02",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": 0
+        },
+        "a",
+        5
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": null
+        },
+        "a",
+        "d"
+       ],
+       "value": null,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": false
+        },
+        "a",
+        true
+       ],
+       "value": false,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": ""
+        },
+        "a",
+        "d"
+       ],
+       "value": "",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": []
+        },
+        "a",
+        [
+         1
+        ]
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": {}
+        },
+        "a",
+        {
+         "x": 1
+        }
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": 1
+        },
+        "b",
+        "d"
+       ],
+       "value": "d",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {},
+        "a",
+        null
+       ],
+       "value": null,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "a": "v"
+        },
+        "a",
+        "d"
+       ],
+       "value": "v",
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 957,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "B03",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         3,
+         1,
+         2
+        ]
+       ],
+       "value": 2.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         5
+        ]
+       ],
+       "value": 5.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         4,
+         1,
+         3,
+         2
+        ]
+       ],
+       "value": 2.5,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         2,
+         2
+        ]
+       ],
+       "value": 2.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         -3,
+         10,
+         0
+        ]
+       ],
+       "value": 0.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1000000,
+         -1000000
+        ]
+       ],
+       "value": 0.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         9,
+         7,
+         8,
+         1,
+         3
+        ]
+       ],
+       "value": 7.0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        []
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 797,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "E01",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "name": "a",
+         "timeout_ms": 1500
+        }
+       ],
+       "value": {
+        "name": "a",
+        "timeout_s": 1.5
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "timeout_ms": 2000
+        }
+       ],
+       "value": {
+        "timeout_s": 2.0
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "timeout_ms": 0
+        }
+       ],
+       "value": {
+        "timeout_s": 0.0
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "name": "x",
+         "retries": 3
+        }
+       ],
+       "value": {
+        "name": "x",
+        "retries": 3
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {}
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "timeout_s": 4
+        }
+       ],
+       "value": {
+        "timeout_s": 4
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        {
+         "nested": {
+          "timeout_ms": 5
+         },
+         "timeout_ms": 1
+        }
+       ],
+       "value": {
+        "nested": {
+         "timeout_ms": 5
+        },
+        "timeout_s": 0.001
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        {
+         "timeout_ms": 1000,
+         "timeout_s": 1
+        }
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1057,
+     "stdout_capped": false,
+     "seconds": 0.3
+    },
+    {
+     "id": "E02",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        5,
+        1,
+        3
+       ],
+       "value": 3,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        -4
+       ],
+       "value": -1,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        0,
+        1,
+        3
+       ],
+       "value": 1,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        2,
+        1,
+        3
+       ],
+       "value": 2,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        3,
+        3,
+        3
+       ],
+       "value": 3,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        -7,
+        -5,
+        -1
+       ],
+       "value": -5,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        0
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        9
+       ],
+       "value": 1,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        0
+       ],
+       "value": true,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        7
+       ],
+       "value": false,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        -2
+       ],
+       "value": true,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": null,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         0,
+         1
+        ]
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         null,
+         2
+        ]
+       ],
+       "value": null,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": null,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         1,
+         false
+        ]
+       ],
+       "value": false,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "",
+         " ",
+         "a"
+        ]
+       ],
+       "value": 2,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        ""
+       ],
+       "value": "",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "abc"
+       ],
+       "value": "cba",
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "سلام"
+       ],
+       "value": "مالس",
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1966,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "E03",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          2,
+          250
+         ],
+         [
+          1,
+          100
+         ]
+        ]
+       ],
+       "value": 600,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          2,
+          250
+         ],
+         [
+          1,
+          100
+         ],
+         [
+          2,
+          250
+         ]
+        ]
+       ],
+       "value": 1100,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          0,
+          999
+         ],
+         [
+          3,
+          0
+         ]
+        ]
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          2,
+          250
+         ],
+         [
+          1,
+          100
+         ],
+         [
+          2,
+          250
+         ]
+        ],
+        100
+       ],
+       "value": 1000,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          2,
+          250
+         ],
+         [
+          1,
+          100
+         ],
+         [
+          2,
+          250
+         ]
+        ],
+        5000
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [],
+        0
+       ],
+       "value": 0,
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          2,
+          250
+         ],
+         [
+          1,
+          100
+         ],
+         [
+          2,
+          250
+         ]
+        ],
+        100
+       ],
+       "value": {
+        "line_count": 3,
+        "subtotal_cents": 1100,
+        "total_cents": 1000
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [],
+        50
+       ],
+       "value": {
+        "line_count": 0,
+        "subtotal_cents": 0,
+        "total_cents": 0
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          1,
+          1
+         ]
+        ],
+        0
+       ],
+       "value": {
+        "line_count": 1,
+        "subtotal_cents": 1,
+        "total_cents": 1
+       },
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1229,
+     "stdout_capped": false,
+     "seconds": 0.3
+    },
+    {
+     "id": "F01",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "b",
+         "a",
+         "b"
+        ]
+       ],
+       "value": [
+        "b",
+        "a"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "a",
+         "A",
+         "a"
+        ]
+       ],
+       "value": [
+        "a",
+        "A"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "",
+         "x",
+         "",
+         "x"
+        ]
+       ],
+       "value": [
+        "",
+        "x"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "z",
+         "y",
+         "x",
+         "y",
+         "z"
+        ]
+       ],
+       "value": [
+        "z",
+        "y",
+        "x"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "سلام",
+         "hi",
+         "سلام"
+        ]
+       ],
+       "value": [
+        "سلام",
+        "hi"
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         "one"
+        ]
+       ],
+       "value": [
+        "one"
+       ],
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 821,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "F02",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          1,
+          6
+         ],
+         [
+          2,
+          6
+         ]
+        ]
+       ],
+       "value": [
+        [
+         1,
+         6
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        []
+       ],
+       "value": [],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          1,
+          2
+         ],
+         [
+          3,
+          4
+         ]
+        ]
+       ],
+       "value": [
+        [
+         1,
+         2
+        ],
+        [
+         3,
+         4
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          1,
+          5
+         ],
+         [
+          3,
+          5
+         ]
+        ]
+       ],
+       "value": [
+        [
+         1,
+         5
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          8,
+          10
+         ],
+         [
+          1,
+          6
+         ],
+         [
+          2,
+          6
+         ],
+         [
+          15,
+          18
+         ]
+        ]
+       ],
+       "value": [
+        [
+         1,
+         6
+        ],
+        [
+         8,
+         10
+        ],
+        [
+         15,
+         18
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          1,
+          10
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          4,
+          5
+         ]
+        ]
+       ],
+       "value": [
+        [
+         1,
+         10
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          -5,
+          0
+         ],
+         [
+          -2,
+          0
+         ],
+         [
+          5,
+          5
+         ]
+        ]
+       ],
+       "value": [
+        [
+         -5,
+         0
+        ],
+        [
+         5,
+         5
+        ]
+       ],
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        [
+         [
+          4,
+          4
+         ],
+         [
+          4,
+          4
+         ]
+        ]
+       ],
+       "value": [
+        [
+         4,
+         4
+        ]
+       ],
+       "same_object_as_input": false
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 921,
+     "stdout_capped": false,
+     "seconds": 0.28
+    },
+    {
+     "id": "F03",
+     "records": [
+      {
+       "status": "returned",
+       "args_after": [
+        "a = 1\n# note\nb=x=y"
+       ],
+       "value": {
+        "a": "1",
+        "b": "x=y"
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        ""
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "\n   \n  # only a comment\n"
+       ],
+       "value": {},
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "k=\n"
+       ],
+       "value": {
+        "k": ""
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "k=1\nk=2"
+       ],
+       "value": {
+        "k": "2"
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "  name =  two  words  "
+       ],
+       "value": {
+        "name": "two  words"
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "url=http://x/?a=b&c=d"
+       ],
+       "value": {
+        "url": "http://x/?a=b&c=d"
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "returned",
+       "args_after": [
+        "اسم=قيمة"
+       ],
+       "value": {
+        "اسم": "قيمة"
+       },
+       "same_object_as_input": false
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        "novalue"
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      },
+      {
+       "status": "raised",
+       "args_after": [
+        " = 3"
+       ],
+       "value": null,
+       "same_object_as_input": false,
+       "error": "ValueError"
+      }
+     ],
+     "confined": true,
+     "in_job": true,
+     "integrity": 4096,
+     "status": "finished",
+     "exit_code": 0,
+     "stdout_bytes": 1213,
+     "stdout_capped": false,
+     "seconds": 0.27
+    }
+   ],
+   "complete": true,
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "total_seconds": 3.9
+  }
+ },
+ "progress_logs": {
+  "session-00": [
+   "13:59:08 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+   "13:59:08 start A01",
+   "13:59:08 end A01 finished",
+   "13:59:08 start A02",
+   "13:59:08 end A02 finished",
+   "13:59:08 start A03",
+   "13:59:09 end A03 finished",
+   "13:59:09 start B01",
+   "13:59:09 end B01 finished",
+   "13:59:09 start B02",
+   "13:59:09 end B02 finished",
+   "13:59:09 start B03",
+   "13:59:10 end B03 finished",
+   "13:59:10 start E01",
+   "13:59:10 end E01 finished",
+   "13:59:10 start E02",
+   "13:59:10 end E02 finished",
+   "13:59:10 start E03",
+   "13:59:11 end E03 finished",
+   "13:59:11 start F01",
+   "13:59:11 end F01 finished",
+   "13:59:11 start F02",
+   "13:59:11 end F02 finished",
+   "13:59:11 start F03",
+   "13:59:11 end F03 finished"
+  ]
+ }
+}

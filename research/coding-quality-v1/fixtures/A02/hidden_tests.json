@@ -1,0 +1,51 @@
+[
+ {
+  "args": [
+   ""
+  ],
+  "call": "solution.ascii_digits",
+  "expect": ""
+ },
+ {
+  "args": [
+   "٠١٢٣٤٥٦٧٨٩"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "0123456789"
+ },
+ {
+  "args": [
+   "۰۱۲۳۴۵۶۷۸۹"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "0123456789"
+ },
+ {
+  "args": [
+   "a1٢b"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "a12b"
+ },
+ {
+  "args": [
+   "عام ٢٠٢٦"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "عام 2026"
+ },
+ {
+  "args": [
+   "१२"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "१२"
+ },
+ {
+  "args": [
+   "no digits"
+  ],
+  "call": "solution.ascii_digits",
+  "expect": "no digits"
+ }
+]

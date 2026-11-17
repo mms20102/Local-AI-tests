@@ -1,0 +1,15 @@
+[
+ {
+  "args": [
+   {
+    "name": "a",
+    "timeout_ms": 1500
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "name": "a",
+   "timeout_s": 1.5
+  }
+ }
+]

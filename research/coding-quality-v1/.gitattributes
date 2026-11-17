@@ -1,0 +1,2 @@
+# Fixture hashes in manifest.json are over exact bytes: no end-of-line conversion here.
+* -text

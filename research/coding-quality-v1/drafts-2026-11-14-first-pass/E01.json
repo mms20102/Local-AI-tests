@@ -1,0 +1,10 @@
+{
+ "content": "```python\ndef to_seconds(config):\n    \"\"\"Return the configuration with timeout_ms converted to timeout_s.\"\"\"\n    if \"timeout_ms\" in config and \"timeout_s\" in config:\n        raise ValueError(\"Both timeout_ms and timeout_s are present\")\n    \n    new_config = dict(config)\n    \n    if \"timeout_ms\" in new_config:\n        new_config[\"timeout_s\"] = new_config.pop(\"timeout_ms\") / 1000.0\n    \n    return new_config\n```",
+ "finish_reason": "stop",
+ "truncated": false,
+ "max_tokens": 256,
+ "stream": true,
+ "elapsed_seconds": 36.0,
+ "first_text_seconds": 17.36,
+ "executed": false
+}

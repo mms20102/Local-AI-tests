@@ -1,0 +1,415 @@
+{
+ "mode": "drafts",
+ "identities": {
+  "grade.py": "61adbf320209d662b8b009c0fef5dc6f325d3208f22b768a8c49b546fad6ccae",
+  "manifest.json": "58a0546eebf904ab8736d3a85fbaa4d43e415176416278f03238704b01c3b6e4",
+  "sandbox_host.py": "38d98c69e78143a569fa00af32cf287376ab0c0a63a6cea3b947bbbcdd06a45e",
+  "guest_runner.py": "860dda91c6a72349abface3962497327d3250f7a60b4b4e5db84ec4c9ece924d",
+  "source_gate.py": "61cfbd977524e54e69030e612e6a47845d144d38e9a2a7c2b67ab2ff8c7292bc",
+  "hostile/index.json": "e68780c4edfc5c07a19fb0047fa895418026dde672b010e2ab45c64ba53d3757",
+  "fixture_revision": 2
+ },
+ "source_gate": {
+  "A01": {
+   "plain": true,
+   "reasons": []
+  },
+  "A02": {
+   "plain": true,
+   "reasons": []
+  },
+  "A03": {
+   "plain": true,
+   "reasons": []
+  },
+  "B01": {
+   "plain": true,
+   "reasons": []
+  },
+  "B02": {
+   "plain": true,
+   "reasons": []
+  },
+  "B03": {
+   "plain": true,
+   "reasons": []
+  },
+  "E01": {
+   "plain": true,
+   "reasons": []
+  },
+  "E02": {
+   "plain": true,
+   "reasons": []
+  },
+  "E03": {
+   "plain": true,
+   "reasons": []
+  },
+  "F01": {
+   "plain": true,
+   "reasons": []
+  },
+  "F02": {
+   "plain": true,
+   "reasons": []
+  },
+  "F03": {
+   "plain": true,
+   "reasons": []
+  }
+ },
+ "sessions": [
+  {
+   "entries": [
+    "A01",
+    "A02",
+    "A03",
+    "B01",
+    "B02",
+    "B03",
+    "E01",
+    "E02",
+    "E03",
+    "F01",
+    "F02",
+    "F03"
+   ],
+   "plain_session": true,
+   "session": {
+    "deadline_hit": false,
+    "host_available_mb_before": 5065,
+    "seconds_to_report": 16.0,
+    "closed_by_guest_shutdown": true,
+    "sandbox_processes_after": []
+   },
+   "refused": [],
+   "environment": {
+    "python": "3.12.16",
+    "user": "WDAGUtilityAccount",
+    "computer": "0E41A267-3C53-4",
+    "network": {
+     "public_ip": "failed: OSError",
+     "public_dns_name": "failed: gaierror",
+     "default_gateway_guess": "failed: OSError",
+     "link_local_host": "failed: OSError"
+    },
+    "input_folder_writable": false,
+    "input_folder_write_error": "PermissionError",
+    "drives": [
+     "C:"
+    ],
+    "host_user_folder_visible": false,
+    "tsclient_visible": false,
+    "runner_integrity": 12288
+   },
+   "limits": {
+    "entry_timeout_s": 10,
+    "max_output_bytes": 1048576,
+    "memory_limit_bytes": 1073741824,
+    "active_process_limit": 1,
+    "candidate_integrity": 4096
+   },
+   "guest_total_seconds": 3.9,
+   "runner_protection": {
+    "access_list_set": true,
+    "fresh_terminate_handle_refused": true
+   },
+   "progress_log": [
+    "13:59:08 runner protected {'access_list_set': True, 'fresh_terminate_handle_refused': True}",
+    "13:59:08 start A01",
+    "13:59:08 end A01 finished",
+    "13:59:08 start A02",
+    "13:59:08 end A02 finished",
+    "13:59:08 start A03",
+    "13:59:09 end A03 finished",
+    "13:59:09 start B01",
+    "13:59:09 end B01 finished",
+    "13:59:09 start B02",
+    "13:59:09 end B02 finished",
+    "13:59:09 start B03",
+    "13:59:10 end B03 finished",
+    "13:59:10 start E01",
+    "13:59:10 end E01 finished",
+    "13:59:10 start E02",
+    "13:59:10 end E02 finished",
+    "13:59:10 start E03",
+    "13:59:11 end E03 finished",
+    "13:59:11 start F01",
+    "13:59:11 end F01 finished",
+    "13:59:11 start F02",
+    "13:59:11 end F02 finished",
+    "13:59:11 start F03",
+    "13:59:11 end F03 finished"
+   ]
+  }
+ ],
+ "static": {
+  "A01": {
+   "draft_sha256": "80e5d1f536c6b5d6e51bbddf93db0fee43b4ed8e9fb2347f46aeeb8f2eda94a2",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "A02": {
+   "draft_sha256": "855ebc07c3fe4c7ee9d6445cc165089a63c613093f8db92afc819c0dd0271f2d",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "A03": {
+   "draft_sha256": "cdee9f6383f3af0718c101c72ac60b8dd00023b719319a82871e5cf3b2682829",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "B01": {
+   "draft_sha256": "126c95a0019c353e889ec826519f8559008d000ee76268d7dc17a07447633e1a",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "B02": {
+   "draft_sha256": "2dcc8addfde67fdc0e14ec038bc71e50f2ef61dcd9659f57bd4080a3a42ad258",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "B03": {
+   "draft_sha256": "a6c4ae5db18d32ecd2b318eb192a0b265f3e0efaa2164c7b4934440b02c70511",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "E01": {
+   "draft_sha256": "f71032971ade08ef0c66e27e103d853ec6162a12a0a30a3bba2015d5bad1c689",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "E02": {
+   "draft_sha256": "1a6acf62c09cb8f54e54969de7344fa4754ff15caa64030c97defbbd3aa90613",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "E03": {
+   "draft_sha256": "f77d0bb4bf5bb18d5b9660bc556d1b251800ae85e515fac2c688ee37a20fd52c",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "F01": {
+   "draft_sha256": "d0d1c22f510643195fde6e746f86b7ea719d937763524b5af109b4604e4b8705",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "F02": {
+   "draft_sha256": "1171eefa4a7e0118b6169b37ec5d6bc54e07dfcb1e1774b244560e984e70bfa1",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  },
+  "F03": {
+   "draft_sha256": "699b2db6e67c65cd6f8b3d1496d44cd4bfe76a0266cccd7892885b2fc38741c5",
+   "transport": "complete",
+   "structure": "pass",
+   "problems": []
+  }
+ },
+ "judged": {
+  "A01": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.34,
+   "exit_code": 0,
+   "stdout_bytes": 1062,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A02": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.31,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "A03": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1167,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "B01": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 981,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B02": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 957,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 9,
+   "total": 9,
+   "failures": []
+  },
+  "B03": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 797,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E01": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1057,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 8,
+   "total": 8,
+   "failures": []
+  },
+  "E02": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 1966,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 21,
+   "total": 21,
+   "failures": []
+  },
+  "E03": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.3,
+   "exit_code": 0,
+   "stdout_bytes": 1229,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  },
+  "F01": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 821,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 7,
+   "total": 7,
+   "failures": []
+  },
+  "F02": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.28,
+   "exit_code": 0,
+   "stdout_bytes": 921,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 4,
+   "total": 8,
+   "failures": [
+    "case 0: mutated input",
+    "case 3: mutated input",
+    "case 4: mutated input",
+    "case 6: mutated input"
+   ]
+  },
+  "F03": {
+   "status": "finished",
+   "confined": true,
+   "seconds": 0.27,
+   "exit_code": 0,
+   "stdout_bytes": 1213,
+   "in_job": true,
+   "integrity": 4096,
+   "report_folder_tampering": null,
+   "trusted_observation": true,
+   "passed": 10,
+   "total": 10,
+   "failures": []
+  }
+ },
+ "summary": {
+  "tasks": 12,
+  "fully_passing_trusted": [
+   "A01",
+   "A02",
+   "A03",
+   "B01",
+   "B02",
+   "B03",
+   "E01",
+   "E02",
+   "E03",
+   "F01",
+   "F03"
+  ],
+  "count": 11,
+  "passing_but_untrusted": [],
+  "not_run": []
+ }
+}

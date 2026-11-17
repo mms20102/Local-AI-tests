@@ -1,0 +1,84 @@
+[
+ {
+  "args": [
+   {
+    "timeout_ms": 2000
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "timeout_s": 2.0
+  }
+ },
+ {
+  "args": [
+   {
+    "timeout_ms": 0
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "timeout_s": 0.0
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "x",
+    "retries": 3
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "name": "x",
+   "retries": 3
+  },
+  "new_object": true
+ },
+ {
+  "args": [
+   {}
+  ],
+  "call": "config.to_seconds",
+  "expect": {},
+  "new_object": true
+ },
+ {
+  "args": [
+   {
+    "timeout_s": 4
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "timeout_s": 4
+  }
+ },
+ {
+  "args": [
+   {
+    "nested": {
+     "timeout_ms": 5
+    },
+    "timeout_ms": 1
+   }
+  ],
+  "call": "config.to_seconds",
+  "expect": {
+   "nested": {
+    "timeout_ms": 5
+   },
+   "timeout_s": 0.001
+  }
+ },
+ {
+  "args": [
+   {
+    "timeout_ms": 1000,
+    "timeout_s": 1
+   }
+  ],
+  "call": "config.to_seconds",
+  "raises": "ValueError"
+ }
+]

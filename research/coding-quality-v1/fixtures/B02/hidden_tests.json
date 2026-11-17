@@ -1,0 +1,92 @@
+[
+ {
+  "args": [
+   {
+    "a": null
+   },
+   "a",
+   "d"
+  ],
+  "call": "cache.lookup",
+  "expect": null
+ },
+ {
+  "args": [
+   {
+    "a": false
+   },
+   "a",
+   true
+  ],
+  "call": "cache.lookup",
+  "expect": false
+ },
+ {
+  "args": [
+   {
+    "a": ""
+   },
+   "a",
+   "d"
+  ],
+  "call": "cache.lookup",
+  "expect": ""
+ },
+ {
+  "args": [
+   {
+    "a": []
+   },
+   "a",
+   [
+    1
+   ]
+  ],
+  "call": "cache.lookup",
+  "expect": []
+ },
+ {
+  "args": [
+   {
+    "a": {}
+   },
+   "a",
+   {
+    "x": 1
+   }
+  ],
+  "call": "cache.lookup",
+  "expect": {}
+ },
+ {
+  "args": [
+   {
+    "a": 1
+   },
+   "b",
+   "d"
+  ],
+  "call": "cache.lookup",
+  "expect": "d"
+ },
+ {
+  "args": [
+   {},
+   "a",
+   null
+  ],
+  "call": "cache.lookup",
+  "expect": null
+ },
+ {
+  "args": [
+   {
+    "a": "v"
+   },
+   "a",
+   "d"
+  ],
+  "call": "cache.lookup",
+  "expect": "v"
+ }
+]
